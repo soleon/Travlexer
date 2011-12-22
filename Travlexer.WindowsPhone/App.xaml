@@ -1,0 +1,12 @@
+﻿<Application x:Class="Travlexer.WindowsPhone.App"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone">
+	<Application.Resources></Application.Resources>
+	<Application.ApplicationLifetimeObjects>
+		<shell:PhoneApplicationService Activated="ApplicationActivated"
+									   Closing="ApplicationClosing"
+									   Deactivated="ApplicationDeactivated"
+									   Launching="ApplicationLaunching" />
+	</Application.ApplicationLifetimeObjects>
+</Application>
