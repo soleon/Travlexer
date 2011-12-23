@@ -62,6 +62,22 @@ namespace Travlexer.WindowsPhone.Infrustructure.Entities
 		private PlaceDetail _detail;
 		private const string DetailProperty = "Detail";
 
+		public PlaceColor Color
+		{
+			get { return _color; }
+			set { SetProperty(ref _color, value, ColorProperty); }
+		}
+		private PlaceColor _color;
+		private const string ColorProperty = "Color";
+
+		public PlaceIcon Icon
+		{
+			get { return _icon; }
+			set { SetProperty(ref _icon, value, IconProperty); }
+		}
+		private PlaceIcon _icon;
+		private const string IconProperty = "Icon";
+
 		#endregion
 
 
@@ -190,7 +206,7 @@ namespace Travlexer.WindowsPhone.Infrustructure.Entities
 	/// <summary>
 	/// Defines the available icons for a <see cref="Place"/>.
 	/// </summary>
-	public enum PinIcon : byte
+	public enum PlaceIcon : byte
 	{
 		General = 0,
 		Recreation,
@@ -205,7 +221,7 @@ namespace Travlexer.WindowsPhone.Infrustructure.Entities
 	/// <summary>
 	/// Defines the available colors for a <see cref="Place"/>.
 	/// </summary>
-	public enum PinColor : byte
+	public enum PlaceColor : byte
 	{
 		Blue = 0,
 		Magenta,
@@ -224,10 +240,31 @@ namespace Travlexer.WindowsPhone.Infrustructure.Entities
 	/// </summary>
 	public class Location
 	{
+		#region Constructors
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Location"/> class.
+		/// </summary>
+		public Location(double latitude, double longitude)
+		{
+			if (latitude < -90D || latitude > 90D)
+			{
+				throw new ArgumentOutOfRangeException("latitude", "Latitude is out of range. Valid latitude is between -90 and 90.");
+			}
+			if (longitude < -180D || longitude > 180D)
+			{
+				throw new ArgumentOutOfRangeException("longitude", "Longitude is out of range. Valid latitude is between -180 and 180.");
+			}
+			Latitude = latitude;
+			Longitude = longitude;
+		}
+
+		#endregion
+
 		#region Public Properties
 
-		public double Latitude { get; set; }
-		public double Longitued { get; set; }
+		public double Latitude { get; private set; }
+		public double Longitude { get; private set; }
 
 		#endregion
 	}

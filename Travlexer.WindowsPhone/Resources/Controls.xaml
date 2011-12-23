@@ -1,0 +1,398 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
+					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+					xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
+					xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					mc:Ignorable="d">
+	<Style TargetType="Controls:ButtonCircle">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Controls:ButtonCircle">
+					<StackPanel Width="48">
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentContainer"
+																	   Storyboard.TargetProperty="Foreground">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="{StaticResource PhoneBackgroundBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
+																	   Storyboard.TargetProperty="Background">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="{StaticResource PhoneForegroundBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
+																	   Storyboard.TargetProperty="BorderBrush">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="{StaticResource PhoneForegroundBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentContainer"
+																	   Storyboard.TargetProperty="Foreground">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="{StaticResource PhoneDisabledBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
+																	   Storyboard.TargetProperty="BorderBrush">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="{StaticResource PhoneDisabledBrush}" />
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
+																	   Storyboard.TargetProperty="Background">
+											<DiscreteObjectKeyFrame KeyTime="0"
+																	Value="Transparent" />
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<Border x:Name="ButtonBackground"
+								Height="48"
+								Width="48"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								CornerRadius="24">
+							<ContentControl x:Name="ContentContainer"
+											Padding="{TemplateBinding Padding}"
+											Content="{TemplateBinding Content}"
+											ContentTemplate="{TemplateBinding ContentTemplate}"
+											Foreground="{TemplateBinding Foreground}"
+											HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+											VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+						</Border>
+						<TextBlock FontSize="12"
+								   HorizontalAlignment="Center"
+								   Text="{TemplateBinding Caption}" />
+					</StackPanel>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Padding"
+				Value="8,8,8,5" />
+		<Setter Property="BorderBrush"
+				Value="{StaticResource PhoneForegroundBrush}" />
+		<Setter Property="BorderThickness"
+				Value="{StaticResource PhoneBorderThickness}" />
+		<Setter Property="Background"
+				Value="{StaticResource TransparentBrush}" />
+	</Style>
+	<Style TargetType="Controls:Pushpin">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Controls:Pushpin">
+					<Maps:Pushpin x:Name="Pushpin" Padding="5"
+								  Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}, RelativeSource={RelativeSource TemplatedParent}}">
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="VisualStates">
+								<VisualStateGroup.Transitions>
+									<VisualTransition From="Collapsed"
+													  GeneratedDuration="0:0:0.3"
+													  To="Expanded">
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Content"
+															 Storyboard.TargetProperty="(FrameworkElement.Width)"
+															 Duration="0:0:0.3"
+															 EasingFunction="{StaticResource EasingQuinticOut}"
+															 To="230" />
+											<DoubleAnimation Storyboard.TargetName="Content"
+															 Storyboard.TargetProperty="(FrameworkElement.Height)"
+															 Duration="0:0:0.3"
+															 EasingFunction="{StaticResource EasingQuinticOut}"
+															 To="136" />
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualTransition>
+									<VisualTransition From="Expanded"
+													  To="Collapsed">
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Content"
+															 Storyboard.TargetProperty="(FrameworkElement.Width)"
+															 Duration="0:0:0.2"
+															 EasingFunction="{StaticResource EasingQuinticOut}" />
+											<DoubleAnimation Storyboard.TargetName="Content"
+															 Storyboard.TargetProperty="(FrameworkElement.Height)"
+															 Duration="0:0:0.2"
+															 EasingFunction="{StaticResource EasingQuinticOut}" />
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Collapsed</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Collapsed</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Collapsed</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualTransition>
+								</VisualStateGroup.Transitions>
+								<VisualState x:Name="Expanded">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
+											Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<Visibility>Visible</Visibility>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
+											Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<Visibility>Visible</Visibility>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
+											Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<Visibility>Visible</Visibility>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+										<DoubleAnimation Storyboard.TargetName="Content"
+											Storyboard.TargetProperty="(FrameworkElement.Width)"
+											Duration="0"
+											To="230"
+											d:IsOptimized="True" />
+										<DoubleAnimation Storyboard.TargetName="Content"
+											Storyboard.TargetProperty="(FrameworkElement.Height)"
+											Duration="0"
+											To="138"
+											d:IsOptimized="True" />
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Collapsed" />
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="PinTypeStates">
+								<VisualStateGroup.Transitions>
+									<VisualTransition From="SearchResult"
+													  GeneratedDuration="0:0:0.2"
+													  To="UserPin">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonDelete"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0:0:0.1">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<DoubleAnimationUsingKeyFrames Storyboard.TargetName="ButtonDelete"
+																		   Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)">
+												<EasingDoubleKeyFrame KeyTime="0"
+																	  Value="180" />
+												<EasingDoubleKeyFrame KeyTime="0:0:0.1"
+																	  Value="90" />
+												<EasingDoubleKeyFrame KeyTime="0:0:0.2"
+																	  Value="0" />
+											</DoubleAnimationUsingKeyFrames>
+											<DoubleAnimation Storyboard.TargetName="ButtonPin"
+															 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
+															 Duration="0:0:0.2"
+															 To="-180"
+															 d:IsOptimized="True" />
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPin"
+																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+												<DiscreteObjectKeyFrame KeyTime="0:0:0.1">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Collapsed</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+												<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Collapsed</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualTransition>
+								</VisualStateGroup.Transitions>
+								<VisualState x:Name="UserPin" />
+								<VisualState x:Name="SearchResult">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonDelete"
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<Visibility>Collapsed</Visibility>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPin"
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<Visibility>Visible</Visibility>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="search2">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<Visibility>Visible</Visibility>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<Maps:Pushpin.Template>
+							<ControlTemplate TargetType="Maps:Pushpin">
+								<Grid>
+									<Ellipse Height="50"
+											 Margin="-25,0,0,-25"
+											 Width="50"
+											 Fill="Transparent"
+											 HorizontalAlignment="Left"
+											 VerticalAlignment="Bottom" />
+									<Border Margin="0,0,0,23"
+											Padding="{TemplateBinding Padding}"
+											Background="{TemplateBinding Background}"
+											BorderBrush="{StaticResource PhoneForegroundBrush}"
+											BorderThickness="2"
+											UseLayoutRounding="True">
+										<ContentPresenter />
+									</Border>
+									<Path Data="M1,1 L1,25 L25,1"
+										  Fill="{TemplateBinding Background}"
+										  HorizontalAlignment="Left"
+										  Stroke="{StaticResource PhoneForegroundBrush}"
+										  StrokeThickness="2"
+										  VerticalAlignment="Bottom" />
+								</Grid>
+							</ControlTemplate>
+						</Maps:Pushpin.Template>
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="MouseLeftButtonDown">
+								<ec:GoToStateAction StateName="Expanded" />
+							</i:EventTrigger>
+							<i:EventTrigger EventName="MouseLeftButtonUp">
+								<ec:GoToStateAction StateName="Collapsed" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+						<Grid x:Name="Content"
+							  Height="48"
+							  Width="48">
+							<Icons:Search2 x:Name="search2" Background="{Binding Background, ElementName=Pushpin}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="32" Height="32" Margin="0,-20,-20,0" Foreground="{StaticResource PhoneBorderBrush}" Visibility="Collapsed" />
+							<ContentPresenter Height="48"
+											  Width="48"
+											  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}, RelativeSource={RelativeSource TemplatedParent}}"
+											  HorizontalAlignment="Left"
+											  VerticalAlignment="Top" />
+							<TextBlock x:Name="Title"
+									   Height="24"
+									   Margin="55,0,0,0"
+									   Width="180"
+									   FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+									   HorizontalAlignment="Left"
+									   Text="{TemplateBinding Title}"
+									   TextTrimming="WordEllipsis"
+									   VerticalAlignment="Top"
+									   Visibility="Collapsed" />
+							<TextBlock x:Name="Address"
+									   Height="50"
+									   Margin="55,25,0,0"
+									   Width="180"
+									   FontFamily="{StaticResource PhoneFontFamilyLight}"
+									   HorizontalAlignment="Left"
+									   Text="{TemplateBinding Address}"
+									   TextTrimming="WordEllipsis"
+									   TextWrapping="Wrap"
+									   VerticalAlignment="Top"
+									   Visibility="Collapsed" />
+							<StackPanel x:Name="ButtonPanel"
+										Height="65"
+										Margin="0,75,0,0"
+										Width="228"
+										HorizontalAlignment="Left"
+										Orientation="Horizontal"
+										VerticalAlignment="Top"
+										Visibility="Collapsed">
+								<Controls:ButtonCircle Margin="0,0,12,0"
+													   Padding="5"
+													   Caption="Detail">
+									<Icons:Info />
+								</Controls:ButtonCircle>
+								<Controls:ButtonCircle Margin="0,0,12,0"
+													   Caption="depart">
+									<Icons:From />
+								</Controls:ButtonCircle>
+								<Controls:ButtonCircle Margin="0,0,12,0"
+													   Caption="go to">
+									<Icons:To />
+								</Controls:ButtonCircle>
+								<Controls:ButtonCircle x:Name="ButtonDelete"
+													   Caption="delete">
+									<!--<Controls:ButtonCircle.Projection>
+										<PlaneProjection />
+									</Controls:ButtonCircle.Projection>-->
+									<Icons:Delete />
+								</Controls:ButtonCircle>
+								<Controls:ButtonCircle x:Name="ButtonPin"
+													   Caption="keep"
+													   RenderTransformOrigin="0.5,0.5"
+													   Visibility="Collapsed">
+									<Controls:ButtonCircle.Projection>
+										<PlaneProjection />
+									</Controls:ButtonCircle.Projection>
+									<Icons:Pin />
+								</Controls:ButtonCircle>
+							</StackPanel>
+						</Grid>
+					</Maps:Pushpin>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

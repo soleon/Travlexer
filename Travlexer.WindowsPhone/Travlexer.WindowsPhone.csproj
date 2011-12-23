@@ -22,9 +22,11 @@
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
     <XapFilename>Travlexer.WindowsPhone.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>Travelexer.WindowsPhone.App</SilverlightAppEntry>
+    <SilverlightAppEntry>Travlexer.WindowsPhone.App</SilverlightAppEntry>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,6 +50,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Controls" />
+    <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
     <Reference Include="Microsoft.Phone.Interop" />
@@ -58,6 +62,7 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Interactivity" />
     <Reference Include="System.Xml" />
     <Reference Include="mscorlib.extensions" />
   </ItemGroup>
@@ -65,7 +70,50 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ButtonCircle.cs" />
+    <Compile Include="Controls\Icons\ArrowRight.cs" />
+    <Compile Include="Controls\Icons\Bicycle.cs" />
+    <Compile Include="Controls\Icons\Camera.cs" />
+    <Compile Include="Controls\Icons\Car.cs" />
+    <Compile Include="Controls\Icons\Delete.cs" />
+    <Compile Include="Controls\Icons\Download.cs" />
+    <Compile Include="Controls\Icons\Edit.cs" />
+    <Compile Include="Controls\Icons\From.cs" />
+    <Compile Include="Controls\Icons\Info.cs" />
+    <Compile Include="Controls\Icons\Location.cs" />
+    <Compile Include="Controls\Icons\Search.cs" />
+    <Compile Include="Controls\Icons\Search2.cs" />
+    <Compile Include="Controls\Icons\Swap.cs" />
+    <Compile Include="Controls\Icons\To.cs" />
+    <Compile Include="Controls\Icons\Walk.cs" />
+    <Compile Include="Controls\Pushpin.cs" />
+    <Compile Include="Converters\PlaceColorHexConverter.cs" />
+    <Compile Include="Converters\PlaceIconToControlConverter.cs" />
+    <Compile Include="DesignTime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\MapView.xaml.cs">
+      <DependentUpon>MapView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Resources\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Default.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MapView.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -88,7 +136,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\" />
-    <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Travlexer.WindowsPhone.Core\Travlexer.WindowsPhone.Core.csproj">
+      <Project>{A70A1D13-1874-442F-BB5F-AE765C12FD6A}</Project>
+      <Name>Travlexer.WindowsPhone.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Travlexer.WindowsPhone.Infrustructure\Travlexer.WindowsPhone.Infrustructure.csproj">
+      <Project>{70DDDE02-5CC0-47AF-ABA9-EA4C853DAA92}</Project>
+      <Name>Travlexer.WindowsPhone.Infrustructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

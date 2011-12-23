@@ -53,7 +53,7 @@ namespace Travlexer.Core
 
 		protected bool SetProperty<T>(ref T property, T value, string propertyName)
 		{
-			if (property.Equals(value))
+			if (Equals(property, value))
 			{
 				return false;
 			}
@@ -64,7 +64,7 @@ namespace Travlexer.Core
 
 		protected bool SetProperty<T>(ref T property, T value, params string[] propertyNames)
 		{
-			if (property.Equals(value))
+			if (Equals(property, value))
 			{
 				return false;
 			}
