@@ -18,7 +18,7 @@ namespace Travlexer.WindowsPhone.Infrustructure
 		/// Removes the existing user pin.
 		/// </summary>
 		/// <param name="pin">The pin.</param>
-		void RemovePin(Pin pin);
+		void RemovePin(UserPin pin);
 
 		/// <summary>
 		/// Removes all user pins.

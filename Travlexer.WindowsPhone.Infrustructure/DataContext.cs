@@ -12,7 +12,7 @@ namespace Travlexer.WindowsPhone.Infrustructure
 		/// </summary>
 		public DataContext()
 		{
-			Pins = new ReadOnlyObservableCollection<Pin>(_pins);
+			Pins = new ReadOnlyObservableCollection<UserPin>(_pins);
 			SearchResults = new ReadOnlyObservableCollection<SearchResult>(_searchResults);
 		}
 
@@ -24,9 +24,9 @@ namespace Travlexer.WindowsPhone.Infrustructure
 		/// <summary>
 		/// Gets the user pins.
 		/// </summary>
-		public ReadOnlyObservableCollection<Pin> Pins { get; private set; }
+		public ReadOnlyObservableCollection<UserPin> Pins { get; private set; }
 
-		private readonly ObservableCollection<Pin> _pins = new ObservableCollection<Pin>();
+		private readonly ObservableCollection<UserPin> _pins = new ObservableCollection<UserPin>();
 
 		/// <summary>
 		/// Gets the search results.
@@ -47,16 +47,16 @@ namespace Travlexer.WindowsPhone.Infrustructure
 		/// <param name="location">The location of the user pin.</param>
 		public void AddNewPin(PlaceIcon icon, Location location)
 		{
-			_pins.Add(new Pin(location));
+			_pins.Add(new UserPin(location));
 		}
 
 		/// <summary>
 		/// Removes the existing user pin.
 		/// </summary>
-		/// <param name="pin">The pin.</param>
-		public void RemovePin(Pin pin)
+		/// <param name="UserPin">The pin.</param>
+		public void RemovePin(UserPin UserPin)
 		{
-			_pins.Remove(pin);
+			_pins.Remove(UserPin);
 		}
 
 		/// <summary>

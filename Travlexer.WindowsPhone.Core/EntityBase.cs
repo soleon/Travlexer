@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using Travlexer.WindowsPhone.Core.Extensions.Extensions;
+using Travlexer.WindowsPhone.Core.Extensions;
 
-namespace Travlexer.Core
+namespace Travlexer.WindowsPhone.Core
 {
 	public abstract class EntityBase : INotifyPropertyChanged, IDisposable
 	{

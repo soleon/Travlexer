@@ -53,6 +53,8 @@
 										</ObjectAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
+								<VisualState x:Name="Normal" />
+								<VisualState x:Name="MouseOver" />
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<Border x:Name="ButtonBackground"
@@ -83,15 +85,22 @@
 				Value="{StaticResource PhoneForegroundBrush}" />
 		<Setter Property="BorderThickness"
 				Value="{StaticResource PhoneBorderThickness}" />
-		<Setter Property="Background"
-				Value="{StaticResource TransparentBrush}" />
+		<Setter Property="Background">
+			<Setter.Value>
+				<SolidColorBrush Color="#66000000" />
+			</Setter.Value>
+		</Setter>
 	</Style>
 	<Style TargetType="Controls:Pushpin">
+		<Setter Property="CacheMode"
+				Value="{StaticResource BitmapCache}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Controls:Pushpin">
-					<Maps:Pushpin x:Name="Pushpin" Padding="5"
-								  Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}, RelativeSource={RelativeSource TemplatedParent}}">
+					<Maps:Pushpin x:Name="Pushpin"
+								  Padding="5"
+								  Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}, RelativeSource={RelativeSource TemplatedParent}}"
+								  Location="{Binding Location, RelativeSource={RelativeSource TemplatedParent}}">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="VisualStates">
 								<VisualStateGroup.Transitions>
@@ -176,7 +185,7 @@
 								<VisualState x:Name="Expanded">
 									<Storyboard>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -184,7 +193,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -192,7 +201,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -200,15 +209,15 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<DoubleAnimation Storyboard.TargetName="Content"
-											Storyboard.TargetProperty="(FrameworkElement.Width)"
-											Duration="0"
-											To="230"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(FrameworkElement.Width)"
+														 Duration="0"
+														 To="230"
+														 d:IsOptimized="True" />
 										<DoubleAnimation Storyboard.TargetName="Content"
-											Storyboard.TargetProperty="(FrameworkElement.Height)"
-											Duration="0"
-											To="138"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(FrameworkElement.Height)"
+														 Duration="0"
+														 To="138"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Collapsed" />
@@ -276,7 +285,8 @@
 												</DiscreteObjectKeyFrame.Value>
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="search2">
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchResultIndicator"
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -324,7 +334,15 @@
 						<Grid x:Name="Content"
 							  Height="48"
 							  Width="48">
-							<Icons:Search2 x:Name="search2" Background="{Binding Background, ElementName=Pushpin}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="32" Height="32" Margin="0,-20,-20,0" Foreground="{StaticResource PhoneBorderBrush}" Visibility="Collapsed" />
+							<Icons:Search2 x:Name="SearchResultIndicator"
+										   Height="32"
+										   Margin="0,-20,-20,0"
+										   Width="32"
+										   Background="{Binding Background, ElementName=Pushpin}"
+										   Foreground="{StaticResource PhoneBorderBrush}"
+										   HorizontalAlignment="Right"
+										   VerticalAlignment="Top"
+										   Visibility="Collapsed" />
 							<ContentPresenter Height="48"
 											  Width="48"
 											  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}, RelativeSource={RelativeSource TemplatedParent}}"
@@ -361,31 +379,35 @@
 										Visibility="Collapsed">
 								<Controls:ButtonCircle Margin="0,0,12,0"
 													   Padding="5"
-													   Caption="Detail">
+													   Caption="detail"
+													   Command="{Binding CommandViewDetail, RelativeSource={RelativeSource TemplatedParent}}"
+													   CommandParameter="{Binding CommandViewDetail, RelativeSource={RelativeSource TemplatedParent}}">
 									<Icons:Info />
 								</Controls:ButtonCircle>
 								<Controls:ButtonCircle Margin="0,0,12,0"
-													   Caption="depart">
+													   Caption="depart"
+													   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
+													   CommandParameter="{Binding CommandParameterDepart, RelativeSource={RelativeSource TemplatedParent}}">
 									<Icons:From />
 								</Controls:ButtonCircle>
 								<Controls:ButtonCircle Margin="0,0,12,0"
-													   Caption="go to">
+													   Caption="arrive"
+													   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
+													   CommandParameter="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}">
 									<Icons:To />
 								</Controls:ButtonCircle>
 								<Controls:ButtonCircle x:Name="ButtonDelete"
-													   Caption="delete">
-									<!--<Controls:ButtonCircle.Projection>
-										<PlaneProjection />
-									</Controls:ButtonCircle.Projection>-->
+													   Caption="delete"
+													   Command="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}"
+													   CommandParameter="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}">
 									<Icons:Delete />
 								</Controls:ButtonCircle>
 								<Controls:ButtonCircle x:Name="ButtonPin"
 													   Caption="keep"
+													   Command="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
+													   CommandParameter="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
 													   RenderTransformOrigin="0.5,0.5"
 													   Visibility="Collapsed">
-									<Controls:ButtonCircle.Projection>
-										<PlaneProjection />
-									</Controls:ButtonCircle.Projection>
 									<Icons:Pin />
 								</Controls:ButtonCircle>
 							</StackPanel>

@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using System.Device.Location;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Travlexer.WindowsPhone.Infrustructure.Entities;
 
 namespace Travlexer.WindowsPhone.Controls
@@ -30,6 +32,131 @@ namespace Travlexer.WindowsPhone.Controls
 			Color = pin.Color;
 #endif
 		}
+
+		#endregion
+
+
+		#region Commands
+
+		public ICommand CommandViewDetail
+		{
+			get { return (ICommand) GetValue(CommandViewDetailProperty); }
+			set { SetValue(CommandViewDetailProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandViewDetailProperty = DependencyProperty.Register(
+			"CommandViewDetail",
+			typeof (ICommand),
+			typeof (Pushpin),
+			null);
+
+		public object CommandParameterViewDetail
+		{
+			get { return GetValue(CommandParameterViewDetailProperty); }
+			set { SetValue(CommandParameterViewDetailProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandParameterViewDetailProperty = DependencyProperty.Register(
+			"CommandParameterViewDetail",
+			typeof (object),
+			typeof (Pushpin),
+			null);
+
+		public ICommand CommandDepart
+		{
+			get { return (ICommand) GetValue(CommandDepartProperty); }
+			set { SetValue(CommandDepartProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandDepartProperty = DependencyProperty.Register(
+			"CommandDepart",
+			typeof (ICommand),
+			typeof (Pushpin),
+			null);
+
+		public object CommandParameterDepart
+		{
+			get { return GetValue(CommandParameterDepartProperty); }
+			set { SetValue(CommandParameterDepartProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandParameterDepartProperty = DependencyProperty.Register(
+			"CommandParameterDepart",
+			typeof (object),
+			typeof (Pushpin),
+			null);
+
+		public ICommand CommandArrive
+		{
+			get { return (ICommand) GetValue(CommandArriveProperty); }
+			set { SetValue(CommandArriveProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandArriveProperty = DependencyProperty.Register(
+			"CommandArrive",
+			typeof (ICommand),
+			typeof (Pushpin),
+			null);
+
+		public object CommandParameterArrive
+		{
+			get { return GetValue(CommandParameterArriveProperty); }
+			set { SetValue(CommandParameterArriveProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandParameterArriveProperty = DependencyProperty.Register(
+			"CommandParameterArrive",
+			typeof (object),
+			typeof (Pushpin),
+			null);
+
+		public ICommand CommandDelete
+		{
+			get { return (ICommand) GetValue(CommandDeleteProperty); }
+			set { SetValue(CommandDeleteProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandDeleteProperty = DependencyProperty.Register(
+			"CommandDelete",
+			typeof (ICommand),
+			typeof (Pushpin),
+			null);
+
+		public object CommandParameterDelete
+		{
+			get { return GetValue(CommandParameterDeleteProperty); }
+			set { SetValue(CommandParameterDeleteProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandParameterDeleteProperty = DependencyProperty.Register(
+			"CommandParameterDelete",
+			typeof (object),
+			typeof (Pushpin),
+			null);
+
+		public ICommand CommandPinSearchResult
+		{
+			get { return (ICommand) GetValue(CommandPinSearchResultProperty); }
+			set { SetValue(CommandPinSearchResultProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandPinSearchResultProperty = DependencyProperty.Register(
+			"CommandPinSearchResult",
+			typeof (ICommand),
+			typeof (Pushpin),
+			null);
+
+		public object CommandParameterPinDearchResult
+		{
+			get { return GetValue(CommandParameterPinDearchResultProperty); }
+			set { SetValue(CommandParameterPinDearchResultProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandParameterPinDearchResultProperty = DependencyProperty.Register(
+			"CommandParameterPinDearchResult",
+			typeof (object),
+			typeof (Pushpin),
+			null);
 
 		#endregion
 
@@ -81,6 +208,18 @@ namespace Travlexer.WindowsPhone.Controls
 		public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
 			"Color",
 			typeof (PlaceColor),
+			typeof (Pushpin),
+			null);
+
+		public GeoCoordinate Location
+		{
+			get { return (GeoCoordinate) GetValue(LocationProperty); }
+			set { SetValue(LocationProperty, value); }
+		}
+
+		public static readonly DependencyProperty LocationProperty = DependencyProperty.Register(
+			"Location",
+			typeof (GeoCoordinate),
 			typeof (Pushpin),
 			null);
 
