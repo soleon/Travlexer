@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using Travelexer.WindowsPhone.Core.Extensions;
 using Travlexer.WindowsPhone.Models;
 using Travlexer.WindowsPhone.Services;
 
@@ -11,7 +12,7 @@ namespace Travlexer.WindowsPhone
 	{
 		#region Private Fields
 
-		private Services.GoogleMaps.IGoogleMapsClient _googleMapsClient;
+		private readonly Services.GoogleMaps.IGoogleMapsClient _googleMapsClient;
 
 		#endregion
 
@@ -56,8 +57,8 @@ namespace Travlexer.WindowsPhone
 		/// <summary>
 		/// Adds a new user pin.
 		/// </summary>
-		/// <param name="icon">The icon of the user pin.</param>
 		/// <param name="location">The location of the user pin.</param>
+		/// <param name="icon">The icon of the user pin.</param>
 		public void AddNewUserPin(Location location, PlaceIcon icon = default(PlaceIcon))
 		{
 			var pin = new UserPin(location) { Icon = icon };
@@ -106,9 +107,22 @@ namespace Travlexer.WindowsPhone
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
 		public void GetPlaceDetails(Place place, Action<CallbackEventArgs> callback = null)
 		{
+			if (!Globals.IsNetworkAvailable)
+			{
+				callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.NetworkUnavailable));
+				return;
+			}
+
 			_googleMapsClient.GetPlaceDetails(place.Location, args =>
 			{
 				// TODO: handle error properly. Check the HTTP status.
+				if (args.StatusCode != HttpStatusCode.OK)
+				{
+					var exception = args.ErrorException;
+					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs(CallbackStatus.ServiceException, exception) : new CallbackEventArgs(CallbackStatus.Unknown));
+					return;
+				}
+
 				var details = args.Data.Results.First();
 				if (place.Details == null)
 				{

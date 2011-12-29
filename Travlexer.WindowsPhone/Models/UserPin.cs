@@ -4,15 +4,21 @@ namespace Travlexer.WindowsPhone.Models
 {
 	public class UserPin : Place
 	{
+		#region Constants
+
+		private const string DefaultName = "My Pin";
+
+		#endregion
+
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Infrustructure.Entities.UserPin"/> class.
+		/// Initializes a new instance of the <see cref="UserPin"/> class.
 		/// </summary>
 		/// <param name="location">The geographical location of this pin.</param>
 		/// <param name="id">The ID of this pin.</param>
 		/// <param name="name">The name of this pin.</param>
-		public UserPin(Location location, Guid id = default(Guid), string name = "My Pin")
+		public UserPin(Location location, Guid id = default(Guid), string name = DefaultName)
 			: base(location)
 		{
 			Id = id == default(Guid) ? Guid.NewGuid() : id;

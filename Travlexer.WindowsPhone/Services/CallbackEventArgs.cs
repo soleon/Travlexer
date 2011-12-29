@@ -114,6 +114,11 @@ namespace Travlexer.WindowsPhone.Services
 		/// <summary>
 		/// The current session is invalid or expired.
 		/// </summary>
-		InvalidOrExpiredSession
+		InvalidOrExpiredSession,
+
+		/// <summary>
+		/// There's no network connection available.
+		/// </summary>
+		NetworkUnavailable
 	}
 }

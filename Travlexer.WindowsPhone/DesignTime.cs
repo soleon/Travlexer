@@ -35,7 +35,8 @@ namespace Travlexer.WindowsPhone
 					return null;
 				}
 				var data = Globals.DataContext = new DataContext(new GoogleMapsClientMock());
-				data.AddNewUserPin(new Location(9.1540930, -1.39166990));
+				data.AddNewUserPin(new Location(9.1540930, -1.39166990), PlaceIcon.Fuel);
+				data.AddNewUserPin(new Location(-76.016093664209961, -120.9375), PlaceIcon.Drink);
 				return _mapViewModel ?? (_mapViewModel = new MapViewModel());
 			}
 		}

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Travlexer.WindowsPhone.Extensions;
+using Travelexer.WindowsPhone.Core.Extensions;
 
 namespace Travlexer.WindowsPhone.Models
 {

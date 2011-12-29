@@ -54,6 +54,7 @@
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
+    <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
@@ -76,7 +77,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Controls\ButtonCircle.cs" />
     <Compile Include="Controls\Icons\ArrowRight.cs" />
     <Compile Include="Controls\Icons\Bicycle.cs" />
@@ -99,7 +99,6 @@
     <Compile Include="Converters\PlaceIconToControlConverter.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="DesignTime.cs" />
-    <Compile Include="Extensions\DelegateExtensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IDataContext.cs" />
     <Compile Include="Models\IModel.cs" />
@@ -118,6 +117,7 @@
     <Compile Include="ViewModels\DataViewModelBase.cs" />
     <Compile Include="ViewModels\IViewModel.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
+    <Compile Include="ViewModels\PushpinContentStates.cs" />
     <Compile Include="ViewModels\UserPinViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\MapView.xaml.cs">
@@ -163,7 +163,12 @@
     </Content>
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Travelexer.WindowsPhone.Core\Travelexer.WindowsPhone.Core.csproj">
+      <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
+      <Name>Travelexer.WindowsPhone.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

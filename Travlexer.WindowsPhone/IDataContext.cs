@@ -30,8 +30,8 @@ namespace Travlexer.WindowsPhone
 		/// <summary>
 		/// Adds a new user pin.
 		/// </summary>
-		/// <param name="icon">The icon of the user pin.</param>
 		/// <param name="location">The location of the user pin.</param>
+		/// <param name="icon">The icon of the user pin.</param>
 		void AddNewUserPin(Location location, PlaceIcon icon = default(PlaceIcon));
 
 		/// <summary>

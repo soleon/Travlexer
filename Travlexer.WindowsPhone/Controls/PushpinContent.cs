@@ -2,7 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.ViewModels;
 
 namespace Travlexer.WindowsPhone.Controls
 {
@@ -11,11 +13,7 @@ namespace Travlexer.WindowsPhone.Controls
 	/// </summary>
 	public class PushpinContent : Control
 	{
-		public enum States : byte
-		{
-			Collapsed = 0,
-			Expanded
-		}
+		
 
 
 		#region Constructors
@@ -35,6 +33,7 @@ namespace Travlexer.WindowsPhone.Controls
 			Title = pin.Name;
 			Address = pin.FormattedAddress;
 			Icon = pin.Icon;
+			State = PushpinContentStates.Expanded;
 #endif
 		}
 
@@ -168,17 +167,17 @@ namespace Travlexer.WindowsPhone.Controls
 
 		#region Public Properties
 
-		public States State
+		public PushpinContentStates State
 		{
-			get { return (States) GetValue(StateProperty); }
+			get { return (PushpinContentStates)GetValue(StateProperty); }
 			set { SetValue(StateProperty, value); }
 		}
 
 		public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
 			"State",
-			typeof (States),
+			typeof(PushpinContentStates),
 			typeof (PushpinContent),
-			new PropertyMetadata(default(States), OnStateChanged));
+			new PropertyMetadata(default(PushpinContentStates), OnStateChanged));
 
 		public string Title
 		{

@@ -3,7 +3,7 @@ using Travlexer.WindowsPhone.Models;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
-	public abstract class DataViewModelBase<T> : ViewModelBase where T: IModel
+	public abstract class DataViewModelBase<T> : ViewModelBase where T : IModel
 	{
 		#region Constructors
 
@@ -11,7 +11,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Initializes a new instance of the <see cref="DataViewModelBase&lt;T&gt;"/> class.
 		/// </summary>
 		/// <param name="data">The data.</param>
-		protected DataViewModelBase(T data)
+		/// <param name="parent">The logical parent view model that owns this view model.</param>
+		protected DataViewModelBase(T data, IViewModel parent = null)
+			: base(parent)
 		{
 			if (data.Equals(null))
 			{

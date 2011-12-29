@@ -4,6 +4,20 @@ namespace Travlexer.WindowsPhone.ViewModels
 {
 	public abstract class ViewModelBase : ModelBase, IViewModel
 	{
+		#region Constructors
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ViewModelBase"/> class.
+		/// </summary>
+		/// <param name="parent">The logical parent view model that owns this view model.</param>
+		internal ViewModelBase(IViewModel parent = null)
+		{
+			Parent = parent;
+		}
+
+		#endregion
+
+
 		#region Public Properties
 
 		/// <summary>
