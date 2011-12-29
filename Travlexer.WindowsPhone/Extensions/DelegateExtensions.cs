@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using Travlexer.WindowsPhone.Core.Commands;
+using Travlexer.WindowsPhone.Commands;
 
-namespace Travlexer.WindowsPhone.Core.Extensions
+namespace Travlexer.WindowsPhone.Extensions
 {
 	public static class DelegateExtensions
 	{

@@ -3,4 +3,5 @@
 					xmlns:Converters="clr-namespace:Travlexer.WindowsPhone.Converters">
 	<Converters:PlaceColorToHexConverter x:Key="PlaceColorToHexConverter" />
 	<Converters:PlaceIconToControlConverter x:Key="PlaceIconToControlConverter" />
+	<Converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
 </ResourceDictionary>

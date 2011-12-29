@@ -1,14 +1,13 @@
 using System;
-using Travlexer.WindowsPhone.Core;
 
-namespace Travlexer.WindowsPhone.Infrustructure.Entities
+namespace Travlexer.WindowsPhone.Models
 {
-	public abstract class Place : EntityBase
+	public class Place : ModelBase
 	{
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Place"/> class.
+		/// Initializes a new instance of the <see cref="Infrustructure.Entities.Place"/> class.
 		/// </summary>
 		/// <param name="location">The geographical location of this pin.</param>
 		protected Place(Location location)
@@ -43,22 +42,22 @@ namespace Travlexer.WindowsPhone.Infrustructure.Entities
 		private Location _location;
 		private const string LocationProperty = "Location";
 
-		public Address Address
+		public string FormattedAddress
 		{
-			get { return _address; }
-			set { SetProperty(ref _address, value, AddressProperty); }
+			get { return _formattedAddress; }
+			set { SetProperty(ref _formattedAddress, value, AddressProperty); }
 		}
 
-		private Address _address;
-		private const string AddressProperty = "Address";
+		private string _formattedAddress;
+		private const string AddressProperty = "FormattedAddress";
 
-		public PlaceDetail Detail
+		public PlaceDetails Details
 		{
 			get { return _detail; }
 			set { SetProperty(ref _detail, value, DetailProperty); }
 		}
 
-		private PlaceDetail _detail;
+		private PlaceDetails _detail;
 		private const string DetailProperty = "Detail";
 
 		public PlaceColor Color
@@ -86,7 +85,7 @@ namespace Travlexer.WindowsPhone.Infrustructure.Entities
 		{
 			Name = null;
 			Location = null;
-			Address = null;
+			FormattedAddress = null;
 			base.OnDispose();
 		}
 

@@ -3,7 +3,6 @@
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-					xmlns:mec="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Controls"
 					mc:Ignorable="d">
 	<Style TargetType="Icons:ArrowRight">
 		<Setter Property="Template">
@@ -114,6 +113,7 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
 	</Style>
 	<Style TargetType="Icons:Search">
 		<Setter Property="Template">
@@ -130,7 +130,11 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Search2">
-					<Path Data="M20,32 L4,48 M48,20 C48,28.836555 40.836555,36 32,36 C23.163445,36 16,28.836555 16,20 C16,11.163444 23.163445,4 32,4 C40.836555,4 48,11.163444 48,20 z" Fill="{TemplateBinding Background}" Stretch="Uniform" Stroke="{TemplateBinding Foreground}" StrokeThickness="4"/>
+					<Path Data="M20,32 L4,48 M48,20 C48,28.836555 40.836555,36 32,36 C23.163445,36 16,28.836555 16,20 C16,11.163444 23.163445,4 32,4 C40.836555,4 48,11.163444 48,20 z"
+						  Fill="{TemplateBinding Background}"
+						  Stretch="Uniform"
+						  Stroke="{TemplateBinding Foreground}"
+						  StrokeThickness="4" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

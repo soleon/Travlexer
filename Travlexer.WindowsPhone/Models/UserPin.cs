@@ -1,19 +1,16 @@
 using System;
 
-namespace Travlexer.WindowsPhone.Infrustructure.Entities
+namespace Travlexer.WindowsPhone.Models
 {
-	/// <summary>
-	/// Represents a user placed pin on the map.
-	/// </summary>
 	public class UserPin : Place
 	{
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="UserPin"/> class.
+		/// Initializes a new instance of the <see cref="Infrustructure.Entities.UserPin"/> class.
 		/// </summary>
-		/// <param name="id">The geographical location of this pin.</param>
-		/// <param name="name">The ID of this pin.</param>
+		/// <param name="location">The geographical location of this pin.</param>
+		/// <param name="id">The ID of this pin.</param>
 		/// <param name="name">The name of this pin.</param>
 		public UserPin(Location location, Guid id = default(Guid), string name = "My Pin")
 			: base(location)

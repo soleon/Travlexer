@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics;
 
-namespace Travlexer.WindowsPhone.Infrustructure.Entities
+namespace Travlexer.WindowsPhone.Models
 {
 	/// <summary>
 	/// Represents a geographical location.
 	/// </summary>
+	[DebuggerDisplay("{Latitude,nq}, {Longitude,nq}")]
 	public class Location
 	{
 		#region Constructors
@@ -28,10 +30,26 @@ namespace Travlexer.WindowsPhone.Infrustructure.Entities
 
 		#endregion
 
+
 		#region Public Properties
 
 		public double Latitude { get; private set; }
 		public double Longitude { get; private set; }
+
+		#endregion
+
+
+		#region Operators
+
+		public static implicit operator System.Device.Location.GeoCoordinate(Location location)
+		{
+			return new System.Device.Location.GeoCoordinate(location.Latitude, location.Longitude);
+		}
+
+		public static implicit operator Location(System.Device.Location.GeoCoordinate coordinate)
+		{
+			return new Location(coordinate.Latitude, coordinate.Longitude);
+		}
 
 		#endregion
 	}

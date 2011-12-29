@@ -1,8 +1,8 @@
 using System;
 using System.Windows.Input;
-using Travlexer.WindowsPhone.Core.Extensions;
+using Travlexer.WindowsPhone.Extensions;
 
-namespace Travlexer.WindowsPhone.Core.Commands
+namespace Travlexer.WindowsPhone.Commands
 {
 	/// <summary>
 	/// The DelegateCommand provides an implementation of <see cref="ICommand"/>

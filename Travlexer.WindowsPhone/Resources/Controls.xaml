@@ -2,8 +2,6 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-					xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
-					xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
 					xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -90,17 +88,15 @@
 				<SolidColorBrush Color="#66000000" />
 			</Setter.Value>
 		</Setter>
+		<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
 	</Style>
-	<Style TargetType="Controls:Pushpin">
-		<Setter Property="CacheMode"
-				Value="{StaticResource BitmapCache}" />
+	<Style TargetType="Controls:PushpinContent">
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="Controls:Pushpin">
-					<Maps:Pushpin x:Name="Pushpin"
-								  Padding="5"
-								  Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}, RelativeSource={RelativeSource TemplatedParent}}"
-								  Location="{Binding Location, RelativeSource={RelativeSource TemplatedParent}}">
+				<ControlTemplate TargetType="Controls:PushpinContent">
+					<Grid x:Name="Content"
+						  Height="32"
+						  Width="32" Background="{TemplateBinding Background}">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="VisualStates">
 								<VisualStateGroup.Transitions>
@@ -185,7 +181,7 @@
 								<VisualState x:Name="Expanded">
 									<Storyboard>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -193,7 +189,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -201,7 +197,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -209,15 +205,16 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<DoubleAnimation Storyboard.TargetName="Content"
-														 Storyboard.TargetProperty="(FrameworkElement.Width)"
-														 Duration="0"
-														 To="230"
-														 d:IsOptimized="True" />
+											Storyboard.TargetProperty="(FrameworkElement.Width)"
+											Duration="0"
+											To="230"
+											d:IsOptimized="True" />
 										<DoubleAnimation Storyboard.TargetName="Content"
-														 Storyboard.TargetProperty="(FrameworkElement.Height)"
-														 Duration="0"
-														 To="138"
-														 d:IsOptimized="True" />
+											Storyboard.TargetProperty="(FrameworkElement.Height)"
+											Duration="0"
+											To="138"
+											d:IsOptimized="True" />
+										<DoubleAnimation Duration="0" To="{StaticResource PhoneFontSizeSmall}" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="Address" d:IsOptimized="True"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Collapsed" />
@@ -297,124 +294,119 @@
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
-						<Maps:Pushpin.Template>
-							<ControlTemplate TargetType="Maps:Pushpin">
-								<Grid>
-									<Ellipse Height="50"
-											 Margin="-25,0,0,-25"
-											 Width="50"
-											 Fill="Transparent"
-											 HorizontalAlignment="Left"
-											 VerticalAlignment="Bottom" />
-									<Border Margin="0,0,0,23"
-											Padding="{TemplateBinding Padding}"
-											Background="{TemplateBinding Background}"
-											BorderBrush="{StaticResource PhoneForegroundBrush}"
-											BorderThickness="2"
-											UseLayoutRounding="True">
-										<ContentPresenter />
-									</Border>
-									<Path Data="M1,1 L1,25 L25,1"
-										  Fill="{TemplateBinding Background}"
+						<Icons:Search2 x:Name="SearchResultIndicator"
+									   Height="32"
+									   Margin="0,-20,-20,0"
+									   Width="32"
+									   Background="{Binding Background, ElementName=Pushpin}"
+									   Foreground="{StaticResource PhoneBorderBrush}"
+									   HorizontalAlignment="Right"
+									   VerticalAlignment="Top"
+									   Visibility="Collapsed" />
+						<ContentPresenter Height="32"
+										  Width="32"
+										  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}, RelativeSource={RelativeSource TemplatedParent}}"
 										  HorizontalAlignment="Left"
-										  Stroke="{StaticResource PhoneForegroundBrush}"
-										  StrokeThickness="2"
-										  VerticalAlignment="Bottom" />
-								</Grid>
-							</ControlTemplate>
-						</Maps:Pushpin.Template>
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="MouseLeftButtonDown">
-								<ec:GoToStateAction StateName="Expanded" />
-							</i:EventTrigger>
-							<i:EventTrigger EventName="MouseLeftButtonUp">
-								<ec:GoToStateAction StateName="Collapsed" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-						<Grid x:Name="Content"
-							  Height="48"
-							  Width="48">
-							<Icons:Search2 x:Name="SearchResultIndicator"
-										   Height="32"
-										   Margin="0,-20,-20,0"
-										   Width="32"
-										   Background="{Binding Background, ElementName=Pushpin}"
-										   Foreground="{StaticResource PhoneBorderBrush}"
-										   HorizontalAlignment="Right"
-										   VerticalAlignment="Top"
-										   Visibility="Collapsed" />
-							<ContentPresenter Height="48"
-											  Width="48"
-											  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}, RelativeSource={RelativeSource TemplatedParent}}"
-											  HorizontalAlignment="Left"
-											  VerticalAlignment="Top" />
-							<TextBlock x:Name="Title"
-									   Height="24"
-									   Margin="55,0,0,0"
-									   Width="180"
-									   FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-									   HorizontalAlignment="Left"
-									   Text="{TemplateBinding Title}"
-									   TextTrimming="WordEllipsis"
-									   VerticalAlignment="Top"
-									   Visibility="Collapsed" />
-							<TextBlock x:Name="Address"
-									   Height="50"
-									   Margin="55,25,0,0"
-									   Width="180"
-									   FontFamily="{StaticResource PhoneFontFamilyLight}"
-									   HorizontalAlignment="Left"
-									   Text="{TemplateBinding Address}"
-									   TextTrimming="WordEllipsis"
-									   TextWrapping="Wrap"
-									   VerticalAlignment="Top"
-									   Visibility="Collapsed" />
-							<StackPanel x:Name="ButtonPanel"
-										Height="65"
-										Margin="0,75,0,0"
-										Width="228"
-										HorizontalAlignment="Left"
-										Orientation="Horizontal"
-										VerticalAlignment="Top"
-										Visibility="Collapsed">
-								<Controls:ButtonCircle Margin="0,0,12,0"
-													   Padding="5"
-													   Caption="detail"
-													   Command="{Binding CommandViewDetail, RelativeSource={RelativeSource TemplatedParent}}"
-													   CommandParameter="{Binding CommandViewDetail, RelativeSource={RelativeSource TemplatedParent}}">
-									<Icons:Info />
-								</Controls:ButtonCircle>
-								<Controls:ButtonCircle Margin="0,0,12,0"
-													   Caption="depart"
-													   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
-													   CommandParameter="{Binding CommandParameterDepart, RelativeSource={RelativeSource TemplatedParent}}">
-									<Icons:From />
-								</Controls:ButtonCircle>
-								<Controls:ButtonCircle Margin="0,0,12,0"
-													   Caption="arrive"
-													   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
-													   CommandParameter="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}">
-									<Icons:To />
-								</Controls:ButtonCircle>
-								<Controls:ButtonCircle x:Name="ButtonDelete"
-													   Caption="delete"
-													   Command="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}"
-													   CommandParameter="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}">
-									<Icons:Delete />
-								</Controls:ButtonCircle>
-								<Controls:ButtonCircle x:Name="ButtonPin"
-													   Caption="keep"
-													   Command="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
-													   CommandParameter="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
-													   RenderTransformOrigin="0.5,0.5"
-													   Visibility="Collapsed">
-									<Icons:Pin />
-								</Controls:ButtonCircle>
-							</StackPanel>
-						</Grid>
-					</Maps:Pushpin>
+										  VerticalAlignment="Top" />
+						<TextBlock x:Name="Title"
+								   Height="24"
+								   Margin="40,0,0,0"
+								   Width="180"
+								   FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+								   HorizontalAlignment="Left"
+								   Text="{TemplateBinding Title}"
+								   TextTrimming="WordEllipsis"
+								   VerticalAlignment="Top"
+								   Visibility="Collapsed" FontSize="{StaticResource PhoneFontSizeNormal}" />
+						<TextBlock x:Name="Address"
+								   Height="50"
+								   Margin="40,25,0,0"
+								   Width="180"
+								   FontFamily="{StaticResource PhoneFontFamilyLight}"
+								   HorizontalAlignment="Left"
+								   Text="{TemplateBinding Address}"
+								   TextTrimming="WordEllipsis"
+								   TextWrapping="Wrap"
+								   VerticalAlignment="Top"
+								   Visibility="Collapsed" FontSize="{StaticResource PhoneFontSizeSmall}" />
+						<StackPanel x:Name="ButtonPanel"
+									Height="65"
+									Margin="0,75,0,0"
+									Width="228"
+									HorizontalAlignment="Left"
+									Orientation="Horizontal"
+									VerticalAlignment="Top"
+									Visibility="Collapsed">
+							<Controls:ButtonCircle Margin="0,0,12,0"
+												   Padding="5"
+												   Caption="detail"
+												   Command="{Binding CommandViewDetail, RelativeSource={RelativeSource TemplatedParent}}"
+												   CommandParameter="{Binding CommandViewDetail, RelativeSource={RelativeSource TemplatedParent}}">
+								<Icons:Info />
+							</Controls:ButtonCircle>
+							<Controls:ButtonCircle Margin="0,0,12,0"
+												   Caption="depart"
+												   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
+												   CommandParameter="{Binding CommandParameterDepart, RelativeSource={RelativeSource TemplatedParent}}">
+								<Icons:From />
+							</Controls:ButtonCircle>
+							<Controls:ButtonCircle Margin="0,0,12,0"
+												   Caption="arrive"
+												   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
+												   CommandParameter="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}">
+								<Icons:To />
+							</Controls:ButtonCircle>
+							<Controls:ButtonCircle x:Name="ButtonDelete"
+												   Caption="delete"
+												   Command="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}"
+												   CommandParameter="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}">
+								<Icons:Delete />
+							</Controls:ButtonCircle>
+							<Controls:ButtonCircle x:Name="ButtonPin"
+												   Caption="keep"
+												   Command="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
+												   CommandParameter="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
+												   RenderTransformOrigin="0.5,0.5"
+												   Visibility="Collapsed">
+								<Icons:Pin />
+							</Controls:ButtonCircle>
+						</StackPanel>
+					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+	</Style>
+	<Style TargetType="Maps:Pushpin">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Maps:Pushpin">
+					<Grid>
+						<Ellipse Height="50"
+								 Margin="-25,0,0,-25"
+								 Width="50"
+								 Fill="Transparent"
+								 HorizontalAlignment="Left"
+								 VerticalAlignment="Bottom" />
+						<Border Margin="0,0,0,23"
+								Padding="{TemplateBinding Padding}"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{StaticResource PhoneForegroundBrush}"
+								BorderThickness="2"
+								UseLayoutRounding="True">
+							<ContentPresenter />
+						</Border>
+						<Path Data="M1,1 L12.5,25 L25,1"
+							  Fill="{TemplateBinding Background}"
+							  HorizontalAlignment="Center"
+							  Stroke="{StaticResource PhoneForegroundBrush}"
+							  StrokeThickness="2"
+							  VerticalAlignment="Bottom" />
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Padding" Value="5"/>
+		<Setter Property="CacheMode" Value="BitmapCache"/>
 	</Style>
 </ResourceDictionary>

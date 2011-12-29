@@ -1,7 +1,7 @@
-namespace Travlexer.WindowsPhone.Infrustructure.Entities
+namespace Travlexer.WindowsPhone.Models
 {
 	/// <summary>
-	/// Defines the available icons for a <see cref="Place"/>.
+	/// Defines the available icons for a <see cref="Infrustructure.Entities.Place"/>.
 	/// </summary>
 	public enum PlaceIcon : byte
 	{

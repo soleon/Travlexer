@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Travlexer.WindowsPhone.Core;
 
-namespace Travlexer.WindowsPhone.Infrustructure.Entities
+namespace Travlexer.WindowsPhone.Models
 {
-	public class Route : EntityBase
+	public class Route : ModelBase
 	{
 		#region Public Properties
 

@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel;
-using Travlexer.WindowsPhone.Infrustructure.Entities;
+using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Services.GoogleMaps;
+using Travlexer.WindowsPhone.ViewModels;
+using Location = Travlexer.WindowsPhone.Models.Location;
 
 namespace Travlexer.WindowsPhone
 {
@@ -15,13 +18,28 @@ namespace Travlexer.WindowsPhone
 					return null;
 				}
 				return _userPin ?? (_userPin = new UserPin(
-					new Location(-33.91, 151.21), name: "Jason's New Place")
+					new Location(9.1540930, -1.39166990), name: "Jason's New Place")
 					{
-						Address = new Address { FormattedAddress = "235 South Dowling St, Darlington NSW 2017, Australia" }
+						FormattedAddress = "235 South Dowling St, Darlington NSW 2017, Australia"
 					});
 			}
 		}
 		private UserPin _userPin;
+
+		public MapViewModel MapViewModel
+		{
+			get
+			{
+				if (!DesignerProperties.IsInDesignTool)
+				{
+					return null;
+				}
+				var data = Globals.DataContext = new DataContext(new GoogleMapsClientMock());
+				data.AddNewUserPin(new Location(9.1540930, -1.39166990));
+				return _mapViewModel ?? (_mapViewModel = new MapViewModel());
+			}
+		}
+		private MapViewModel _mapViewModel;
 #endif
 	}
 }

@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
+﻿using System.Windows.Input;
+using Microsoft.Phone.Controls.Maps;
+using Travlexer.WindowsPhone.Extensions;
+using Travlexer.WindowsPhone.ViewModels;
 
-namespace Travlexer_WindowsPhone
+namespace Travlexer.WindowsPhone.Views
 {
-    public partial class MapView : PhoneApplicationPage
-    {
-        public MapView()
-        {
-            InitializeComponent();
-        }
-    }
+	public partial class MapView
+	{
+		private MapViewModel _context;
+
+		public MapView()
+		{
+			InitializeComponent();
+			_context = DataContext as MapViewModel;
+		}
+
+		private void MapHold(object sender, GestureEventArgs e)
+		{
+			var map = sender as Map;
+			var coordinate = map.ViewportPointToLocation(e.GetPosition(map));
+			_context.CommandAddUserPin.ExecuteIfNotNull(coordinate);
+		}
+	}
 }

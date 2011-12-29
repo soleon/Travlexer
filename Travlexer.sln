@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travlexer.WindowsPhone", "Travlexer.WindowsPhone\Travlexer.WindowsPhone.csproj", "{FA109FC3-77E0-4C8D-BE04-9C660DB18634}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travlexer.WindowsPhone.Infrustructure", "Travlexer.WindowsPhone.Infrustructure\Travlexer.WindowsPhone.Infrustructure.csproj", "{70DDDE02-5CC0-47AF-ABA9-EA4C853DAA92}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travlexer.WindowsPhone.Core", "Travlexer.WindowsPhone.Core\Travlexer.WindowsPhone.Core.csproj", "{A70A1D13-1874-442F-BB5F-AE765C12FD6A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,14 +15,6 @@ Global
 		{FA109FC3-77E0-4C8D-BE04-9C660DB18634}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA109FC3-77E0-4C8D-BE04-9C660DB18634}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA109FC3-77E0-4C8D-BE04-9C660DB18634}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{70DDDE02-5CC0-47AF-ABA9-EA4C853DAA92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70DDDE02-5CC0-47AF-ABA9-EA4C853DAA92}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70DDDE02-5CC0-47AF-ABA9-EA4C853DAA92}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70DDDE02-5CC0-47AF-ABA9-EA4C853DAA92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A70A1D13-1874-442F-BB5F-AE765C12FD6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A70A1D13-1874-442F-BB5F-AE765C12FD6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A70A1D13-1874-442F-BB5F-AE765C12FD6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A70A1D13-1874-442F-BB5F-AE765C12FD6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

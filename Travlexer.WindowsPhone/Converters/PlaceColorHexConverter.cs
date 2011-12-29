@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
-using Travlexer.WindowsPhone.Infrustructure.Entities;
+using Travlexer.WindowsPhone.Models;
+
 namespace Travlexer.WindowsPhone.Converters
 {
 	public class PlaceColorToHexConverter : IValueConverter

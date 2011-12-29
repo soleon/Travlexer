@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using Travlexer.WindowsPhone.Core.Extensions;
+﻿using System.ComponentModel;
+using Travlexer.WindowsPhone.Extensions;
 
-namespace Travlexer.WindowsPhone.Core
+namespace Travlexer.WindowsPhone.Models
 {
-	public abstract class EntityBase : INotifyPropertyChanged, IDisposable
+	public abstract class ModelBase : IModel
 	{
 		#region Public Events
 
@@ -34,7 +33,7 @@ namespace Travlexer.WindowsPhone.Core
 			}
 		}
 
-		protected virtual void OnDispose() { }
+		protected virtual void OnDispose() {}
 
 		#endregion
 

@@ -1,4 +1,4 @@
-namespace Travlexer.WindowsPhone.Infrustructure.Entities
+namespace Travlexer.WindowsPhone.Models
 {
 	/// <summary>
 	/// Represents a search result pin on the map.
