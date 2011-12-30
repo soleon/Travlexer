@@ -1,22 +1,33 @@
 using System;
+using Travelexer.WindowsPhone.Core.Models;
 
 namespace Travlexer.WindowsPhone.Models
 {
 	public class Place : ModelBase
 	{
+		#region Constants
+
+		private const string DefaultName = "My Place";
+
+		#endregion
+
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Infrustructure.Entities.Place"/> class.
+		/// Initializes a new instance of the <see cref="Place"/> class.
 		/// </summary>
 		/// <param name="location">The geographical location of this pin.</param>
-		protected Place(Location location)
+		/// <param name="id">The ID of this place.</param>
+		/// <param name="name">The name of this place.</param>
+		public Place(Location location, Guid id = default(Guid), string name = DefaultName)
 		{
 			if (location == null)
 			{
-				throw new ArgumentNullException("location", "Location is required in order to create a pin.");
+				throw new ArgumentNullException("location", "Location is required in order to create a place.");
 			}
 			Location = location;
+			Id = id == default(Guid) ? Guid.NewGuid() : id;
+			Name = name;
 		}
 
 		#endregion
@@ -76,6 +87,32 @@ namespace Travlexer.WindowsPhone.Models
 		private PlaceIcon _icon;
 		private const string IconProperty = "Icon";
 
+		public bool IsSearchResult
+		{
+			get { return _isSearchResult; }
+			set { SetProperty(ref _isSearchResult, value, IsSearchResultProperty); }
+		}
+		private bool _isSearchResult;
+		private const string IsSearchResultProperty = "IsSearchResult";
+
+		public Guid Id
+		{
+			get { return _id; }
+			set { SetProperty(ref _id, value, IdProperty); }
+		}
+
+		private Guid _id;
+		private const string IdProperty = "Id";
+
+		public string Note
+		{
+			get { return _note; }
+			set { SetProperty(ref _note, value, NoteProperty); }
+		}
+
+		private string _note;
+		private const string NoteProperty = "Note";
+
 		#endregion
 
 
@@ -86,6 +123,13 @@ namespace Travlexer.WindowsPhone.Models
 			Name = null;
 			Location = null;
 			FormattedAddress = null;
+			Note = null;
+			if (Details != null)
+			{
+				var details = Details;
+				Details = null;
+				details.Dispose();
+			}
 			base.OnDispose();
 		}
 

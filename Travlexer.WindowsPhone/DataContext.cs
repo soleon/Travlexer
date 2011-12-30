@@ -23,8 +23,7 @@ namespace Travlexer.WindowsPhone
 		/// </summary>
 		public DataContext(Services.GoogleMaps.IGoogleMapsClient googleMapsClient = null)
 		{
-			UserPins = new ReadOnlyObservableCollection<UserPin>(_userPins);
-			SearchResults = new ReadOnlyObservableCollection<SearchResult>(_searchResults);
+			Places = new ReadOnlyObservableCollection<Place>(_places);
 
 			_googleMapsClient = googleMapsClient ?? new Services.GoogleMaps.GoogleMapsClient();
 		}
@@ -38,16 +37,9 @@ namespace Travlexer.WindowsPhone
 		/// <summary>
 		/// Gets the collection that contains all user pins.
 		/// </summary>
-		public ReadOnlyObservableCollection<UserPin> UserPins { get; private set; }
+		public ReadOnlyObservableCollection<Place> Places { get; private set; }
 
-		private readonly ObservableCollection<UserPin> _userPins = new ObservableCollection<UserPin>();
-
-		/// <summary>
-		/// Gets the collection that contains all search results.
-		/// </summary>
-		public ReadOnlyObservableCollection<SearchResult> SearchResults { get; private set; }
-
-		private readonly ObservableCollection<SearchResult> _searchResults = new ObservableCollection<SearchResult>();
+		private readonly ObservableCollection<Place> _places = new ObservableCollection<Place>();
 
 		#endregion
 
@@ -55,49 +47,48 @@ namespace Travlexer.WindowsPhone
 		#region Public Methods
 
 		/// <summary>
-		/// Adds a new user pin.
+		/// Adds a new place.
 		/// </summary>
-		/// <param name="location">The location of the user pin.</param>
-		/// <param name="icon">The icon of the user pin.</param>
-		public void AddNewUserPin(Location location, PlaceIcon icon = default(PlaceIcon))
+		/// <param name="location">The location of the place.</param>
+		/// <param name="icon">The icon of the place.</param>
+		/// <param name="callback">The action to execute after the process is finished.</param>
+		public Place AddNewPlace(Location location, PlaceIcon icon = default(PlaceIcon), Action<CallbackEventArgs> callback = null)
 		{
-			var pin = new UserPin(location) { Icon = icon };
-			_userPins.Add(pin);
-			GetPlaceDetails(pin);
+			var p = new Place(location) { Icon = icon };
+			_places.Add(p);
+			GetPlaceDetails(p, callback);
+			return p;
 		}
 
 		/// <summary>
-		/// Removes the existing user pin.
+		/// Removes the existing place.
 		/// </summary>
-		/// <param name="userPin">The pin.</param>
-		public void RemovePin(UserPin userPin)
+		/// <param name="place">The place to be removed.</param>
+		public void RemovePlace(Place place)
 		{
-			_userPins.Remove(userPin);
+			_places.Remove(place);
 		}
 
 		/// <summary>
-		/// Removes all user pins.
+		/// Removes all places.
 		/// </summary>
-		public void ClearUserPins()
+		public void ClearPlaces()
 		{
-			_userPins.Clear();
-		}
-
-		/// <summary>
-		/// Removes the search result.
-		/// </summary>
-		/// <param name="result">The result to be removed.</param>
-		public void RemoveSearchResult(SearchResult result)
-		{
-			_searchResults.Remove(result);
+			_places.Clear();
 		}
 
 		/// <summary>
 		/// Removes all search results.
 		/// </summary>
-		public void ClearSearchResults()
+		public void ClearUnPinnedPlaces()
 		{
-			_searchResults.Clear();
+			for (var i = _places.Count; i >= 0; i--)
+			{
+				if (!_places[i].IsSearchResult)
+				{
+					_places.RemoveAt(i);
+				}
+			}
 		}
 
 		/// <summary>
@@ -115,7 +106,6 @@ namespace Travlexer.WindowsPhone
 
 			_googleMapsClient.GetPlaceDetails(place.Location, args =>
 			{
-				// TODO: handle error properly. Check the HTTP status.
 				if (args.StatusCode != HttpStatusCode.OK)
 				{
 					var exception = args.ErrorException;
@@ -133,6 +123,7 @@ namespace Travlexer.WindowsPhone
 					place.Details.ContactNumber = details.FormattedPhoneNumber;
 				}
 				place.FormattedAddress = details.FormattedAddress;
+				callback.ExecuteIfNotNull(new CallbackEventArgs());
 			});
 		}
 

@@ -1,6 +1,6 @@
-﻿using Travlexer.WindowsPhone.Models;
+﻿using Travelexer.WindowsPhone.Core.Models;
 
-namespace Travlexer.WindowsPhone.ViewModels
+namespace Travelexer.WindowsPhone.Core.ViewModels
 {
 	public abstract class ViewModelBase : ModelBase, IViewModel
 	{
@@ -10,7 +10,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Initializes a new instance of the <see cref="ViewModelBase"/> class.
 		/// </summary>
 		/// <param name="parent">The logical parent view model that owns this view model.</param>
-		internal ViewModelBase(IViewModel parent = null)
+		protected ViewModelBase(IViewModel parent = null)
 		{
 			Parent = parent;
 		}

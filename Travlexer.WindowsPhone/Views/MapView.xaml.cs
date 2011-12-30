@@ -28,7 +28,7 @@ namespace Travlexer.WindowsPhone.Views
 		private void OnMapHold(object sender, GestureEventArgs e)
 		{
 			var coordinate = Map.ViewportPointToLocation(e.GetPosition(Map));
-			_context.CommandAddUserPin.ExecuteIfNotNull(coordinate);
+			_context.CommandAddPlace.ExecuteIfNotNull(coordinate);
 		}
 
 		#endregion

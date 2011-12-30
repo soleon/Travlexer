@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Travelexer.WindowsPhone.Core.Models;
 
 namespace Travlexer.WindowsPhone.Models
 {

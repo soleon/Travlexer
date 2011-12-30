@@ -4,4 +4,6 @@
 	<Converters:PlaceColorToHexConverter x:Key="PlaceColorToHexConverter" />
 	<Converters:PlaceIconToControlConverter x:Key="PlaceIconToControlConverter" />
 	<Converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
+	<Converters:PushpinHighlightStateToOpacityConverter x:Key="PushpinHighlightStateToOpacityConverter" />
+	<Converters:PushpinHighlightStateToHitTestVisibilityConverter x:Key="PushpinHighlightStateToHitTestVisibilityConverter" />
 </ResourceDictionary>

@@ -1,4 +1,6 @@
-﻿namespace Travlexer.WindowsPhone.Models
+﻿using Travelexer.WindowsPhone.Core.Models;
+
+namespace Travlexer.WindowsPhone.Models
 {
 	public class PlaceDetails : ModelBase
 	{

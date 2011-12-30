@@ -203,12 +203,6 @@ namespace Travelexer.WindowsPhone.Core.Collections
 					continue;
 				}
 
-				var target = this[startingIndex];
-				if (target is IDisposable)
-				{
-					((IDisposable)target).Dispose();
-				}
-
 				RemoveAt(startingIndex);
 			}
 		}
@@ -227,11 +221,6 @@ namespace Travelexer.WindowsPhone.Core.Collections
 			}
 			else
 			{
-				var target = this[index];
-				if (target is IDisposable)
-				{
-					((IDisposable)target).Dispose();
-				}
 				RemoveAt(index);
 			}
 		}
@@ -241,10 +230,6 @@ namespace Travelexer.WindowsPhone.Core.Collections
 		/// </summary>
 		private void OnSourceReset()
 		{
-			foreach (var item in this.OfType<IDisposable>())
-			{
-				item.Dispose();
-			}
 			Clear();
 		}
 

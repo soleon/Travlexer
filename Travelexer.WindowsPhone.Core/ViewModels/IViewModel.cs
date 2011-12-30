@@ -1,6 +1,6 @@
-using Travlexer.WindowsPhone.Models;
+using Travelexer.WindowsPhone.Core.Models;
 
-namespace Travlexer.WindowsPhone.ViewModels
+namespace Travelexer.WindowsPhone.Core.ViewModels
 {
 	public interface IViewModel : IModel
 	{

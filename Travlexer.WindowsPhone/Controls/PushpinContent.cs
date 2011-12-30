@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using Travlexer.WindowsPhone.Models;
 using Travlexer.WindowsPhone.ViewModels;
 
@@ -11,9 +10,50 @@ namespace Travlexer.WindowsPhone.Controls
 	/// <summary>
 	/// Represents a pushpin on a map.
 	/// </summary>
+	[TemplateVisualState(GroupName = GROUP_VisualStates, Name = STATE_Expanded)]
+	[TemplateVisualState(GroupName = GROUP_VisualStates, Name = STATE_Collapsed)]
+	[TemplateVisualState(GroupName = GROUP_PinTypeStates, Name = STATE_SearchResult)]
+	[TemplateVisualState(GroupName = GROUP_PinTypeStates, Name = STATE_UserPin)]
+	[TemplateVisualState(GroupName = GROUP_WorkingStates, Name = STATE_Idle)]
+	[TemplateVisualState(GroupName = GROUP_WorkingStates, Name = STATE_Working)]
+	[TemplateVisualState(GroupName = GROUP_WorkingStates, Name = STATE_Error)]
+	[TemplatePart(Name = PART_Content, Type = typeof (Panel))]
+	[TemplatePart(Name = PART_SearchResultIndicator, Type = typeof (Control))]
+	[TemplatePart(Name = PART_Title, Type = typeof (TextBlock))]
+	[TemplatePart(Name = PART_Address, Type = typeof (TextBlock))]
+	[TemplatePart(Name = PART_GeoCoordinate, Type = typeof (TextBlock))]
+	[TemplatePart(Name = PART_WorkingText, Type = typeof (TextBlock))]
+	[TemplatePart(Name = PART_ButtonPanel, Type = typeof (Panel))]
+	[TemplatePart(Name = PART_ButtonDelete, Type = typeof (Button))]
+	[TemplatePart(Name = PART_ButtonPin, Type = typeof (Button))]
 	public class PushpinContent : Control
 	{
-		
+		#region MyRegion
+
+		// Visual states and groups name.
+		private const string GROUP_VisualStates = "VisualStates";
+		private const string STATE_Expanded = "Expanded";
+		private const string STATE_Collapsed = "Collapsed";
+		private const string GROUP_PinTypeStates = "PinTypeStates";
+		private const string STATE_SearchResult = "SearchResult";
+		private const string STATE_UserPin = "UserPin";
+		private const string GROUP_WorkingStates = "WorkingStates";
+		private const string STATE_Idle = "Idle";
+		private const string STATE_Working = "Working";
+		private const string STATE_Error = "Error";
+
+		// Template parts name.
+		private const string PART_Content = "Content";
+		private const string PART_SearchResultIndicator = "SearchResultIndicator";
+		private const string PART_Title = "Title";
+		private const string PART_Address = "Address";
+		private const string PART_GeoCoordinate = "GeoCoordinate";
+		private const string PART_WorkingText = "WorkingText";
+		private const string PART_ButtonPanel = "ButtonPanel";
+		private const string PART_ButtonDelete = "ButtonDelete";
+		private const string PART_ButtonPin = "ButtonPin";
+
+		#endregion
 
 
 		#region Constructors
@@ -33,7 +73,8 @@ namespace Travlexer.WindowsPhone.Controls
 			Title = pin.Name;
 			Address = pin.FormattedAddress;
 			Icon = pin.Icon;
-			State = PushpinContentStates.Expanded;
+			VisualState = PushpinContentVisualStates.Expanded;
+			Location = pin.Location;
 #endif
 		}
 
@@ -42,26 +83,26 @@ namespace Travlexer.WindowsPhone.Controls
 
 		#region Commands
 
-		public ICommand CommandViewDetail
+		public ICommand CommandViewDetails
 		{
-			get { return (ICommand) GetValue(CommandViewDetailProperty); }
-			set { SetValue(CommandViewDetailProperty, value); }
+			get { return (ICommand) GetValue(CommandViewDetailsProperty); }
+			set { SetValue(CommandViewDetailsProperty, value); }
 		}
 
-		public static readonly DependencyProperty CommandViewDetailProperty = DependencyProperty.Register(
-			"CommandViewDetail",
+		public static readonly DependencyProperty CommandViewDetailsProperty = DependencyProperty.Register(
+			"CommandViewDetails",
 			typeof (ICommand),
 			typeof (PushpinContent),
 			null);
 
-		public object CommandParameterViewDetail
+		public object CommandViewDetailsParameter
 		{
-			get { return GetValue(CommandParameterViewDetailProperty); }
-			set { SetValue(CommandParameterViewDetailProperty, value); }
+			get { return GetValue(CommandViewDetailsParameterProperty); }
+			set { SetValue(CommandViewDetailsParameterProperty, value); }
 		}
 
-		public static readonly DependencyProperty CommandParameterViewDetailProperty = DependencyProperty.Register(
-			"CommandParameterViewDetail",
+		public static readonly DependencyProperty CommandViewDetailsParameterProperty = DependencyProperty.Register(
+			"CommandViewDetailsParameter",
 			typeof (object),
 			typeof (PushpinContent),
 			null);
@@ -78,14 +119,14 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			null);
 
-		public object CommandParameterDepart
+		public object CommandDepartParameter
 		{
-			get { return GetValue(CommandParameterDepartProperty); }
-			set { SetValue(CommandParameterDepartProperty, value); }
+			get { return GetValue(CommandDepartParameterProperty); }
+			set { SetValue(CommandDepartParameterProperty, value); }
 		}
 
-		public static readonly DependencyProperty CommandParameterDepartProperty = DependencyProperty.Register(
-			"CommandParameterDepart",
+		public static readonly DependencyProperty CommandDepartParameterProperty = DependencyProperty.Register(
+			"CommandDepartParameter",
 			typeof (object),
 			typeof (PushpinContent),
 			null);
@@ -102,14 +143,14 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			null);
 
-		public object CommandParameterArrive
+		public object CommandArriveParameter
 		{
-			get { return GetValue(CommandParameterArriveProperty); }
-			set { SetValue(CommandParameterArriveProperty, value); }
+			get { return GetValue(CommandArriveParameterProperty); }
+			set { SetValue(CommandArriveParameterProperty, value); }
 		}
 
-		public static readonly DependencyProperty CommandParameterArriveProperty = DependencyProperty.Register(
-			"CommandParameterArrive",
+		public static readonly DependencyProperty CommandArriveParameterProperty = DependencyProperty.Register(
+			"CommandArriveParameter",
 			typeof (object),
 			typeof (PushpinContent),
 			null);
@@ -126,14 +167,14 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			null);
 
-		public object CommandParameterDelete
+		public object CommandDeleteParameter
 		{
-			get { return GetValue(CommandParameterDeleteProperty); }
-			set { SetValue(CommandParameterDeleteProperty, value); }
+			get { return GetValue(CommandDeleteParameterProperty); }
+			set { SetValue(CommandDeleteParameterProperty, value); }
 		}
 
-		public static readonly DependencyProperty CommandParameterDeleteProperty = DependencyProperty.Register(
-			"CommandParameterDelete",
+		public static readonly DependencyProperty CommandDeleteParameterProperty = DependencyProperty.Register(
+			"CommandDeleteParameter",
 			typeof (object),
 			typeof (PushpinContent),
 			null);
@@ -150,14 +191,14 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			null);
 
-		public object CommandParameterPinDearchResult
+		public object CommandPinSearchResultParameter
 		{
-			get { return GetValue(CommandParameterPinDearchResultProperty); }
-			set { SetValue(CommandParameterPinDearchResultProperty, value); }
+			get { return GetValue(CommandPinSearchResultParameterProperty); }
+			set { SetValue(CommandPinSearchResultParameterProperty, value); }
 		}
 
-		public static readonly DependencyProperty CommandParameterPinDearchResultProperty = DependencyProperty.Register(
-			"CommandParameterPinDearchResult",
+		public static readonly DependencyProperty CommandPinSearchResultParameterProperty = DependencyProperty.Register(
+			"CommandPinSearchResultParameter",
 			typeof (object),
 			typeof (PushpinContent),
 			null);
@@ -167,17 +208,29 @@ namespace Travlexer.WindowsPhone.Controls
 
 		#region Public Properties
 
-		public PushpinContentStates State
+		public PushpinContentVisualStates VisualState
 		{
-			get { return (PushpinContentStates)GetValue(StateProperty); }
-			set { SetValue(StateProperty, value); }
+			get { return (PushpinContentVisualStates) GetValue(VisualStateProperty); }
+			set { SetValue(VisualStateProperty, value); }
 		}
 
-		public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
-			"State",
-			typeof(PushpinContentStates),
+		public static readonly DependencyProperty VisualStateProperty = DependencyProperty.Register(
+			"VisualState",
+			typeof (PushpinContentVisualStates),
 			typeof (PushpinContent),
-			new PropertyMetadata(default(PushpinContentStates), OnStateChanged));
+			new PropertyMetadata(default(PushpinContentVisualStates), OnVisualStateChanged));
+
+		public PushpinContentWorkingStates WorkingState
+		{
+			get { return (PushpinContentWorkingStates) GetValue(WorkingStateProperty); }
+			set { SetValue(WorkingStateProperty, value); }
+		}
+
+		public static readonly DependencyProperty WorkingStateProperty = DependencyProperty.Register(
+			"WorkingState",
+			typeof (PushpinContentWorkingStates),
+			typeof (PushpinContent),
+			new PropertyMetadata(default(PushpinContentWorkingStates), OnWorkingStateChanged));
 
 		public string Title
 		{
@@ -215,6 +268,30 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			new PropertyMetadata(default(PlaceIcon)));
 
+		public Location Location
+		{
+			get { return (Location) GetValue(LocationProperty); }
+			set { SetValue(LocationProperty, value); }
+		}
+
+		public static readonly DependencyProperty LocationProperty = DependencyProperty.Register(
+			"Location",
+			typeof (Location),
+			typeof (PushpinContent),
+			null);
+
+		public bool IsSearchResult
+		{
+			get { return (bool) GetValue(IsSearchResultProperty); }
+			set { SetValue(IsSearchResultProperty, value); }
+		}
+
+		public static readonly DependencyProperty IsSearchResultProperty = DependencyProperty.Register(
+			"IsSearchResult",
+			typeof (bool),
+			typeof (PushpinContent),
+			new PropertyMetadata(false, OnIsSearchResultChanged));
+
 		#endregion
 
 
@@ -222,14 +299,28 @@ namespace Travlexer.WindowsPhone.Controls
 
 		public override void OnApplyTemplate()
 		{
-			VisualStateManager.GoToState(this, State.ToString(), false);
+			VisualStateManager.GoToState(this, VisualState.ToString(), false);
+			VisualStateManager.GoToState(this, WorkingState.ToString(), false);
+			VisualStateManager.GoToState(this, IsSearchResult ? STATE_SearchResult : STATE_UserPin, false);
 			base.OnApplyTemplate();
 		}
 
-		private static void OnStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnVisualStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			var content = (PushpinContent) d;
-			VisualStateManager.GoToState(content, content.State.ToString(), true);
+			VisualStateManager.GoToState(content, content.VisualState.ToString(), true);
+		}
+
+		private static void OnWorkingStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
+			var content = (PushpinContent) sender;
+			VisualStateManager.GoToState(content, content.WorkingState.ToString(), true);
+		}
+
+		private static void OnIsSearchResultChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
+			var content = (PushpinContent) sender;
+			VisualStateManager.GoToState(content, content.IsSearchResult ? STATE_SearchResult : STATE_UserPin, true);
 		}
 
 		#endregion

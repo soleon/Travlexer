@@ -1,14 +1,22 @@
 using System;
-using System.Diagnostics;
+using System.Device.Location;
+using System.Globalization;
 
 namespace Travlexer.WindowsPhone.Models
 {
 	/// <summary>
 	/// Represents a geographical location.
 	/// </summary>
-	[DebuggerDisplay("{Latitude,nq}, {Longitude,nq}")]
 	public class Location
 	{
+		#region Constants
+
+		private const string Delimiter = ", ";
+		private const string FormatString = "G";
+
+		#endregion
+
+
 		#region Constructors
 
 		/// <summary>
@@ -39,14 +47,22 @@ namespace Travlexer.WindowsPhone.Models
 		#endregion
 
 
-		#region Operators
+		#region Public Methods
 
-		public static implicit operator System.Device.Location.GeoCoordinate(Location location)
+		/// <summary>
+		/// Returns a culture invariant <see cref="System.String"/> that represents the geo-coordinate of this location.
+		/// </summary>
+		public override string ToString()
 		{
-			return new System.Device.Location.GeoCoordinate(location.Latitude, location.Longitude);
+			return (Latitude.ToString(FormatString, CultureInfo.InvariantCulture) + Delimiter + Longitude.ToString(FormatString, CultureInfo.InvariantCulture));
 		}
 
-		public static implicit operator Location(System.Device.Location.GeoCoordinate coordinate)
+		#endregion
+
+
+		#region Operators
+
+		public static implicit operator Location(GeoCoordinate coordinate)
 		{
 			return new Location(coordinate.Latitude, coordinate.Longitude);
 		}

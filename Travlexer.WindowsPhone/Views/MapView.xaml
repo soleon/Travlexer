@@ -1,16 +1,17 @@
 ﻿<phone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.MapView"
 							xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+							xmlns:Behaviors="clr-namespace:Travelexer.WindowsPhone.Core.Behaviors;assembly=Travelexer.WindowsPhone.Core"
 							xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
-							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 							xmlns:Triggers="clr-namespace:Travelexer.WindowsPhone.Core.Triggers;assembly=Travelexer.WindowsPhone.Core"
-							xmlns:Behaviors="clr-namespace:Travelexer.WindowsPhone.Core.Behaviors;assembly=Travelexer.WindowsPhone.Core"
+							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
+							Style="{StaticResource PageDefault}"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
 							Foreground="{StaticResource PhoneForegroundBrush}"
@@ -19,14 +20,13 @@
 							d:DesignWidth="480"
 							d:DesignHeight="768"
 							shell:SystemTray.IsVisible="True"
-							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}"
-							Style="{StaticResource PageDefault}">
+							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
 	<phone:PhoneApplicationPage.DataContext>
 		<ViewModels:MapViewModel />
 	</phone:PhoneApplicationPage.DataContext>
 	<Grid>
-		<Maps:Map x:Name="Map">
-			<Maps:MapItemsControl ItemsSource="{Binding UserPins}">
+		<Maps:Map x:Name="Map" LogoVisibility="Collapsed" CopyrightVisibility="Collapsed">
+			<Maps:MapItemsControl ItemsSource="{Binding Pushpins}">
 				<i:Interaction.Behaviors>
 					<Behaviors:CancelGestureEventBehavior />
 				</i:Interaction.Behaviors>
@@ -34,21 +34,29 @@
 					<DataTemplate>
 						<Maps:Pushpin Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
-									  PositionOrigin="BottomCenter">
+									  PositionOrigin="BottomCenter"
+									  Opacity="{Binding HighlightState, Converter={StaticResource PushpinHighlightStateToOpacityConverter}}"
+									  IsHitTestVisible="{Binding HighlightState, Converter={StaticResource PushpinHighlightStateToHitTestVisibilityConverter}}">
 							<i:Interaction.Triggers>
-								<i:EventTrigger EventName="Tap" >
-									<i:InvokeCommandAction Command="{Binding Parent.CommandToggleUserPinContentState}"
-														   CommandParameter="{Binding}"/>
+								<i:EventTrigger EventName="Tap">
+									<i:InvokeCommandAction Command="{Binding Parent.CommandToggleSelectedPushpin, Mode=OneTime}"
+														   CommandParameter="{Binding}" />
 								</i:EventTrigger>
 								<Triggers:RootManipulationTrigger>
-									<i:InvokeCommandAction Command="{Binding Parent.CommandCollapseUserPinContent}"
+									<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
 														   CommandParameter="{Binding}" />
 								</Triggers:RootManipulationTrigger>
 							</i:Interaction.Triggers>
 							<Controls:PushpinContent Address="{Binding Data.FormattedAddress}"
+													 CommandDelete="{Binding Parent.CommandDeletePlace, Mode=OneTime}"
+													 CommandDeleteParameter="{Binding}"
+													 CommandPinSearchResult="{Binding Parent.CommandPinSearchResult, Mode=OneTime}"
+													 CommandPinSearchResultParameter="{Binding}"
 													 Icon="{Binding Data.Icon}"
+													 Location="{Binding Data.Location}"
 													 Title="{Binding Data.Name}"
-													 State="{Binding State}"/>
+													 VisualState="{Binding VisualState}"
+													 WorkingState="{Binding WorkingState}" />
 						</Maps:Pushpin>
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>

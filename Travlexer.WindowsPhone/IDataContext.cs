@@ -13,14 +13,9 @@ namespace Travlexer.WindowsPhone
 		#region Properties
 
 		/// <summary>
-		/// Gets the collection that contains all user pins.
+		/// Gets the collection that contains all places shown on the map.
 		/// </summary>
-		ReadOnlyObservableCollection<UserPin> UserPins { get; }
-
-		/// <summary>
-		/// Gets the collection that contains all search results.
-		/// </summary>
-		ReadOnlyObservableCollection<SearchResult> SearchResults { get; }
+		ReadOnlyObservableCollection<Place> Places { get; }
 
 		#endregion
 
@@ -28,33 +23,28 @@ namespace Travlexer.WindowsPhone
 		#region Methods
 
 		/// <summary>
-		/// Adds a new user pin.
+		/// Adds a new place.
 		/// </summary>
-		/// <param name="location">The location of the user pin.</param>
-		/// <param name="icon">The icon of the user pin.</param>
-		void AddNewUserPin(Location location, PlaceIcon icon = default(PlaceIcon));
+		/// <param name="location">The location of the place.</param>
+		/// <param name="icon">The icon of the place.</param>
+		/// <param name="callback">The action to execute after the process is finished.</param>
+		Place AddNewPlace(Location location, PlaceIcon icon = default(PlaceIcon), Action<CallbackEventArgs> callback = null);
 
 		/// <summary>
-		/// Removes the existing user pin.
+		/// Removes the existing place.
 		/// </summary>
-		/// <param name="userPin">The pin.</param>
-		void RemovePin(UserPin userPin);
+		/// <param name="place">The place to be removed.</param>
+		void RemovePlace(Place place);
 
 		/// <summary>
-		/// Removes all user pins.
+		/// Removes all places.
 		/// </summary>
-		void ClearUserPins();
+		void ClearPlaces();
 
 		/// <summary>
-		/// Removes the search result.
+		/// Removes all places that are not pinned.
 		/// </summary>
-		/// <param name="result">The result to be removed.</param>
-		void RemoveSearchResult(SearchResult result);
-
-		/// <summary>
-		/// Removes all search results.
-		/// </summary>
-		void ClearSearchResults();
+		void ClearUnPinnedPlaces();
 
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> for the specified location.
