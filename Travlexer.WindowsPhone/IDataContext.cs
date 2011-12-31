@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Microsoft.Phone.Controls.Maps;
+using Travelexer.WindowsPhone.Core.Services;
 using Travlexer.WindowsPhone.Models;
-using Travlexer.WindowsPhone.Services;
 
 namespace Travlexer.WindowsPhone
 {
@@ -26,9 +27,7 @@ namespace Travlexer.WindowsPhone
 		/// Adds a new place.
 		/// </summary>
 		/// <param name="location">The location of the place.</param>
-		/// <param name="icon">The icon of the place.</param>
-		/// <param name="callback">The action to execute after the process is finished.</param>
-		Place AddNewPlace(Location location, PlaceIcon icon = default(PlaceIcon), Action<CallbackEventArgs> callback = null);
+		Place AddNewPlace(Location location);
 
 		/// <summary>
 		/// Removes the existing place.
@@ -47,11 +46,12 @@ namespace Travlexer.WindowsPhone
 		void ClearUnPinnedPlaces();
 
 		/// <summary>
-		/// Gets a list of <see cref="PlaceDetails"/> for the specified location.
+		/// Gets information of the specified <see cref="Place"/>.
 		/// </summary>
-		/// <param name="place"></param>
+		/// <param name="place">The place to get the information for.</param>
+		/// <param name="bounds">The view port to restrict the result.</param>
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
-		void GetPlaceDetails(Place place, Action<CallbackEventArgs> callback = null);
+		void GetPlaceInformation(Place place, LocationRect bounds = null, Action<CallbackEventArgs> callback = null);
 
 		#endregion
 	}

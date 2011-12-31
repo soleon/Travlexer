@@ -14,8 +14,7 @@ namespace Travlexer.WindowsPhone.Converters
 			{
 				return null;
 			}
-			var location = (Location)value;
-			return new GeoCoordinate(location.Latitude, location.Longitude);
+			return (GeoCoordinate)(Location)value;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -24,8 +23,7 @@ namespace Travlexer.WindowsPhone.Converters
 			{
 				return null;
 			}
-			var coordinate = (GeoCoordinate)value;
-			return new Location(coordinate.Latitude, coordinate.Longitude);
+			return (Location)(GeoCoordinate)value;
 		}
 	}
 }

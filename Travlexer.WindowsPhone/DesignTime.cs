@@ -19,7 +19,7 @@ namespace Travlexer.WindowsPhone
 					return null;
 				}
 				var data = Globals.DataContext = new DataContext(new GoogleMapsClientMock());
-				return _userPin ?? (_userPin = data.AddNewPlace(new Location(9.1540930, -1.39166990), PlaceIcon.Fuel));
+				return _userPin ?? (_userPin = data.AddNewPlace(new Location(9.1540930, -1.39166990)));
 			}
 		}
 		private Place _userPin;

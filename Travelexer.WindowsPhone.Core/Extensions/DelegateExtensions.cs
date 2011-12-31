@@ -59,5 +59,10 @@ namespace Travelexer.WindowsPhone.Core.Extensions
 			}
 			action(param1, param2);
 		}
+
+		public static TResult ExecuteIfNotNull<TResult>(this Func<TResult> function)
+		{
+			return function == null ? default(TResult) : function();
+		}
 	}
 }

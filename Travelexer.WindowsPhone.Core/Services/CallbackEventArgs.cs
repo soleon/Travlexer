@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Travlexer.WindowsPhone.Services
+namespace Travelexer.WindowsPhone.Core.Services
 {
 	/// <summary>
 	/// Arguments passed to a service callback.

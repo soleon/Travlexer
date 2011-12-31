@@ -25,7 +25,7 @@
 		<ViewModels:MapViewModel />
 	</phone:PhoneApplicationPage.DataContext>
 	<Grid>
-		<Maps:Map x:Name="Map" LogoVisibility="Collapsed" CopyrightVisibility="Collapsed">
+		<Maps:Map x:Name="Map" LogoVisibility="Collapsed" CopyrightVisibility="Collapsed" Center="{Binding MapCenter, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}">
 			<Maps:MapItemsControl ItemsSource="{Binding Pushpins}">
 				<i:Interaction.Behaviors>
 					<Behaviors:CancelGestureEventBehavior />

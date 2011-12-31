@@ -67,6 +67,11 @@ namespace Travlexer.WindowsPhone.Models
 			return new Location(coordinate.Latitude, coordinate.Longitude);
 		}
 
+		public static implicit operator GeoCoordinate(Location location)
+		{
+			return new GeoCoordinate(location.Latitude, location.Longitude);
+		}
+
 		#endregion
 	}
 }

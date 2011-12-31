@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using Microsoft.Phone.Controls.Maps;
 using Newtonsoft.Json;
 using RestSharp;
 using Travlexer.WindowsPhone.Models;
@@ -13,7 +16,7 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
-		void GetPlaceDetails(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback);
+		void GetPlaces(LatLng location, ViewPort bounds, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback);
 	}
 
 	public class GoogleMapsClient : IGoogleMapsClient
@@ -121,18 +124,20 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
-		public void GetPlaceDetails(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
+		public void GetPlaces(LatLng location, ViewPort bounds, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
 		{
 			var c = new RestClient(BaseApiUrl);
-			c.ExecuteAsync<EnumerableResponse<PlaceDetails>>(new RestRequest(_baseGeocodingUrl + "&latlng=" + location), response =>
-			{
-				try
+			c.ExecuteAsync<EnumerableResponse<PlaceDetails>>(
+				new RestRequest(_baseGeocodingUrl + "&latlng=" + location + (bounds == null ? null : "&bounds=" + bounds)),
+				response =>
 				{
-					response.Data = JsonConvert.DeserializeObject<EnumerableResponse<PlaceDetails>>(response.Content);
-				}
-				catch { }
-				callback(response);
-			});
+					try
+					{
+						response.Data = JsonConvert.DeserializeObject<EnumerableResponse<PlaceDetails>>(response.Content);
+					}
+					catch {}
+					callback(response);
+				});
 		}
 
 		#endregion
@@ -161,188 +166,188 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		private const string GeocodeResponse = @"
 {
    'results' : [
-      {
-         'address_components' : [
-            {
-               'long_name' : 'Fryfusu-Damongo Rd',
-               'short_name' : 'Fryfusu-Damongo Rd',
-               'types' : [ 'route' ]
-            },
-            {
-               'long_name' : 'Central Gonja',
-               'short_name' : 'Central Gonja',
-               'types' : [ 'administrative_area_level_2', 'political' ]
-            },
-            {
-               'long_name' : 'Northern',
-               'short_name' : 'Northern',
-               'types' : [ 'administrative_area_level_1', 'political' ]
-            },
-            {
-               'long_name' : 'Ghana',
-               'short_name' : 'GH',
-               'types' : [ 'country', 'political' ]
-            }
-         ],
-         'formatted_address' : 'Fryfusu-Damongo Rd, Ghana',
-         'geometry' : {
-            'bounds' : {
-               'northeast' : {
-                  'lat' : 9.1540930,
-                  'lng' : -1.39166990
-               },
-               'southwest' : {
-                  'lat' : 9.151451399999999,
-                  'lng' : -1.39836190
-               }
-            },
-            'location' : {
-               'lat' : 9.152476699999999,
-               'lng' : -1.39513080
-            },
-            'location_type' : 'APPROXIMATE',
-            'viewport' : {
-               'northeast' : {
-                  'lat' : 9.154121180291501,
-                  'lng' : -1.39166990
-               },
-               'southwest' : {
-                  'lat' : 9.151423219708498,
-                  'lng' : -1.39836190
-               }
-            }
-         },
-         'types' : [ 'route' ]
-      },
-      {
-         'address_components' : [
-            {
-               'long_name' : 'Central Gonja',
-               'short_name' : 'Central Gonja',
-               'types' : [ 'administrative_area_level_2', 'political' ]
-            },
-            {
-               'long_name' : 'Northern',
-               'short_name' : 'Northern',
-               'types' : [ 'administrative_area_level_1', 'political' ]
-            },
-            {
-               'long_name' : 'Ghana',
-               'short_name' : 'GH',
-               'types' : [ 'country', 'political' ]
-            }
-         ],
-         'formatted_address' : 'Central Gonja, Ghana',
-         'geometry' : {
-            'bounds' : {
-               'northeast' : {
-                  'lat' : 9.331186499999999,
-                  'lng' : -0.68870540
-               },
-               'southwest' : {
-                  'lat' : 8.54469520,
-                  'lng' : -2.0977020
-               }
-            },
-            'location' : {
-               'lat' : 9.01137950,
-               'lng' : -1.05861350
-            },
-            'location_type' : 'APPROXIMATE',
-            'viewport' : {
-               'northeast' : {
-                  'lat' : 9.331186499999999,
-                  'lng' : -0.68870540
-               },
-               'southwest' : {
-                  'lat' : 8.54469520,
-                  'lng' : -2.0977020
-               }
-            }
-         },
-         'types' : [ 'administrative_area_level_2', 'political' ]
-      },
-      {
-         'address_components' : [
-            {
-               'long_name' : 'Northern',
-               'short_name' : 'Northern',
-               'types' : [ 'administrative_area_level_1', 'political' ]
-            },
-            {
-               'long_name' : 'Ghana',
-               'short_name' : 'GH',
-               'types' : [ 'country', 'political' ]
-            }
-         ],
-         'formatted_address' : 'Northern, Ghana',
-         'geometry' : {
-            'bounds' : {
-               'northeast' : {
-                  'lat' : 10.7145930,
-                  'lng' : 0.563380
-               },
-               'southwest' : {
-                  'lat' : 7.954847000000001,
-                  'lng' : -2.7796660
-               }
-            },
-            'location' : {
-               'lat' : 9.543926899999999,
-               'lng' : -0.90566230
-            },
-            'location_type' : 'APPROXIMATE',
-            'viewport' : {
-               'northeast' : {
-                  'lat' : 10.7145930,
-                  'lng' : 0.563380
-               },
-               'southwest' : {
-                  'lat' : 7.954847000000001,
-                  'lng' : -2.7796660
-               }
-            }
-         },
-         'types' : [ 'administrative_area_level_1', 'political' ]
-      },
-      {
-         'address_components' : [
-            {
-               'long_name' : 'Ghana',
-               'short_name' : 'GH',
-               'types' : [ 'country', 'political' ]
-            }
-         ],
-         'formatted_address' : 'Ghana',
-         'geometry' : {
-            'bounds' : {
-               'northeast' : {
-                  'lat' : 11.16666750,
-                  'lng' : 1.1995540
-               },
-               'southwest' : {
-                  'lat' : 4.73929610,
-                  'lng' : -3.24916690
-               }
-            },
-            'location' : {
-               'lat' : 7.9465270,
-               'lng' : -1.0231940
-            },
-            'location_type' : 'APPROXIMATE',
-            'viewport' : {
-               'northeast' : {
-                  'lat' : 11.16666750,
-                  'lng' : 1.1995540
-               },
-               'southwest' : {
-                  'lat' : 4.73929610,
-                  'lng' : -3.24916690
-               }
-            }
-         },
-         'types' : [ 'country', 'political' ]
-      }
+	  {
+		 'address_components' : [
+			{
+			   'long_name' : 'Fryfusu-Damongo Rd',
+			   'short_name' : 'Fryfusu-Damongo Rd',
+			   'types' : [ 'route' ]
+			},
+			{
+			   'long_name' : 'Central Gonja',
+			   'short_name' : 'Central Gonja',
+			   'types' : [ 'administrative_area_level_2', 'political' ]
+			},
+			{
+			   'long_name' : 'Northern',
+			   'short_name' : 'Northern',
+			   'types' : [ 'administrative_area_level_1', 'political' ]
+			},
+			{
+			   'long_name' : 'Ghana',
+			   'short_name' : 'GH',
+			   'types' : [ 'country', 'political' ]
+			}
+		 ],
+		 'formatted_address' : 'Fryfusu-Damongo Rd, Ghana',
+		 'geometry' : {
+			'bounds' : {
+			   'northeast' : {
+				  'lat' : 9.1540930,
+				  'lng' : -1.39166990
+			   },
+			   'southwest' : {
+				  'lat' : 9.151451399999999,
+				  'lng' : -1.39836190
+			   }
+			},
+			'location' : {
+			   'lat' : 9.152476699999999,
+			   'lng' : -1.39513080
+			},
+			'location_type' : 'APPROXIMATE',
+			'viewport' : {
+			   'northeast' : {
+				  'lat' : 9.154121180291501,
+				  'lng' : -1.39166990
+			   },
+			   'southwest' : {
+				  'lat' : 9.151423219708498,
+				  'lng' : -1.39836190
+			   }
+			}
+		 },
+		 'types' : [ 'route' ]
+	  },
+	  {
+		 'address_components' : [
+			{
+			   'long_name' : 'Central Gonja',
+			   'short_name' : 'Central Gonja',
+			   'types' : [ 'administrative_area_level_2', 'political' ]
+			},
+			{
+			   'long_name' : 'Northern',
+			   'short_name' : 'Northern',
+			   'types' : [ 'administrative_area_level_1', 'political' ]
+			},
+			{
+			   'long_name' : 'Ghana',
+			   'short_name' : 'GH',
+			   'types' : [ 'country', 'political' ]
+			}
+		 ],
+		 'formatted_address' : 'Central Gonja, Ghana',
+		 'geometry' : {
+			'bounds' : {
+			   'northeast' : {
+				  'lat' : 9.331186499999999,
+				  'lng' : -0.68870540
+			   },
+			   'southwest' : {
+				  'lat' : 8.54469520,
+				  'lng' : -2.0977020
+			   }
+			},
+			'location' : {
+			   'lat' : 9.01137950,
+			   'lng' : -1.05861350
+			},
+			'location_type' : 'APPROXIMATE',
+			'viewport' : {
+			   'northeast' : {
+				  'lat' : 9.331186499999999,
+				  'lng' : -0.68870540
+			   },
+			   'southwest' : {
+				  'lat' : 8.54469520,
+				  'lng' : -2.0977020
+			   }
+			}
+		 },
+		 'types' : [ 'administrative_area_level_2', 'political' ]
+	  },
+	  {
+		 'address_components' : [
+			{
+			   'long_name' : 'Northern',
+			   'short_name' : 'Northern',
+			   'types' : [ 'administrative_area_level_1', 'political' ]
+			},
+			{
+			   'long_name' : 'Ghana',
+			   'short_name' : 'GH',
+			   'types' : [ 'country', 'political' ]
+			}
+		 ],
+		 'formatted_address' : 'Northern, Ghana',
+		 'geometry' : {
+			'bounds' : {
+			   'northeast' : {
+				  'lat' : 10.7145930,
+				  'lng' : 0.563380
+			   },
+			   'southwest' : {
+				  'lat' : 7.954847000000001,
+				  'lng' : -2.7796660
+			   }
+			},
+			'location' : {
+			   'lat' : 9.543926899999999,
+			   'lng' : -0.90566230
+			},
+			'location_type' : 'APPROXIMATE',
+			'viewport' : {
+			   'northeast' : {
+				  'lat' : 10.7145930,
+				  'lng' : 0.563380
+			   },
+			   'southwest' : {
+				  'lat' : 7.954847000000001,
+				  'lng' : -2.7796660
+			   }
+			}
+		 },
+		 'types' : [ 'administrative_area_level_1', 'political' ]
+	  },
+	  {
+		 'address_components' : [
+			{
+			   'long_name' : 'Ghana',
+			   'short_name' : 'GH',
+			   'types' : [ 'country', 'political' ]
+			}
+		 ],
+		 'formatted_address' : 'Ghana',
+		 'geometry' : {
+			'bounds' : {
+			   'northeast' : {
+				  'lat' : 11.16666750,
+				  'lng' : 1.1995540
+			   },
+			   'southwest' : {
+				  'lat' : 4.73929610,
+				  'lng' : -3.24916690
+			   }
+			},
+			'location' : {
+			   'lat' : 7.9465270,
+			   'lng' : -1.0231940
+			},
+			'location_type' : 'APPROXIMATE',
+			'viewport' : {
+			   'northeast' : {
+				  'lat' : 11.16666750,
+				  'lng' : 1.1995540
+			   },
+			   'southwest' : {
+				  'lat' : 4.73929610,
+				  'lng' : -3.24916690
+			   }
+			}
+		 },
+		 'types' : [ 'country', 'political' ]
+	  }
    ],
    'status' : 'OK'
 }
@@ -353,11 +358,11 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 
 		#region Public Methods
 
-		public void GetPlaceDetails(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
+		public void GetPlaces(LatLng location, ViewPort bounds, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
 		{
 			var result = new RestResponse<EnumerableResponse<PlaceDetails>>
 			{
-				StatusCode = System.Net.HttpStatusCode.OK,
+				StatusCode = HttpStatusCode.OK,
 				Data = JsonConvert.DeserializeObject<EnumerableResponse<PlaceDetails>>(GeocodeResponse)
 			};
 			callback(result);
@@ -368,49 +373,49 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 
 	public class AddressComponent
 	{
-		[JsonProperty("long_name")]
+		[JsonProperty(PropertyName = "long_name")]
 		public string LongName { get; set; }
 
-		[JsonProperty("short_name")]
+		[JsonProperty(PropertyName = "short_name")]
 		public string ShortName { get; set; }
 
-		[JsonProperty("types")]
+		[JsonProperty(PropertyName = "types")]
 		public IEnumerable<string> Types { get; set; }
 	}
 
 	public class AutoCompleteResponse
 	{
-		[JsonProperty("predictions")]
+		[JsonProperty(PropertyName = "predictions")]
 		public IEnumerable<Suggestion> Suggestions { get; set; }
 	}
 
 	public struct Distance
 	{
-		[JsonProperty("text")]
+		[JsonProperty(PropertyName = "text")]
 		public string Text { get; set; }
 
-		[JsonProperty("value")]
+		[JsonProperty(PropertyName = "value")]
 		public int Value { get; set; }
 	}
 
 	public struct Duration
 	{
-		[JsonProperty("text")]
+		[JsonProperty(PropertyName = "text")]
 		public string Text { get; set; }
 
-		[JsonProperty("value")]
+		[JsonProperty(PropertyName = "value")]
 		public int Value { get; set; }
 	}
 
 	public class EnumerableResponse<T> : ResponseBase<T>
 	{
-		[JsonProperty("results")]
+		[JsonProperty(PropertyName = "results")]
 		public virtual IEnumerable<T> Results { get; set; }
 	}
 
 	public class RoutesResponse : EnumerableResponse<Route>
 	{
-		[JsonProperty("routes")]
+		[JsonProperty(PropertyName = "routes")]
 		public override IEnumerable<Route> Results
 		{
 			get { return base.Results; }
@@ -428,73 +433,73 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			ROOFTOP
 		}
 
-		[JsonProperty("location")]
+		[JsonProperty(PropertyName = "location")]
 		public LatLng Location { get; set; }
 
-		[JsonProperty("viewport")]
+		[JsonProperty(PropertyName = "viewport")]
 		public ViewPort ViewPort { get; set; }
 
-		[JsonProperty("location_type")]
+		[JsonProperty(PropertyName = "location_type")]
 		public LocationTypes LocationType { get; set; }
 	}
 
 	public class Leg
 	{
-		[JsonProperty("distance")]
+		[JsonProperty(PropertyName = "distance")]
 		public Distance Distance { get; set; }
 
-		[JsonProperty("duration")]
+		[JsonProperty(PropertyName = "duration")]
 		public Duration Duration { get; set; }
 
-		[JsonProperty("end_address")]
+		[JsonProperty(PropertyName = "end_address")]
 		public string EndAddress { get; set; }
 
-		[JsonProperty("end_location")]
+		[JsonProperty(PropertyName = "end_location")]
 		public LatLng EndLocation { get; set; }
 
-		[JsonProperty("start_address")]
+		[JsonProperty(PropertyName = "start_address")]
 		public string StartAddress { get; set; }
 
-		[JsonProperty("start_location")]
+		[JsonProperty(PropertyName = "start_location")]
 		public LatLng StartLocation { get; set; }
 
-		[JsonProperty("steps")]
+		[JsonProperty(PropertyName = "steps")]
 		public IEnumerable<Step> Steps { get; set; }
 	}
 
 	public class Place
 	{
-		[JsonProperty("name")]
+		[JsonProperty(PropertyName = "name")]
 		public string Name { get; set; }
 
-		[JsonProperty("icon")]
+		[JsonProperty(PropertyName = "icon")]
 		public string Icon { get; set; }
 
-		[JsonProperty("vicinity")]
+		[JsonProperty(PropertyName = "vicinity")]
 		public string Vicinity { get; set; }
 
-		[JsonProperty("types")]
+		[JsonProperty(PropertyName = "types")]
 		public IEnumerable<string> Types { get; set; }
 
-		[JsonProperty("geometry")]
+		[JsonProperty(PropertyName = "geometry")]
 		public Geometry Geometry { get; set; }
 
-		[JsonProperty("reference")]
+		[JsonProperty(PropertyName = "reference")]
 		public string Reference { get; set; }
 
-		[JsonProperty("id")]
+		[JsonProperty(PropertyName = "id")]
 		public string Id { get; set; }
 	}
 
 	public class PlaceDetails : Place
 	{
-		[JsonProperty("formatted_phone_number")]
+		[JsonProperty(PropertyName = "formatted_phone_number")]
 		public string FormattedPhoneNumber { get; set; }
 
-		[JsonProperty("formatted_address")]
+		[JsonProperty(PropertyName = "formatted_address")]
 		public string FormattedAddress { get; set; }
 
-		[JsonProperty("address_components")]
+		[JsonProperty(PropertyName = "address_components")]
 		public IEnumerable<AddressComponent> AddressComponents { get; set; }
 	}
 
@@ -529,49 +534,49 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 
 	public class Polyline
 	{
-		[JsonProperty("points")]
+		[JsonProperty(PropertyName = "points")]
 		public string Points { get; set; }
 
-		[JsonProperty("levels")]
+		[JsonProperty(PropertyName = "levels")]
 		public string Levels { get; set; }
 	}
 
 	public class Response<T> : ResponseBase<T>
 	{
-		[JsonProperty("result")]
+		[JsonProperty(PropertyName = "result")]
 		public T Result { get; set; }
 	}
 
 	public abstract class ResponseBase<T>
 	{
-		[JsonProperty("html_attributions")]
+		[JsonProperty(PropertyName = "html_attributions")]
 		public IEnumerable<string> HtmlAttributions { get; set; }
 
-		[JsonProperty("status")]
+		[JsonProperty(PropertyName = "status")]
 		public StatusCodes Status { get; set; }
 	}
 
 	public class Route
 	{
-		[JsonProperty("copyrights")]
+		[JsonProperty(PropertyName = "copyrights")]
 		public string Copyrights { get; set; }
 
-		[JsonProperty("summary")]
+		[JsonProperty(PropertyName = "summary")]
 		public string Summary { get; set; }
 
-		[JsonProperty("bounds")]
+		[JsonProperty(PropertyName = "bounds")]
 		public ViewPort Bounds { get; set; }
 
-		[JsonProperty("warnings")]
+		[JsonProperty(PropertyName = "warnings")]
 		public IEnumerable<string> Warnings { get; set; }
 
-		[JsonProperty("waypoint_order")]
+		[JsonProperty(PropertyName = "waypoint_order")]
 		public IEnumerable<int> WaypointOrder { get; set; }
 
-		[JsonProperty("legs")]
+		[JsonProperty(PropertyName = "legs")]
 		public IEnumerable<Leg> Legs { get; set; }
 
-		[JsonProperty("overview_polyline")]
+		[JsonProperty(PropertyName = "overview_polyline")]
 		public Polyline OverviewPolyline { get; set; }
 	}
 
@@ -600,54 +605,87 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 
 	public class Step
 	{
-		[JsonProperty("distance")]
+		[JsonProperty(PropertyName = "distance")]
 		public Distance Distance { get; set; }
 
-		[JsonProperty("duration")]
+		[JsonProperty(PropertyName = "duration")]
 		public Duration Duration { get; set; }
 
-		[JsonProperty("end_location")]
+		[JsonProperty(PropertyName = "end_location")]
 		public LatLng EndLocation { get; set; }
 
-		[JsonProperty("start_location")]
+		[JsonProperty(PropertyName = "start_location")]
 		public LatLng StartLocation { get; set; }
 
-		[JsonProperty("travel_mode")]
+		[JsonProperty(PropertyName = "travel_mode")]
 		public TravelMode TravelMode { get; set; }
 
-		[JsonProperty("html_instructions")]
+		[JsonProperty(PropertyName = "html_instructions")]
 		public string HtmlInstructions { get; set; }
 
-		[JsonProperty("polyline")]
+		[JsonProperty(PropertyName = "polyline")]
 		public Polyline Polyline { get; set; }
 	}
 
 	public class Suggestion
 	{
-		[JsonProperty("description")]
+		[JsonProperty(PropertyName = "description")]
 		public string Description { get; set; }
 
-		[JsonProperty("reference")]
+		[JsonProperty(PropertyName = "reference")]
 		public string Reference { get; set; }
 
-		[JsonProperty("types")]
+		[JsonProperty(PropertyName = "types")]
 		public IEnumerable<PlaceType> Types { get; set; }
 	}
 
 	public class ViewPort
 	{
-		[JsonProperty("northeast")]
-		public LatLng NorthEast { get; set; }
-
-		[JsonProperty("southwest")]
-		public LatLng SouthWest { get; set; }
-
 		private const string Delimiter = "|";
+
+
+		#region Public Properties
+
+		[JsonProperty(PropertyName = "northeast")]
+		public LatLng Northeast { get; set; }
+
+		[JsonProperty(PropertyName = "southwest")]
+		public LatLng Southwest { get; set; }
+
+		#endregion
+
+
+		#region Operators
+
+		public static implicit operator LocationRect(ViewPort viewPort)
+		{
+			return new LocationRect
+			{
+				Northeast = viewPort.Northeast,
+				Southwest = viewPort.Southwest
+			};
+		}
+
+		public static implicit operator ViewPort(LocationRect viewPort)
+		{
+			return new ViewPort
+			{
+				Northeast = viewPort.Northeast,
+				Southwest = viewPort.Southwest
+			};
+		}
+
+		#endregion
+
+
+		#region Public Methods
 
 		public override string ToString()
 		{
-			return SouthWest + Delimiter + NorthEast;
+			return Southwest + Delimiter + Northeast;
 		}
+
+		#endregion
 	}
 
 	public class LatLng
@@ -661,10 +699,10 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 
 		#region Public Properties
 
-		[JsonProperty("lat")]
+		[JsonProperty(PropertyName = "lat")]
 		public double Lat { get; set; }
 
-		[JsonProperty("lng")]
+		[JsonProperty(PropertyName = "lng")]
 		public double Lng { get; set; }
 
 		#endregion
@@ -680,6 +718,16 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		public static implicit operator LatLng(Location location)
 		{
 			return new LatLng { Lat = location.Latitude, Lng = location.Longitude };
+		}
+
+		public static implicit operator GeoCoordinate(LatLng latLng)
+		{
+			return new GeoCoordinate(latLng.Lat, latLng.Lng);
+		}
+
+		public static implicit operator LatLng(GeoCoordinate coordinate)
+		{
+			return new LatLng { Lat = coordinate.Latitude, Lng = coordinate.Longitude };
 		}
 
 		#endregion

@@ -60,6 +60,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			get { return _highlightState; }
 			set { SetProperty(ref _highlightState, value, HighlightStateProperty); }
 		}
+
 		private PushpinHighlightStates _highlightState;
 		private const string HighlightStateProperty = "HighlightState";
 

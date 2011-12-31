@@ -2,9 +2,13 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using Microsoft.Phone.Controls.Maps;
 using Travelexer.WindowsPhone.Core.Extensions;
+using Travelexer.WindowsPhone.Core.Services;
 using Travlexer.WindowsPhone.Models;
-using Travlexer.WindowsPhone.Services;
+using Travlexer.WindowsPhone.Services.GoogleMaps;
+using Place = Travlexer.WindowsPhone.Models.Place;
+using PlaceDetails = Travlexer.WindowsPhone.Models.PlaceDetails;
 
 namespace Travlexer.WindowsPhone
 {
@@ -12,27 +16,27 @@ namespace Travlexer.WindowsPhone
 	{
 		#region Private Fields
 
-		private readonly Services.GoogleMaps.IGoogleMapsClient _googleMapsClient;
+		private readonly IGoogleMapsClient _googleMapsClient;
 
 		#endregion
+
 
 		#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataContext"/> class.
 		/// </summary>
-		public DataContext(Services.GoogleMaps.IGoogleMapsClient googleMapsClient = null)
+		public DataContext(IGoogleMapsClient googleMapsClient = null)
 		{
 			Places = new ReadOnlyObservableCollection<Place>(_places);
 
-			_googleMapsClient = googleMapsClient ?? new Services.GoogleMaps.GoogleMapsClient();
+			_googleMapsClient = googleMapsClient ?? new GoogleMapsClient();
 		}
 
 		#endregion
 
 
 		#region Public Properties
-
 
 		/// <summary>
 		/// Gets the collection that contains all user pins.
@@ -50,13 +54,10 @@ namespace Travlexer.WindowsPhone
 		/// Adds a new place.
 		/// </summary>
 		/// <param name="location">The location of the place.</param>
-		/// <param name="icon">The icon of the place.</param>
-		/// <param name="callback">The action to execute after the process is finished.</param>
-		public Place AddNewPlace(Location location, PlaceIcon icon = default(PlaceIcon), Action<CallbackEventArgs> callback = null)
+		public Place AddNewPlace(Location location)
 		{
-			var p = new Place(location) { Icon = icon };
+			var p = new Place(location);
 			_places.Add(p);
-			GetPlaceDetails(p, callback);
 			return p;
 		}
 
@@ -92,11 +93,12 @@ namespace Travlexer.WindowsPhone
 		}
 
 		/// <summary>
-		/// Gets a list of <see cref="PlaceDetails"/> for the specified location.
+		/// Gets information of the specified <see cref="Place"/>.
 		/// </summary>
-		/// <param name="place"></param>
+		/// <param name="place">The place to get the information for.</param>
+		/// <param name="bounds">The view port to restrict the result.</param>
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
-		public void GetPlaceDetails(Place place, Action<CallbackEventArgs> callback = null)
+		public void GetPlaceInformation(Place place, LocationRect bounds = null, Action<CallbackEventArgs> callback = null)
 		{
 			if (!Globals.IsNetworkAvailable)
 			{
@@ -104,7 +106,7 @@ namespace Travlexer.WindowsPhone
 				return;
 			}
 
-			_googleMapsClient.GetPlaceDetails(place.Location, args =>
+			_googleMapsClient.GetPlaces(place.Location, bounds, args =>
 			{
 				if (args.StatusCode != HttpStatusCode.OK)
 				{
@@ -129,9 +131,8 @@ namespace Travlexer.WindowsPhone
 
 		#endregion
 
-		#region Private Methods
 
-		
+		#region Private Methods
 
 		#endregion
 	}

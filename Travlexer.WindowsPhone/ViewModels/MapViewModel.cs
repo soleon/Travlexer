@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading;
-using System.Windows;
+using Microsoft.Phone.Controls.Maps;
 using Travelexer.WindowsPhone.Core.Collections;
 using Travelexer.WindowsPhone.Core.Commands;
+using Travelexer.WindowsPhone.Core.Extensions;
+using Travelexer.WindowsPhone.Core.Services;
 using Travelexer.WindowsPhone.Core.ViewModels;
 using Travlexer.WindowsPhone.Models;
-using Travlexer.WindowsPhone.Services;
 using Travlexer.WindowsPhone.Views;
 
 namespace Travlexer.WindowsPhone.ViewModels
@@ -84,8 +84,26 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 			}
 		}
+
 		private PushpinViewModel _selectedPushpin;
 		private const string SelectedPushpinProperty = "SelectedPushpin";
+
+		/// <summary>
+		/// Gets or sets the map center geo-coordination.
+		/// </summary>
+		public Location MapCenter
+		{
+			get { return _mapCenter; }
+			set { SetProperty(ref _mapCenter, value, MapCenterProperty); }
+		}
+
+		private Location _mapCenter;
+		private const string MapCenterProperty = "MapCenter";
+
+		/// <summary>
+		/// Sets the function that returns the current view port of the map.
+		/// </summary>
+		public Func<LocationRect> MapBoundCapturer { private get; set; }
 
 		#endregion
 
@@ -135,21 +153,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnAddPlace(Location location)
 		{
-			PushpinViewModel vm = null;
-			_data.AddNewPlace(location, callback: arg =>
-			{
-				if (vm == null)
-				{
-					return;
-				}
-				vm.WorkingState = arg.Status == CallbackStatus.Successful ? PushpinContentWorkingStates.Idle : PushpinContentWorkingStates.Error;
-			});
-			vm = Pushpins.LastOrDefault();
+			var place = _data.AddNewPlace(location);
+			var vm = Pushpins.LastOrDefault();
 			if (vm == null)
 			{
 				return;
 			}
 			vm.WorkingState = PushpinContentWorkingStates.Working;
+			var bounds = MapBoundCapturer.ExecuteIfNotNull();
+			_data.GetPlaceInformation(
+				place,
+				bounds,
+				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? PushpinContentWorkingStates.Idle : PushpinContentWorkingStates.Error);
 		}
 
 		/// <summary>
@@ -207,6 +222,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Pushpins.CollectionChanged -= OnPushpinsCollectionChanged;
 			Pushpins = null;
 			SelectedPushpin = null;
+			MapBoundCapturer = null;
 
 			base.OnDispose();
 		}
