@@ -17,6 +17,7 @@ namespace Travlexer.WindowsPhone.Views
 			if (_context != null)
 			{
 				_context.MapBoundCapturer = OnCaptureMapBound;
+				_context.SelectedPushpinChanged += OnSelectedPushpinChanged;
 			}
 
 			// The "Hold" event in XAML is not recognised by Blend.
@@ -26,6 +27,15 @@ namespace Travlexer.WindowsPhone.Views
 
 
 		#region Event Handling
+
+		/// <summary>
+		/// Called when the selected pushpin of the data context is changed.
+		/// </summary>
+		/// <param name="vm">The vm.</param>
+		private void OnSelectedPushpinChanged(PushpinViewModel vm)
+		{
+			VisualStateManager.GoToState(this, vm == null ? "Default" : "PushpinSelected", true);
+		}
 
 		/// <summary>
 		/// Called when <see cref="UIElement.Hold"/> event is raise on the map.
@@ -43,7 +53,7 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			return Map.BoundingRectangle;
 		}
-		
+
 		#endregion
 	}
 }

@@ -16,7 +16,7 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
-		void GetPlaces(LatLng location, ViewPort bounds, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback);
+		void GetPlaces(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback);
 	}
 
 	public class GoogleMapsClient : IGoogleMapsClient
@@ -110,7 +110,7 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			_region = RegionInfo.CurrentRegion.TwoLetterISORegionName;
 			_basePlacesSearchUrl = "place/search/json?sensor=true&radius=500&key=" + ApiKey + "&language=" + _language;
 			_basePlaceDetailsUrl = "place/details/json?sensor=true&key=" + ApiKey + "&language=" + _language;
-			_baseGeocodingUrl = "geocode/json?sensor=true&language=" + _language + "&region=" + _region;
+			_baseGeocodingUrl = "geocode/json?sensor=true&language=" + _language +"&region=" + _region;
 			_baseDirectionsUrl = "directions/json?sensor=true&language=" + _language + "&region=" + _region;
 			_baseAutoCompleteUrl = "place/autocomplete/json?sensor=true&key=" + ApiKey + "&language=" + _language;
 			_baseStaticMapUrl = "staticmap?sensor=true";
@@ -124,11 +124,11 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
-		public void GetPlaces(LatLng location, ViewPort bounds, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
+		public void GetPlaces(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
 		{
 			var c = new RestClient(BaseApiUrl);
 			c.ExecuteAsync<EnumerableResponse<PlaceDetails>>(
-				new RestRequest(_baseGeocodingUrl + "&latlng=" + location + (bounds == null ? null : "&bounds=" + bounds)),
+				new RestRequest(_baseGeocodingUrl + "&latlng=" + location),
 				response =>
 				{
 					try
@@ -358,7 +358,7 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 
 		#region Public Methods
 
-		public void GetPlaces(LatLng location, ViewPort bounds, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
+		public void GetPlaces(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
 		{
 			var result = new RestResponse<EnumerableResponse<PlaceDetails>>
 			{
@@ -407,16 +407,16 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		public int Value { get; set; }
 	}
 
-	public class EnumerableResponse<T> : ResponseBase<T>
+	public class EnumerableResponse<T> : ResponseBase
 	{
 		[JsonProperty(PropertyName = "results")]
-		public virtual IEnumerable<T> Results { get; set; }
+		public virtual IList<T> Results { get; set; }
 	}
 
 	public class RoutesResponse : EnumerableResponse<Route>
 	{
 		[JsonProperty(PropertyName = "routes")]
-		public override IEnumerable<Route> Results
+		public override IList<Route> Results
 		{
 			get { return base.Results; }
 			set { base.Results = value; }
@@ -541,13 +541,13 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		public string Levels { get; set; }
 	}
 
-	public class Response<T> : ResponseBase<T>
+	public class Response<T> : ResponseBase
 	{
 		[JsonProperty(PropertyName = "result")]
 		public T Result { get; set; }
 	}
 
-	public abstract class ResponseBase<T>
+	public abstract class ResponseBase
 	{
 		[JsonProperty(PropertyName = "html_attributions")]
 		public IEnumerable<string> HtmlAttributions { get; set; }
@@ -666,12 +666,12 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			};
 		}
 
-		public static implicit operator ViewPort(LocationRect viewPort)
+		public static implicit operator ViewPort(LocationRect rect)
 		{
 			return new ViewPort
 			{
-				Northeast = viewPort.Northeast,
-				Southwest = viewPort.Southwest
+				Northeast = rect.Northeast,
+				Southwest = rect.Southwest
 			};
 		}
 

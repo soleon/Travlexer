@@ -73,8 +73,7 @@ namespace Travlexer.WindowsPhone.Controls
 			Title = pin.Name;
 			Address = pin.FormattedAddress;
 			Icon = pin.Icon;
-			VisualState = PushpinContentVisualStates.Expanded;
-			Location = pin.Location;
+			VisualState = PushpinOverlayVisualStates.Expanded;
 #endif
 		}
 
@@ -208,29 +207,29 @@ namespace Travlexer.WindowsPhone.Controls
 
 		#region Public Properties
 
-		public PushpinContentVisualStates VisualState
+		public PushpinOverlayVisualStates VisualState
 		{
-			get { return (PushpinContentVisualStates) GetValue(VisualStateProperty); }
+			get { return (PushpinOverlayVisualStates) GetValue(VisualStateProperty); }
 			set { SetValue(VisualStateProperty, value); }
 		}
 
 		public static readonly DependencyProperty VisualStateProperty = DependencyProperty.Register(
 			"VisualState",
-			typeof (PushpinContentVisualStates),
+			typeof (PushpinOverlayVisualStates),
 			typeof (PushpinContent),
-			new PropertyMetadata(default(PushpinContentVisualStates), OnVisualStateChanged));
+			new PropertyMetadata(default(PushpinOverlayVisualStates), OnVisualStateChanged));
 
-		public PushpinContentWorkingStates WorkingState
+		public PushpinOverlayWorkingStates WorkingState
 		{
-			get { return (PushpinContentWorkingStates) GetValue(WorkingStateProperty); }
+			get { return (PushpinOverlayWorkingStates) GetValue(WorkingStateProperty); }
 			set { SetValue(WorkingStateProperty, value); }
 		}
 
 		public static readonly DependencyProperty WorkingStateProperty = DependencyProperty.Register(
 			"WorkingState",
-			typeof (PushpinContentWorkingStates),
+			typeof (PushpinOverlayWorkingStates),
 			typeof (PushpinContent),
-			new PropertyMetadata(default(PushpinContentWorkingStates), OnWorkingStateChanged));
+			new PropertyMetadata(default(PushpinOverlayWorkingStates), OnWorkingStateChanged));
 
 		public string Title
 		{
@@ -267,18 +266,6 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PlaceIcon),
 			typeof (PushpinContent),
 			new PropertyMetadata(default(PlaceIcon)));
-
-		public Location Location
-		{
-			get { return (Location) GetValue(LocationProperty); }
-			set { SetValue(LocationProperty, value); }
-		}
-
-		public static readonly DependencyProperty LocationProperty = DependencyProperty.Register(
-			"Location",
-			typeof (Location),
-			typeof (PushpinContent),
-			null);
 
 		public bool IsSearchResult
 		{

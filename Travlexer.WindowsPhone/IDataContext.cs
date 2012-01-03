@@ -49,9 +49,8 @@ namespace Travlexer.WindowsPhone
 		/// Gets information of the specified <see cref="Place"/>.
 		/// </summary>
 		/// <param name="place">The place to get the information for.</param>
-		/// <param name="bounds">The view port to restrict the result.</param>
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
-		void GetPlaceInformation(Place place, LocationRect bounds = null, Action<CallbackEventArgs> callback = null);
+		void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null);
 
 		#endregion
 	}

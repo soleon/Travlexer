@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Windows;
 using Travelexer.WindowsPhone.Core.ViewModels;
 using Travlexer.WindowsPhone.Models;
 
@@ -26,7 +27,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				return;
 			}
-			VisualState = PushpinContentVisualStates.Expanded;
+			VisualState = PushpinOverlayVisualStates.Expanded;
 #endif
 		}
 
@@ -37,32 +38,23 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		public bool IsSearchResult { get; private set; }
 
-		public PushpinContentVisualStates VisualState
+		public PushpinOverlayVisualStates VisualState
 		{
 			get { return _visualState; }
 			set { SetProperty(ref _visualState, value, VisualStateProperty); }
 		}
 
-		private PushpinContentVisualStates _visualState;
+		private PushpinOverlayVisualStates _visualState;
 		private const string VisualStateProperty = "VisualState";
 
-		public PushpinContentWorkingStates WorkingState
+		public PushpinOverlayWorkingStates WorkingState
 		{
 			get { return _workingState; }
 			set { SetProperty(ref _workingState, value, WorkingStateProperty); }
 		}
 
-		private PushpinContentWorkingStates _workingState;
+		private PushpinOverlayWorkingStates _workingState;
 		private const string WorkingStateProperty = "WorkingState";
-
-		public PushpinHighlightStates HighlightState
-		{
-			get { return _highlightState; }
-			set { SetProperty(ref _highlightState, value, HighlightStateProperty); }
-		}
-
-		private PushpinHighlightStates _highlightState;
-		private const string HighlightStateProperty = "HighlightState";
 
 		#endregion
 	}

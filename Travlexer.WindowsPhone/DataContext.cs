@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -96,9 +97,8 @@ namespace Travlexer.WindowsPhone
 		/// Gets information of the specified <see cref="Place"/>.
 		/// </summary>
 		/// <param name="place">The place to get the information for.</param>
-		/// <param name="bounds">The view port to restrict the result.</param>
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
-		public void GetPlaceInformation(Place place, LocationRect bounds = null, Action<CallbackEventArgs> callback = null)
+		public void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null)
 		{
 			if (!Globals.IsNetworkAvailable)
 			{
@@ -106,16 +106,17 @@ namespace Travlexer.WindowsPhone
 				return;
 			}
 
-			_googleMapsClient.GetPlaces(place.Location, bounds, args =>
+			_googleMapsClient.GetPlaces(place.Location, args =>
 			{
-				if (args.StatusCode != HttpStatusCode.OK)
+				EnumerableResponse<Services.GoogleMaps.PlaceDetails> data;
+				IList<Services.GoogleMaps.PlaceDetails> results;
+				if (args.StatusCode != HttpStatusCode.OK || (data = args.Data) == null || (results = data.Results) == null || results.Count == 0)
 				{
 					var exception = args.ErrorException;
 					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs(CallbackStatus.ServiceException, exception) : new CallbackEventArgs(CallbackStatus.Unknown));
 					return;
 				}
-
-				var details = args.Data.Results.First();
+				var details = results.First();
 				if (place.Details == null)
 				{
 					place.Details = new PlaceDetails { ContactNumber = details.FormattedPhoneNumber };

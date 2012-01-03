@@ -148,48 +148,11 @@
 											</ObjectAnimationUsingKeyFrames>
 										</Storyboard>
 									</VisualTransition>
-									<VisualTransition From="Expanded"
-													  To="Collapsed">
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Content"
-															 Storyboard.TargetProperty="(FrameworkElement.Width)"
-															 Duration="0:0:0.2"
-															 EasingFunction="{StaticResource EasingQuinticOut}" />
-											<DoubleAnimation Storyboard.TargetName="Content"
-															 Storyboard.TargetProperty="(FrameworkElement.Height)"
-															 Duration="0:0:0.2"
-															 EasingFunction="{StaticResource EasingQuinticOut}" />
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
-												<DiscreteObjectKeyFrame KeyTime="0">
-													<DiscreteObjectKeyFrame.Value>
-														<Visibility>Collapsed</Visibility>
-													</DiscreteObjectKeyFrame.Value>
-												</DiscreteObjectKeyFrame>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
-												<DiscreteObjectKeyFrame KeyTime="0">
-													<DiscreteObjectKeyFrame.Value>
-														<Visibility>Collapsed</Visibility>
-													</DiscreteObjectKeyFrame.Value>
-												</DiscreteObjectKeyFrame>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
-												<DiscreteObjectKeyFrame KeyTime="0">
-													<DiscreteObjectKeyFrame.Value>
-														<Visibility>Collapsed</Visibility>
-													</DiscreteObjectKeyFrame.Value>
-												</DiscreteObjectKeyFrame>
-											</ObjectAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualTransition>
 								</VisualStateGroup.Transitions>
 								<VisualState x:Name="Expanded">
 									<Storyboard>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -197,7 +160,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -205,7 +168,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -213,15 +176,15 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<DoubleAnimation Storyboard.TargetName="Content"
-														 Storyboard.TargetProperty="(FrameworkElement.Width)"
-														 Duration="0"
-														 To="230"
-														 d:IsOptimized="True" />
+											Storyboard.TargetProperty="(FrameworkElement.Width)"
+											Duration="0"
+											To="230"
+											d:IsOptimized="True" />
 										<DoubleAnimation Storyboard.TargetName="Content"
-														 Storyboard.TargetProperty="(FrameworkElement.Height)"
-														 Duration="0"
-														 To="125"
-														 d:IsOptimized="True" />
+											Storyboard.TargetProperty="(FrameworkElement.Height)"
+											Duration="0"
+											To="125"
+											d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Collapsed" />
@@ -315,12 +278,12 @@
 								<VisualState x:Name="Error">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-											Storyboard.TargetProperty="(UIElement.Opacity)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="GeoCoordinate"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -438,39 +401,111 @@
 		<Setter Property="Foreground"
 				Value="{StaticResource PhoneForegroundBrush}" />
 	</Style>
-	<Style TargetType="Maps:Pushpin">
+	<Style x:Key="PushpinShadow"
+		   TargetType="Maps:Pushpin">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Maps:Pushpin">
-					<Grid x:Name="Root" RenderTransformOrigin="0.5,0.5">
-						<Grid.RenderTransform>
-							<CompositeTransform TranslateY="-800"/>
-						</Grid.RenderTransform>
+					<Path x:Name="Shadow"
+						  Data="M1,1 L12.5,25 L25,1"
+						  HorizontalAlignment="Center"
+						  RenderTransformOrigin="0.5,1"
+						  UseLayoutRounding="False"
+						  VerticalAlignment="Bottom"
+						  d:LayoutOverrides="Width">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="LoadStates">
 								<VisualStateGroup.Transitions>
-									<VisualTransition GeneratedDuration="0" To="Loaded">
+									<VisualTransition To="Loaded">
 										<Storyboard>
-											<DoubleAnimation Duration="0:0:0.3" From="-800" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="Root" EasingFunction="{StaticResource EasingQuinticOut}"/>
-											<DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)" Storyboard.TargetName="Shadow" From="-400" EasingFunction="{StaticResource EasingQuinticOut}"/>
-											<DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="Shadow" From="800" EasingFunction="{StaticResource EasingQuinticOut}"/>
+											<DoubleAnimation Storyboard.TargetName="Shadow"
+															 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
+															 Duration="0:0:0.3"
+															 EasingFunction="{StaticResource EasingQuinticOut}"
+															 From="-400"
+															 To="0" />
 										</Storyboard>
 									</VisualTransition>
 								</VisualStateGroup.Transitions>
 								<VisualState x:Name="Loaded">
 									<Storyboard>
-										<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="Root" d:IsOptimized="True"/>
-										<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)" Storyboard.TargetName="Shadow" d:IsOptimized="True"/>
-										<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="Shadow" d:IsOptimized="True"/>
+										<DoubleAnimation Storyboard.TargetName="Shadow"
+														 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
+										<DoubleAnimation Storyboard.TargetName="Shadow"
+														 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<i:Interaction.Triggers>
 							<i:EventTrigger>
-								<ec:GoToStateAction StateName="Loaded"/>
+								<ec:GoToStateAction StateName="Loaded" />
 							</i:EventTrigger>
 						</i:Interaction.Triggers>
+						<Path.RenderTransform>
+							<CompositeTransform ScaleX="2"
+												ScaleY="2" />
+						</Path.RenderTransform>
+						<Path.Projection>
+							<PlaneProjection CenterOfRotationY="1"
+											 LocalOffsetY="-400"
+											 RotationX="-63"
+											 RotationY="37" />
+						</Path.Projection>
+						<Path.Fill>
+							<LinearGradientBrush EndPoint="0.5,1"
+												 StartPoint="0.5,0">
+								<GradientStop Offset="0" />
+								<GradientStop Color="#80000000"
+											  Offset="1" />
+							</LinearGradientBrush>
+						</Path.Fill>
+					</Path>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="Maps:Pushpin">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Maps:Pushpin">
+					<Grid x:Name="Root"
+						  RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<CompositeTransform TranslateY="-800" />
+						</Grid.RenderTransform>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="LoadStates">
+								<VisualStateGroup.Transitions>
+									<VisualTransition GeneratedDuration="0"
+													  To="Loaded">
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Root"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+															 Duration="0:0:0.3"
+															 EasingFunction="{StaticResource EasingQuinticOut}"
+															 From="-800"
+															 To="0" />
+										</Storyboard>
+									</VisualTransition>
+								</VisualStateGroup.Transitions>
+								<VisualState x:Name="Loaded">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Root"
+														 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
 						<Ellipse Height="38"
 								 Margin="0,0,0,-13"
 								 Width="50"
@@ -485,21 +520,6 @@
 								UseLayoutRounding="True">
 							<ContentPresenter />
 						</Border>
-						<Path x:Name="Shadow" Data="M1,1 L12.5,25 L25,1"
-							VerticalAlignment="Bottom" UseLayoutRounding="False" d:LayoutOverrides="Width" HorizontalAlignment="Center" RenderTransformOrigin="0.5,1" >
-							<Path.RenderTransform>
-								<CompositeTransform ScaleY="2" ScaleX="2" TranslateY="-800"/>
-							</Path.RenderTransform>
-							<Path.Projection>
-								<PlaneProjection RotationX="-63" CenterOfRotationY="1" RotationY="37" LocalOffsetY="-400"/>
-							</Path.Projection>
-							<Path.Fill>
-								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-									<GradientStop Offset="0"/>
-									<GradientStop Color="#80000000" Offset="1"/>
-								</LinearGradientBrush>
-							</Path.Fill>
-						</Path>
 						<Path Data="M1,1 L12.5,25 L25,1"
 							  Fill="{TemplateBinding Background}"
 							  HorizontalAlignment="Center"

@@ -4,14 +4,18 @@
 							xmlns:Behaviors="clr-namespace:Travelexer.WindowsPhone.Core.Behaviors;assembly=Travelexer.WindowsPhone.Core"
 							xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+							xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+							xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
 							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
 							xmlns:Triggers="clr-namespace:Travelexer.WindowsPhone.Core.Triggers;assembly=Travelexer.WindowsPhone.Core"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
 							Style="{StaticResource PageDefault}"
+							x:Name="Self"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
 							Foreground="{StaticResource PhoneForegroundBrush}"
@@ -25,42 +29,173 @@
 		<ViewModels:MapViewModel />
 	</phone:PhoneApplicationPage.DataContext>
 	<Grid>
-		<Maps:Map x:Name="Map" LogoVisibility="Collapsed" CopyrightVisibility="Collapsed" Center="{Binding MapCenter, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}">
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="VisualStates">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.3"
+									  GeneratedEasingFunction="{StaticResource EasingQuinticOut}"
+									  To="PushpinSelected">
+						<Storyboard>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinBackground"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinContent"
+														   Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<ViewModels:PushpinOverlayVisualStates>Expanded</ViewModels:PushpinOverlayVisualStates>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpin"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="PushpinSelected"
+									  GeneratedDuration="0:0:0.2">
+						<Storyboard>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinBackground"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
+								<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="Default" />
+				<VisualState x:Name="Search" />
+				<VisualState x:Name="PushpinSelected">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinContent"
+													   Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<ViewModels:PushpinOverlayVisualStates>Expanded</ViewModels:PushpinOverlayVisualStates>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinBackground"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
+										 Storyboard.TargetProperty="(UIElement.Opacity)"
+										 Duration="0"
+										 To="1"
+										 d:IsOptimized="True" />
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpin"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+		<Maps:Map x:Name="Map"
+				  Center="{Binding MapCenter, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
+				  CopyrightVisibility="Collapsed"
+				  LogoVisibility="Collapsed">
+			<Maps:MapItemsControl IsHitTestVisible="False"
+								  ItemsSource="{Binding Pushpins}">
+				<Maps:MapItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Maps:Pushpin Style="{StaticResource PushpinShadow}"
+									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
+									  PositionOrigin="BottomCenter" />
+					</DataTemplate>
+				</Maps:MapItemsControl.ItemTemplate>
+			</Maps:MapItemsControl>
 			<Maps:MapItemsControl ItemsSource="{Binding Pushpins}">
 				<i:Interaction.Behaviors>
 					<Behaviors:CancelGestureEventBehavior />
 				</i:Interaction.Behaviors>
 				<Maps:MapItemsControl.ItemTemplate>
 					<DataTemplate>
-						<Maps:Pushpin Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
+						<Maps:Pushpin x:Name="Pushpin"
+									  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
-									  PositionOrigin="BottomCenter"
-									  Opacity="{Binding HighlightState, Converter={StaticResource PushpinHighlightStateToOpacityConverter}}"
-									  IsHitTestVisible="{Binding HighlightState, Converter={StaticResource PushpinHighlightStateToHitTestVisibilityConverter}}">
+									  PositionOrigin="BottomCenter">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Tap">
-									<i:InvokeCommandAction Command="{Binding Parent.CommandToggleSelectedPushpin, Mode=OneTime}"
+									<i:InvokeCommandAction Command="{Binding Parent.CommandSelectPushpin, Mode=OneTime}"
 														   CommandParameter="{Binding}" />
 								</i:EventTrigger>
-								<Triggers:RootManipulationTrigger>
-									<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
-														   CommandParameter="{Binding}" />
-								</Triggers:RootManipulationTrigger>
+								<i:EventTrigger>
+									<ec:GoToStateAction StateName="Loaded"
+														TargetObject="{Binding ElementName=Pushpin}" />
+								</i:EventTrigger>
 							</i:Interaction.Triggers>
-							<Controls:PushpinContent Address="{Binding Data.FormattedAddress}"
-													 CommandDelete="{Binding Parent.CommandDeletePlace, Mode=OneTime}"
-													 CommandDeleteParameter="{Binding}"
-													 CommandPinSearchResult="{Binding Parent.CommandPinSearchResult, Mode=OneTime}"
-													 CommandPinSearchResultParameter="{Binding}"
-													 Icon="{Binding Data.Icon}"
-													 Location="{Binding Data.Location}"
-													 Title="{Binding Data.Name}"
-													 VisualState="{Binding VisualState}"
-													 WorkingState="{Binding WorkingState}" />
+							<ContentPresenter Height="32"
+											  Width="32"
+											  Content="{Binding Data.Icon, Converter={StaticResource PlaceIconToControlConverter}}" />
 						</Maps:Pushpin>
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>
+			<Rectangle x:Name="SelectedPushpinBackground"
+					   Fill="#60000000"
+					   IsHitTestVisible="False"
+					   Opacity="0"
+					   Visibility="Collapsed" />
+			<Maps:MapLayer>
+				<i:Interaction.Behaviors>
+					<Behaviors:CancelGestureEventBehavior />
+				</i:Interaction.Behaviors>
+				<Maps:Pushpin x:Name="SelectedPushpin"
+							  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
+							  DataContext="{Binding SelectedPushpin}"
+							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
+							  Visibility="Collapsed"
+							  PositionOrigin="BottomCenter">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="Tap">
+							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
+												   CommandParameter="{Binding}" />
+						</i:EventTrigger>
+						<i:EventTrigger>
+							<ec:GoToStateAction StateName="Loaded"
+												TargetObject="{Binding ElementName=SelectedPushpin}"
+												UseTransitions="False" />
+						</i:EventTrigger>
+						<Triggers:RootManipulationTrigger>
+							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
+												   CommandParameter="{Binding}" />
+						</Triggers:RootManipulationTrigger>
+					</i:Interaction.Triggers>
+					<Controls:PushpinContent x:Name="SelectedPushpinContent"
+											 Address="{Binding Data.FormattedAddress}"
+											 CommandDelete="{Binding Parent.CommandDeletePlace, Mode=OneTime}"
+											 CommandDeleteParameter="{Binding}"
+											 CommandPinSearchResult="{Binding Parent.CommandPinSearchResult, Mode=OneTime}"
+											 CommandPinSearchResultParameter="{Binding}"
+											 Icon="{Binding Data.Icon}"
+											 Title="{Binding Data.Name}"
+											 VisualState="Collapsed"
+											 WorkingState="{Binding WorkingState}" />
+				</Maps:Pushpin>
+			</Maps:MapLayer>
 		</Maps:Map>
 	</Grid>
 </phone:PhoneApplicationPage>

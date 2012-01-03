@@ -134,7 +134,7 @@
 						  Fill="{TemplateBinding Background}"
 						  Stretch="Uniform"
 						  Stroke="{TemplateBinding Foreground}"
-						  StrokeThickness="4" />
+						  StrokeThickness="5" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

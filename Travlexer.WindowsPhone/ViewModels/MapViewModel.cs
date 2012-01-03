@@ -24,6 +24,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 		#endregion
 
 
+		#region Public Events
+
+		/// <summary>
+		/// Occurs when value of <see cref="SelectedPushpin"/> is changed.
+		/// </summary>
+		public event Action<PushpinViewModel> SelectedPushpinChanged;
+
+		#endregion
+
+
 		#region Constructors
 
 		public MapViewModel()
@@ -32,7 +42,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 
 			CommandAddPlace = new DelegateCommand<Location>(OnAddPlace);
-			CommandToggleSelectedPushpin = new DelegateCommand<PushpinViewModel>(OnToggleSelectedPushpin);
+			CommandSelectPushpin = new DelegateCommand<PushpinViewModel>(OnSelectPushpin);
 			CommandDeselectPushpin = new DelegateCommand<PushpinViewModel>(OnDeselectPushpin);
 			CommandDeletePlace = new DelegateCommand<PushpinViewModel>(OnDeletePlace);
 			CommandPinSearchResult = new DelegateCommand<PushpinViewModel>(OnPinSearchResult);
@@ -66,22 +76,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 				foreach (var pushpin in Pushpins)
 				{
-					if (value == null)
-					{
-						pushpin.HighlightState = PushpinHighlightStates.None;
-						pushpin.VisualState = PushpinContentVisualStates.Collapsed;
-					}
-					else if (value == pushpin)
-					{
-						pushpin.HighlightState = PushpinHighlightStates.Highlighted;
-						pushpin.VisualState = PushpinContentVisualStates.Expanded;
-					}
-					else
-					{
-						pushpin.HighlightState = PushpinHighlightStates.UnHighlighted;
-						pushpin.VisualState = PushpinContentVisualStates.Collapsed;
-					}
+					pushpin.VisualState = value == pushpin ? PushpinOverlayVisualStates.Expanded : PushpinOverlayVisualStates.Collapsed;
 				}
+				if (value != null)
+				{
+					MapCenter = value.Data.Location;
+				}
+				SelectedPushpinChanged.ExecuteIfNotNull(value);
 			}
 		}
 
@@ -118,7 +119,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the command that toggles the pushpin content state.
 		/// </summary>
-		public DelegateCommand<PushpinViewModel> CommandToggleSelectedPushpin { get; private set; }
+		public DelegateCommand<PushpinViewModel> CommandSelectPushpin { get; private set; }
 
 		/// <summary>
 		/// Gets the command that collapses the user pin.
@@ -141,11 +142,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		#region Event Handling
 
 		/// <summary>
-		/// Called when <see cref="CommandToggleSelectedPushpin"/> is executed.
+		/// Called when <see cref="CommandSelectPushpin"/> is executed.
 		/// </summary>
-		private void OnToggleSelectedPushpin(PushpinViewModel pushpin)
+		private void OnSelectPushpin(PushpinViewModel pushpin)
 		{
-			SelectedPushpin = SelectedPushpin == pushpin ? null : pushpin;
+			SelectedPushpin = pushpin;
 		}
 
 		/// <summary>
@@ -159,12 +160,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				return;
 			}
-			vm.WorkingState = PushpinContentWorkingStates.Working;
-			var bounds = MapBoundCapturer.ExecuteIfNotNull();
+			vm.WorkingState = PushpinOverlayWorkingStates.Working;
 			_data.GetPlaceInformation(
 				place,
-				bounds,
-				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? PushpinContentWorkingStates.Idle : PushpinContentWorkingStates.Error);
+				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? PushpinOverlayWorkingStates.Idle : PushpinOverlayWorkingStates.Error);
 		}
 
 		/// <summary>

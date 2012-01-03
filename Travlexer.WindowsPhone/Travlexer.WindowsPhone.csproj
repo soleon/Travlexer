@@ -97,8 +97,6 @@
     <Compile Include="Converters\LocationGeoCoordinateConverter.cs" />
     <Compile Include="Converters\PlaceColorHexConverter.cs" />
     <Compile Include="Converters\PlaceIconToControlConverter.cs" />
-    <Compile Include="Converters\PushpinHighlightStateToHitTestVisibilityConverter.cs" />
-    <Compile Include="Converters\PushpinHighlightStateToOpacityConverter.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="DesignTime.cs" />
     <Compile Include="Globals.cs" />
@@ -116,8 +114,7 @@
     <Compile Include="Services\GoogleMaps\GoogleMapsClient.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="ViewModels\PushpinContentStates.cs" />
-    <Compile Include="ViewModels\PushpinContentWorkingStates.cs" />
-    <Compile Include="ViewModels\PushpinHighlightStates.cs" />
+    <Compile Include="ViewModels\PushpinOverlayWorkingStates.cs" />
     <Compile Include="ViewModels\PushpinViewModel.cs" />
     <Compile Include="Views\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
