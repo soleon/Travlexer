@@ -1,0 +1,31 @@
+namespace Travlexer.WindowsPhone.Services.GoogleMaps
+{
+	public enum PlaceType : byte
+	{
+		premise,
+		subpremise,
+		street_number,
+		route,
+		locality,
+		sublocality,
+		political,
+		administrative_area_level_1,
+		administrative_area_level_2,
+		administrative_area_level_3,
+		country,
+		postal_code,
+		intersection,
+		colloquial_area,
+		neighborhood,
+		natural_feature,
+		airport,
+		park,
+		post_box,
+		floor,
+		room,
+		geocode,
+		bus_station,
+		transit_station,
+		establishment
+	}
+}

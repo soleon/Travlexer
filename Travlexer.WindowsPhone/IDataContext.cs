@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Travlexer.WindowsPhone.Core.Services;
 using Travlexer.WindowsPhone.Models;
@@ -50,6 +51,14 @@ namespace Travlexer.WindowsPhone
 		/// <param name="place">The place to get the information for.</param>
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
 		void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null);
+
+		/// <summary>
+		/// Searches for places that matches the input.
+		/// </summary>
+		/// <param name="baseLocation">The geo-coordinate around which to retrieve place information.</param>
+		/// <param name="input">The input to search places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		void Search(Location baseLocation, string input, Action<CallbackEventArgs<IList<Place>>> callback = null);
 
 		#endregion
 	}

@@ -23,7 +23,13 @@ namespace Travlexer.WindowsPhone.Core.ViewModels
 		/// <summary>
 		/// Gets or sets the logical parent view model that owns this view model.
 		/// </summary>
-		public IViewModel Parent { get; set; }
+		public IViewModel Parent
+		{
+			get { return _parent; }
+			set { SetProperty(ref _parent, value, ParentProperty); }
+		}
+		private IViewModel _parent;
+		private const string ParentProperty = "Parent";
 
 		#endregion
 

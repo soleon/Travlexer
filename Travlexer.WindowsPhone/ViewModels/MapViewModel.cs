@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows;
 using Microsoft.Phone.Controls.Maps;
 using Travlexer.WindowsPhone.Core.Collections;
 using Travlexer.WindowsPhone.Core.Commands;
@@ -8,7 +11,9 @@ using Travlexer.WindowsPhone.Core.Extensions;
 using Travlexer.WindowsPhone.Core.Services;
 using Travlexer.WindowsPhone.Core.ViewModels;
 using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Services.GoogleMaps;
 using Travlexer.WindowsPhone.Views;
+using Place = Travlexer.WindowsPhone.Models.Place;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
@@ -31,6 +36,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public event Action<PushpinViewModel> SelectedPushpinChanged;
 
+		/// <summary>
+		/// Occurs when the execution of <see cref="CommandSearch"/> is completed successfully.
+		/// </summary>
+		public event Action<IList<Place>> SearchSucceeded;
+
 		#endregion
 
 
@@ -40,7 +50,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 		{
 			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), _data.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
+			Suggestions = new ReadOnlyObservableCollection<Suggestion>(_suggestions);
 
+			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
+			CommandSearch = new DelegateCommand(OnSearch);
 			CommandAddPlace = new DelegateCommand<Location>(OnAddPlace);
 			CommandSelectPushpin = new DelegateCommand<PushpinViewModel>(OnSelectPushpin);
 			CommandDeselectPushpin = new DelegateCommand<PushpinViewModel>(OnDeselectPushpin);
@@ -106,6 +119,26 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Func<LocationRect> MapBoundCapturer { private get; set; }
 
+		/// <summary>
+		/// Gets the suggestions based on the <see cref="Input"/>.
+		/// </summary>
+		public ReadOnlyObservableCollection<Suggestion> Suggestions { get; private set; }
+
+		private readonly ObservableCollection<Suggestion> _suggestions = new ObservableCollection<Suggestion>();
+
+
+		/// <summary>
+		/// Gets or sets the search input.
+		/// </summary>
+		public string Input
+		{
+			get { return _input; }
+			set { SetProperty(ref _input, value, InputProperty); }
+		}
+
+		private string _input;
+		private const string InputProperty = "Input";
+
 		#endregion
 
 
@@ -135,6 +168,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the command that pins a search result.
 		/// </summary>
 		public DelegateCommand<PushpinViewModel> CommandPinSearchResult { get; private set; }
+
+		/// <summary>
+		/// Gets the command that gets suggestions that based on the <see cref="Input"/>.
+		/// </summary>
+		public DelegateCommand CommandGetSuggestions { get; private set; }
+
+		/// <summary>
+		/// Gets the command that performs the search based on the <see cref="Input"/>.
+		/// </summary>
+		public DelegateCommand CommandSearch { get; private set; }
 
 		#endregion
 
@@ -214,6 +257,34 @@ namespace Travlexer.WindowsPhone.ViewModels
 					}
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandSearch"/> is executed.
+		/// </summary>
+		private void OnSearch()
+		{
+			Globals.DataContext.Search(MapCenter, Input, args =>
+			{
+				if (args.Status != CallbackStatus.Successful)
+				{
+					const string
+						messageBoxText = "There was no result coming back form the search, please try again later.",
+						caption = "Nothing Was Found";
+					MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
+					return;
+				}
+				var places = args.Result;
+				SearchSucceeded.ExecuteIfNotNull(places);
+			});
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandGetSuggestions"/> is executed.
+		/// </summary>
+		private void OnGetSuggestions()
+		{
+			throw new NotImplementedException();
 		}
 
 		protected override void OnDispose()

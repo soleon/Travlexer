@@ -113,6 +113,14 @@ namespace Travlexer.WindowsPhone.Models
 		private string _note;
 		private const string NoteProperty = "Note";
 
+		public ViewPort ViewPort
+		{
+			get { return _viewPort; }
+			set { SetProperty(ref _viewPort, value, ViewPortProperty); }
+		}
+		private ViewPort _viewPort;
+		private const string ViewPortProperty = "ViewPort";
+
 		#endregion
 
 

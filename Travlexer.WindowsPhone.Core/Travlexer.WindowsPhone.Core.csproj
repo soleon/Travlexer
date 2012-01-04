@@ -51,13 +51,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
+    <Compile Include="Threading\UIThread.cs" />
     <Compile Include="Collections\AdaptedObservableCollection.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Converters\BooleanConverter.cs" />
     <Compile Include="Extensions\DelegateExtensions.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CallbackEventArgs.cs" />
+    <Compile Include="TriggerActions\FocusAction.cs" />
+    <Compile Include="Triggers\KeyPressTrigger.cs" />
     <Compile Include="Triggers\RootManipulationTrigger.cs" />
     <Compile Include="ViewModels\DataViewModelBase.cs" />
     <Compile Include="ViewModels\IViewModel.cs" />

@@ -64,12 +64,12 @@ namespace Travlexer.WindowsPhone.Models
 
 		public static implicit operator Location(GeoCoordinate coordinate)
 		{
-			return new Location(coordinate.Latitude, coordinate.Longitude);
+			return coordinate == null ? null : new Location(coordinate.Latitude, coordinate.Longitude);
 		}
 
 		public static implicit operator GeoCoordinate(Location location)
 		{
-			return new GeoCoordinate(location.Latitude, location.Longitude);
+			return location == null ? null : new GeoCoordinate(location.Latitude, location.Longitude);
 		}
 
 		#endregion

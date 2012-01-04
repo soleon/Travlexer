@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using Microsoft.Phone.Controls.Maps;
 using Newtonsoft.Json;
 using RestSharp;
-using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Core.Extensions;
 
 namespace Travlexer.WindowsPhone.Services.GoogleMaps
 {
@@ -17,6 +15,22 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
 		void GetPlaces(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback);
+
+		/// <summary>
+		/// Gets the suggestions based on the input.
+		/// </summary>
+		/// <param name="center">The geo-coordinate of where the suggestions will be based on.</param>
+		/// <param name="input">The input to populate the suggestions.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		void GetSuggestions(LatLng center, string input, Action<RestResponse<AutoCompleteResponse>> callback = null);
+
+		/// <summary>
+		/// Searches for places that matches the input.
+		/// </summary>
+		/// <param name="baseLocation">The geo-coordinate around which to retrieve place information.</param>
+		/// <param name="input">The input to search places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		void Search(LatLng baseLocation, string input, Action<RestResponse<EnumerableResponse<Place>>> callback = null);
 	}
 
 	public class GoogleMapsClient : IGoogleMapsClient
@@ -108,9 +122,9 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			_language = GetLanguageCode(CultureInfo.CurrentCulture);
 
 			_region = RegionInfo.CurrentRegion.TwoLetterISORegionName;
-			_basePlacesSearchUrl = "place/search/json?sensor=true&radius=500&key=" + ApiKey + "&language=" + _language;
+			_basePlacesSearchUrl = "place/search/json?sensor=true&radius=5000&key=" + ApiKey + "&language=" + _language;
 			_basePlaceDetailsUrl = "place/details/json?sensor=true&key=" + ApiKey + "&language=" + _language;
-			_baseGeocodingUrl = "geocode/json?sensor=true&language=" + _language +"&region=" + _region;
+			_baseGeocodingUrl = "geocode/json?sensor=true&language=" + _language + "&region=" + _region;
 			_baseDirectionsUrl = "directions/json?sensor=true&language=" + _language + "&region=" + _region;
 			_baseAutoCompleteUrl = "place/autocomplete/json?sensor=true&key=" + ApiKey + "&language=" + _language;
 			_baseStaticMapUrl = "staticmap?sensor=true";
@@ -124,19 +138,73 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
-		public void GetPlaces(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback)
+		public void GetPlaces(LatLng location, Action<RestResponse<EnumerableResponse<PlaceDetails>>> callback = null)
 		{
 			var c = new RestClient(BaseApiUrl);
 			c.ExecuteAsync<EnumerableResponse<PlaceDetails>>(
 				new RestRequest(_baseGeocodingUrl + "&latlng=" + location),
 				response =>
 				{
-					try
+					if (response != null && response.StatusCode == HttpStatusCode.OK && response.Data == null)
 					{
-						response.Data = JsonConvert.DeserializeObject<EnumerableResponse<PlaceDetails>>(response.Content);
+						try
+						{
+							response.Data = JsonConvert.DeserializeObject<EnumerableResponse<PlaceDetails>>(response.Content);
+						}
+						catch { }
 					}
-					catch {}
-					callback(response);
+					callback.ExecuteIfNotNull(response);
+				});
+		}
+
+		/// <summary>
+		/// Gets the suggestions based on the input.
+		/// </summary>
+		/// <param name="center">The geo-coordinate of where the suggestions will be based on.</param>
+		/// <param name="input">The input to populate the suggestions.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		public void GetSuggestions(LatLng center, string input, Action<RestResponse<AutoCompleteResponse>> callback = null)
+		{
+			var c = new RestClient(BaseApiUrl);
+			c.ExecuteAsync<AutoCompleteResponse>(
+				new RestRequest(_baseAutoCompleteUrl + "&location=" + center + "&input=" + input),
+				response =>
+				{
+					if (response != null && response.StatusCode == HttpStatusCode.OK && response.Data == null)
+					{
+						try
+						{
+							response.Data = JsonConvert.DeserializeObject<AutoCompleteResponse>(response.Content);
+						}
+						catch { }
+					}
+
+					callback.ExecuteIfNotNull(response);
+				});
+		}
+
+		/// <summary>
+		/// Searches for places that matches the input.
+		/// </summary>
+		/// <param name="baseLocation">The geo-coordinate around which to retrieve place information.</param>
+		/// <param name="input">The input to search places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		public void Search(LatLng baseLocation, string input, Action<RestResponse<EnumerableResponse<Place>>> callback = null)
+		{
+			var c = new RestClient(BaseApiUrl);
+			c.ExecuteAsync<EnumerableResponse<Place>>(
+				new RestRequest(_basePlacesSearchUrl + "&location=" + baseLocation + (input == null ? null : "&keyword=" + HttpUtility.UrlEncode(input))),
+				response =>
+				{
+					if (response != null && response.StatusCode == HttpStatusCode.OK && response.Data == null)
+					{
+						try
+						{
+							response.Data = JsonConvert.DeserializeObject<EnumerableResponse<Place>>(response.Content);
+						}
+						catch { }
+					}
+					callback.ExecuteIfNotNull(response);
 				});
 		}
 
@@ -368,385 +436,16 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			callback(result);
 		}
 
-		#endregion
-	}
-
-	public class AddressComponent
-	{
-		[JsonProperty(PropertyName = "long_name")]
-		public string LongName { get; set; }
-
-		[JsonProperty(PropertyName = "short_name")]
-		public string ShortName { get; set; }
-
-		[JsonProperty(PropertyName = "types")]
-		public IEnumerable<string> Types { get; set; }
-	}
-
-	public class AutoCompleteResponse
-	{
-		[JsonProperty(PropertyName = "predictions")]
-		public IEnumerable<Suggestion> Suggestions { get; set; }
-	}
-
-	public struct Distance
-	{
-		[JsonProperty(PropertyName = "text")]
-		public string Text { get; set; }
-
-		[JsonProperty(PropertyName = "value")]
-		public int Value { get; set; }
-	}
-
-	public struct Duration
-	{
-		[JsonProperty(PropertyName = "text")]
-		public string Text { get; set; }
-
-		[JsonProperty(PropertyName = "value")]
-		public int Value { get; set; }
-	}
-
-	public class EnumerableResponse<T> : ResponseBase
-	{
-		[JsonProperty(PropertyName = "results")]
-		public virtual IList<T> Results { get; set; }
-	}
-
-	public class RoutesResponse : EnumerableResponse<Route>
-	{
-		[JsonProperty(PropertyName = "routes")]
-		public override IList<Route> Results
+		public void GetSuggestions(LatLng center, string input, Action<RestResponse<AutoCompleteResponse>> callback = null)
 		{
-			get { return base.Results; }
-			set { base.Results = value; }
-		}
-	}
-
-	public class Geometry
-	{
-		public enum LocationTypes
-		{
-			APPROXIMATE,
-			GEOMETRIC_CENTER,
-			RANGE_INTERPOLATED,
-			ROOFTOP
+			throw new NotImplementedException();
 		}
 
-		[JsonProperty(PropertyName = "location")]
-		public LatLng Location { get; set; }
-
-		[JsonProperty(PropertyName = "viewport")]
-		public ViewPort ViewPort { get; set; }
-
-		[JsonProperty(PropertyName = "location_type")]
-		public LocationTypes LocationType { get; set; }
-	}
-
-	public class Leg
-	{
-		[JsonProperty(PropertyName = "distance")]
-		public Distance Distance { get; set; }
-
-		[JsonProperty(PropertyName = "duration")]
-		public Duration Duration { get; set; }
-
-		[JsonProperty(PropertyName = "end_address")]
-		public string EndAddress { get; set; }
-
-		[JsonProperty(PropertyName = "end_location")]
-		public LatLng EndLocation { get; set; }
-
-		[JsonProperty(PropertyName = "start_address")]
-		public string StartAddress { get; set; }
-
-		[JsonProperty(PropertyName = "start_location")]
-		public LatLng StartLocation { get; set; }
-
-		[JsonProperty(PropertyName = "steps")]
-		public IEnumerable<Step> Steps { get; set; }
-	}
-
-	public class Place
-	{
-		[JsonProperty(PropertyName = "name")]
-		public string Name { get; set; }
-
-		[JsonProperty(PropertyName = "icon")]
-		public string Icon { get; set; }
-
-		[JsonProperty(PropertyName = "vicinity")]
-		public string Vicinity { get; set; }
-
-		[JsonProperty(PropertyName = "types")]
-		public IEnumerable<string> Types { get; set; }
-
-		[JsonProperty(PropertyName = "geometry")]
-		public Geometry Geometry { get; set; }
-
-		[JsonProperty(PropertyName = "reference")]
-		public string Reference { get; set; }
-
-		[JsonProperty(PropertyName = "id")]
-		public string Id { get; set; }
-	}
-
-	public class PlaceDetails : Place
-	{
-		[JsonProperty(PropertyName = "formatted_phone_number")]
-		public string FormattedPhoneNumber { get; set; }
-
-		[JsonProperty(PropertyName = "formatted_address")]
-		public string FormattedAddress { get; set; }
-
-		[JsonProperty(PropertyName = "address_components")]
-		public IEnumerable<AddressComponent> AddressComponents { get; set; }
-	}
-
-	public enum PlaceType : byte
-	{
-		premise,
-		subpremise,
-		street_number,
-		route,
-		locality,
-		sublocality,
-		political,
-		administrative_area_level_1,
-		administrative_area_level_2,
-		administrative_area_level_3,
-		country,
-		postal_code,
-		intersection,
-		colloquial_area,
-		neighborhood,
-		natural_feature,
-		airport,
-		park,
-		post_box,
-		floor,
-		room,
-		geocode,
-		bus_station,
-		transit_station,
-		establishment
-	}
-
-	public class Polyline
-	{
-		[JsonProperty(PropertyName = "points")]
-		public string Points { get; set; }
-
-		[JsonProperty(PropertyName = "levels")]
-		public string Levels { get; set; }
-	}
-
-	public class Response<T> : ResponseBase
-	{
-		[JsonProperty(PropertyName = "result")]
-		public T Result { get; set; }
-	}
-
-	public abstract class ResponseBase
-	{
-		[JsonProperty(PropertyName = "html_attributions")]
-		public IEnumerable<string> HtmlAttributions { get; set; }
-
-		[JsonProperty(PropertyName = "status")]
-		public StatusCodes Status { get; set; }
-	}
-
-	public class Route
-	{
-		[JsonProperty(PropertyName = "copyrights")]
-		public string Copyrights { get; set; }
-
-		[JsonProperty(PropertyName = "summary")]
-		public string Summary { get; set; }
-
-		[JsonProperty(PropertyName = "bounds")]
-		public ViewPort Bounds { get; set; }
-
-		[JsonProperty(PropertyName = "warnings")]
-		public IEnumerable<string> Warnings { get; set; }
-
-		[JsonProperty(PropertyName = "waypoint_order")]
-		public IEnumerable<int> WaypointOrder { get; set; }
-
-		[JsonProperty(PropertyName = "legs")]
-		public IEnumerable<Leg> Legs { get; set; }
-
-		[JsonProperty(PropertyName = "overview_polyline")]
-		public Polyline OverviewPolyline { get; set; }
-	}
-
-	public struct Size
-	{
-		public int Width { get; set; }
-		public int Height { get; set; }
-
-		public override string ToString()
+		public void Search(LatLng baseLocation, string input, Action<RestResponse<EnumerableResponse<Place>>> callback = null)
 		{
-			return Width + "x" + Height;
-		}
-	}
-
-	public enum StatusCodes
-	{
-		OK,
-		UNKNOWN_ERROR,
-		ZERO_RESULTS,
-		OVER_QUERY_LIMIT,
-		REQUEST_DENIED,
-		INVALID_REQUEST,
-		MAX_WAYPOINTS_EXCEEDED,
-		NOT_FOUND
-	}
-
-	public class Step
-	{
-		[JsonProperty(PropertyName = "distance")]
-		public Distance Distance { get; set; }
-
-		[JsonProperty(PropertyName = "duration")]
-		public Duration Duration { get; set; }
-
-		[JsonProperty(PropertyName = "end_location")]
-		public LatLng EndLocation { get; set; }
-
-		[JsonProperty(PropertyName = "start_location")]
-		public LatLng StartLocation { get; set; }
-
-		[JsonProperty(PropertyName = "travel_mode")]
-		public TravelMode TravelMode { get; set; }
-
-		[JsonProperty(PropertyName = "html_instructions")]
-		public string HtmlInstructions { get; set; }
-
-		[JsonProperty(PropertyName = "polyline")]
-		public Polyline Polyline { get; set; }
-	}
-
-	public class Suggestion
-	{
-		[JsonProperty(PropertyName = "description")]
-		public string Description { get; set; }
-
-		[JsonProperty(PropertyName = "reference")]
-		public string Reference { get; set; }
-
-		[JsonProperty(PropertyName = "types")]
-		public IEnumerable<PlaceType> Types { get; set; }
-	}
-
-	public class ViewPort
-	{
-		private const string Delimiter = "|";
-
-
-		#region Public Properties
-
-		[JsonProperty(PropertyName = "northeast")]
-		public LatLng Northeast { get; set; }
-
-		[JsonProperty(PropertyName = "southwest")]
-		public LatLng Southwest { get; set; }
-
-		#endregion
-
-
-		#region Operators
-
-		public static implicit operator LocationRect(ViewPort viewPort)
-		{
-			return new LocationRect
-			{
-				Northeast = viewPort.Northeast,
-				Southwest = viewPort.Southwest
-			};
-		}
-
-		public static implicit operator ViewPort(LocationRect rect)
-		{
-			return new ViewPort
-			{
-				Northeast = rect.Northeast,
-				Southwest = rect.Southwest
-			};
+			throw new NotImplementedException();
 		}
 
 		#endregion
-
-
-		#region Public Methods
-
-		public override string ToString()
-		{
-			return Southwest + Delimiter + Northeast;
-		}
-
-		#endregion
-	}
-
-	public class LatLng
-	{
-		#region Constants
-
-		private const string Delimiter = ",";
-
-		#endregion
-
-
-		#region Public Properties
-
-		[JsonProperty(PropertyName = "lat")]
-		public double Lat { get; set; }
-
-		[JsonProperty(PropertyName = "lng")]
-		public double Lng { get; set; }
-
-		#endregion
-
-
-		#region Operators
-
-		public static implicit operator Location(LatLng latLng)
-		{
-			return new Location(latLng.Lat, latLng.Lng);
-		}
-
-		public static implicit operator LatLng(Location location)
-		{
-			return new LatLng { Lat = location.Latitude, Lng = location.Longitude };
-		}
-
-		public static implicit operator GeoCoordinate(LatLng latLng)
-		{
-			return new GeoCoordinate(latLng.Lat, latLng.Lng);
-		}
-
-		public static implicit operator LatLng(GeoCoordinate coordinate)
-		{
-			return new LatLng { Lat = coordinate.Latitude, Lng = coordinate.Longitude };
-		}
-
-		#endregion
-
-
-		#region Public Methods
-
-		public override string ToString()
-		{
-			return Lat.ToString(NumberFormatInfo.InvariantInfo) + Delimiter + Lng.ToString(NumberFormatInfo.InvariantInfo);
-		}
-
-		#endregion
-	}
-
-	public enum TravelMode
-	{
-		Driving,
-		Bicycling,
-		Walking
 	}
 }

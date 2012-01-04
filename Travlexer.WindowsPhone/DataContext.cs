@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Windows;
 using Travlexer.WindowsPhone.Core.Extensions;
 using Travlexer.WindowsPhone.Core.Services;
+using Travlexer.WindowsPhone.Core.Threading;
 using Travlexer.WindowsPhone.Models;
 using Travlexer.WindowsPhone.Services.GoogleMaps;
 using Place = Travlexer.WindowsPhone.Models.Place;
@@ -83,7 +86,7 @@ namespace Travlexer.WindowsPhone
 		/// </summary>
 		public void ClearUnPinnedPlaces()
 		{
-			for (var i = _places.Count; i >= 0; i--)
+			for (var i = _places.Count - 1; i >= 0; i--)
 			{
 				if (!_places[i].IsSearchResult)
 				{
@@ -105,13 +108,13 @@ namespace Travlexer.WindowsPhone
 				return;
 			}
 
-			_googleMapsClient.GetPlaces(place.Location, args =>
+			_googleMapsClient.GetPlaces(place.Location, response =>
 			{
 				EnumerableResponse<Services.GoogleMaps.PlaceDetails> data;
 				IList<Services.GoogleMaps.PlaceDetails> results;
-				if (args.StatusCode != HttpStatusCode.OK || (data = args.Data) == null || (results = data.Results) == null || results.Count == 0)
+				if (response.StatusCode != HttpStatusCode.OK || (data = response.Data) == null || (results = data.Results) == null || results.Count == 0)
 				{
-					var exception = args.ErrorException;
+					var exception = response.ErrorException;
 					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs(CallbackStatus.ServiceException, exception) : new CallbackEventArgs(CallbackStatus.Unknown));
 					return;
 				}
@@ -126,6 +129,53 @@ namespace Travlexer.WindowsPhone
 				}
 				place.FormattedAddress = details.FormattedAddress;
 				callback.ExecuteIfNotNull(new CallbackEventArgs());
+			});
+		}
+
+		/// <summary>
+		/// Searches for places that matches the input.
+		/// </summary>
+		/// <param name="baseLocation">The geo-coordinate around which to retrieve place information.</param>
+		/// <param name="input">The input to search places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		public void Search(Location baseLocation, string input, Action<CallbackEventArgs<IList<Place>>> callback = null)
+		{
+			if (!Globals.IsNetworkAvailable)
+			{
+				callback.ExecuteIfNotNull(new CallbackEventArgs<IList<Place>>(CallbackStatus.NetworkUnavailable));
+				return;
+			}
+
+			_googleMapsClient.Search(baseLocation, input, response =>
+			{
+				EnumerableResponse<Services.GoogleMaps.Place> data;
+				IList<Services.GoogleMaps.Place> results;
+				if (response.StatusCode != HttpStatusCode.OK || (data = response.Data) == null || (results = data.Results) == null || results.Count == 0)
+				{
+					var exception = response.ErrorException;
+					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs<IList<Place>>(CallbackStatus.ServiceException, exception) : new CallbackEventArgs<IList<Place>>(CallbackStatus.Unknown));
+					return;
+				}
+
+
+				ClearUnPinnedPlaces();
+				var places = results.Take(10).Select(p => (Place)p).ToList();
+
+				UIThread.RunWorker(() =>
+				{
+					var lastIndex = places.Count - 1;
+					for (var i = 0; i <= lastIndex; i++)
+					{
+						var place = places[i];
+						UIThread.InvokeAsync(() => _places.Add(place));
+						if (i == lastIndex)
+						{
+							break;
+						}
+						Thread.Sleep(100);
+					}
+				});
+				callback.ExecuteIfNotNull(new CallbackEventArgs<IList<Place>>(places));
 			});
 		}
 
