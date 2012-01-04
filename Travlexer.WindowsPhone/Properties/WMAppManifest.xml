@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{a81b2038-2ee0-4775-bac8-7676f963ddbd}" Title="Travelexer" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Travelexer.WindowsPhone author" Description="Sample description" Publisher="Travelexer.WindowsPhone">
+  <App xmlns="" ProductID="{a81b2038-2ee0-4775-bac8-7676f963ddbd}" Title="Travlexer" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Travelexer.WindowsPhone author" Description="Sample description" Publisher="Travelexer.WindowsPhone">
     <IconPath IsRelative="true" IsResource="false">Assets\AppIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES" />

@@ -1,4 +1,4 @@
-﻿using Travelexer.WindowsPhone.Core.Models;
+﻿using Travlexer.WindowsPhone.Core.Models;
 
 namespace Travlexer.WindowsPhone.Models
 {

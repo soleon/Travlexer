@@ -1,7 +1,7 @@
 using System;
-using Travelexer.WindowsPhone.Core.Models;
+using Travlexer.WindowsPhone.Core.Models;
 
-namespace Travelexer.WindowsPhone.Core.ViewModels
+namespace Travlexer.WindowsPhone.Core.ViewModels
 {
 	public abstract class DataViewModelBase<T> : ViewModelBase where T : IModel
 	{

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travlexer.WindowsPhone", "Travlexer.WindowsPhone\Travlexer.WindowsPhone.csproj", "{FA109FC3-77E0-4C8D-BE04-9C660DB18634}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travelexer.WindowsPhone.Core", "Travelexer.WindowsPhone.Core\Travelexer.WindowsPhone.Core.csproj", "{D410E698-3733-4558-9844-761EAAC04BAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travlexer.WindowsPhone.Core", "Travlexer.WindowsPhone.Core\Travlexer.WindowsPhone.Core.csproj", "{D410E698-3733-4558-9844-761EAAC04BAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

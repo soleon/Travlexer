@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using Microsoft.Phone.Controls.Maps;
-using Travelexer.WindowsPhone.Core.Extensions;
+using Travlexer.WindowsPhone.Core.Extensions;
 using Travlexer.WindowsPhone.ViewModels;
 
 namespace Travlexer.WindowsPhone.Views

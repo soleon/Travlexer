@@ -50,12 +50,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Expression.Controls" />
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -63,15 +61,12 @@
       <HintPath>..\Libraries\RestSharp.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="System.Device" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Interactivity" />
     <Reference Include="System.Xml" />
-    <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -164,9 +159,9 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Travelexer.WindowsPhone.Core\Travelexer.WindowsPhone.Core.csproj">
+    <ProjectReference Include="..\Travlexer.WindowsPhone.Core\Travlexer.WindowsPhone.Core.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
-      <Name>Travelexer.WindowsPhone.Core</Name>
+      <Name>Travlexer.WindowsPhone.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />

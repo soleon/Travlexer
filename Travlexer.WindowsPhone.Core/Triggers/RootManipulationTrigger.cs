@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 
-namespace Travelexer.WindowsPhone.Core.Triggers
+namespace Travlexer.WindowsPhone.Core.Triggers
 {
 	/// <summary>
 	/// Executes a collection of actions when the <see cref="Application.RootVisual"/> raises any manipulation activity.

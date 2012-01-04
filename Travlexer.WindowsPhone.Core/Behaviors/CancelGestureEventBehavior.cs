@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using System.Windows.Interactivity;
 
-namespace Travelexer.WindowsPhone.Core.Behaviors
+namespace Travlexer.WindowsPhone.Core.Behaviors
 {
 	public class CancelGestureEventBehavior : Behavior<UIElement>
 	{

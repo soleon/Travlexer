@@ -2,11 +2,11 @@
 using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.Phone.Controls.Maps;
-using Travelexer.WindowsPhone.Core.Collections;
-using Travelexer.WindowsPhone.Core.Commands;
-using Travelexer.WindowsPhone.Core.Extensions;
-using Travelexer.WindowsPhone.Core.Services;
-using Travelexer.WindowsPhone.Core.ViewModels;
+using Travlexer.WindowsPhone.Core.Collections;
+using Travlexer.WindowsPhone.Core.Commands;
+using Travlexer.WindowsPhone.Core.Extensions;
+using Travlexer.WindowsPhone.Core.Services;
+using Travlexer.WindowsPhone.Core.ViewModels;
 using Travlexer.WindowsPhone.Models;
 using Travlexer.WindowsPhone.Views;
 

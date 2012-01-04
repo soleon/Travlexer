@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 
-namespace Travelexer.WindowsPhone.Core.Collections
+namespace Travlexer.WindowsPhone.Core.Collections
 {
 	public class AdaptedObservableCollection<TSource, TTarget> : ObservableCollection<TTarget>
 	{

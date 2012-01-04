@@ -1,6 +1,5 @@
 using System.ComponentModel;
-using System.Windows;
-using Travelexer.WindowsPhone.Core.ViewModels;
+using Travlexer.WindowsPhone.Core.ViewModels;
 using Travlexer.WindowsPhone.Models;
 
 namespace Travlexer.WindowsPhone.ViewModels

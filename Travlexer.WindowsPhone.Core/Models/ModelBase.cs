@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using Travelexer.WindowsPhone.Core.Extensions;
+using Travlexer.WindowsPhone.Core.Extensions;
 
-namespace Travelexer.WindowsPhone.Core.Models
+namespace Travlexer.WindowsPhone.Core.Models
 {
 	public abstract class ModelBase : IModel
 	{

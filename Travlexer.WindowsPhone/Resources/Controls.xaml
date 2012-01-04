@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:Behaviors="clr-namespace:Travelexer.WindowsPhone.Core.Behaviors;assembly=Travelexer.WindowsPhone.Core"
+					xmlns:Behaviors="clr-namespace:Travlexer.WindowsPhone.Core.Behaviors;assembly=Travlexer.WindowsPhone.Core"
 					xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"

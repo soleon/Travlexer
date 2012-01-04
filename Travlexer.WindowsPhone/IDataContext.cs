@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Microsoft.Phone.Controls.Maps;
-using Travelexer.WindowsPhone.Core.Services;
+using Travlexer.WindowsPhone.Core.Services;
 using Travlexer.WindowsPhone.Models;
 
 namespace Travlexer.WindowsPhone

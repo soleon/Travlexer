@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Travelexer.WindowsPhone.Core.Models
+namespace Travlexer.WindowsPhone.Core.Models
 {
 	public interface IModel : INotifyPropertyChanged, IDisposable
 	{
