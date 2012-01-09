@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
+using Microsoft.Phone.Shell;
 using Travlexer.WindowsPhone.Core.Extensions;
 using Travlexer.WindowsPhone.Models;
 using Travlexer.WindowsPhone.ViewModels;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Travlexer.WindowsPhone.Views
 {
 	public partial class MapView
 	{
-		#region Constants
-
-		private const string SearchStateName = "Search";
-		private const string DefaultStateName = "Default";
-		private const string PushpinSelectedStateName = "PushpinSelected";
-
-		#endregion
-
-
 		#region Private Members
 
 		/// <summary>
@@ -29,10 +23,16 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private readonly MapViewModel _context;
 
+		/// <summary>
+		/// A reference to the current <see cref="ApplicationBar"/>.
+		/// </summary>
+		private readonly IApplicationBar _appBar;
+
 		#endregion
 
 
 		#region Constructors
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MapView"/> class.
 		/// </summary>
@@ -40,17 +40,23 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			InitializeComponent();
 			_context = DataContext as MapViewModel;
+			_appBar = ApplicationBar;
+
 			if (_context != null)
 			{
 				_context.MapBoundCapturer = OnCaptureMapBound;
 				_context.SelectedPushpinChanged += OnSelectedPushpinChanged;
 				_context.SearchSucceeded += OnSearchSucceeded;
+				_context.VisualStateChanged += OnVisualStateChanged;
+				_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
 			}
 
 			// The "Hold" event in XAML is not recognised by Blend.
 			// Doing event handling here instead of in XAML is a hack to make the view still "blendable".
 			Map.Hold += OnMapHold;
-		} 
+		}
+
+
 		#endregion
 
 
@@ -62,7 +68,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// <param name="vm">The vm.</param>
 		private void OnSelectedPushpinChanged(PushpinViewModel vm)
 		{
-			VisualStateManager.GoToState(this, vm == null ? DefaultStateName : PushpinSelectedStateName, true);
+			GoToState(vm == null ? MapViewModel.VisualStates.Default : MapViewModel.VisualStates.PushpinSelected);
 		}
 
 		/// <summary>
@@ -88,7 +94,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void OnAppButtonSearchClick(object sender, EventArgs e)
 		{
-			VisualStateManager.GoToState(this, SearchStateName, true);
+			GoToState(MapViewModel.VisualStates.Search);
 			SearchBox.Focus();
 		}
 
@@ -110,7 +116,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -119,6 +125,56 @@ namespace Travlexer.WindowsPhone.Views
 			}
 		}
 
+
+		/// <summary>
+		/// Called when the visual state of the view model has changed.
+		/// </summary>
+		private void OnVisualStateChanged(MapViewModel.VisualStates state)
+		{
+			_appBar.IsVisible = state == MapViewModel.VisualStates.Default || state == MapViewModel.VisualStates.PushpinSelected;
+			VisualStateManager.GoToState(this, state.ToString(), true);
+		}
+
+		/// <summary>
+		/// This method is called when the hardware Back button is pressed.
+		/// Returns to the Default visual state if the view is in another state, otherwise, exits the application.
+		/// </summary>
+		protected override void OnBackKeyPress(CancelEventArgs e)
+		{
+			if (_context.VisualState == MapViewModel.VisualStates.Default || _context.VisualState == MapViewModel.VisualStates.PushpinSelected)
+			{
+				base.OnBackKeyPress(e);
+			}
+			else
+			{
+				e.Cancel = true;
+				GoToState(MapViewModel.VisualStates.Default);
+			}
+		}
+
+		private void OnSuggestionsRetrieved()
+		{
+			SearchBox.PopulateComplete();
+		}
+
 		#endregion
+
+
+		#region Private Methods
+
+		/// <summary>
+		/// Sets the <see cref="MapViewModel.VisualState"/> and focuses on the map control if the state is Default.
+		/// </summary>
+		private void GoToState(MapViewModel.VisualStates state)
+		{
+			_context.VisualState = state;
+			if (state == MapViewModel.VisualStates.Default)
+			{
+				Map.Focus();
+			}
+		}
+
+		#endregion
+
 	}
 }

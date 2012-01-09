@@ -33,15 +33,27 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 		/// </summary>
 		public bool IsKeyPressHandled
 		{
-			get { return (bool)GetValue(IsKeyPressHandledProperty); }
+			get { return (bool) GetValue(IsKeyPressHandledProperty); }
 			set { SetValue(IsKeyPressHandledProperty, value); }
 		}
 
 		public static readonly DependencyProperty IsKeyPressHandledProperty = DependencyProperty.Register(
 			"IsKeyPressHandled",
-			typeof(bool),
-			typeof(KeyPressTrigger),
+			typeof (bool),
+			typeof (KeyPressTrigger),
 			new PropertyMetadata(true));
+
+		public bool CanTrigger
+		{
+			get { return (bool) GetValue(CanTriggerProperty); }
+			set { SetValue(CanTriggerProperty, value); }
+		}
+
+		public static readonly DependencyProperty CanTriggerProperty = DependencyProperty.Register(
+			"CanTrigger",
+			typeof (bool),
+			typeof (KeyPressTrigger),
+			null);
 
 		#endregion
 
@@ -79,7 +91,10 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 			{
 				e.Handled = true;
 			}
-			InvokeActions(null);
+			if (CanTrigger)
+			{
+				InvokeActions(null);
+			}
 		}
 
 		#endregion

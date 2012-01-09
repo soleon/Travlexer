@@ -22,6 +22,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 	/// </summary>
 	public class MapViewModel : ViewModelBase
 	{
+		#region Public Enums
+
+		public enum VisualStates : byte
+		{
+			Default = 0,
+			Search,
+			PushpinSelected
+		}
+
+		#endregion
+
+
 		#region Private Fields
 
 		private static readonly IDataContext _data = Globals.DataContext;
@@ -41,6 +53,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public event Action<IList<Place>> SearchSucceeded;
 
+		/// <summary>
+		/// Occurs when <see cref="VisualState"/> is changed.
+		/// </summary>
+		public event Action<VisualStates> VisualStateChanged;
+
+		/// <summary>
+		/// Occurs when <see cref="Suggestions"/> are retrieved from service client.
+		/// </summary>
+		public event Action SuggestionsRetrieved;
+
 		#endregion
 
 
@@ -50,7 +72,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		{
 			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), _data.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
-			Suggestions = new ReadOnlyObservableCollection<Suggestion>(_suggestions);
+			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
 
 			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
 			CommandSearch = new DelegateCommand(OnSearch);
@@ -122,10 +144,28 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the suggestions based on the <see cref="Input"/>.
 		/// </summary>
-		public ReadOnlyObservableCollection<Suggestion> Suggestions { get; private set; }
+		public ReadOnlyObservableCollection<SearchSuggestion> Suggestions { get; private set; }
 
-		private readonly ObservableCollection<Suggestion> _suggestions = new ObservableCollection<Suggestion>();
+		private readonly ObservableCollection<SearchSuggestion> _suggestions = new ObservableCollection<SearchSuggestion>();
 
+
+		/// <summary>
+		/// Gets or sets the selected <see cref="SearchSuggestion"/>.
+		/// </summary>
+		public SearchSuggestion SelectedSuggestion
+		{
+			get { return _selectedSuggestion; }
+			set
+			{
+				if (!SetProperty(ref _selectedSuggestion, value, SelectedSuggestionProperty) || value == null)
+				{
+					return;
+				}
+				OnSuggestionSelected(value);
+			}
+		}
+		private SearchSuggestion _selectedSuggestion;
+		private const string SelectedSuggestionProperty = "SelectedSuggestion";
 
 		/// <summary>
 		/// Gets or sets the search input.
@@ -138,6 +178,25 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private string _input;
 		private const string InputProperty = "Input";
+
+		/// <summary>
+		/// Gets or sets the visual state for the view.
+		/// </summary>
+		public VisualStates VisualState
+		{
+			get { return _visualState; }
+			set
+			{
+				if (_visualState == value)
+				{
+					return;
+				}
+				_visualState = value;
+				VisualStateChanged.ExecuteIfNotNull(value);
+			}
+		}
+
+		private VisualStates _visualState;
 
 		#endregion
 
@@ -284,7 +343,25 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnGetSuggestions()
 		{
-			throw new NotImplementedException();
+			_data.GetSuggestions(MapCenter, Input, args =>
+			{
+				_suggestions.Clear();
+				if (args.Status != CallbackStatus.Successful)
+				{
+					return;
+				}
+				var suggestions = args.Result;
+				suggestions.ForEach(_suggestions.Add);
+				SuggestionsRetrieved.ExecuteIfNotNull();
+			});
+		}
+
+		/// <summary>
+		/// Called when <see cref="SelectedSuggestion"/> is changed to another valid value.
+		/// </summary>
+		private void OnSuggestionSelected(SearchSuggestion suggestion)
+		{
+
 		}
 
 		protected override void OnDispose()

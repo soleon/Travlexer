@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using RestSharp;
 using Travlexer.WindowsPhone.Core.Services;
 using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Services.GoogleMaps;
+using Place = Travlexer.WindowsPhone.Models.Place;
 
 namespace Travlexer.WindowsPhone
 {
@@ -60,6 +63,14 @@ namespace Travlexer.WindowsPhone
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		void Search(Location baseLocation, string input, Action<CallbackEventArgs<IList<Place>>> callback = null);
 
+
+		/// <summary>
+		/// Gets the suggestions based on the input and center location.
+		/// </summary>
+		/// <param name="location">The center location to bias the suggestion result.</param>
+		/// <param name="input">The input to suggest base on.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		void GetSuggestions(Location location, string input, Action<CallbackEventArgs<List<SearchSuggestion>>> callback = null);
 		#endregion
 	}
 }

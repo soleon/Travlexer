@@ -259,12 +259,12 @@
 								<VisualState x:Name="Working">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-														 Storyboard.TargetProperty="(UIElement.Opacity)"
-														 Duration="0"
-														 To="0"
-														 d:IsOptimized="True" />
+											Storyboard.TargetProperty="(UIElement.Opacity)"
+											Duration="0"
+											To="0"
+											d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="WorkingText"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -276,12 +276,12 @@
 								<VisualState x:Name="Error">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-														 Storyboard.TargetProperty="(UIElement.Opacity)"
-														 Duration="0"
-														 To="0"
-														 d:IsOptimized="True" />
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="GeoCoordinate"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Opacity)"
+											Duration="0"
+											To="0"
+											d:IsOptimized="True" />
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorText"
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -325,7 +325,7 @@
 								   Text="{Binding Address, RelativeSource={RelativeSource TemplatedParent}}"
 								   VerticalAlignment="Top"
 								   Visibility="Collapsed" />
-						<TextBlock x:Name="GeoCoordinate"
+						<TextBlock x:Name="ErrorText"
 								   Height="25"
 								   Margin="0,35,0,0"
 								   Width="230"
@@ -337,7 +337,7 @@
 								   Visibility="Collapsed" />
 						<TextBlock x:Name="WorkingText"
 								   Height="25"
-								   Margin="0,45,0,0"
+								   Margin="0,35,0,0"
 								   Width="230"
 								   FontSize="18"
 								   HorizontalAlignment="Left"
@@ -389,6 +389,9 @@
 												   CommandParameter="{Binding CommandPinSearchResultParameter, RelativeSource={RelativeSource TemplatedParent}}"
 												   RenderTransformOrigin="0.5,0.5"
 												   Visibility="Collapsed">
+								<Controls:ButtonCircle.Projection>
+									<PlaneProjection />
+								</Controls:ButtonCircle.Projection>
 								<Icons:Pin />
 							</Controls:ButtonCircle>
 						</StackPanel>

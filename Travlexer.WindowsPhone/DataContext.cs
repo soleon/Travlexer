@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows;
+using RestSharp;
 using Travlexer.WindowsPhone.Core.Extensions;
 using Travlexer.WindowsPhone.Core.Services;
 using Travlexer.WindowsPhone.Core.Threading;
@@ -20,6 +21,8 @@ namespace Travlexer.WindowsPhone
 		#region Private Fields
 
 		private readonly IGoogleMapsClient _googleMapsClient;
+
+		private RestRequestAsyncHandle _getSuggestionsAsyncHandle;
 
 		#endregion
 
@@ -146,7 +149,7 @@ namespace Travlexer.WindowsPhone
 				return;
 			}
 
-			_googleMapsClient.Search(baseLocation, input, response =>
+			_googleMapsClient.Search(baseLocation, input, callback:response =>
 			{
 				EnumerableResponse<Services.GoogleMaps.Place> data;
 				IList<Services.GoogleMaps.Place> results;
@@ -176,6 +179,50 @@ namespace Travlexer.WindowsPhone
 					}
 				});
 				callback.ExecuteIfNotNull(new CallbackEventArgs<IList<Place>>(places));
+			});
+		}
+
+		/// <summary>
+		/// Gets the suggestions based on the input and center location.
+		/// </summary>
+		/// <param name="location">The center location to bias the suggestion result.</param>
+		/// <param name="input">The input to suggest base on.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		public void GetSuggestions(Location location, string input, Action<CallbackEventArgs<List<SearchSuggestion>>> callback = null)
+		{
+			if (_getSuggestionsAsyncHandle != null)
+			{
+				_getSuggestionsAsyncHandle.Abort();
+			}
+
+			if (!Globals.IsNetworkAvailable)
+			{
+				callback.ExecuteIfNotNull(new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.NetworkUnavailable));
+				return;
+			}
+
+			_getSuggestionsAsyncHandle = _googleMapsClient.GetSuggestions(location, input, response =>
+			{
+				_getSuggestionsAsyncHandle = null;
+
+				var responseStatus = response.ResponseStatus;
+				if (responseStatus == ResponseStatus.Aborted)
+				{
+					callback.ExecuteIfNotNull(new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.Cancelled));
+					return;
+				}
+
+				AutoCompleteResponse data;
+				List<Suggestion> suggestions;
+				if (responseStatus != ResponseStatus.Completed || response.StatusCode != HttpStatusCode.OK || (data = response.Data) == null || (suggestions = data.Suggestions) == null)
+				{
+					var exception = response.ErrorException;
+					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.ServiceException, exception) : new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.Unknown));
+					return;
+				}
+
+				var result = new CallbackEventArgs<List<SearchSuggestion>>(suggestions.Select(s => (SearchSuggestion)s).ToList());
+				callback.ExecuteIfNotNull(result);
 			});
 		}
 

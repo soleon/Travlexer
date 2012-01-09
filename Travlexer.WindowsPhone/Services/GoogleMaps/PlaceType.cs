@@ -26,6 +26,7 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		geocode,
 		bus_station,
 		transit_station,
-		establishment
+		establishment,
+		point_of_interest
 	}
 }

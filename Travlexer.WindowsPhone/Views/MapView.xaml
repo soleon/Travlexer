@@ -6,15 +6,15 @@
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 							xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+							xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
 							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+							xmlns:TriggerActions="clr-namespace:Travlexer.WindowsPhone.Core.TriggerActions;assembly=Travlexer.WindowsPhone.Core"
 							xmlns:Triggers="clr-namespace:Travlexer.WindowsPhone.Core.Triggers;assembly=Travlexer.WindowsPhone.Core"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
-							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-							xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
-							xmlns:TriggerActions="clr-namespace:Travlexer.WindowsPhone.Core.TriggerActions;assembly=Travlexer.WindowsPhone.Core"
 							Style="{StaticResource PageDefault}"
 							x:Name="Self"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -78,18 +78,18 @@
 					</VisualTransition>
 					<VisualTransition To="Search">
 						<Storyboard>
-							<DoubleAnimation Duration="0:0:0.3"
-											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="1"
+							<DoubleAnimation Storyboard.TargetName="SearchBackground"
 											 Storyboard.TargetProperty="(UIElement.Opacity)"
-											 Storyboard.TargetName="SearchBackground" />
-							<DoubleAnimation Duration="0:0:0.3"
+											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="0"
+											 To="1" />
+							<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
 											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-											 Storyboard.TargetName="SearchContentPanel" />
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-														   Storyboard.TargetName="SearchPanel">
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}"
+											 To="0" />
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
@@ -101,16 +101,16 @@
 					<VisualTransition From="Search"
 									  GeneratedDuration="0">
 						<Storyboard>
-							<DoubleAnimation Duration="0:0:0.2"
+							<DoubleAnimation Storyboard.TargetName="SearchBackground"
 											 Storyboard.TargetProperty="(UIElement.Opacity)"
-											 Storyboard.TargetName="SearchBackground"
+											 Duration="0:0:0.2"
 											 EasingFunction="{StaticResource EasingQuinticOut}" />
-							<DoubleAnimation Duration="0:0:0.2"
+							<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
 											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-											 Storyboard.TargetName="SearchContentPanel"
+											 Duration="0:0:0.2"
 											 EasingFunction="{StaticResource EasingQuinticOut}" />
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-														   Storyboard.TargetName="SearchPanel">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
@@ -123,23 +123,23 @@
 				<VisualState x:Name="Default" />
 				<VisualState x:Name="Search">
 					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-													   Storyboard.TargetName="SearchPanel">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-						<DoubleAnimation Duration="0"
-										 To="1"
+						<DoubleAnimation Storyboard.TargetName="SearchBackground"
 										 Storyboard.TargetProperty="(UIElement.Opacity)"
-										 Storyboard.TargetName="SearchBackground"
+										 Duration="0"
+										 To="1"
 										 d:IsOptimized="True" />
-						<DoubleAnimation Duration="0"
-										 To="0"
+						<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
 										 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-										 Storyboard.TargetName="SearchContentPanel"
+										 Duration="0"
+										 To="0"
 										 d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
@@ -181,8 +181,8 @@
 		<Maps:Map x:Name="Map"
 				  Center="{Binding MapCenter, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
 				  CopyrightVisibility="Collapsed"
-				  LogoVisibility="Collapsed"
-				  CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW">
+				  CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
+				  LogoVisibility="Collapsed">
 			<Maps:MapItemsControl IsHitTestVisible="False"
 								  ItemsSource="{Binding Pushpins}">
 				<Maps:MapItemsControl.ItemTemplate>
@@ -233,8 +233,8 @@
 							  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
 							  DataContext="{Binding SelectedPushpin}"
 							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
-							  Visibility="Collapsed"
-							  PositionOrigin="BottomCenter">
+							  PositionOrigin="BottomCenter"
+							  Visibility="Collapsed">
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Tap">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
@@ -245,10 +245,10 @@
 												TargetObject="{Binding ElementName=SelectedPushpin}"
 												UseTransitions="False" />
 						</i:EventTrigger>
-						<Triggers:RootManipulationTrigger>
+						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SelectedPushpin, Converter={StaticResource BooleanConverter}}">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
-						</Triggers:RootManipulationTrigger>
+						</Triggers:RootTouchTrigger>
 					</i:Interaction.Triggers>
 					<Controls:PushpinContent x:Name="SelectedPushpinContent"
 											 Address="{Binding Data.FormattedAddress}"
@@ -265,20 +265,21 @@
 		</Maps:Map>
 		<Grid x:Name="SearchPanel"
 			  Visibility="Collapsed">
-			<Rectangle Fill="#60000000"
-					   x:Name="SearchBackground"
-					   Opacity="0" 
-					   IsHitTestVisible="False"/>
-			<Grid VerticalAlignment="Top"
-				  x:Name="SearchContentPanel"
+			<Rectangle x:Name="SearchBackground"
+					   Fill="#60000000"
+					   IsHitTestVisible="False"
+					   Opacity="0" />
+			<Grid x:Name="SearchContentPanel"
 				  Height="72"
-				  Background="{StaticResource PhoneChromeBrush}">
+				  Background="{StaticResource PhoneChromeBrush}"
+				  VerticalAlignment="Top">
 				<i:Interaction.Triggers>
-					<Triggers:RootManipulationTrigger>
-						<ec:GoToStateAction TargetObject="{Binding ElementName=Self}"
-											StateName="Default"
-											IsEnabled="{Binding Visibility, ElementName=SearchPanel, Converter={StaticResource BooleanConverter}}" />
-					</Triggers:RootManipulationTrigger>
+					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SearchPanel, Converter={StaticResource BooleanConverter}}">
+						<ec:ChangePropertyAction PropertyName="VisualState"
+												 TargetObject="{Binding}"
+												 Value="Default" />
+						<TriggerActions:FocusAction TargetObject="{Binding ElementName=Map}" />
+					</Triggers:RootTouchTrigger>
 				</i:Interaction.Triggers>
 				<Grid.RenderTransform>
 					<CompositeTransform TranslateY="-72" />
@@ -288,33 +289,49 @@
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 				<toolkit:AutoCompleteBox x:Name="SearchBox"
-										 Text="{Binding Input, Mode=TwoWay}">
+										 FilterMode="None"
+										 ItemsSource="{Binding Suggestions}"
+										 MinimumPopulateDelay="500"
+										 MinimumPrefixLength="3"
+										 SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
+										 Text="{Binding Input, Mode=TwoWay}"
+										 ValueMemberBinding="{Binding Description}">
 					<toolkit:AutoCompleteBox.InputScope>
 						<InputScope>
 							<InputScopeName NameValue="Search" />
 						</InputScope>
 					</toolkit:AutoCompleteBox.InputScope>
 					<i:Interaction.Triggers>
-						<Triggers:KeyPressTrigger Key="Enter">
+						<i:EventTrigger EventName="Populating">
+							<i:InvokeCommandAction Command="{Binding CommandGetSuggestions}" />
+						</i:EventTrigger>
+						<Triggers:KeyPressTrigger CanTrigger="{Binding Input, Converter={StaticResource BooleanConverter}}"
+												  Key="Enter">
 							<i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}" />
-							<ec:GoToStateAction TargetObject="{Binding ElementName=Self}"
-												StateName="Default"
-												IsEnabled="{Binding Input, Converter={StaticResource BooleanConverter}}"/>
-							<TriggerActions:FocusAction TargetObject="{Binding ElementName=Self}" />
+							<ec:ChangePropertyAction PropertyName="VisualState"
+													 TargetObject="{Binding}"
+													 Value="Default" />
+							<TriggerActions:FocusAction TargetObject="{Binding ElementName=Map}" />
 						</Triggers:KeyPressTrigger>
 					</i:Interaction.Triggers>
+					<toolkit:AutoCompleteBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Margin="{StaticResource PhoneVerticalMargin}"
+									   Text="{Binding Description}" />
+						</DataTemplate>
+					</toolkit:AutoCompleteBox.ItemTemplate>
 				</toolkit:AutoCompleteBox>
-				<Controls:ButtonCircle VerticalAlignment="Center"
-									   Grid.Column="1">
+				<Controls:ButtonCircle Grid.Column="1"
+									   IsHitTestVisible="{Binding Input, Converter={StaticResource BooleanConverter}}"
+									   VerticalAlignment="Center">
 					<i:Interaction.Triggers>
-						<i:EventTrigger EventName="Tap">
-							<ec:GoToStateAction TargetObject="{Binding ElementName=Self}"
-												StateName="Default"
-												IsEnabled="{Binding Input, Converter={StaticResource BooleanConverter}}"/>
-							<i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}"
-												   IsEnabled="{Binding Input, Converter={StaticResource BooleanConverter}}"/>
-							<TriggerActions:FocusAction TargetObject="{Binding ElementName=Self}"/>
-						</i:EventTrigger>
+						<Triggers:EventTrigger CanTrigger="{Binding Input, Converter={StaticResource BooleanConverter}}"
+											   EventName="Tap">
+							<ec:ChangePropertyAction PropertyName="VisualState"
+													 TargetObject="{Binding}"
+													 Value="Default" />
+							<i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}" />
+						</Triggers:EventTrigger>
 					</i:Interaction.Triggers>
 					<Icons:Search2 />
 				</Controls:ButtonCircle>
@@ -324,41 +341,10 @@
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar x:Name="PhoneApplicationBar"
 							  IsVisible="True">
-			<!--<shell:ApplicationBar.MenuItems>
-				<shell:ApplicationBarMenuItem x:Name="AppBarMenuItemItinerary"
-											  Click="AppBarMenuItemItineraryClick"
-											  IsEnabled="False"
-											  Text="itinerary" />
-				<shell:ApplicationBarMenuItem x:Name="AppBarMenuItemClearSearch"
-											  Click="AppBarMenuItemClearSearchClick"
-											  Text="clear search" />
-				<shell:ApplicationBarMenuItem x:Name="AppBarMenuItemClearRoute"
-											  Click="AppBarMenuItemClearRouteClick"
-											  Text="clear route" />
-				<shell:ApplicationBarMenuItem x:Name="AppBarMenuItemSync"
-											  Click="AppBarMenuItemSyncClick"
-											  Text="sync" />
-				<shell:ApplicationBarMenuItem x:Name="AppBarMenuItemMore"
-											  Click="AppBarMenuItemMoreClick"
-											  Text="more..." />
-			</shell:ApplicationBar.MenuItems>-->
-			<!--<shell:ApplicationBarIconButton x:Name="AppButtonCurrentLocation"
-											Click="AppButtonCurrentLocationClick"
-											IconUri="/Resources/Icons/Location.png"
-											IsEnabled="False"
-											Text="me" />-->
 			<shell:ApplicationBarIconButton x:Name="AppButtonSearch"
 											Click="OnAppButtonSearchClick"
-											IconUri="/Resources/Icons/Search.png"
+											IconUri="/Assets/Search.png"
 											Text="search" />
-			<!--<shell:ApplicationBarIconButton x:Name="AppButtonDirections"
-											Click="AppButtonDirectionsClick"
-											IconUri="/Resources/Icons/Directions.png"
-											Text="directions" />
-			<shell:ApplicationBarIconButton x:Name="AppButtonLayers"
-											Click="AppButtonLayersClick"
-											IconUri="/Resources/Icons/Layers.png"
-											Text="layers" />-->
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interactivity;
@@ -7,10 +6,10 @@ using System.Windows.Interactivity;
 namespace Travlexer.WindowsPhone.Core.Triggers
 {
 	/// <summary>
-	/// Executes a collection of actions when the <see cref="Application.RootVisual"/> raises any manipulation activity.
+	/// Executes a collection of actions when the <see cref="Application.RootVisual"/> raises any <see cref="FrameworkElement.MouseLeftButtonDown"/> activity.
 	/// </summary>
-	[Description("Executes a collection of action when the Application.RootVisual raises any manipulation activity.")]
-	public class RootManipulationTrigger : TriggerBase<FrameworkElement>
+	[Description("Executes a collection of action when the Application.RootVisual raises any MouseLeftButtonDown activity.")]
+	public class RootTouchTrigger : TriggerBase<FrameworkElement>
 	{
 		#region Private Members
 
@@ -23,6 +22,23 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 		/// Determines if the mouse activity is local to the <see cref="TriggerBase{T}.AssociatedObject"/>.
 		/// </summary>
 		private bool _isLocal;
+
+		#endregion
+
+
+		#region Public Properties
+
+		public bool CanTrigger
+		{
+			get { return (bool) GetValue(CanTriggerProperty); }
+			set { SetValue(CanTriggerProperty, value); }
+		}
+
+		public static readonly DependencyProperty CanTriggerProperty = DependencyProperty.Register(
+			"CanTrigger",
+			typeof (bool),
+			typeof (RootTouchTrigger),
+			null);
 
 		#endregion
 
@@ -62,16 +78,16 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 
 			// Attach to root visual
 			rootVisual.AddHandler(
-				UIElement.ManipulationStartedEvent,
-				new EventHandler<ManipulationStartedEventArgs>(OnRootManipulation),
+				UIElement.MouseLeftButtonDownEvent,
+				new MouseButtonEventHandler(OnRootEvent),
 				true
 				);
 
 
 			// Attach to associated UIElement
 			AssociatedObject.AddHandler(
-				UIElement.ManipulationStartedEvent,
-				new EventHandler<ManipulationStartedEventArgs>(OnLocalManipulation),
+				UIElement.MouseLeftButtonDownEvent,
+				new MouseButtonEventHandler(OnLocalEvent),
 				true
 				);
 		}
@@ -119,15 +135,15 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 
 			// Attach to root visual
 			rootVisual.RemoveHandler(
-				UIElement.ManipulationStartedEvent,
-				new EventHandler<ManipulationStartedEventArgs>(OnRootManipulation)
+				UIElement.MouseLeftButtonDownEvent,
+				new MouseButtonEventHandler(OnRootEvent)
 				);
 
 
 			// Attach to associated UIElement
 			AssociatedObject.RemoveHandler(
-				UIElement.ManipulationStartedEvent,
-				new EventHandler<ManipulationStartedEventArgs>(OnLocalManipulation)
+				UIElement.MouseLeftButtonDownEvent,
+				new MouseButtonEventHandler(OnLocalEvent)
 				);
 
 			_isAttached = false;
@@ -138,7 +154,7 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnLocalManipulation(object sender, ManipulationStartedEventArgs e)
+		private void OnLocalEvent(object sender, MouseButtonEventArgs e)
 		{
 			_isLocal = true;
 		}
@@ -148,7 +164,7 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnRootManipulation(object sender, ManipulationStartedEventArgs e)
+		private void OnRootEvent(object sender, MouseButtonEventArgs e)
 		{
 			// Don't continue if click was local to the associated object
 			if (_isLocal)
@@ -156,8 +172,10 @@ namespace Travlexer.WindowsPhone.Core.Triggers
 				_isLocal = false;
 				return;
 			}
-
-			InvokeActions(null);
+			if (CanTrigger)
+			{
+				InvokeActions(null);
+			}
 		}
 
 		#endregion

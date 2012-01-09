@@ -102,6 +102,7 @@
     <Compile Include="Models\PlaceDetails.cs" />
     <Compile Include="Models\PlaceIcon.cs" />
     <Compile Include="Models\Route.cs" />
+    <Compile Include="Models\SearchSuggestion.cs" />
     <Compile Include="Models\ViewPort.cs" />
     <Compile Include="Page1.xaml.cs">
       <DependentUpon>Page1.xaml</DependentUpon>
@@ -173,6 +174,7 @@
     <None Include="Properties\WMAppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Search.png" />
     <Content Include="Assets\AppIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
