@@ -34,7 +34,8 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			}
 			return new Models.Place(place.Geometry.Location, name: place.Name)
 			{
-				ViewPort = place.Geometry.ViewPort
+				ViewPort = place.Geometry.ViewPort,
+				Reference = place.Reference
 			};
 		}
 	}

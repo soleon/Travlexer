@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 namespace Travlexer.WindowsPhone.Services.GoogleMaps
 {
-	public class RoutesResponse : EnumerableResponse<Route>
+	public class RoutesResponse : ListResponse<Route>
 	{
 		[JsonProperty(PropertyName = "routes")]
-		public override IList<Route> Results
+		public override List<Route> Results
 		{
 			get { return base.Results; }
 			set { base.Results = value; }

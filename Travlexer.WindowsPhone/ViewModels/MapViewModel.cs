@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using Microsoft.Phone.Controls.Maps;
 using Travlexer.WindowsPhone.Core.Collections;
 using Travlexer.WindowsPhone.Core.Commands;
 using Travlexer.WindowsPhone.Core.Extensions;
 using Travlexer.WindowsPhone.Core.Services;
+using Travlexer.WindowsPhone.Core.Threading;
 using Travlexer.WindowsPhone.Core.ViewModels;
 using Travlexer.WindowsPhone.Models;
 using Travlexer.WindowsPhone.Services.GoogleMaps;
@@ -148,7 +150,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private readonly ObservableCollection<SearchSuggestion> _suggestions = new ObservableCollection<SearchSuggestion>();
 
-
 		/// <summary>
 		/// Gets or sets the selected <see cref="SearchSuggestion"/>.
 		/// </summary>
@@ -161,7 +162,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				{
 					return;
 				}
-				OnSuggestionSelected(value);
+				OnSuggestionSelected();
 			}
 		}
 		private SearchSuggestion _selectedSuggestion;
@@ -329,11 +330,35 @@ namespace Travlexer.WindowsPhone.ViewModels
 				{
 					const string
 						messageBoxText = "There was no result coming back form the search, please try again later.",
-						caption = "Nothing Was Found";
+						caption = "Nothing was found";
 					MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
 					return;
 				}
 				var places = args.Result;
+				UIThread.RunWorker(() =>
+				{
+					var lastIndex = places.Count - 1;
+					for (var i = 0; i <= lastIndex; i++)
+					{
+						var place = places[i];
+						UIThread.InvokeAsync(() =>
+						{
+							_data.AddNewPlace(place);
+							if (Pushpins.Count <= 0)
+							{
+								return;
+							}
+							var vm = Pushpins[Pushpins.Count - 1];
+							vm.WorkingState = PushpinOverlayWorkingStates.Working;
+							_data.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? PushpinOverlayWorkingStates.Idle : PushpinOverlayWorkingStates.Error);
+						});
+						if (i == lastIndex)
+						{
+							break;
+						}
+						Thread.Sleep(100);
+					}
+				});
 				SearchSucceeded.ExecuteIfNotNull(places);
 			});
 		}
@@ -343,8 +368,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnGetSuggestions()
 		{
+			// Do not get suggestion visual state is not Search.
+			if (VisualState != VisualStates.Search)
+			{
+				return;
+			}
+
 			_data.GetSuggestions(MapCenter, Input, args =>
 			{
+				SelectedSuggestion = null;
 				_suggestions.Clear();
 				if (args.Status != CallbackStatus.Successful)
 				{
@@ -359,9 +391,32 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Called when <see cref="SelectedSuggestion"/> is changed to another valid value.
 		/// </summary>
-		private void OnSuggestionSelected(SearchSuggestion suggestion)
+		private void OnSuggestionSelected()
 		{
+			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
+			Deployment.Current.Dispatcher.BeginInvoke(() =>
+			{
+				VisualState = VisualStates.Default;
+			});
 
+			_data.GetPlaceDetails(SelectedSuggestion.Reference, args =>
+			{
+				if (args.Status != CallbackStatus.Successful)
+				{
+					const string
+						messageBoxText = "There was a problem getting information for your selected place, please try again later.",
+						caption = "Unable to find place";
+					MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
+					return;
+				}
+				_data.ClearSearchResults();
+				var place = args.Result;
+				_data.AddNewPlace(place);
+				SearchSucceeded.ExecuteIfNotNull(new List<Place> { place });
+			});
+
+			SelectedSuggestion = null;
+			_suggestions.Clear();
 		}
 
 		protected override void OnDispose()

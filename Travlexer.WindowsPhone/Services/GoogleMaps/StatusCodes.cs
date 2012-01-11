@@ -1,9 +1,9 @@
 namespace Travlexer.WindowsPhone.Services.GoogleMaps
 {
-	public enum StatusCodes
+	public enum StatusCodes : byte
 	{
+		UNKNOWN_ERROR = 0,
 		OK,
-		UNKNOWN_ERROR,
 		ZERO_RESULTS,
 		OVER_QUERY_LIMIT,
 		REQUEST_DENIED,

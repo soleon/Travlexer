@@ -3,9 +3,13 @@ using Newtonsoft.Json;
 
 namespace Travlexer.WindowsPhone.Services.GoogleMaps
 {
-	public class AutoCompleteResponse
+	public class AutoCompleteResponse : ListResponse<Suggestion>
 	{
 		[JsonProperty(PropertyName = "predictions")]
-		public List<Suggestion> Suggestions { get; set; }
+		new public List<Suggestion> Results
+		{
+			get { return base.Results; }
+			set { base.Results = value; }
+		}
 	}
 }

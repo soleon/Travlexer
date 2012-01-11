@@ -11,6 +11,7 @@ namespace Travlexer.WindowsPhone.Models
 
 		#endregion
 
+
 		#region Constructors
 
 		/// <summary>
@@ -76,6 +77,7 @@ namespace Travlexer.WindowsPhone.Models
 			get { return _color; }
 			set { SetProperty(ref _color, value, ColorProperty); }
 		}
+
 		private PlaceColor _color;
 		private const string ColorProperty = "Color";
 
@@ -84,6 +86,7 @@ namespace Travlexer.WindowsPhone.Models
 			get { return _icon; }
 			set { SetProperty(ref _icon, value, IconProperty); }
 		}
+
 		private PlaceIcon _icon;
 		private const string IconProperty = "Icon";
 
@@ -92,6 +95,7 @@ namespace Travlexer.WindowsPhone.Models
 			get { return _isSearchResult; }
 			set { SetProperty(ref _isSearchResult, value, IsSearchResultProperty); }
 		}
+
 		private bool _isSearchResult;
 		private const string IsSearchResultProperty = "IsSearchResult";
 
@@ -118,8 +122,17 @@ namespace Travlexer.WindowsPhone.Models
 			get { return _viewPort; }
 			set { SetProperty(ref _viewPort, value, ViewPortProperty); }
 		}
+
 		private ViewPort _viewPort;
 		private const string ViewPortProperty = "ViewPort";
+
+		public string Reference
+		{
+			get { return _reference; }
+			set { SetProperty(ref _reference, value, ReferenceProperty); }
+		}
+		private string _reference;
+		private const string ReferenceProperty = "Reference";
 
 		#endregion
 

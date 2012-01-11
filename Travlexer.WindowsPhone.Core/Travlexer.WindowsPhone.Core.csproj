@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Threading\UIThread.cs" />
     <Compile Include="Collections\AdaptedObservableCollection.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />

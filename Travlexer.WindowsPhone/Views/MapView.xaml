@@ -11,7 +11,6 @@
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
 							xmlns:TriggerActions="clr-namespace:Travlexer.WindowsPhone.Core.TriggerActions;assembly=Travlexer.WindowsPhone.Core"
 							xmlns:Triggers="clr-namespace:Travlexer.WindowsPhone.Core.Triggers;assembly=Travlexer.WindowsPhone.Core"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
@@ -288,20 +287,21 @@
 					<ColumnDefinition />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<toolkit:AutoCompleteBox x:Name="SearchBox"
-										 FilterMode="None"
-										 ItemsSource="{Binding Suggestions}"
-										 MinimumPopulateDelay="500"
-										 MinimumPrefixLength="3"
-										 SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
-										 Text="{Binding Input, Mode=TwoWay}"
-										 ValueMemberBinding="{Binding Description}">
-					<toolkit:AutoCompleteBox.InputScope>
+				<Controls:AutoCompleteBox x:Name="SearchBox"
+										  FilterMode="None"
+										  ItemsSource="{Binding Suggestions}"
+										  MinimumPopulateDelay="500"
+										  MinimumPrefixLength="3"
+										  SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
+										  Text="{Binding Input, Mode=TwoWay}"
+										  ValueMemberBinding="{Binding Description}">
+					<Controls:AutoCompleteBox.InputScope>
 						<InputScope>
 							<InputScopeName NameValue="Search" />
 						</InputScope>
-					</toolkit:AutoCompleteBox.InputScope>
+					</Controls:AutoCompleteBox.InputScope>
 					<i:Interaction.Triggers>
+						
 						<i:EventTrigger EventName="Populating">
 							<i:InvokeCommandAction Command="{Binding CommandGetSuggestions}" />
 						</i:EventTrigger>
@@ -314,13 +314,13 @@
 							<TriggerActions:FocusAction TargetObject="{Binding ElementName=Map}" />
 						</Triggers:KeyPressTrigger>
 					</i:Interaction.Triggers>
-					<toolkit:AutoCompleteBox.ItemTemplate>
+					<Controls:AutoCompleteBox.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Margin="{StaticResource PhoneVerticalMargin}"
 									   Text="{Binding Description}" />
 						</DataTemplate>
-					</toolkit:AutoCompleteBox.ItemTemplate>
-				</toolkit:AutoCompleteBox>
+					</Controls:AutoCompleteBox.ItemTemplate>
+				</Controls:AutoCompleteBox>
 				<Controls:ButtonCircle Grid.Column="1"
 									   IsHitTestVisible="{Binding Input, Converter={StaticResource BooleanConverter}}"
 									   VerticalAlignment="Center">

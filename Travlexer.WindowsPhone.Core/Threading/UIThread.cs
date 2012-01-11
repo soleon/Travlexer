@@ -61,6 +61,15 @@ namespace Travlexer.WindowsPhone.Core.Threading
 		#region Public Static Methods
 
 		/// <summary>
+		/// Recoils the given action on the UI Thread under normal priority.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		public static void InvokeBack(Action action)
+		{
+			RunWorker(() => InvokeAsync(action));
+		}
+
+		/// <summary>
 		/// Invokes the given action on the UI Thread under normal priority.
 		/// </summary>
 		/// <param name="action">The action to execute.</param>

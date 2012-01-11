@@ -107,12 +107,16 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			if (places.Count == 1)
 			{
-				var viewPort = places[0].ViewPort;
+				var place = places[0];
+				var viewPort = place.ViewPort;
 				if (viewPort == null)
 				{
-					return;
+					Map.SetView(place.Location, 15D);
 				}
-				Map.SetView(places[0].ViewPort);
+				else
+				{
+					Map.SetView(places[0].ViewPort);
+				}
 			}
 			else
 			{
@@ -131,7 +135,15 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void OnVisualStateChanged(MapViewModel.VisualStates state)
 		{
-			_appBar.IsVisible = state == MapViewModel.VisualStates.Default || state == MapViewModel.VisualStates.PushpinSelected;
+			if (state == MapViewModel.VisualStates.Default || state == MapViewModel.VisualStates.PushpinSelected)
+			{
+				_appBar.IsVisible = true;
+				Map.Focus();
+			}
+			else
+			{
+				_appBar.IsVisible = false;
+			}
 			VisualStateManager.GoToState(this, state.ToString(), true);
 		}
 

@@ -73,6 +73,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ButtonCircle.cs" />
+    <Compile Include="Controls\AutoCompleteBox.cs" />
     <Compile Include="Controls\Icons\ArrowRight.cs" />
     <Compile Include="Controls\Icons\Bicycle.cs" />
     <Compile Include="Controls\Icons\Camera.cs" />
@@ -112,9 +113,11 @@
     <Compile Include="Services\GoogleMaps\AutoCompleteResponse.cs" />
     <Compile Include="Services\GoogleMaps\Distance.cs" />
     <Compile Include="Services\GoogleMaps\Duration.cs" />
-    <Compile Include="Services\GoogleMaps\EnumerableResponse.cs" />
+    <Compile Include="Services\GoogleMaps\ListResponse.cs" />
     <Compile Include="Services\GoogleMaps\Geometry.cs" />
     <Compile Include="Services\GoogleMaps\GoogleMapsClient.cs" />
+    <Compile Include="Services\GoogleMaps\IGoogleMapsResponse.cs" />
+    <Compile Include="Services\GoogleMaps\IListResponse.cs" />
     <Compile Include="Services\GoogleMaps\LatLng.cs" />
     <Compile Include="Services\GoogleMaps\Leg.cs" />
     <Compile Include="Services\GoogleMaps\Place.cs" />

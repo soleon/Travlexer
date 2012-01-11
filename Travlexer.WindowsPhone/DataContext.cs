@@ -22,8 +22,6 @@ namespace Travlexer.WindowsPhone
 
 		private readonly IGoogleMapsClient _googleMapsClient;
 
-		private RestRequestAsyncHandle _getSuggestionsAsyncHandle;
-
 		#endregion
 
 
@@ -63,8 +61,17 @@ namespace Travlexer.WindowsPhone
 		public Place AddNewPlace(Location location)
 		{
 			var p = new Place(location);
-			_places.Add(p);
+			AddNewPlace(p);
 			return p;
+		}
+
+		/// <summary>
+		/// Adds the new place to the global place list.
+		/// </summary>
+		/// <param name="place">The new place to be added.</param>
+		public void AddNewPlace(Place place)
+		{
+			_places.Add(place);
 		}
 
 		/// <summary>
@@ -87,7 +94,7 @@ namespace Travlexer.WindowsPhone
 		/// <summary>
 		/// Removes all search results.
 		/// </summary>
-		public void ClearUnPinnedPlaces()
+		public void ClearSearchResults()
 		{
 			for (var i = _places.Count - 1; i >= 0; i--)
 			{
@@ -105,23 +112,13 @@ namespace Travlexer.WindowsPhone
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
 		public void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null)
 		{
-			if (!Globals.IsNetworkAvailable)
-			{
-				callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.NetworkUnavailable));
-				return;
-			}
-
 			_googleMapsClient.GetPlaces(place.Location, response =>
 			{
-				EnumerableResponse<Services.GoogleMaps.PlaceDetails> data;
-				IList<Services.GoogleMaps.PlaceDetails> results;
-				if (response.StatusCode != HttpStatusCode.OK || (data = response.Data) == null || (results = data.Results) == null || results.Count == 0)
+				if (HasErrorAndCallback<ListResponse<Services.GoogleMaps.PlaceDetails>, Services.GoogleMaps.PlaceDetails>(response, callback))
 				{
-					var exception = response.ErrorException;
-					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs(CallbackStatus.ServiceException, exception) : new CallbackEventArgs(CallbackStatus.Unknown));
 					return;
 				}
-				var details = results.First();
+				var details = response.Data.Results.First();
 				if (place.Details == null)
 				{
 					place.Details = new PlaceDetails { ContactNumber = details.FormattedPhoneNumber };
@@ -136,49 +133,69 @@ namespace Travlexer.WindowsPhone
 		}
 
 		/// <summary>
+		/// Gets the details for the specified place by its reference key.
+		/// </summary>
+		/// <param name="place">The place to get the details for.</param>
+		/// <param name="callback">The callback to be executed after the process is finished.</param>
+		public void GetPlaceDetails(Place place, Action<CallbackEventArgs> callback = null)
+		{
+			if (place.Reference == null)
+			{
+				const string message = "Reference of the target place is required in order to get its details.";
+				throw new InvalidOperationException(message);
+			}
+			GetPlaceDetails(place.Reference, args =>
+			{
+				var p = args.Result;
+				if (place.Details == null)
+				{
+					place.Details = new PlaceDetails();
+				}
+				place.Details.ContactNumber = p.Details.ContactNumber;
+				place.FormattedAddress = p.FormattedAddress;
+				place.Name = p.Name;
+				place.ViewPort = p.ViewPort;
+				callback.ExecuteIfNotNull(new CallbackEventArgs(args.Status, args.Exception));
+			});
+		}
+
+		/// <summary>
+		/// Gets place details by its reference key.
+		/// </summary>
+		/// <param name="reference">The reference key to the place.</param>
+		/// <param name="callback">The callback to be executed when this process is finished.</param>
+		public void GetPlaceDetails(string reference, Action<CallbackEventArgs<Place>> callback = null)
+		{
+			_googleMapsClient.GetPlaceDetails(reference, response =>
+			{
+				if (HasErrorAndCallback<Response<Services.GoogleMaps.PlaceDetails>, Services.GoogleMaps.PlaceDetails, Place>(response, callback))
+				{
+					return;
+				}
+
+				callback.ExecuteIfNotNull(new CallbackEventArgs<Place>(response.Data.Result));
+			});
+		}
+
+		/// <summary>
 		/// Searches for places that matches the input.
 		/// </summary>
 		/// <param name="baseLocation">The geo-coordinate around which to retrieve place information.</param>
 		/// <param name="input">The input to search places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		public void Search(Location baseLocation, string input, Action<CallbackEventArgs<IList<Place>>> callback = null)
+		public void Search(Location baseLocation, string input, Action<CallbackEventArgs<List<Place>>> callback = null)
 		{
-			if (!Globals.IsNetworkAvailable)
+			_googleMapsClient.Search(baseLocation, input, callback: response =>
 			{
-				callback.ExecuteIfNotNull(new CallbackEventArgs<IList<Place>>(CallbackStatus.NetworkUnavailable));
-				return;
-			}
-
-			_googleMapsClient.Search(baseLocation, input, callback:response =>
-			{
-				EnumerableResponse<Services.GoogleMaps.Place> data;
-				IList<Services.GoogleMaps.Place> results;
-				if (response.StatusCode != HttpStatusCode.OK || (data = response.Data) == null || (results = data.Results) == null || results.Count == 0)
+				if (HasErrorAndCallback<ListResponse<Services.GoogleMaps.Place>, Services.GoogleMaps.Place, List<Place>>(response, callback))
 				{
-					var exception = response.ErrorException;
-					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs<IList<Place>>(CallbackStatus.ServiceException, exception) : new CallbackEventArgs<IList<Place>>(CallbackStatus.Unknown));
 					return;
 				}
 
-
-				ClearUnPinnedPlaces();
+				ClearSearchResults();
+				var results = response.Data.Results;
 				var places = results.Take(10).Select(p => (Place)p).ToList();
-
-				UIThread.RunWorker(() =>
-				{
-					var lastIndex = places.Count - 1;
-					for (var i = 0; i <= lastIndex; i++)
-					{
-						var place = places[i];
-						UIThread.InvokeAsync(() => _places.Add(place));
-						if (i == lastIndex)
-						{
-							break;
-						}
-						Thread.Sleep(100);
-					}
-				});
-				callback.ExecuteIfNotNull(new CallbackEventArgs<IList<Place>>(places));
+				callback.ExecuteIfNotNull(new CallbackEventArgs<List<Place>>(places));
 			});
 		}
 
@@ -190,37 +207,13 @@ namespace Travlexer.WindowsPhone
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		public void GetSuggestions(Location location, string input, Action<CallbackEventArgs<List<SearchSuggestion>>> callback = null)
 		{
-			if (_getSuggestionsAsyncHandle != null)
+			_googleMapsClient.GetSuggestions(location, input, response =>
 			{
-				_getSuggestionsAsyncHandle.Abort();
-			}
-
-			if (!Globals.IsNetworkAvailable)
-			{
-				callback.ExecuteIfNotNull(new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.NetworkUnavailable));
-				return;
-			}
-
-			_getSuggestionsAsyncHandle = _googleMapsClient.GetSuggestions(location, input, response =>
-			{
-				_getSuggestionsAsyncHandle = null;
-
-				var responseStatus = response.ResponseStatus;
-				if (responseStatus == ResponseStatus.Aborted)
+				if (HasErrorAndCallback<AutoCompleteResponse, Suggestion, List<SearchSuggestion>>(response, callback))
 				{
-					callback.ExecuteIfNotNull(new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.Cancelled));
 					return;
 				}
-
-				AutoCompleteResponse data;
-				List<Suggestion> suggestions;
-				if (responseStatus != ResponseStatus.Completed || response.StatusCode != HttpStatusCode.OK || (data = response.Data) == null || (suggestions = data.Suggestions) == null)
-				{
-					var exception = response.ErrorException;
-					callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.ServiceException, exception) : new CallbackEventArgs<List<SearchSuggestion>>(CallbackStatus.Unknown));
-					return;
-				}
-
+				var suggestions = response.Data.Results;
 				var result = new CallbackEventArgs<List<SearchSuggestion>>(suggestions.Select(s => (SearchSuggestion)s).ToList());
 				callback.ExecuteIfNotNull(result);
 			});
@@ -230,6 +223,63 @@ namespace Travlexer.WindowsPhone
 
 
 		#region Private Methods
+
+		/// <summary>
+		/// Callbacks if the response result has any error.
+		/// </summary>
+		/// <param name="response">The response to check.</param>
+		/// <param name="callback">The callback to execute if there's any error.</param>
+		/// <returns><c>true</c> if there is any error and the callback has been executed, otherwise, <c>false</c>.</returns>
+		private static bool HasErrorAndCallback<TResponseData, TListResult>(RestResponse<TResponseData> response, Action<CallbackEventArgs> callback = null) where TResponseData : class, IResponse
+		{
+			var responseStatus = response.ResponseStatus;
+			if (responseStatus == ResponseStatus.Aborted)
+			{
+				callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Cancelled));
+				return true;
+			}
+			TResponseData data;
+			if (response.StatusCode != HttpStatusCode.OK ||
+				(data = response.Data) == null ||
+				data.Status != StatusCodes.OK ||
+				(data is IListResponse<TListResult> && ((IListResponse<TListResult>)data).Results.IsNullOrEmpty()))
+			{
+				var exception = response.ErrorException;
+				callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs(CallbackStatus.ServiceException, exception) : new CallbackEventArgs(CallbackStatus.Unknown));
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Callbacks if the response result has any error.
+		/// </summary>
+		/// <typeparam name="TResponseData">The type data carried by the <see cref="RestResponse{T}"/>.</typeparam>
+		/// <typeparam name="TCallback">The type of parameter that the <see cref="CallbackEventArgs{T}"/> carries.</typeparam>
+		/// <typeparam name="TListResult">The type of the list items if <see cref="TResponseData"/> is of type <see cref="IListResponse{T}"/>.</typeparam>
+		/// <param name="response">The response.</param>
+		/// <param name="callback">The callback.</param>
+		/// <returns><c>true</c> if there is any error and the callback has been executed, otherwise, <c>false</c>.</returns>
+		private static bool HasErrorAndCallback<TResponseData, TListResult, TCallback>(RestResponse<TResponseData> response, Action<CallbackEventArgs<TCallback>> callback = null) where TResponseData : class, IResponse
+		{
+			var responseStatus = response.ResponseStatus;
+			if (responseStatus == ResponseStatus.Aborted)
+			{
+				callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
+				return true;
+			}
+			TResponseData data;
+			if (response.StatusCode != HttpStatusCode.OK ||
+				(data = response.Data) == null ||
+				data.Status != StatusCodes.OK ||
+				(data is IListResponse<TListResult> && ((IListResponse<TListResult>)data).Results.IsNullOrEmpty()))
+			{
+				var exception = response.ErrorException;
+				callback.ExecuteIfNotNull(exception != null ? new CallbackEventArgs<TCallback>(CallbackStatus.ServiceException, exception) : new CallbackEventArgs<TCallback>(CallbackStatus.Unknown));
+				return true;
+			}
+			return false;
+		}
 
 		#endregion
 	}
