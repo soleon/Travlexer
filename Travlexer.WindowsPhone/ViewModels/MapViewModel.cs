@@ -361,6 +361,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				});
 				SearchSucceeded.ExecuteIfNotNull(places);
 			});
+			ResetSearchSuggestions();
 		}
 
 		/// <summary>
@@ -415,8 +416,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				SearchSucceeded.ExecuteIfNotNull(new List<Place> { place });
 			});
 
-			SelectedSuggestion = null;
-			_suggestions.Clear();
+			ResetSearchSuggestions();
 		}
 
 		protected override void OnDispose()
@@ -427,6 +427,17 @@ namespace Travlexer.WindowsPhone.ViewModels
 			MapBoundCapturer = null;
 
 			base.OnDispose();
+		}
+
+		#endregion
+
+
+		#region Private Methods
+
+		private void ResetSearchSuggestions()
+		{
+			SelectedSuggestion = null;
+			_suggestions.Clear();
 		}
 
 		#endregion
