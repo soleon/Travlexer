@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using Codify.WindowsPhone.Extensions;
 using Newtonsoft.Json;
 using RestSharp;
-using Travlexer.WindowsPhone.Core.Extensions;
 
 namespace Travlexer.WindowsPhone.Services.GoogleMaps
 {

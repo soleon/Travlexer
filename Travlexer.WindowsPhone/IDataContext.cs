@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Travlexer.WindowsPhone.Core.Services;
+using Codify.WindowsPhone.Services;
 using Travlexer.WindowsPhone.Models;
 
 namespace Travlexer.WindowsPhone

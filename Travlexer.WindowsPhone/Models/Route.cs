@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Travlexer.WindowsPhone.Core.Models;
+using Codify.WindowsPhone.Models;
 
 namespace Travlexer.WindowsPhone.Models
 {

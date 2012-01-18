@@ -187,9 +187,9 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Travlexer.WindowsPhone.Core\Travlexer.WindowsPhone.Core.csproj">
+    <ProjectReference Include="..\Codify.WindowsPhone\Codify.WindowsPhone.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
-      <Name>Travlexer.WindowsPhone.Core</Name>
+      <Name>Codify.WindowsPhone</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
