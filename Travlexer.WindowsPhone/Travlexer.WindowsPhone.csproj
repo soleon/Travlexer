@@ -116,8 +116,7 @@
     <Compile Include="Services\GoogleMaps\ListResponse.cs" />
     <Compile Include="Services\GoogleMaps\Geometry.cs" />
     <Compile Include="Services\GoogleMaps\GoogleMapsClient.cs" />
-    <Compile Include="Services\GoogleMaps\IGoogleMapsResponse.cs" />
-    <Compile Include="Services\GoogleMaps\IListResponse.cs" />
+    <Compile Include="Services\GoogleMaps\IResponse.cs" />
     <Compile Include="Services\GoogleMaps\LatLng.cs" />
     <Compile Include="Services\GoogleMaps\Leg.cs" />
     <Compile Include="Services\GoogleMaps\Place.cs" />
@@ -125,7 +124,6 @@
     <Compile Include="Services\GoogleMaps\PlaceType.cs" />
     <Compile Include="Services\GoogleMaps\Polyline.cs" />
     <Compile Include="Services\GoogleMaps\Response.cs" />
-    <Compile Include="Services\GoogleMaps\ResponseBase.cs" />
     <Compile Include="Services\GoogleMaps\Route.cs" />
     <Compile Include="Services\GoogleMaps\RoutesResponse.cs" />
     <Compile Include="Services\GoogleMaps\Size.cs" />

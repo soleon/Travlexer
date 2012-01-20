@@ -21,28 +21,23 @@ namespace Codify.WindowsPhone.Services
 		Cancelled,
 
 		/// <summary>
-		/// Connection to the service was not found.
-		/// </summary>
-		ConnectionFailed,
-
-		/// <summary>
 		/// The service call raised an exception.
 		/// </summary>
 		ServiceException,
 
 		/// <summary>
-		/// The call was denied by the server.
-		/// </summary>
-		AccessDenied,
-
-		/// <summary>
-		/// The current session is invalid or expired.
-		/// </summary>
-		InvalidOrExpiredSession,
-
-		/// <summary>
 		/// There's no network connection available.
 		/// </summary>
-		NetworkUnavailable
+		NetworkUnavailable,
+
+		/// <summary>
+		/// The response was valid but the response data contains no result.
+		/// </summary>
+		EmptyResult,
+
+		/// <summary>
+		/// The request of this callback was invalid.
+		/// </summary>
+		InvalidRequest
 	}
 }

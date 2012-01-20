@@ -64,5 +64,10 @@ namespace Codify.WindowsPhone.Extensions
 		{
 			return function == null ? default(TResult) : function();
 		}
+
+		public static TResult ExecuteIfNotNull<T, TResult>(this Func<T, TResult> function, T param, TResult defaultResult = default(TResult))
+		{
+			return function == null ? defaultResult : function(param);
+		}
 	}
 }

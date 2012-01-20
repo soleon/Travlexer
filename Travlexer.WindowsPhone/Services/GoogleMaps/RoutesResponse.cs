@@ -6,10 +6,10 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 	public class RoutesResponse : ListResponse<Route>
 	{
 		[JsonProperty(PropertyName = "routes")]
-		public override List<Route> Results
+		public new List<Route> Result
 		{
-			get { return base.Results; }
-			set { base.Results = value; }
+			get { return base.Result; }
+			set { base.Result = value; }
 		}
 	}
 }

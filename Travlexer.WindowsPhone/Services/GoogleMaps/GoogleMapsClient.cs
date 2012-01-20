@@ -14,7 +14,16 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
+		/// <param name="location">The geo-location to match for places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
 		void GetPlaces(LatLng location, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null);
+
+		/// <summary>
+		/// Gets the places that match the address.
+		/// </summary>
+		/// <param name="address">The address to match for places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		void GetPlaces(string address, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null);
 
 		/// <summary>
 		/// Gets the place details.
@@ -38,7 +47,7 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <param name="input">The input to search places.</param>
 		/// <param name="radius">The maximum radius based on the center location to search for results.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void Search(LatLng center, string input, ushort radius = ushort.MaxValue, Action<RestResponse<ListResponse<Place>>> callback = null);
+		void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null);
 	}
 
 	public class GoogleMapsClient : IGoogleMapsClient
@@ -133,9 +142,9 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			_language = GetLanguageCode(CultureInfo.CurrentCulture);
 
 			_region = RegionInfo.CurrentRegion.TwoLetterISORegionName;
-			_basePlacesSearchUrl = "place/search/json?sensor=true&key=" + ApiKey + "&language=" + _language;
+			_basePlacesSearchUrl = "place/search/json?radius=50000&sensor=true&key=" + ApiKey + "&language=" + _language;
 			_basePlaceDetailsUrl = "place/details/json?sensor=true&key=" + ApiKey + "&language=" + _language + "&reference=";
-			_baseGeocodingUrl = "geocode/json?sensor=true&language=" + _language + "&region=" + _region + "&latlng=";
+			_baseGeocodingUrl = "geocode/json?sensor=true&language=" + _language + "&region=" + _region;
 			_baseDirectionsUrl = "directions/json?sensor=true&language=" + _language + "&region=" + _region;
 			_baseAutoCompleteUrl = "place/autocomplete/json?sensor=true&key=" + ApiKey + "&language=" + _language;
 			_baseStaticMapUrl = "staticmap?sensor=true";
@@ -149,44 +158,40 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <summary>
 		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
+		/// <param name="location">The geo-location to match for places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
 		public void GetPlaces(LatLng location, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null)
 		{
-			var c = new RestClient(BaseApiUrl);
-			c.ExecuteAsync<ListResponse<PlaceDetails>>(
-				new RestRequest(_baseGeocodingUrl + location),
-				response =>
-				{
-					if (IsGoodResponse(response) && response.Data == null)
-					{
-						try
-						{
-							response.Data = JsonConvert.DeserializeObject<ListResponse<PlaceDetails>>(response.Content);
-						}
-						catch { }
-					}
-					callback.ExecuteIfNotNull(response);
-				});
+			ProcessRequest<ListResponse<PlaceDetails>, List<PlaceDetails>>(
+				new RestRequest(_baseGeocodingUrl + "&latlng=" + location),
+				response => response.Data = JsonConvert.DeserializeObject<ListResponse<PlaceDetails>>(response.Content),
+				callback: callback);
 		}
 
+		/// <summary>
+		/// Gets the places that match the address.
+		/// </summary>
+		/// <param name="address">The address to match for places.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		public void GetPlaces(string address, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null)
+		{
+			ProcessRequest<ListResponse<PlaceDetails>, List<PlaceDetails>>(
+				new RestRequest(_baseGeocodingUrl + "&address=" + address),
+				r => r.Data = JsonConvert.DeserializeObject<ListResponse<PlaceDetails>>(r.Content),
+				callback: callback);
+		}
+
+		/// <summary>
+		/// Gets the place details.
+		/// </summary>
+		/// <param name="reference">The reference key of the place.</param>
+		/// <param name="callback">The callback to be executed after the process is finished.</param>
 		public void GetPlaceDetails(string reference, Action<RestResponse<Response<PlaceDetails>>> callback = null)
 		{
-			var c = new RestClient(BaseApiUrl);
-			c.ExecuteAsync<Response<PlaceDetails>>(
+			ProcessRequest<Response<PlaceDetails>, PlaceDetails>(
 				new RestRequest(_basePlaceDetailsUrl + reference),
-				response =>
-				{
-					if (IsGoodResponse(response) && response.Data == null)
-					{
-						try
-						{
-							response.Data = JsonConvert.DeserializeObject<Response<PlaceDetails>>(response.Content);
-						}
-						catch
-						{
-						}
-					}
-					callback.ExecuteIfNotNull(response);
-				});
+				r => r.Data = JsonConvert.DeserializeObject<Response<PlaceDetails>>(r.Content),
+				callback: callback);
 		}
 
 		/// <summary>
@@ -203,23 +208,10 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 				_getSuggestionsAsyncHandle.Abort();
 			}
 
-			var c = new RestClient(BaseApiUrl);
-			_getSuggestionsAsyncHandle = c.ExecuteAsync<AutoCompleteResponse>(
+			_getSuggestionsAsyncHandle = ProcessRequest<AutoCompleteResponse, List<Suggestion>>(
 				new RestRequest(_baseAutoCompleteUrl + "&location=" + center + "&input=" + input),
-				response =>
-				{
-					_getSuggestionsAsyncHandle = null;
-					if (IsGoodResponse(response) && response.Data.Results == null)
-					{
-						try
-						{
-							response.Data = JsonConvert.DeserializeObject<AutoCompleteResponse>(response.Content);
-						}
-						catch { }
-					}
-
-					callback.ExecuteIfNotNull(response);
-				});
+				r => r.Data = JsonConvert.DeserializeObject<AutoCompleteResponse>(r.Content),
+				callback: callback);
 		}
 
 		/// <summary>
@@ -229,23 +221,12 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// <param name="input">The input to search places.</param>
 		/// <param name="radius">The maximum radius based on the center location to search for results.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		public void Search(LatLng center, string input, ushort radius = ushort.MaxValue, Action<RestResponse<ListResponse<Place>>> callback = null)
+		public void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
-			var c = new RestClient(BaseApiUrl);
-			c.ExecuteAsync<ListResponse<Place>>(
-				new RestRequest(_basePlacesSearchUrl + "&location=" + center + "&keyword=" + HttpUtility.UrlEncode(input) + "&radius=" + radius),
-				response =>
-				{
-					if (IsGoodResponse(response) && response.Data == null)
-					{
-						try
-						{
-							response.Data = JsonConvert.DeserializeObject<ListResponse<Place>>(response.Content);
-						}
-						catch { }
-					}
-					callback.ExecuteIfNotNull(response);
-				});
+			ProcessRequest<ListResponse<Place>, List<Place>>(
+				new RestRequest(_basePlacesSearchUrl + "&location=" + center + "&keyword=" + HttpUtility.UrlEncode(input)),
+				r => r.Data = JsonConvert.DeserializeObject<ListResponse<Place>>(r.Content),
+				callback: callback);
 		}
 
 		#endregion
@@ -257,19 +238,41 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 		/// Gets the supported language code based on the specified culture information.
 		/// </summary>
 		/// <returns>A language code that supported by Google Maps' APIs, or the two letter ISO language name of the specified culture if no supported language code is found.</returns>
-		private string GetLanguageCode(CultureInfo cultureInfo)
+		private static string GetLanguageCode(CultureInfo cultureInfo)
 		{
-			var culture = CultureInfo.CurrentCulture;
+			var culture = cultureInfo;
 			var lng = culture.Name;
 			return _supportedLanguageCodes.Contains(lng) ? lng : culture.TwoLetterISOLanguageName;
 		}
 
 		/// <summary>
-		/// Determines whether the specified response's statusese are all good.
+		/// Processes an async REST request.
 		/// </summary>
-		private bool IsGoodResponse(RestResponseBase response)
+		/// <typeparam name="TResponse">Type of the response data.</typeparam>
+		/// <typeparam name="TResult">Type of the result in the response data.</typeparam>
+		/// <param name="request">The request to be processed.</param>
+		/// <param name="failedResponseAction">The action to be executed if the request came back with a failed response.</param>
+		/// <param name="validateResponse">An optional function to validate response for special validation requirement.</param>
+		/// <param name="callback">The final callback to be executed.</param>
+		/// <returns>The <see cref="RestRequestAsyncHandle"/> associated with this request.</returns>
+		private static RestRequestAsyncHandle ProcessRequest<TResponse, TResult>(IRestRequest request, Action<RestResponse<TResponse>> failedResponseAction = null, Func<RestResponse<TResponse>, bool> validateResponse = null, Action<RestResponse<TResponse>> callback = null)
+			where TResponse : class, IResponse<TResult>, new()
+			where TResult : class
 		{
-			return response != null && response.StatusCode == HttpStatusCode.OK;
+			var c = new RestClient(BaseApiUrl);
+			TResponse data;
+			return c.ExecuteAsync<TResponse>(request, r =>
+			{
+				if (r == null || r.StatusCode != HttpStatusCode.OK || (data = r.Data) == null || data.Result == null || r.Content.IsNullOrEmpty() || !validateResponse.ExecuteIfNotNull(r, true))
+				{
+					try
+					{
+						failedResponseAction.ExecuteIfNotNull(r);
+					}
+					catch { }
+				}
+				callback.ExecuteIfNotNull(r);
+			});
 		}
 
 		#endregion
@@ -484,6 +487,11 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			callback(result);
 		}
 
+		public void GetPlaces(string address, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void GetPlaceDetails(string reference, Action<RestResponse<Response<PlaceDetails>>> callback = null)
 		{
 			throw new NotImplementedException();
@@ -494,7 +502,7 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 			throw new NotImplementedException();
 		}
 
-		public void Search(LatLng center, string input, ushort radius = 65535, Action<RestResponse<ListResponse<Place>>> callback = null)
+		public void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
 			throw new NotImplementedException();
 		}

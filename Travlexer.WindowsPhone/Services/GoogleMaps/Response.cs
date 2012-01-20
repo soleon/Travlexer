@@ -1,10 +1,9 @@
-using Newtonsoft.Json;
-
 namespace Travlexer.WindowsPhone.Services.GoogleMaps
 {
-	public class Response<T> : ResponseBase
+	public class Response<T> : IResponse<T>
 	{
-		[JsonProperty(PropertyName = "result")]
+		public StatusCodes Status { get; set; }
+
 		public T Result { get; set; }
 	}
 }

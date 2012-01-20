@@ -219,17 +219,17 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			new PropertyMetadata(default(PushpinOverlayVisualStates), OnVisualStateChanged));
 
-		public PushpinOverlayWorkingStates WorkingState
+		public WorkingStates WorkingState
 		{
-			get { return (PushpinOverlayWorkingStates) GetValue(WorkingStateProperty); }
+			get { return (WorkingStates) GetValue(WorkingStateProperty); }
 			set { SetValue(WorkingStateProperty, value); }
 		}
 
 		public static readonly DependencyProperty WorkingStateProperty = DependencyProperty.Register(
 			"WorkingState",
-			typeof (PushpinOverlayWorkingStates),
+			typeof (WorkingStates),
 			typeof (PushpinContent),
-			new PropertyMetadata(default(PushpinOverlayWorkingStates), OnWorkingStateChanged));
+			new PropertyMetadata(default(WorkingStates), OnWorkingStateChanged));
 
 		public string Title
 		{

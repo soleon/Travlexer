@@ -6,10 +6,10 @@ namespace Travlexer.WindowsPhone.Services.GoogleMaps
 	public class AutoCompleteResponse : ListResponse<Suggestion>
 	{
 		[JsonProperty(PropertyName = "predictions")]
-		new public List<Suggestion> Results
+		public new List<Suggestion> Result
 		{
-			get { return base.Results; }
-			set { base.Results = value; }
+			get { return base.Result; }
+			set { base.Result = value; }
 		}
 	}
 }

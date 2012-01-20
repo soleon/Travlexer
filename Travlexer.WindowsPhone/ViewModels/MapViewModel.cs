@@ -13,9 +13,7 @@ using Codify.WindowsPhone.Threading;
 using Codify.WindowsPhone.ViewModels;
 using Microsoft.Phone.Controls.Maps;
 using Travlexer.WindowsPhone.Models;
-using Travlexer.WindowsPhone.Services.GoogleMaps;
 using Travlexer.WindowsPhone.Views;
-using Place = Travlexer.WindowsPhone.Models.Place;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
@@ -165,6 +163,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				OnSuggestionSelected();
 			}
 		}
+
 		private SearchSuggestion _selectedSuggestion;
 		private const string SelectedSuggestionProperty = "SelectedSuggestion";
 
@@ -263,10 +262,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				return;
 			}
-			vm.WorkingState = PushpinOverlayWorkingStates.Working;
+			vm.WorkingState = WorkingStates.Working;
 			_data.GetPlaceInformation(
 				place,
-				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? PushpinOverlayWorkingStates.Idle : PushpinOverlayWorkingStates.Error);
+				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
 		}
 
 		/// <summary>
@@ -328,12 +327,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				if (args.Status != CallbackStatus.Successful)
 				{
-					const string
-						messageBoxText = "There was no result coming back form the search, please try again later.",
-						caption = "Nothing was found";
-					MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
+					const string messageBoxText = "Nothing was found in the search.";
+					MessageBox.Show(messageBoxText);
 					return;
 				}
+				_data.ClearSearchResults();
 				var places = args.Result;
 				UIThread.RunWorker(() =>
 				{
@@ -344,13 +342,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 						UIThread.InvokeAsync(() =>
 						{
 							_data.AddNewPlace(place);
-							if (Pushpins.Count <= 0)
+							if (Pushpins.Count <= 0 || place.Reference == null)
 							{
 								return;
 							}
 							var vm = Pushpins[Pushpins.Count - 1];
-							vm.WorkingState = PushpinOverlayWorkingStates.Working;
-							_data.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? PushpinOverlayWorkingStates.Idle : PushpinOverlayWorkingStates.Error);
+							vm.WorkingState = WorkingStates.Working;
+							_data.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
 						});
 						if (i == lastIndex)
 						{
@@ -395,10 +393,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnSuggestionSelected()
 		{
 			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
-			Deployment.Current.Dispatcher.BeginInvoke(() =>
-			{
-				VisualState = VisualStates.Default;
-			});
+			Deployment.Current.Dispatcher.BeginInvoke(() => { VisualState = VisualStates.Default; });
 
 			_data.GetPlaceDetails(SelectedSuggestion.Reference, args =>
 			{

@@ -46,13 +46,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private PushpinOverlayVisualStates _visualState;
 		private const string VisualStateProperty = "VisualState";
 
-		public PushpinOverlayWorkingStates WorkingState
+		public WorkingStates WorkingState
 		{
 			get { return _workingState; }
 			set { SetProperty(ref _workingState, value, WorkingStateProperty); }
 		}
 
-		private PushpinOverlayWorkingStates _workingState;
+		private WorkingStates _workingState;
 		private const string WorkingStateProperty = "WorkingState";
 
 		#endregion
