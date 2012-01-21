@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
-using Travlexer.WindowsPhone.Models;
-using Travlexer.WindowsPhone.Services.GoogleMaps;
+using Travlexer.WindowsPhone.Infrastructure;
+using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps;
 using Travlexer.WindowsPhone.ViewModels;
-using Place = Travlexer.WindowsPhone.Models.Place;
+using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
 
 namespace Travlexer.WindowsPhone
 {
@@ -17,8 +18,8 @@ namespace Travlexer.WindowsPhone
 				{
 					return null;
 				}
-				var data = Globals.DataContext = new DataContext(new GoogleMapsClientMock());
-				return _userPin ?? (_userPin = data.AddNewPlace(new Location(9.1540930, -1.39166990)));
+				DataContext.GoogleMapsClient = new GoogleMapsClientMock();
+				return _userPin ?? (_userPin = DataContext.AddNewPlace(new Location(9.1540930, -1.39166990)));
 			}
 		}
 
@@ -34,8 +35,8 @@ namespace Travlexer.WindowsPhone
 				}
 				if (_mapViewModel == null)
 				{
-					var data = Globals.DataContext = new DataContext(new GoogleMapsClientMock());
-					data.AddNewPlace(new Location(9.1540930, -1.39166990));
+					DataContext.GoogleMapsClient = new GoogleMapsClientMock();
+					DataContext.AddNewPlace(new Location(9.1540930, -1.39166990));
 					_mapViewModel = new MapViewModel();
 				}
 				return _mapViewModel;

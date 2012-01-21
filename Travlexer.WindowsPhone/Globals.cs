@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.NetworkInformation;
+using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone
 {
@@ -21,17 +22,6 @@ namespace Travlexer.WindowsPhone
 
 
 		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets the data context that contains all essential data for this application.
-		/// </summary>
-		public static IDataContext DataContext
-		{
-			get { return _dataContext ?? (_dataContext = new DataContext()); }
-			set { _dataContext = value; }
-		}
-
-		private static IDataContext _dataContext;
 
 		/// <summary>
 		/// Gets a value indicating whether the network is available.

@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Infrastructure.Models;
 using Location = Travlexer.WindowsPhone.Controls.Icons.Location;
 
 namespace Travlexer.WindowsPhone.Converters

@@ -12,7 +12,8 @@ using Codify.WindowsPhone.Services;
 using Codify.WindowsPhone.Threading;
 using Codify.WindowsPhone.ViewModels;
 using Microsoft.Phone.Controls.Maps;
-using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Infrastructure;
+using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Views;
 
 namespace Travlexer.WindowsPhone.ViewModels
@@ -30,13 +31,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Search,
 			PushpinSelected
 		}
-
-		#endregion
-
-
-		#region Private Fields
-
-		private static readonly IDataContext _data = Globals.DataContext;
 
 		#endregion
 
@@ -70,7 +64,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		public MapViewModel()
 		{
-			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), _data.Places);
+			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), DataContext.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
 
@@ -256,14 +250,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnAddPlace(Location location)
 		{
-			var place = _data.AddNewPlace(location);
+			var place = DataContext.AddNewPlace(location);
 			var vm = Pushpins.LastOrDefault();
 			if (vm == null)
 			{
 				return;
 			}
 			vm.WorkingState = WorkingStates.Working;
-			_data.GetPlaceInformation(
+			DataContext.GetPlaceInformation(
 				place,
 				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
 		}
@@ -285,7 +279,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnDeletePlace(PushpinViewModel vm)
 		{
-			_data.RemovePlace(vm.Data);
+			DataContext.RemovePlace(vm.Data);
 		}
 
 		/// <summary>
@@ -323,7 +317,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnSearch()
 		{
-			Globals.DataContext.Search(MapCenter, Input, args =>
+			DataContext.Search(MapCenter, Input, args =>
 			{
 				if (args.Status != CallbackStatus.Successful)
 				{
@@ -331,7 +325,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					MessageBox.Show(messageBoxText);
 					return;
 				}
-				_data.ClearSearchResults();
+				DataContext.ClearSearchResults();
 				var places = args.Result;
 				UIThread.RunWorker(() =>
 				{
@@ -341,14 +335,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 						var place = places[i];
 						UIThread.InvokeAsync(() =>
 						{
-							_data.AddNewPlace(place);
+							DataContext.AddNewPlace(place);
 							if (Pushpins.Count <= 0 || place.Reference == null)
 							{
 								return;
 							}
 							var vm = Pushpins[Pushpins.Count - 1];
 							vm.WorkingState = WorkingStates.Working;
-							_data.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
+							DataContext.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
 						});
 						if (i == lastIndex)
 						{
@@ -373,7 +367,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				return;
 			}
 
-			_data.GetSuggestions(MapCenter, Input, args =>
+			DataContext.GetSuggestions(MapCenter, Input, args =>
 			{
 				SelectedSuggestion = null;
 				_suggestions.Clear();
@@ -395,7 +389,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
 			Deployment.Current.Dispatcher.BeginInvoke(() => { VisualState = VisualStates.Default; });
 
-			_data.GetPlaceDetails(SelectedSuggestion.Reference, args =>
+			DataContext.GetPlaceDetails(SelectedSuggestion.Reference, args =>
 			{
 				if (args.Status != CallbackStatus.Successful)
 				{
@@ -405,9 +399,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 					MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
 					return;
 				}
-				_data.ClearSearchResults();
+				DataContext.ClearSearchResults();
 				var place = args.Result;
-				_data.AddNewPlace(place);
+				DataContext.AddNewPlace(place);
 				SearchSucceeded.ExecuteIfNotNull(new List<Place> { place });
 			});
 

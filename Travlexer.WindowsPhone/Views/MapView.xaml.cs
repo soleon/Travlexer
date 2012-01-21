@@ -4,13 +4,12 @@ using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using Codify.WindowsPhone.Extensions;
-using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
-using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
-using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Travlexer.WindowsPhone.Views
 {
@@ -55,7 +54,6 @@ namespace Travlexer.WindowsPhone.Views
 			// Doing event handling here instead of in XAML is a hack to make the view still "blendable".
 			Map.Hold += OnMapHold;
 		}
-
 
 		#endregion
 
@@ -120,7 +118,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -187,6 +185,5 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		#endregion
-
 	}
 }

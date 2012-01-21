@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
 
 namespace Travlexer.WindowsPhone.Controls

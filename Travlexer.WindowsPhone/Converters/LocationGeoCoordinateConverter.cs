@@ -2,7 +2,7 @@ using System;
 using System.Device.Location;
 using System.Globalization;
 using System.Windows.Data;
-using Travlexer.WindowsPhone.Models;
+using Travlexer.WindowsPhone.Infrastructure.Models;
 
 namespace Travlexer.WindowsPhone.Converters
 {
