@@ -2,7 +2,7 @@
 
 namespace Travlexer.WindowsPhone.Controls.Icons
 {
-	public class Camera : Control
+	public class Camera : IconBase
 	{
 		public Camera()
 		{

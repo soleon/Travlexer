@@ -2,7 +2,7 @@
 
 namespace Travlexer.WindowsPhone.Controls.Icons
 {
-	public class Car : Control
+	public class Car : IconBase
 	{
 		public Car()
 		{

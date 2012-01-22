@@ -2,7 +2,7 @@ using System.Windows.Controls;
 
 namespace Travlexer.WindowsPhone.Controls.Icons
 {
-	public class Walk : Control
+	public class Walk : IconBase
 	{
 		public Walk()
 		{

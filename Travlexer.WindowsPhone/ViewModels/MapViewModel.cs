@@ -335,6 +335,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 						var place = places[i];
 						UIThread.InvokeAsync(() =>
 						{
+							place.IsSearchResult = true;
 							DataContext.AddNewPlace(place);
 							if (Pushpins.Count <= 0 || place.Reference == null)
 							{
@@ -401,6 +402,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 				DataContext.ClearSearchResults();
 				var place = args.Result;
+				place.IsSearchResult = true;
 				DataContext.AddNewPlace(place);
 				SearchSucceeded.ExecuteIfNotNull(new List<Place> { place });
 			});

@@ -243,14 +243,6 @@
 												</DiscreteObjectKeyFrame.Value>
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchResultIndicator"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
-											<DiscreteObjectKeyFrame KeyTime="0">
-												<DiscreteObjectKeyFrame.Value>
-													<Visibility>Visible</Visibility>
-												</DiscreteObjectKeyFrame.Value>
-											</DiscreteObjectKeyFrame>
-										</ObjectAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
@@ -292,15 +284,6 @@
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
-						<Icons:Search2 x:Name="SearchResultIndicator"
-									   Height="32"
-									   Margin="0,-20,-20,0"
-									   Width="32"
-									   Background="{Binding Background, ElementName=Pushpin}"
-									   Foreground="{StaticResource PhoneBorderBrush}"
-									   HorizontalAlignment="Right"
-									   VerticalAlignment="Top"
-									   Visibility="Collapsed" />
 						<ContentPresenter Height="32"
 										  Width="32"
 										  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}, RelativeSource={RelativeSource TemplatedParent}}"
@@ -530,6 +513,14 @@
 							  Stroke="{StaticResource PhoneForegroundBrush}"
 							  StrokeThickness="2"
 							  VerticalAlignment="Bottom" />
+						<Icons:Search2 Height="20"
+							Margin="0,-8,-8,0"
+							Width="20"
+							Background="{TemplateBinding Background}"
+							Foreground="{StaticResource PhoneBorderBrush}"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Top"
+							Visibility="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

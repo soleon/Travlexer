@@ -73,6 +73,7 @@
     <Compile Include="Controls\Icons\Camera.cs" />
     <Compile Include="Controls\Icons\Car.cs" />
     <Compile Include="Controls\Icons\Delete.cs" />
+    <Compile Include="Controls\Icons\IconBase.cs" />
     <Compile Include="Controls\Icons\Pin.cs" />
     <Compile Include="Controls\Icons\Edit.cs" />
     <Compile Include="Controls\Icons\From.cs" />

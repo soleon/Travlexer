@@ -12,7 +12,7 @@ namespace Codify.WindowsPhone.Converters
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var result = false;
-			
+
 			if (value is string)
 			{
 				result = Convert((string)value);
@@ -20,6 +20,10 @@ namespace Codify.WindowsPhone.Converters
 			else if (value is Visibility)
 			{
 				result = Convert((Visibility)value);
+			}
+			else if (value is bool)
+			{
+				result = (bool)value;
 			}
 
 			if (parameter is string && string.Equals((string)parameter, ReverseParameter, StringComparison.CurrentCultureIgnoreCase))

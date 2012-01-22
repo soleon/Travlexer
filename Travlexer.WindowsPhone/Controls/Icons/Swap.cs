@@ -2,7 +2,7 @@ using System.Windows.Controls;
 
 namespace Travlexer.WindowsPhone.Controls.Icons
 {
-	public class Swap : Control
+	public class Swap : IconBase
 	{
 		public Swap()
 		{

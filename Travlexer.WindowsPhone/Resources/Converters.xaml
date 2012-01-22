@@ -6,4 +6,5 @@
 	<Converters:PlaceIconToControlConverter x:Key="PlaceIconToControlConverter" />
 	<Converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
 	<CoreConverters:BooleanConverter x:Key="BooleanConverter" />
+	<CoreConverters:VisibilityConverter x:Key="VisibilityConverter" />
 </ResourceDictionary>

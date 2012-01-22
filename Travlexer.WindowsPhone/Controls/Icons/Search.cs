@@ -2,7 +2,7 @@ using System.Windows.Controls;
 
 namespace Travlexer.WindowsPhone.Controls.Icons
 {
-	public class Search : Control
+	public class Search : IconBase
 	{
 		public Search()
 		{

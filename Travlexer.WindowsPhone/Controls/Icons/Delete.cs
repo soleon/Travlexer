@@ -1,12 +1,10 @@
-using System.Windows.Controls;
-
 namespace Travlexer.WindowsPhone.Controls.Icons
 {
-	public class Delete : Control
+	public class Delete : IconBase
 	{
 		public Delete()
 		{
-			DefaultStyleKey = typeof(Delete);
+			DefaultStyleKey = typeof (Delete);
 		}
 	}
 }

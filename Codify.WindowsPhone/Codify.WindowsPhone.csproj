@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
+    <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Services\CallbackStatus.cs" />
     <Compile Include="Threading\Task.cs" />

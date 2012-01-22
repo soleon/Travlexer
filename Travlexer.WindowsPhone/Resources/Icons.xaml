@@ -4,7 +4,10 @@
 					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					mc:Ignorable="d">
-	<Style TargetType="Icons:ArrowRight">
+	<Style TargetType="Icons:IconBase" x:Key="IconBaseStyle">
+		<Setter Property="StrokeThickness" Value="5"/>
+	</Style>
+	<Style TargetType="Icons:ArrowRight" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:ArrowRight">
@@ -15,7 +18,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Bicycle">
+	<Style TargetType="Icons:Bicycle" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Bicycle">
@@ -26,7 +29,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Camera">
+	<Style TargetType="Icons:Camera" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Camera">
@@ -37,7 +40,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Car">
+	<Style TargetType="Icons:Car" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Car">
@@ -48,7 +51,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Delete">
+	<Style TargetType="Icons:Delete" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Delete">
@@ -59,7 +62,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Pin">
+	<Style TargetType="Icons:Pin" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Pin">
@@ -70,7 +73,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Edit">
+	<Style TargetType="Icons:Edit" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Edit">
@@ -81,7 +84,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:From">
+	<Style TargetType="Icons:From" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:From">
@@ -92,7 +95,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Info">
+	<Style TargetType="Icons:Info" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Info">
@@ -103,7 +106,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Location">
+	<Style TargetType="Icons:Location" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Location">
@@ -115,7 +118,7 @@
 		</Setter>
 		<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
 	</Style>
-	<Style TargetType="Icons:Search">
+	<Style TargetType="Icons:Search" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Search">
@@ -126,20 +129,19 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Search2">
+	<Style TargetType="Icons:Search2" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Search2">
-					<Path Data="M20,32 L4,48 M48,20 C48,28.836555 40.836555,36 32,36 C23.163445,36 16,28.836555 16,20 C16,11.163444 23.163445,4 32,4 C40.836555,4 48,11.163444 48,20 z"
-						  Fill="{TemplateBinding Background}"
+					<Path Data="M20,32 L8.9125004,43.170834 M48,20 C48,28.836555 40.836555,36 32,36 C23.163445,36 16,28.836555 16,20 C16,11.163444 23.163445,4 32,4 C40.836555,4 48,11.163444 48,20 z"
 						  Stretch="Uniform"
 						  Stroke="{TemplateBinding Foreground}"
-						  StrokeThickness="5" />
+						  StrokeThickness="{TemplateBinding StrokeThickness}" Fill="{TemplateBinding Background}" StrokeEndLineCap="Round" UseLayoutRounding="False" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Swap">
+	<Style TargetType="Icons:Swap" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Swap">
@@ -150,7 +152,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:To">
+	<Style TargetType="Icons:To" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:To">
@@ -161,7 +163,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Walk">
+	<Style TargetType="Icons:Walk" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Walk">
@@ -172,7 +174,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Recreation">
+	<Style TargetType="Icons:Recreation" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Recreation">
@@ -183,7 +185,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Internet">
+	<Style TargetType="Icons:Internet" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Internet">
@@ -194,7 +196,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Like">
+	<Style TargetType="Icons:Like" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Like">
@@ -205,7 +207,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Restaurant">
+	<Style TargetType="Icons:Restaurant" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Restaurant">
@@ -216,7 +218,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Bar">
+	<Style TargetType="Icons:Bar" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Bar">
@@ -227,7 +229,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<Style TargetType="Icons:Hospital">
+	<Style TargetType="Icons:Hospital" BasedOn="{StaticResource IconBaseStyle}">
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Icons:Hospital">

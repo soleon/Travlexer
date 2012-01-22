@@ -201,6 +201,7 @@
 						<Maps:Pushpin x:Name="Pushpin"
 									  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
+									  Tag="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}"
 									  PositionOrigin="BottomCenter">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Tap">
@@ -233,7 +234,8 @@
 							  DataContext="{Binding SelectedPushpin}"
 							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
 							  PositionOrigin="BottomCenter"
-							  Visibility="Collapsed">
+							  Visibility="Collapsed"
+							  Tag="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}">
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Tap">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
@@ -258,7 +260,8 @@
 											 Icon="{Binding Data.Icon}"
 											 Title="{Binding Data.Name}"
 											 VisualState="Collapsed"
-											 WorkingState="{Binding WorkingState}" />
+											 WorkingState="{Binding WorkingState}"
+											 IsSearchResult="{Binding Data.IsSearchResult, Mode=TwoWay}"/>
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 		</Maps:Map>
