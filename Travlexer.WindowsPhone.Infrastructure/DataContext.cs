@@ -98,7 +98,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		{
 			for (var i = _places.Count - 1; i >= 0; i--)
 			{
-				if (!_places[i].IsSearchResult)
+				if (_places[i].IsSearchResult)
 				{
 					_places.RemoveAt(i);
 				}

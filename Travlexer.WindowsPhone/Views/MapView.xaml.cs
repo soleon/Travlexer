@@ -86,7 +86,6 @@ namespace Travlexer.WindowsPhone.Views
 			return Map.BoundingRectangle;
 		}
 
-
 		/// <summary>
 		/// Called when <see cref="AppButtonSearch"/> is clicked.
 		/// </summary>
@@ -127,7 +126,6 @@ namespace Travlexer.WindowsPhone.Views
 			}
 		}
 
-
 		/// <summary>
 		/// Called when the visual state of the view model has changed.
 		/// </summary>
@@ -162,9 +160,20 @@ namespace Travlexer.WindowsPhone.Views
 			}
 		}
 
+		/// <summary>
+		/// Called when <see cref="MapViewModel.SuggestionsRetrieved"/> event is raised from the data context of this view.
+		/// </summary>
 		private void OnSuggestionsRetrieved()
 		{
 			SearchBox.PopulateComplete();
+		}
+
+		/// <summary>
+		/// Called when the "clear search" application bar menu item is clicked.
+		/// </summary>
+		private void OnMenuClearSearchClick(object sender, EventArgs e)
+		{
+			Infrastructure.DataContext.ClearSearchResults();
 		}
 
 		#endregion

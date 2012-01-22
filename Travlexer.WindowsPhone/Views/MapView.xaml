@@ -348,6 +348,10 @@
 											Click="OnAppButtonSearchClick"
 											IconUri="/Assets/Search.png"
 											Text="search" />
+			<shell:ApplicationBar.MenuItems>
+				<shell:ApplicationBarMenuItem Text="clear search"
+											  Click="OnMenuClearSearchClick"/>
+			</shell:ApplicationBar.MenuItems>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>
