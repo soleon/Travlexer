@@ -48,6 +48,9 @@
     <Reference Include="RestSharp.WindowsPhone">
       <HintPath>..\Libraries\RestSharp.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="Serialization">
+      <HintPath>..\Libraries\Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="System.Device" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -88,6 +91,9 @@
     <Compile Include="Services\GoogleMaps\Suggestion.cs" />
     <Compile Include="Services\GoogleMaps\TravelMode.cs" />
     <Compile Include="Services\GoogleMaps\ViewPort.cs" />
+    <Compile Include="Services\Serialization\BinarySerializer.cs" />
+    <Compile Include="Services\Serialization\ISerializer.cs" />
+    <Compile Include="Services\Serialization\JsonSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codify.WindowsPhone\Codify.WindowsPhone.csproj">

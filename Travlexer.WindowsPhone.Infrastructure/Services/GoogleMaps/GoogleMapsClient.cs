@@ -6,6 +6,7 @@ using System.Net;
 using Codify.WindowsPhone.Extensions;
 using Newtonsoft.Json;
 using RestSharp;
+using JsonSerializer = Travlexer.WindowsPhone.Infrastructure.Services.Serialization.JsonSerializer;
 
 namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 {
@@ -52,6 +53,8 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 	public class GoogleMapsClient : IGoogleMapsClient
 	{
 		#region Private Members
+
+		private static readonly JsonSerializer _jsonSerializer = new JsonSerializer(); 
 
 		private static readonly string[] _supportedLanguageCodes = new[]
 		{
@@ -163,7 +166,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		{
 			ProcessRequest<ListResponse<PlaceDetails>, List<PlaceDetails>>(
 				new RestRequest(_baseGeocodingUrl + "&latlng=" + location),
-				response => response.Data = JsonConvert.DeserializeObject<ListResponse<PlaceDetails>>(response.Content),
+				response => response.Data = _jsonSerializer.Deserialize<ListResponse<PlaceDetails>>(response.Content),
 				callback: callback);
 		}
 
@@ -176,7 +179,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		{
 			ProcessRequest<ListResponse<PlaceDetails>, List<PlaceDetails>>(
 				new RestRequest(_baseGeocodingUrl + "&address=" + address),
-				r => r.Data = JsonConvert.DeserializeObject<ListResponse<PlaceDetails>>(r.Content),
+				r => r.Data = _jsonSerializer.Deserialize<ListResponse<PlaceDetails>>(r.Content),
 				callback: callback);
 		}
 
@@ -189,7 +192,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		{
 			ProcessRequest<Response<PlaceDetails>, PlaceDetails>(
 				new RestRequest(_basePlaceDetailsUrl + reference),
-				r => r.Data = JsonConvert.DeserializeObject<Response<PlaceDetails>>(r.Content),
+				r => r.Data = _jsonSerializer.Deserialize<Response<PlaceDetails>>(r.Content),
 				callback: callback);
 		}
 
@@ -209,7 +212,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 
 			_getSuggestionsAsyncHandle = ProcessRequest<AutoCompleteResponse, List<Suggestion>>(
 				new RestRequest(_baseAutoCompleteUrl + "&location=" + center + "&input=" + input),
-				r => r.Data = JsonConvert.DeserializeObject<AutoCompleteResponse>(r.Content),
+				r => r.Data = _jsonSerializer.Deserialize<AutoCompleteResponse>(r.Content),
 				callback: callback);
 		}
 
@@ -223,7 +226,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		{
 			ProcessRequest<ListResponse<Place>, List<Place>>(
 				new RestRequest(_basePlacesSearchUrl + "&location=" + center + "&keyword=" + HttpUtility.UrlEncode(input)),
-				r => r.Data = JsonConvert.DeserializeObject<ListResponse<Place>>(r.Content),
+				r => r.Data = _jsonSerializer.Deserialize<ListResponse<Place>>(r.Content),
 				callback: callback);
 		}
 
