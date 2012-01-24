@@ -64,6 +64,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		private const string MapZoomLevelProperty = "MapZoomLevel";
 
 		/// <summary>
+		/// Gets or sets the search input.
+		/// </summary>
+		public static string SearchInput { get; set; }
+		private const string SearchInputProperty = "SearchInput";
+
+		/// <summary>
 		/// Gets or sets the google maps client.
 		/// </summary>
 		public static IGoogleMapsClient GoogleMapsClient
@@ -273,6 +279,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				callback);
 		}
 
+		/// <summary>
+		/// Saves the data context to the storage provided by <see cref="StorageProvider"/>.
+		/// </summary>
 		public static void SaveContext()
 		{
 			// Save map center.
@@ -281,11 +290,17 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save map zoom level.
 			StorageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel);
 
+			// Save search input.
+			StorageProvider.SaveSetting(SearchInputProperty, SearchInput);
+
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
 		}
 
+		/// <summary>
+		/// Loads the data context from the storage provided by <see cref="StorageProvider"/>.
+		/// </summary>
 		public static void LoadContext()
 		{
 			// Load map center.
@@ -300,6 +315,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			if (StorageProvider.TryGetSetting(MapZoomLevelProperty, out mapZoomLevel))
 			{
 				MapZoomLevel = mapZoomLevel;
+			}
+
+			// Load search input.
+			string searchInput;
+			if (StorageProvider.TryGetSetting(SearchInputProperty, out searchInput))
+			{
+				SearchInput = searchInput;
 			}
 
 			// Load places.

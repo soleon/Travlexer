@@ -65,11 +65,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		public MapViewModel()
 		{
-			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), DataContext.Places);
-			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
-			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
 			Center = DataContext.MapCenter;
 			ZoomLevel = DataContext.MapZoomLevel;
+			SearchInput = DataContext.SearchInput;
+			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
+			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), DataContext.Places);
+			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 
 			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
 			CommandSearch = new DelegateCommand(OnSearch);
@@ -165,7 +166,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public Func<LocationRect> MapBoundCapturer { private get; set; }
 
 		/// <summary>
-		/// Gets the suggestions based on the <see cref="Input"/>.
+		/// Gets the suggestions based on the <see cref="SearchInput"/>.
 		/// </summary>
 		public ReadOnlyObservableCollection<SearchSuggestion> Suggestions { get; private set; }
 
@@ -193,13 +194,19 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets or sets the search input.
 		/// </summary>
-		public string Input
+		public string SearchInput
 		{
-			get { return _input; }
-			set { SetProperty(ref _input, value, InputProperty); }
+			get { return _searchInput; }
+			set
+			{
+				if (SetProperty(ref _searchInput, value, InputProperty))
+				{
+					DataContext.SearchInput = value;
+				}
+			}
 		}
 
-		private string _input;
+		private string _searchInput;
 		private const string InputProperty = "Input";
 
 		/// <summary>
@@ -252,12 +259,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public DelegateCommand<PushpinViewModel> CommandPinSearchResult { get; private set; }
 
 		/// <summary>
-		/// Gets the command that gets suggestions that based on the <see cref="Input"/>.
+		/// Gets the command that gets suggestions that based on the <see cref="SearchInput"/>.
 		/// </summary>
 		public DelegateCommand CommandGetSuggestions { get; private set; }
 
 		/// <summary>
-		/// Gets the command that performs the search based on the <see cref="Input"/>.
+		/// Gets the command that performs the search based on the <see cref="SearchInput"/>.
 		/// </summary>
 		public DelegateCommand CommandSearch { get; private set; }
 
@@ -346,7 +353,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnSearch()
 		{
-			DataContext.Search(Center, Input, args =>
+			DataContext.Search(Center, SearchInput, args =>
 			{
 				if (args.Status != CallbackStatus.Successful)
 				{
@@ -397,7 +404,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				return;
 			}
 
-			DataContext.GetSuggestions(Center, Input, args =>
+			DataContext.GetSuggestions(Center, SearchInput, args =>
 			{
 				SelectedSuggestion = null;
 				_suggestions.Clear();

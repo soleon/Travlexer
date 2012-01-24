@@ -297,7 +297,7 @@
 										  MinimumPopulateDelay="500"
 										  MinimumPrefixLength="3"
 										  SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
-										  Text="{Binding Input, Mode=TwoWay}"
+										  Text="{Binding SearchInput, Mode=TwoWay}"
 										  ValueMemberBinding="{Binding Description}">
 					<Controls:AutoCompleteBox.InputScope>
 						<InputScope>
@@ -309,7 +309,7 @@
 						<i:EventTrigger EventName="Populating">
 							<i:InvokeCommandAction Command="{Binding CommandGetSuggestions}" />
 						</i:EventTrigger>
-						<Triggers:KeyPressTrigger CanTrigger="{Binding Input, Converter={StaticResource BooleanConverter}}"
+						<Triggers:KeyPressTrigger CanTrigger="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
 												  Key="Enter">
 							<i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}" />
 							<ec:ChangePropertyAction PropertyName="VisualState"
@@ -326,10 +326,10 @@
 					</Controls:AutoCompleteBox.ItemTemplate>
 				</Controls:AutoCompleteBox>
 				<Controls:ButtonCircle Grid.Column="1"
-									   IsHitTestVisible="{Binding Input, Converter={StaticResource BooleanConverter}}"
+									   IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
 									   VerticalAlignment="Center">
 					<i:Interaction.Triggers>
-						<Triggers:EventTrigger CanTrigger="{Binding Input, Converter={StaticResource BooleanConverter}}"
+						<Triggers:EventTrigger CanTrigger="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
 											   EventName="Tap">
 							<ec:ChangePropertyAction PropertyName="VisualState"
 													 TargetObject="{Binding}"
