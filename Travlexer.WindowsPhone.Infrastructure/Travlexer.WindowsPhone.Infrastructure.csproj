@@ -52,6 +52,7 @@
       <HintPath>..\Libraries\Serialization.dll</HintPath>
     </Reference>
     <Reference Include="System.Device" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -91,9 +92,8 @@
     <Compile Include="Services\GoogleMaps\Suggestion.cs" />
     <Compile Include="Services\GoogleMaps\TravelMode.cs" />
     <Compile Include="Services\GoogleMaps\ViewPort.cs" />
-    <Compile Include="Services\Serialization\BinarySerializer.cs" />
-    <Compile Include="Services\Serialization\ISerializer.cs" />
-    <Compile Include="Services\Serialization\JsonSerializer.cs" />
+    <Compile Include="Serialization\BinarySerializer.cs" />
+    <Compile Include="Serialization\JsonSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codify.WindowsPhone\Codify.WindowsPhone.csproj">

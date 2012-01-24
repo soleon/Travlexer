@@ -4,10 +4,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using Codify.WindowsPhone.Extensions;
+using Codify.WindowsPhone.Serialization;
 using Codify.WindowsPhone.Services;
+using Codify.WindowsPhone.Storage;
 using RestSharp;
 using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.WindowsPhone.Infrastructure.Serialization;
 using Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps;
 using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
 using PlaceDetails = Travlexer.WindowsPhone.Infrastructure.Models.PlaceDetails;
@@ -34,9 +38,30 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Gets the collection that contains all user pins.
 		/// </summary>
+		[DataMember]
 		public static ReadOnlyObservableCollection<Place> Places { get; private set; }
 
 		private static readonly ObservableCollection<Place> _places = new ObservableCollection<Place>();
+		private const string PlacesProperty = "Places";
+
+		/// <summary>
+		/// Gets or sets the map center geo-location.
+		/// </summary>
+		public static Location MapCenter
+		{
+			get { return _mapCenter ?? (_mapCenter = new Location()); }
+			set { _mapCenter = value; }
+		}
+
+		private static Location _mapCenter;
+		private const string MapCenterProperty = "MapCenter";
+
+		/// <summary>
+		/// Gets or sets the map zoom level.
+		/// </summary>
+		public static double MapZoomLevel { get; set; }
+
+		private const string MapZoomLevelProperty = "MapZoomLevel";
 
 		/// <summary>
 		/// Gets or sets the google maps client.
@@ -48,6 +73,28 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		private static IGoogleMapsClient _googleMapsClient;
+
+		/// <summary>
+		/// Gets or sets the storage provider for saving and loading data.
+		/// </summary>
+		public static IStorage StorageProvider
+		{
+			get { return _storageProvider ?? (_storageProvider = new IsolatedStorage()); }
+			set { _storageProvider = value; }
+		}
+
+		private static IStorage _storageProvider;
+
+		/// <summary>
+		/// Gets or sets the serializer for saving and loading data.
+		/// </summary>
+		public static ISerializer<byte[]> Serializer
+		{
+			get { return _serializer ?? (_serializer = new BinarySerializer()); }
+			set { _serializer = value; }
+		}
+
+		private static ISerializer<byte[]> _serializer;
 
 		#endregion
 
@@ -224,6 +271,44 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				(c, r) => c.GetSuggestions(location, input, r),
 				r => new List<SearchSuggestion>(r.Result.Select(s => (SearchSuggestion) s).ToList()),
 				callback);
+		}
+
+		public static void SaveContext()
+		{
+			// Save map center.
+			StorageProvider.SaveSetting(MapCenterProperty, MapCenter);
+
+			// Save map zoom level.
+			StorageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel);
+
+			// Save places.
+			var placeBytes = Serializer.Serialize(_places.ToArray());
+			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
+		}
+
+		public static void LoadContext()
+		{
+			// Load map center.
+			Location mapCenter;
+			if (StorageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
+			{
+				MapCenter = mapCenter;
+			}
+
+			// Load map zoom level.
+			double mapZoomLevel;
+			if (StorageProvider.TryGetSetting(MapZoomLevelProperty, out mapZoomLevel))
+			{
+				MapZoomLevel = mapZoomLevel;
+			}
+
+			// Load places.
+			byte[] placeBytes;
+			Place[] places;
+			if (StorageProvider.TryGetSetting(PlacesProperty, out placeBytes) && Serializer.TryDeserialize(placeBytes, out places))
+			{
+				places.ForEach(_places.Add);
+			}
 		}
 
 		#endregion

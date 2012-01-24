@@ -19,7 +19,7 @@ namespace Travlexer.WindowsPhone
 					return null;
 				}
 				DataContext.GoogleMapsClient = new GoogleMapsClientMock();
-				return _userPin ?? (_userPin = DataContext.AddNewPlace(new Location(9.1540930, -1.39166990)));
+				return _userPin ?? (_userPin = DataContext.AddNewPlace(new Location { Latitude = 9.1540930, Longitude = -1.39166990 }));
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace Travlexer.WindowsPhone
 				if (_mapViewModel == null)
 				{
 					DataContext.GoogleMapsClient = new GoogleMapsClientMock();
-					DataContext.AddNewPlace(new Location(9.1540930, -1.39166990));
+					DataContext.AddNewPlace(new Location { Latitude = 9.1540930, Longitude = -1.39166990 });
 					_mapViewModel = new MapViewModel();
 				}
 				return _mapViewModel;

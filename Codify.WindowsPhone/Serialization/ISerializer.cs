@@ -1,4 +1,4 @@
-namespace Travlexer.WindowsPhone.Infrastructure.Services.Serialization
+namespace Codify.WindowsPhone.Serialization
 {
 	public interface ISerializer<TSource>
 	{

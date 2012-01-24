@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone
 {
@@ -51,19 +52,35 @@ namespace Travlexer.WindowsPhone
 
 		// Code to execute when the application is launching (eg, from Start)
 		// This code will not execute when the application is reactivated
-		private void ApplicationLaunching(object sender, LaunchingEventArgs e) { }
+		private void ApplicationLaunching(object sender, LaunchingEventArgs e)
+		{
+			DataContext.LoadContext();
+		}
 
 		// Code to execute when the application is activated (brought to foreground)
 		// This code will not execute when the application is first launched
-		private void ApplicationActivated(object sender, ActivatedEventArgs e) { }
+		private void ApplicationActivated(object sender, ActivatedEventArgs e)
+		{
+			if (e.IsApplicationInstancePreserved)
+			{
+				return;
+			}
+			DataContext.LoadContext();
+		}
 
 		// Code to execute when the application is deactivated (sent to background)
 		// This code will not execute when the application is closing
-		private void ApplicationDeactivated(object sender, DeactivatedEventArgs e) { }
+		private void ApplicationDeactivated(object sender, DeactivatedEventArgs e)
+		{
+			DataContext.SaveContext();
+		}
 
 		// Code to execute when the application is closing (eg, user hit Back)
 		// This code will not execute when the application is deactivated
-		private void ApplicationClosing(object sender, ClosingEventArgs e) { }
+		private void ApplicationClosing(object sender, ClosingEventArgs e)
+		{
+			DataContext.SaveContext();
+		}
 
 		// Code to execute if a navigation fails
 		private static void RootFrameNavigationFailed(object sender, NavigationFailedEventArgs e)

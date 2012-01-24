@@ -6,7 +6,7 @@ using System.Net;
 using Codify.WindowsPhone.Extensions;
 using Newtonsoft.Json;
 using RestSharp;
-using JsonSerializer = Travlexer.WindowsPhone.Infrastructure.Services.Serialization.JsonSerializer;
+using JsonSerializer = Travlexer.WindowsPhone.Infrastructure.Serialization.JsonSerializer;
 
 namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 {

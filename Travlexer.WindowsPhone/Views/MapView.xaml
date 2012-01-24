@@ -178,10 +178,11 @@
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 		<Maps:Map x:Name="Map"
-				  Center="{Binding MapCenter, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
+				  Center="{Binding Center, Mode=TwoWay}"
 				  CopyrightVisibility="Collapsed"
 				  CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
-				  LogoVisibility="Collapsed">
+				  LogoVisibility="Collapsed"
+				  ZoomLevel="{Binding ZoomLevel, Mode=TwoWay}">
 			<Maps:MapItemsControl IsHitTestVisible="False"
 								  ItemsSource="{Binding Pushpins}">
 				<Maps:MapItemsControl.ItemTemplate>

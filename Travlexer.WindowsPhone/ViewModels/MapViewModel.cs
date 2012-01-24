@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Device.Location;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -67,6 +68,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), DataContext.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
+			Center = DataContext.MapCenter;
+			ZoomLevel = DataContext.MapZoomLevel;
 
 			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
 			CommandSearch = new DelegateCommand(OnSearch);
@@ -109,7 +112,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 				if (value != null)
 				{
-					MapCenter = value.Data.Location;
+					Center = value.Data.Location;
 				}
 				SelectedPushpinChanged.ExecuteIfNotNull(value);
 			}
@@ -121,14 +124,40 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets or sets the map center geo-coordination.
 		/// </summary>
-		public Location MapCenter
+		public GeoCoordinate Center
 		{
-			get { return _mapCenter; }
-			set { SetProperty(ref _mapCenter, value, MapCenterProperty); }
+			get { return _center; }
+			set
+			{
+				if (!SetProperty(ref _center, value, CenterProperty))
+				{
+					return;
+				}
+				var mapCenter = DataContext.MapCenter;
+				mapCenter.Latitude = value.Latitude;
+				mapCenter.Longitude = value.Longitude;
+			}
 		}
 
-		private Location _mapCenter;
-		private const string MapCenterProperty = "MapCenter";
+		private GeoCoordinate _center;
+		private const string CenterProperty = "Center";
+
+		/// <summary>
+		/// Gets or sets the zoom level of the map.
+		/// </summary>
+		public double ZoomLevel
+		{
+			get { return _zoomLevel; }
+			set
+			{
+				if (SetProperty(ref _zoomLevel, value, ZoomLevelProperty))
+				{
+					DataContext.MapZoomLevel = value;
+				}
+			}
+		}
+		private double _zoomLevel;
+		private const string ZoomLevelProperty = "ZoomLevel";
 
 		/// <summary>
 		/// Sets the function that returns the current view port of the map.
@@ -317,7 +346,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnSearch()
 		{
-			DataContext.Search(MapCenter, Input, args =>
+			DataContext.Search(Center, Input, args =>
 			{
 				if (args.Status != CallbackStatus.Successful)
 				{
@@ -368,7 +397,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				return;
 			}
 
-			DataContext.GetSuggestions(MapCenter, Input, args =>
+			DataContext.GetSuggestions(Center, Input, args =>
 			{
 				SelectedSuggestion = null;
 				_suggestions.Clear();

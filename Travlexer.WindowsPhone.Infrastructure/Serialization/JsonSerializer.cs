@@ -1,8 +1,9 @@
-﻿using Serialization;
+using Codify.WindowsPhone.Serialization;
+using Newtonsoft.Json;
 
-namespace Travlexer.WindowsPhone.Infrastructure.Services.Serialization
+namespace Travlexer.WindowsPhone.Infrastructure.Serialization
 {
-	public class BinarySerializer : ISerializer<byte[]>
+	public class JsonSerializer : ISerializer<string>
 	{
 		#region Public Methods
 
@@ -14,9 +15,9 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.Serialization
 		/// <returns>
 		/// The deserialized object as <see cref="TTarget"/>.
 		/// </returns>
-		public TTarget Deserialize<TTarget>(byte[] source) where TTarget : class
+		public TTarget Deserialize<TTarget>(string source) where TTarget : class
 		{
-			return SilverlightSerializer.Deserialize<TTarget>(source);
+			return JsonConvert.DeserializeObject<TTarget>(source);
 		}
 
 		/// <summary>
@@ -28,7 +29,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.Serialization
 		/// <returns>
 		///   <c>true</c> if the deserialization process is successful, otherwise, <c>false</c>.
 		/// </returns>
-		public bool TryDeserialize<TTarget>(byte[] source, out TTarget output) where TTarget : class
+		public bool TryDeserialize<TTarget>(string source, out TTarget output) where TTarget : class
 		{
 			try
 			{
@@ -42,28 +43,28 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.Serialization
 		}
 
 		/// <summary>
-		/// Serializes the specified target into <see cref="byte[]"/>.
+		/// Serializes the specified target into <see cref="string"/>.
 		/// </summary>
 		/// <typeparam name="TTarget">The type of the target.</typeparam>
 		/// <param name="target">The target to serialize.</param>
 		/// <returns>
-		/// The serialized representation of the target as <see cref="byte[]"/>.
+		/// The serialized representation of the target as <see cref="string"/>.
 		/// </returns>
-		public byte[] Serialize<TTarget>(TTarget target) where TTarget : class
+		public string Serialize<TTarget>(TTarget target) where TTarget : class
 		{
-			return SilverlightSerializer.Serialize(target);
+			return JsonConvert.SerializeObject(target);
 		}
 
 		/// <summary>
-		/// Tries to serialize the target into <see cref="byte[]"/>.
+		/// Tries to serialize the target into <see cref="string"/>.
 		/// </summary>
 		/// <typeparam name="TTarget">The type of the target.</typeparam>
 		/// <param name="target">The target to be serialized.</param>
-		/// <param name="output">The serialized representation of the source as <see cref="byte[]"/> if serialization is successful.</param>
+		/// <param name="output">The serialized representation of the source as <see cref="string"/> if serialization is successful.</param>
 		/// <returns>
 		///   <c>true</c> if the serialization process is successful, otherwise, <c>false</c>.
 		/// </returns>
-		public bool TrySerialize<TTarget>(TTarget target, out byte[] output) where TTarget : class
+		public bool TrySerialize<TTarget>(TTarget target, out string output) where TTarget : class
 		{
 			try
 			{

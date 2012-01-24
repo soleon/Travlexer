@@ -31,6 +31,17 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 			Name = name;
 		}
 
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Place"/> class.
+		/// </summary>
+		/// <remarks>
+		/// This parmeterless constructor is only intended for serialization purpose.
+		/// Do not use this constructor in code.
+		/// </remarks>
+		public Place()
+			: this(new Location(), name: null) {}
+
 		#endregion
 
 
@@ -131,6 +142,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 			get { return _reference; }
 			set { SetProperty(ref _reference, value, ReferenceProperty); }
 		}
+
 		private string _reference;
 		private const string ReferenceProperty = "Reference";
 

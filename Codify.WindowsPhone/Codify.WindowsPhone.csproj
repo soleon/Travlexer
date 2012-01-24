@@ -50,7 +50,9 @@
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Services\CallbackStatus.cs" />
+    <Compile Include="Storage\IsolatedStorage.cs" />
     <Compile Include="Threading\Task.cs" />
     <Compile Include="Threading\UIThread.cs" />
     <Compile Include="Collections\AdaptedObservableCollection.cs" />

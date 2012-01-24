@@ -29,7 +29,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 
 		public static implicit operator Location(LatLng latLng)
 		{
-			return latLng == null ? null : new Location(latLng.Lat, latLng.Lng);
+			return latLng == null ? null : new Location { Latitude = latLng.Lat, Longitude = latLng.Lng };
 		}
 
 		public static implicit operator LatLng(Location location)
