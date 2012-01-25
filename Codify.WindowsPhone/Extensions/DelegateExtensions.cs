@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows.Input;
 using Codify.WindowsPhone.Commands;
 
 namespace Codify.WindowsPhone.Extensions
@@ -15,7 +16,7 @@ namespace Codify.WindowsPhone.Extensions
 			handler(sender, e);
 		}
 
-		public static void ExecuteIfNotNull(this DelegateCommand command, object parameter = null)
+		public static void ExecuteIfNotNull(this ICommand command, object parameter = null)
 		{
 			if (command == null)
 			{
@@ -40,6 +41,15 @@ namespace Codify.WindowsPhone.Extensions
 				return;
 			}
 			action();
+		}
+
+		public static void ExecuteIfNotNull(this EventHandler handler, object sender, EventArgs e)
+		{
+			if (handler == null)
+			{
+				return;
+			}
+			handler(sender, e);
 		}
 
 		public static void ExecuteIfNotNull<T>(this Action<T> action, T parameter)

@@ -5,7 +5,6 @@ using System.Device.Location;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Codify.WindowsPhone.Extensions;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
 using Travlexer.WindowsPhone.Infrastructure.Models;
@@ -46,7 +45,7 @@ namespace Travlexer.WindowsPhone.Views
 				_context.MapBoundCapturer = OnCaptureMapBound;
 				_context.SelectedPushpinChanged += OnSelectedPushpinChanged;
 				_context.SearchSucceeded += OnSearchSucceeded;
-				_context.VisualStateChanged += OnVisualStateChanged;
+				_context.VisualStateChanged += GoToState;
 				_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
 			}
 
@@ -75,7 +74,7 @@ namespace Travlexer.WindowsPhone.Views
 		private void OnMapHold(object sender, GestureEventArgs e)
 		{
 			var coordinate = Map.ViewportPointToLocation(e.GetPosition(Map));
-			_context.CommandAddPlace.ExecuteIfNotNull(coordinate);
+			_context.CommandAddPlace.Execute(coordinate);
 		}
 
 		/// <summary>
@@ -127,23 +126,6 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// Called when the visual state of the view model has changed.
-		/// </summary>
-		private void OnVisualStateChanged(MapViewModel.VisualStates state)
-		{
-			if (state == MapViewModel.VisualStates.Default || state == MapViewModel.VisualStates.PushpinSelected)
-			{
-				_appBar.IsVisible = true;
-				Map.Focus();
-			}
-			else
-			{
-				_appBar.IsVisible = false;
-			}
-			VisualStateManager.GoToState(this, state.ToString(), true);
-		}
-
-		/// <summary>
 		/// This method is called when the hardware Back button is pressed.
 		/// Returns to the Default visual state if the view is in another state, otherwise, exits the application.
 		/// </summary>
@@ -168,14 +150,6 @@ namespace Travlexer.WindowsPhone.Views
 			SearchBox.PopulateComplete();
 		}
 
-		/// <summary>
-		/// Called when the "clear search" application bar menu item is clicked.
-		/// </summary>
-		private void OnMenuClearSearchClick(object sender, EventArgs e)
-		{
-			Infrastructure.DataContext.ClearSearchResults();
-		}
-
 		#endregion
 
 
@@ -187,10 +161,21 @@ namespace Travlexer.WindowsPhone.Views
 		private void GoToState(MapViewModel.VisualStates state)
 		{
 			_context.VisualState = state;
-			if (state == MapViewModel.VisualStates.Default)
+			switch (state)
 			{
-				Map.Focus();
+				case MapViewModel.VisualStates.Default:
+					Map.Focus();
+					_appBar.IsVisible = true;
+					break;
+				case MapViewModel.VisualStates.Search:
+					SearchBox.Focus();
+					_appBar.IsVisible = false;
+					break;
+				case MapViewModel.VisualStates.PushpinSelected:
+					_appBar.IsVisible = false;
+					break;
 			}
+			VisualStateManager.GoToState(this, state.ToString(), false);
 		}
 
 		#endregion

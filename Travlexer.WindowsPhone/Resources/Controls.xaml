@@ -11,6 +11,9 @@
 					xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 					xmlns:Behaviors="clr-namespace:Codify.WindowsPhone.Behaviors;assembly=Codify.WindowsPhone"
 					mc:Ignorable="d">
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="Brushes.xaml"/>
+	</ResourceDictionary.MergedDictionaries>
 	<Style TargetType="Controls:ButtonCircle">
 		<Setter Property="Template">
 			<Setter.Value>

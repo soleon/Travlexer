@@ -70,6 +70,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		private const string SearchInputProperty = "SearchInput";
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this instance is tracking current location.
+		/// </summary>
+		public static bool IsTrackingCurrentLocation { get; set; }
+		private const string IsTrackingCurrentLocationProperty = "IsTrackingCurrentLocation";
+
+		/// <summary>
 		/// Gets or sets the google maps client.
 		/// </summary>
 		public static IGoogleMapsClient GoogleMapsClient
@@ -293,6 +299,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save search input.
 			StorageProvider.SaveSetting(SearchInputProperty, SearchInput);
 
+			// Save current location tracking flag.
+			StorageProvider.SaveSetting(IsTrackingCurrentLocationProperty, IsTrackingCurrentLocation);
+
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
@@ -322,6 +331,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			if (StorageProvider.TryGetSetting(SearchInputProperty, out searchInput))
 			{
 				SearchInput = searchInput;
+			}
+
+			// Load current location tracking flag.
+			bool isTrackingCurrnetLocation;
+			if (StorageProvider.TryGetSetting(IsTrackingCurrentLocationProperty, out isTrackingCurrnetLocation))
+			{
+				IsTrackingCurrentLocation = isTrackingCurrnetLocation;
 			}
 
 			// Load places.

@@ -56,13 +56,7 @@ namespace Codify.WindowsPhone.Commands
 		/// <summary>
 		/// Raised when the status of the CanExecute method changes
 		/// </summary>
-		public event EventHandler CanExecuteChanged
-		{
-			add { _canExecuteChanged += value; }
-			remove { _canExecuteChanged -= value; }
-		}
-
-		private EventHandler _canExecuteChanged;
+		public event EventHandler CanExecuteChanged;
 
 		#endregion
 
@@ -112,10 +106,7 @@ namespace Codify.WindowsPhone.Commands
 		/// </summary>
 		public void NotifyCanExecuteChanged()
 		{
-			if (_canExecuteChanged != null)
-			{
-				_canExecuteChanged(this, EventArgs.Empty);
-			}
+			CanExecuteChanged.ExecuteIfNotNull(this, EventArgs.Empty);
 		}
 
 		#endregion
@@ -150,7 +141,7 @@ namespace Codify.WindowsPhone.Commands
 		/// <summary>
 		/// Creates a new instance of DelegateCommand
 		/// </summary>
-		public DelegateCommand() {}
+		public DelegateCommand() { }
 
 		/// <summary>
 		/// Creates a new instance of DelegatingCommand
@@ -180,13 +171,7 @@ namespace Codify.WindowsPhone.Commands
 		/// <summary>
 		/// Raised when the status of the CanExecute method changes
 		/// </summary>
-		public event EventHandler CanExecuteChanged
-		{
-			add { _canExecuteChanged += value; }
-			remove { _canExecuteChanged -= value; }
-		}
-
-		private EventHandler _canExecuteChanged;
+		public event EventHandler CanExecuteChanged;
 
 		#endregion
 
@@ -197,18 +182,18 @@ namespace Codify.WindowsPhone.Commands
 		{
 			if (parameter is TParam)
 			{
-				return (TParam) parameter;
+				return (TParam)parameter;
 			}
 
 			var defaultValue = default(TParam);
 
 			if (parameter != null && defaultValue is IConvertible)
 			{
-				var p = Convert.ChangeType(parameter, typeof (TParam), null);
+				var p = Convert.ChangeType(parameter, typeof(TParam), null);
 
 				if (p != null)
 				{
-					return (TParam) p;
+					return (TParam)p;
 				}
 			}
 
@@ -263,10 +248,7 @@ namespace Codify.WindowsPhone.Commands
 		/// </summary>
 		public void NotifyCanExecuteChanged()
 		{
-			if (_canExecuteChanged != null)
-			{
-				_canExecuteChanged(this, EventArgs.Empty);
-			}
+			CanExecuteChanged.ExecuteIfNotNull(this, EventArgs.Empty);
 		}
 
 		#endregion

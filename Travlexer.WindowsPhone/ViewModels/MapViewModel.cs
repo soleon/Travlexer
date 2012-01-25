@@ -24,6 +24,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 	/// </summary>
 	public class MapViewModel : ViewModelBase
 	{
+		#region Private Members
+
+		private readonly GeoCoordinateWatcher _geoWatcher;
+
+		#endregion
+
+
 		#region Public Enums
 
 		public enum VisualStates : byte
@@ -68,6 +75,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Center = DataContext.MapCenter;
 			ZoomLevel = DataContext.MapZoomLevel;
 			SearchInput = DataContext.SearchInput;
+			IsTrackingCurrentLocation = DataContext.IsTrackingCurrentLocation;
+
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
 			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), DataContext.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
@@ -79,6 +88,17 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandDeselectPushpin = new DelegateCommand<PushpinViewModel>(OnDeselectPushpin);
 			CommandDeletePlace = new DelegateCommand<PushpinViewModel>(OnDeletePlace);
 			CommandPinSearchResult = new DelegateCommand<PushpinViewModel>(OnPinSearchResult);
+			CommandStartTrackingCurrentLocation = new DelegateCommand(OnStartTrackingCurrentLocation);
+			CommandStopTrackingCurrentLocation = new DelegateCommand(OnStopTrackingCurrentLocation);
+			CommandGoToSearchState = new DelegateCommand(OnGoToSearchState);
+			CommandClearSearchResults = new DelegateCommand(OnClearSearchResults);
+
+			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
+			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
+			if (IsTrackingCurrentLocation)
+			{
+				Center = _geoWatcher.Position.Location;
+			}
 		}
 
 		#endregion
@@ -157,6 +177,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 			}
 		}
+
 		private double _zoomLevel;
 		private const string ZoomLevelProperty = "ZoomLevel";
 
@@ -199,7 +220,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			get { return _searchInput; }
 			set
 			{
-				if (SetProperty(ref _searchInput, value, InputProperty))
+				if (SetProperty(ref _searchInput, value, SearchInputProperty))
 				{
 					DataContext.SearchInput = value;
 				}
@@ -207,7 +228,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		}
 
 		private string _searchInput;
-		private const string InputProperty = "Input";
+		private const string SearchInputProperty = "SearchInput";
 
 		/// <summary>
 		/// Gets or sets the visual state for the view.
@@ -227,6 +248,36 @@ namespace Travlexer.WindowsPhone.ViewModels
 		}
 
 		private VisualStates _visualState;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the map is tracking current location.
+		/// </summary>
+		public bool IsTrackingCurrentLocation
+		{
+			get { return _isTrackingCurrentLocation; }
+			set
+			{
+				if (!SetProperty(ref _isTrackingCurrentLocation, value, IsTrackingCurrentLocationProperty))
+				{
+					return;
+				}
+				if (value)
+				{
+					_geoWatcher.Start();
+					if (ZoomLevel < 15)
+					{
+						ZoomLevel = 15;
+					}
+				}
+				else
+				{
+					_geoWatcher.Stop();
+				}
+			}
+		}
+
+		private bool _isTrackingCurrentLocation;
+		private const string IsTrackingCurrentLocationProperty = "IsTrackingCurrentLocation";
 
 		#endregion
 
@@ -267,6 +318,26 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the command that performs the search based on the <see cref="SearchInput"/>.
 		/// </summary>
 		public DelegateCommand CommandSearch { get; private set; }
+
+		/// <summary>
+		/// Gets the command that starts tracking current location.
+		/// </summary>
+		public DelegateCommand CommandStartTrackingCurrentLocation { get; private set; }
+
+		/// <summary>
+		/// Gets the command that stops tracking current location.
+		/// </summary>
+		public DelegateCommand CommandStopTrackingCurrentLocation { get; private set; }
+
+		/// <summary>
+		/// Gets the command that sets the <see cref="VisualState"/> to <see cref="VisualStates.Search"/>.
+		/// </summary>
+		public DelegateCommand CommandGoToSearchState { get; private set; }
+
+		/// <summary>
+		/// Gets the command that clears search results.
+		/// </summary>
+		public DelegateCommand CommandClearSearchResults { get; private set; }
 
 		#endregion
 
@@ -424,7 +495,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnSuggestionSelected()
 		{
 			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
-			Deployment.Current.Dispatcher.BeginInvoke(() => { VisualState = VisualStates.Default; });
+			UIThread.InvokeBack(() => VisualState = VisualStates.Default);
 
 			DataContext.GetPlaceDetails(SelectedSuggestion.Reference, args =>
 			{
@@ -444,6 +515,46 @@ namespace Travlexer.WindowsPhone.ViewModels
 			});
 
 			ResetSearchSuggestions();
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandStartTrackingCurrentLocation"/> is executed.
+		/// </summary>
+		private void OnStopTrackingCurrentLocation()
+		{
+			IsTrackingCurrentLocation = false;
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandStopTrackingCurrentLocation"/> is executed.
+		/// </summary>
+		private void OnStartTrackingCurrentLocation()
+		{
+			IsTrackingCurrentLocation = true;
+		}
+
+		/// <summary>
+		/// Called when <see cref="GeoCoordinateWatcher.PositionChanged"/> event is raised.
+		/// </summary>
+		private void OnGeoWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+		{
+			Center = e.Position.Location;
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandGoToSearchState"/> is executed.
+		/// </summary>
+		private void OnGoToSearchState()
+		{
+			VisualState = VisualStates.Search;
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandClearSearchResults"/> is executed.
+		/// </summary>
+		private void OnClearSearchResults()
+		{
+			DataContext.ClearSearchResults();
 		}
 
 		protected override void OnDispose()

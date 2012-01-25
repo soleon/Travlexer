@@ -1,4 +1,3 @@
-using System.Windows.Controls;
 
 namespace Travlexer.WindowsPhone.Controls.Icons
 {
