@@ -12,7 +12,6 @@ using Codify.WindowsPhone.Extensions;
 using Codify.WindowsPhone.Services;
 using Codify.WindowsPhone.Threading;
 using Codify.WindowsPhone.ViewModels;
-using Microsoft.Phone.Controls.Maps;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Views;
@@ -99,6 +98,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				Center = _geoWatcher.Position.Location;
 			}
+
+			DataContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
 		}
 
 		#endregion
@@ -147,20 +148,20 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public GeoCoordinate Center
 		{
-			get { return _center; }
+			get { return DataContext.MapCenter; }
 			set
 			{
-				if (!SetProperty(ref _center, value, CenterProperty))
+				var mapCenter = DataContext.MapCenter;
+				if (value == mapCenter)
 				{
 					return;
 				}
-				var mapCenter = DataContext.MapCenter;
 				mapCenter.Latitude = value.Latitude;
 				mapCenter.Longitude = value.Longitude;
+				RaisePropertyChange(CenterProperty);
 			}
 		}
 
-		private GeoCoordinate _center;
 		private const string CenterProperty = "Center";
 
 		/// <summary>
@@ -168,23 +169,19 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public double ZoomLevel
 		{
-			get { return _zoomLevel; }
+			get { return DataContext.MapZoomLevel; }
 			set
 			{
-				if (SetProperty(ref _zoomLevel, value, ZoomLevelProperty))
+				if (DataContext.MapZoomLevel.Equals(value))
 				{
-					DataContext.MapZoomLevel = value;
+					return;
 				}
+				DataContext.MapZoomLevel = value;
+				RaisePropertyChange(ZoomLevelProperty);
 			}
 		}
 
-		private double _zoomLevel;
 		private const string ZoomLevelProperty = "ZoomLevel";
-
-		/// <summary>
-		/// Sets the function that returns the current view port of the map.
-		/// </summary>
-		public Func<LocationRect> MapBoundCapturer { private get; set; }
 
 		/// <summary>
 		/// Gets the suggestions based on the <see cref="SearchInput"/>.
@@ -217,17 +214,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public string SearchInput
 		{
-			get { return _searchInput; }
+			get { return DataContext.SearchInput; }
 			set
 			{
-				if (SetProperty(ref _searchInput, value, SearchInputProperty))
+				if (DataContext.SearchInput == value)
 				{
-					DataContext.SearchInput = value;
+					return;
 				}
+				DataContext.SearchInput = value;
+				RaisePropertyChange(SearchInputProperty);
 			}
 		}
 
-		private string _searchInput;
 		private const string SearchInputProperty = "SearchInput";
 
 		/// <summary>
@@ -254,13 +252,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public bool IsTrackingCurrentLocation
 		{
-			get { return _isTrackingCurrentLocation; }
+			get { return DataContext.IsTrackingCurrentLocation; }
 			set
 			{
-				if (!SetProperty(ref _isTrackingCurrentLocation, value, IsTrackingCurrentLocationProperty))
+				if (DataContext.IsTrackingCurrentLocation == value)
 				{
 					return;
 				}
+				DataContext.IsTrackingCurrentLocation = value;
+				RaisePropertyChange(IsTrackingCurrentLocationProperty);
 				if (value)
 				{
 					_geoWatcher.Start();
@@ -276,8 +276,20 @@ namespace Travlexer.WindowsPhone.ViewModels
 			}
 		}
 
-		private bool _isTrackingCurrentLocation;
 		private const string IsTrackingCurrentLocationProperty = "IsTrackingCurrentLocation";
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is busy.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this instance is busy; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsBusy
+		{
+			get { return DataContext.IsBusy.Value; }
+		}
+
+		private const string IsBusyProperty = "IsBusy";
 
 		#endregion
 
@@ -424,8 +436,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnSearch()
 		{
+			DataContext.IsBusy.Value = true;
 			DataContext.Search(Center, SearchInput, args =>
 			{
+				DataContext.IsBusy.Value = false;
 				if (args.Status != CallbackStatus.Successful)
 				{
 					const string messageBoxText = "Nothing was found in the search.";
@@ -475,8 +489,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 				return;
 			}
 
+			DataContext.IsBusy.Value = true;
 			DataContext.GetSuggestions(Center, SearchInput, args =>
 			{
+				DataContext.IsBusy.Value = false;
 				SelectedSuggestion = null;
 				_suggestions.Clear();
 				if (args.Status != CallbackStatus.Successful)
@@ -497,8 +513,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
 			UIThread.InvokeBack(() => VisualState = VisualStates.Default);
 
+			DataContext.IsBusy.Value = true;
 			DataContext.GetPlaceDetails(SelectedSuggestion.Reference, args =>
 			{
+				DataContext.IsBusy.Value = false;
 				if (args.Status != CallbackStatus.Successful)
 				{
 					const string
@@ -562,7 +580,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Pushpins.CollectionChanged -= OnPushpinsCollectionChanged;
 			Pushpins = null;
 			SelectedPushpin = null;
-			MapBoundCapturer = null;
 
 			base.OnDispose();
 		}

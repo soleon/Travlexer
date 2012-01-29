@@ -42,7 +42,6 @@ namespace Travlexer.WindowsPhone.Views
 
 			if (_context != null)
 			{
-				_context.MapBoundCapturer = OnCaptureMapBound;
 				_context.SelectedPushpinChanged += OnSelectedPushpinChanged;
 				_context.SearchSucceeded += OnSearchSucceeded;
 				_context.VisualStateChanged += GoToState;
@@ -75,14 +74,6 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			var coordinate = Map.ViewportPointToLocation(e.GetPosition(Map));
 			_context.CommandAddPlace.Execute(coordinate);
-		}
-
-		/// <summary>
-		/// Called when the current view port of the map is required.
-		/// </summary>
-		private LocationRect OnCaptureMapBound()
-		{
-			return Map.BoundingRectangle;
 		}
 
 		/// <summary>

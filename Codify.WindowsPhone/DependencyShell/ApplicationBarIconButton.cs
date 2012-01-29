@@ -4,7 +4,7 @@ using Microsoft.Phone.Shell;
 
 namespace Codify.WindowsPhone.DependencyShell
 {
-	public class ApplicationBarIconButton : DependencyShellItemBase<IApplicationBarIconButton>
+	public class ApplicationBarIconButton : ApplicationBarItemBase<IApplicationBarIconButton>
 	{
 		#region Constructors
 

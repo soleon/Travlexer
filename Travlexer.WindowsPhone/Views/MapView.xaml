@@ -25,6 +25,9 @@
 							d:DesignHeight="768"
 							shell:SystemTray.IsVisible="True"
 							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
+	<shell:SystemTray.ProgressIndicator>
+		<shell:ProgressIndicator IsVisible="True" IsIndeterminate="{Binding IsBusy}"/>
+	</shell:SystemTray.ProgressIndicator>
 	<phone:PhoneApplicationPage.DataContext>
 		<ViewModels:MapViewModel />
 	</phone:PhoneApplicationPage.DataContext>
@@ -279,9 +282,8 @@
 					   IsHitTestVisible="False"
 					   Opacity="0" />
 			<Grid x:Name="SearchContentPanel"
-				  Height="72"
-				  Background="{StaticResource PhoneChromeBrush}"
-				  VerticalAlignment="Top">
+				  Height="52"
+				  VerticalAlignment="Top" Background="{StaticResource PhoneChromeBrush}">
 				<i:Interaction.Triggers>
 					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SearchPanel, Converter={StaticResource BooleanConverter}}">
 						<ec:ChangePropertyAction PropertyName="VisualState"
@@ -303,7 +305,7 @@
 										  MinimumPrefixLength="3"
 										  SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
 										  Text="{Binding SearchInput, Mode=TwoWay}"
-										  ValueMemberBinding="{Binding Description}">
+										  ValueMemberBinding="{Binding Description}" Margin="-12" BorderThickness="0" Padding="6,4">
 					<Controls:AutoCompleteBox.InputScope>
 						<InputScope>
 							<InputScopeName NameValue="Search" />
@@ -328,7 +330,8 @@
 						</DataTemplate>
 					</Controls:AutoCompleteBox.ItemTemplate>
 				</Controls:AutoCompleteBox>
-				<Controls:ButtonCircle Grid.Column="1"
+				<Button Grid.Column="1"
+						Template="{x:Null}"
 									   IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
 									   VerticalAlignment="Center">
 					<i:Interaction.Triggers>
@@ -340,13 +343,15 @@
 							<i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}" />
 						</Triggers:EventTrigger>
 					</i:Interaction.Triggers>
-					<Icons:Search2 />
-				</Controls:ButtonCircle>
+					<Border Padding="10" Background="{StaticResource PhoneForegroundBrush}">
+						<Icons:Search2 Foreground="{StaticResource PhoneBackgroundBrush}" />
+					</Border>
+				</Button>
 			</Grid>
 		</Grid>
 	</Grid>
 	<i:Interaction.Behaviors>
-		<DependencyShell:ApplicationBar>
+		<DependencyShell:ApplicationBar Opacity="0.9">
 			<DependencyShell:ApplicationBar.Buttons>
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
 														  IconUri="/Assets/Track.png"

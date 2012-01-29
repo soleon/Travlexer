@@ -2,7 +2,7 @@ using Microsoft.Phone.Shell;
 
 namespace Codify.WindowsPhone.DependencyShell
 {
-	public class ApplicationBarMenuItem : DependencyShellItemBase<IApplicationBarMenuItem>
+	public class ApplicationBarMenuItem : ApplicationBarItemBase<IApplicationBarMenuItem>
 	{
 		#region Constructors
 

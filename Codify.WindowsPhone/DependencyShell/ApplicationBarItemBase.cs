@@ -7,7 +7,7 @@ using Microsoft.Phone.Shell;
 
 namespace Codify.WindowsPhone.DependencyShell
 {
-	public abstract class DependencyShellItemBase<T> : FrameworkElement where T: class, IApplicationBarMenuItem
+	public abstract class ApplicationBarItemBase<T> : FrameworkElement where T: class, IApplicationBarMenuItem
 	{
 		#region Public Properties
 
@@ -28,7 +28,7 @@ namespace Codify.WindowsPhone.DependencyShell
 		public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
 			"Text",
 			typeof (string),
-			typeof(DependencyShellItemBase<T>),
+			typeof(ApplicationBarItemBase<T>),
 			new PropertyMetadata(null, OnTextChanged));
 
 		public bool IsEnabled
@@ -40,7 +40,7 @@ namespace Codify.WindowsPhone.DependencyShell
 		public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.Register(
 			"IsEnabled",
 			typeof (bool),
-			typeof (DependencyShellItemBase<T>),
+			typeof (ApplicationBarItemBase<T>),
 			new PropertyMetadata(true, OnIsEnabledChanged));
 
 		public ICommand Command
@@ -52,7 +52,7 @@ namespace Codify.WindowsPhone.DependencyShell
 		public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
 			"Command",
 			typeof (ICommand),
-			typeof (DependencyShellItemBase<T>),
+			typeof (ApplicationBarItemBase<T>),
 			null);
 
 		public object CommandParameter
@@ -64,7 +64,7 @@ namespace Codify.WindowsPhone.DependencyShell
 		public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
 			"CommandParameter",
 			typeof (object),
-			typeof (DependencyShellItemBase<T>),
+			typeof (ApplicationBarItemBase<T>),
 			null);
 
 		#endregion
@@ -77,7 +77,7 @@ namespace Codify.WindowsPhone.DependencyShell
 		/// </summary>
 		private static void OnTextChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
 		{
-			var b = (DependencyShellItemBase<T>)sender;
+			var b = (ApplicationBarItemBase<T>)sender;
 			if (b.Item == null)
 			{
 				return;
@@ -91,7 +91,7 @@ namespace Codify.WindowsPhone.DependencyShell
 		/// </summary>
 		private static void OnIsEnabledChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
 		{
-			var b = (DependencyShellItemBase<T>)sender;
+			var b = (ApplicationBarItemBase<T>)sender;
 			if (b.Item == null)
 			{
 				return;
