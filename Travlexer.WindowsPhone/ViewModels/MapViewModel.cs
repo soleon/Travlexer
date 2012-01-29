@@ -45,11 +45,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 		#region Public Events
 
 		/// <summary>
-		/// Occurs when value of <see cref="SelectedPushpin"/> is changed.
-		/// </summary>
-		public event Action<PushpinViewModel> SelectedPushpinChanged;
-
-		/// <summary>
 		/// Occurs when the execution of <see cref="CommandSearch"/> is completed successfully.
 		/// </summary>
 		public event Action<IList<Place>> SearchSucceeded;
@@ -90,16 +85,30 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandStartTrackingCurrentLocation = new DelegateCommand(OnStartTrackingCurrentLocation);
 			CommandStopTrackingCurrentLocation = new DelegateCommand(OnStopTrackingCurrentLocation);
 			CommandGoToSearchState = new DelegateCommand(OnGoToSearchState);
+			CommandGoToDefaultState = new DelegateCommand(OnGoToDefaultState);
 			CommandClearSearchResults = new DelegateCommand(OnClearSearchResults);
 
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
-			if (IsTrackingCurrentLocation)
+			if (DataContext.IsTrackingCurrentLocation)
 			{
-				Center = _geoWatcher.Position.Location;
+				if (!_geoWatcher.Position.Location.IsUnknown)
+				{
+					Center = _geoWatcher.Position.Location;
+				}
+				_geoWatcher.Start();
 			}
 
 			DataContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandGoToDefaultState"/>.
+		/// </summary>
+		private void OnGoToDefaultState()
+		{
+			DataContext.CancelGetSuggestions();
+			VisualState = VisualStates.Default;
 		}
 
 		#endregion
@@ -136,7 +145,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				{
 					Center = value.Data.Location;
 				}
-				SelectedPushpinChanged.ExecuteIfNotNull(value);
+				VisualState = value == null ? VisualStates.Default : VisualStates.PushpinSelected;
 			}
 		}
 
@@ -347,6 +356,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public DelegateCommand CommandGoToSearchState { get; private set; }
 
 		/// <summary>
+		/// Gets the command that sets the <see cref="VisualState"/> to <see cref="VisualStates.Default"/>.
+		/// </summary>
+		public DelegateCommand CommandGoToDefaultState { get; private set; }
+
+		/// <summary>
 		/// Gets the command that clears search results.
 		/// </summary>
 		public DelegateCommand CommandClearSearchResults { get; private set; }
@@ -437,6 +451,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnSearch()
 		{
 			DataContext.IsBusy.Value = true;
+			VisualState = VisualStates.Default;
+			DataContext.CancelGetSuggestions();
 			DataContext.Search(Center, SearchInput, args =>
 			{
 				DataContext.IsBusy.Value = false;
@@ -473,6 +489,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 						Thread.Sleep(100);
 					}
 				});
+				IsTrackingCurrentLocation = false;
 				SearchSucceeded.ExecuteIfNotNull(places);
 			});
 			ResetSearchSuggestions();
@@ -556,6 +573,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnGeoWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
 		{
+			if (e.Position.Location.IsUnknown)
+			{
+				return;
+			}
 			Center = e.Position.Location;
 		}
 

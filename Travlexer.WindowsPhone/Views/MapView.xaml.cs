@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
@@ -42,7 +41,6 @@ namespace Travlexer.WindowsPhone.Views
 
 			if (_context != null)
 			{
-				_context.SelectedPushpinChanged += OnSelectedPushpinChanged;
 				_context.SearchSucceeded += OnSearchSucceeded;
 				_context.VisualStateChanged += GoToState;
 				_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
@@ -59,30 +57,12 @@ namespace Travlexer.WindowsPhone.Views
 		#region Event Handling
 
 		/// <summary>
-		/// Called when the selected pushpin of the data context is changed.
-		/// </summary>
-		/// <param name="vm">The vm.</param>
-		private void OnSelectedPushpinChanged(PushpinViewModel vm)
-		{
-			GoToState(vm == null ? MapViewModel.VisualStates.Default : MapViewModel.VisualStates.PushpinSelected);
-		}
-
-		/// <summary>
 		/// Called when <see cref="UIElement.Hold"/> event is raise on the map.
 		/// </summary>
 		private void OnMapHold(object sender, GestureEventArgs e)
 		{
 			var coordinate = Map.ViewportPointToLocation(e.GetPosition(Map));
 			_context.CommandAddPlace.Execute(coordinate);
-		}
-
-		/// <summary>
-		/// Called when <see cref="AppButtonSearch"/> is clicked.
-		/// </summary>
-		private void OnAppButtonSearchClick(object sender, EventArgs e)
-		{
-			GoToState(MapViewModel.VisualStates.Search);
-			SearchBox.Focus();
 		}
 
 		/// <summary>
@@ -102,7 +82,14 @@ namespace Travlexer.WindowsPhone.Views
 				}
 				else
 				{
-					Map.SetView(places[0].ViewPort);
+					try
+					{
+						Map.SetView(place.ViewPort);
+					}
+					catch (System.ArgumentOutOfRangeException)
+					{
+						Map.SetView(place.Location, 15D);
+					}
 				}
 			}
 			else
@@ -118,18 +105,13 @@ namespace Travlexer.WindowsPhone.Views
 
 		/// <summary>
 		/// This method is called when the hardware Back button is pressed.
-		/// Returns to the Default visual state if the view is in another state, otherwise, exits the application.
+		/// Cancel the back key press if the view is not in default visual state.
 		/// </summary>
 		protected override void OnBackKeyPress(CancelEventArgs e)
 		{
-			if (_context.VisualState == MapViewModel.VisualStates.Default || _context.VisualState == MapViewModel.VisualStates.PushpinSelected)
-			{
-				base.OnBackKeyPress(e);
-			}
-			else
+			if (_context.VisualState != MapViewModel.VisualStates.Default)
 			{
 				e.Cancel = true;
-				GoToState(MapViewModel.VisualStates.Default);
 			}
 		}
 
@@ -166,7 +148,7 @@ namespace Travlexer.WindowsPhone.Views
 					_appBar.IsVisible = false;
 					break;
 			}
-			VisualStateManager.GoToState(this, state.ToString(), false);
+			VisualStateManager.GoToState(this, state.ToString(), true);
 		}
 
 		#endregion

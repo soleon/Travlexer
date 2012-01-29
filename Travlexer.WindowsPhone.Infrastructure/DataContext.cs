@@ -304,6 +304,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		/// <summary>
+		/// Cancels the current get suggestions operation if there is any.
+		/// </summary>
+		public static void CancelGetSuggestions()
+		{
+			GoogleMapsClient.CancelGetSuggestions();
+		}
+
+		/// <summary>
 		/// Saves the data context to the storage provided by <see cref="StorageProvider"/>.
 		/// </summary>
 		public static void SaveContext()

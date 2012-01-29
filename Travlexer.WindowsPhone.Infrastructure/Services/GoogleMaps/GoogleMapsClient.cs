@@ -48,6 +48,11 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		/// <param name="input">The input to search places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null);
+
+		/// <summary>
+		/// Cancels the current get suggestions operation if there is any.
+		/// </summary>
+		void CancelGetSuggestions();
 	}
 
 	public class GoogleMapsClient : IGoogleMapsClient
@@ -228,6 +233,18 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 				new RestRequest(_basePlacesSearchUrl + "&location=" + center + "&keyword=" + HttpUtility.UrlEncode(input)),
 				r => r.Data = _jsonSerializer.Deserialize<ListResponse<Place>>(r.Content),
 				callback: callback);
+		}
+
+		/// <summary>
+		/// Cancels the current get suggestions operation if there is any.
+		/// </summary>
+		public void CancelGetSuggestions()
+		{
+			if (_getSuggestionsAsyncHandle == null)
+			{
+				return;
+			}
+			_getSuggestionsAsyncHandle.Abort();
 		}
 
 		#endregion
@@ -506,6 +523,11 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		public void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
 			throw new NotImplementedException();
+		}
+
+		public void CancelGetSuggestions()
+		{
+			
 		}
 
 		#endregion
