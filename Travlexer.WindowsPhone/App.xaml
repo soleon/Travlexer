@@ -10,9 +10,9 @@
 		</ResourceDictionary>
 </Application.Resources>
 	<Application.ApplicationLifetimeObjects>
-		<shell:PhoneApplicationService Activated="ApplicationActivated"
-									   Closing="ApplicationClosing"
-									   Deactivated="ApplicationDeactivated"
-									   Launching="ApplicationLaunching" />
+		<shell:PhoneApplicationService Activated="OnApplicationActivated"
+									   Closing="OnApplicationClosing"
+									   Deactivated="OnApplicationDeactivated"
+									   Launching="OnApplicationLaunching" />
 	</Application.ApplicationLifetimeObjects>
 </Application>

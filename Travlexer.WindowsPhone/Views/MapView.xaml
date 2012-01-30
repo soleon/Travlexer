@@ -15,7 +15,6 @@
 							xmlns:Triggers="clr-namespace:Codify.WindowsPhone.Triggers;assembly=Codify.WindowsPhone"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
 							Style="{StaticResource PageDefault}"
-							x:Name="Self"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
 							Foreground="{StaticResource PhoneForegroundBrush}"
@@ -27,11 +26,12 @@
 							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
 	<i:Interaction.Triggers>
 		<i:EventTrigger EventName="BackKeyPress">
-			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}"/>
+			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
 		</i:EventTrigger>
 	</i:Interaction.Triggers>
 	<shell:SystemTray.ProgressIndicator>
-		<shell:ProgressIndicator IsVisible="True" IsIndeterminate="{Binding IsBusy}"/>
+		<shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
+								 IsVisible="True" />
 	</shell:SystemTray.ProgressIndicator>
 	<phone:PhoneApplicationPage.DataContext>
 		<ViewModels:MapViewModel />
@@ -44,7 +44,7 @@
 									  To="PushpinSelected">
 						<Storyboard>
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinBackground"
-								Storyboard.TargetProperty="(UIElement.Visibility)">
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
@@ -52,7 +52,7 @@
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinContent"
-								Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
+														   Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<ViewModels:PushpinOverlayVisualStates>Expanded</ViewModels:PushpinOverlayVisualStates>
@@ -60,14 +60,18 @@
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpin"
-								Storyboard.TargetProperty="(UIElement.Visibility)">
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<DoubleAnimation Duration="0:0:0.3" EasingFunction="{StaticResource EasingQuinticOut}" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="SelectedPushpinBackground"/>
+							<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
+											 Storyboard.TargetProperty="(UIElement.Opacity)"
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}"
+											 To="1" />
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition From="PushpinSelected"
@@ -81,7 +85,10 @@
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<DoubleAnimation Duration="0:0:0.3" EasingFunction="{StaticResource EasingQuinticOut}" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="SelectedPushpinBackground"/>
+							<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
+											 Storyboard.TargetProperty="(UIElement.Opacity)"
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}" />
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition To="Search">
@@ -92,7 +99,7 @@
 											 EasingFunction="{StaticResource EasingQuinticOut}"
 											 To="1" />
 							<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+											 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
 											 To="0" />
@@ -113,7 +120,7 @@
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}" />
 							<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+											 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}" />
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
@@ -144,7 +151,7 @@
 										 To="1"
 										 d:IsOptimized="True" />
 						<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-										 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+										 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
 										 Duration="0"
 										 To="0"
 										 d:IsOptimized="True" />
@@ -288,29 +295,31 @@
 					   Opacity="0" />
 			<Grid x:Name="SearchContentPanel"
 				  Height="52"
-				  VerticalAlignment="Top" Background="{StaticResource PhoneChromeBrush}">
+				  Background="{StaticResource PhoneChromeBrush}"
+				  VerticalAlignment="Top">
 				<i:Interaction.Triggers>
 					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SearchPanel, Converter={StaticResource BooleanConverter}}">
-						<ec:ChangePropertyAction PropertyName="VisualState"
-												 TargetObject="{Binding}"
-												 Value="Default" />
+						<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
 					</Triggers:RootTouchTrigger>
 				</i:Interaction.Triggers>
 				<Grid.RenderTransform>
-					<CompositeTransform TranslateY="-52" />
+					<TranslateTransform Y="-52" />
 				</Grid.RenderTransform>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 				<Controls:AutoCompleteBox x:Name="SearchBox"
+										  Height="76"
+										  Margin="-12"
 										  FilterMode="None"
 										  ItemsSource="{Binding Suggestions}"
 										  MinimumPopulateDelay="500"
 										  MinimumPrefixLength="3"
+										  PopupVerticalOffset="30"
 										  SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
 										  Text="{Binding SearchInput, Mode=TwoWay}"
-										  ValueMemberBinding="{Binding Description}" Margin="-12" BorderThickness="0" Padding="6,4">
+										  ValueMemberBinding="{Binding Description}">
 					<Controls:AutoCompleteBox.InputScope>
 						<InputScope>
 							<InputScopeName NameValue="Search" />
@@ -333,12 +342,17 @@
 					</Controls:AutoCompleteBox.ItemTemplate>
 				</Controls:AutoCompleteBox>
 				<Button Grid.Column="1"
-						Template="{x:Null}"
-									   IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
-									   VerticalAlignment="Center"
-									   Command="{Binding CommandSearch, Mode=OneTime}">
-					<Border Padding="10" Background="{StaticResource PhoneForegroundBrush}">
-						<Icons:Search2 Foreground="{StaticResource PhoneBackgroundBrush}" />
+						Command="{Binding CommandSearch, Mode=OneTime}"
+						IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
+						Template="{x:Null}">
+					<Border Height="52"
+							Width="52"
+							Background="{StaticResource PhoneForegroundBrush}">
+						<Icons:Search2 Height="32"
+									   Width="32"
+									   Foreground="{StaticResource PhoneBackgroundBrush}"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
 					</Border>
 				</Button>
 			</Grid>

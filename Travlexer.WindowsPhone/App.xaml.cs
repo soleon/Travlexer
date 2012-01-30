@@ -9,19 +9,22 @@ namespace Travlexer.WindowsPhone
 {
 	public partial class App
 	{
+		#region Public Properties
 		/// <summary>
 		/// Provides easy access to the root frame of the Phone Application.
 		/// </summary>
 		/// <returns>The root frame of the Phone Application.</returns>
-		public PhoneApplicationFrame RootFrame { get; private set; }
+		public PhoneApplicationFrame RootFrame { get; private set; } 
+		#endregion
 
+		#region Constructors
 		/// <summary>
 		/// Constructor for the Application object.
 		/// </summary>
 		public App()
 		{
 			// Global handler for uncaught exceptions. 
-			UnhandledException += ApplicationUnhandledException;
+			UnhandledException += OnApplicationUnhandledException;
 
 			// Standard Silverlight initialization
 			InitializeComponent();
@@ -33,14 +36,14 @@ namespace Travlexer.WindowsPhone
 			if (Debugger.IsAttached)
 			{
 				// Display the current frame rate counters.
-				Current.Host.Settings.EnableFrameRateCounter = true;
+				// Current.Host.Settings.EnableFrameRateCounter = true;
 
 				// Show the areas of the app that are being redrawn in each frame.
-				//Application.Current.Host.Settings.EnableRedrawRegions = true;
+				// Current.Host.Settings.EnableRedrawRegions = true;
 
 				// Enable non-production analysis visualization mode, 
 				// which shows areas of a page that are handed off to GPU with a colored overlay.
-				//Application.Current.Host.Settings.EnableCacheVisualization = true;
+				// Current.Host.Settings.EnableCacheVisualization = true;
 
 				// Disable the application idle detection by setting the UserIdleDetectionMode property of the
 				// application's PhoneApplicationService object to Disabled.
@@ -49,17 +52,15 @@ namespace Travlexer.WindowsPhone
 				PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
 			}
 		}
+		#endregion
 
-		// Code to execute when the application is launching (eg, from Start)
-		// This code will not execute when the application is reactivated
-		private void ApplicationLaunching(object sender, LaunchingEventArgs e)
+		#region Event Handling
+		private void OnApplicationLaunching(object sender, LaunchingEventArgs e)
 		{
 			DataContext.LoadContext();
 		}
 
-		// Code to execute when the application is activated (brought to foreground)
-		// This code will not execute when the application is first launched
-		private void ApplicationActivated(object sender, ActivatedEventArgs e)
+		private void OnApplicationActivated(object sender, ActivatedEventArgs e)
 		{
 			if (e.IsApplicationInstancePreserved)
 			{
@@ -68,22 +69,17 @@ namespace Travlexer.WindowsPhone
 			DataContext.LoadContext();
 		}
 
-		// Code to execute when the application is deactivated (sent to background)
-		// This code will not execute when the application is closing
-		private void ApplicationDeactivated(object sender, DeactivatedEventArgs e)
+		private void OnApplicationDeactivated(object sender, DeactivatedEventArgs e)
 		{
 			DataContext.SaveContext();
 		}
 
-		// Code to execute when the application is closing (eg, user hit Back)
-		// This code will not execute when the application is deactivated
-		private void ApplicationClosing(object sender, ClosingEventArgs e)
+		private void OnApplicationClosing(object sender, ClosingEventArgs e)
 		{
 			DataContext.SaveContext();
 		}
 
-		// Code to execute if a navigation fails
-		private static void RootFrameNavigationFailed(object sender, NavigationFailedEventArgs e)
+		private static void OnRootFrameNavigationFailed(object sender, NavigationFailedEventArgs e)
 		{
 			if (Debugger.IsAttached)
 			{
@@ -92,8 +88,7 @@ namespace Travlexer.WindowsPhone
 			}
 		}
 
-		// Code to execute on Unhandled Exceptions
-		private static void ApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
+		private static void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
 		{
 			if (Debugger.IsAttached)
 			{
@@ -101,6 +96,7 @@ namespace Travlexer.WindowsPhone
 				Debugger.Break();
 			}
 		}
+		#endregion
 
 
 		#region Phone application initialization
@@ -118,24 +114,24 @@ namespace Travlexer.WindowsPhone
 
 			// Create the frame but don't set it as RootVisual yet; this allows the splash
 			// screen to remain active until the application is ready to render.
-			RootFrame = new PhoneApplicationFrame();
-			RootFrame.Navigated += CompleteInitializePhoneApplication;
+			RootFrame = new TransitionFrame();
+			RootFrame.Navigated += OnCompleteInitializePhoneApplication;
 
 			// Handle navigation failures
-			RootFrame.NavigationFailed += RootFrameNavigationFailed;
+			RootFrame.NavigationFailed += OnRootFrameNavigationFailed;
 
 			// Ensure we don't initialize again
 			_phoneApplicationInitialized = true;
 		}
 
 		// Do not add any additional code to this method
-		private void CompleteInitializePhoneApplication(object sender, NavigationEventArgs e)
+		private void OnCompleteInitializePhoneApplication(object sender, NavigationEventArgs e)
 		{
 			// Set the root visual to allow the application to render
 			RootVisual = RootFrame;
 
 			// Remove this handler since it is no longer needed
-			RootFrame.Navigated -= CompleteInitializePhoneApplication;
+			RootFrame.Navigated -= OnCompleteInitializePhoneApplication;
 		}
 
 		#endregion
