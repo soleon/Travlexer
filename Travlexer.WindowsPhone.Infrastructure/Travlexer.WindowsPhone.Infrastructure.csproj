@@ -59,6 +59,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationContext.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Place.cs" />

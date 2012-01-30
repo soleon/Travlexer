@@ -99,7 +99,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				_geoWatcher.Start();
 			}
 
-			DataContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
+			ApplicationContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
 		}
 
 		/// <summary>
@@ -295,7 +295,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </value>
 		public bool IsBusy
 		{
-			get { return DataContext.IsBusy.Value; }
+			get { return ApplicationContext.IsBusy.Value; }
 		}
 
 		private const string IsBusyProperty = "IsBusy";
@@ -450,12 +450,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnSearch()
 		{
-			DataContext.IsBusy.Value = true;
+			ApplicationContext.IsBusy.Value = true;
 			VisualState = VisualStates.Default;
 			DataContext.CancelGetSuggestions();
 			DataContext.Search(Center, SearchInput, args =>
 			{
-				DataContext.IsBusy.Value = false;
+				ApplicationContext.IsBusy.Value = false;
 				if (args.Status != CallbackStatus.Successful)
 				{
 					const string messageBoxText = "Nothing was found in the search.";
@@ -506,10 +506,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 				return;
 			}
 
-			DataContext.IsBusy.Value = true;
+			ApplicationContext.IsBusy.Value = true;
 			DataContext.GetSuggestions(Center, SearchInput, args =>
 			{
-				DataContext.IsBusy.Value = false;
+				ApplicationContext.IsBusy.Value = false;
 				SelectedSuggestion = null;
 				_suggestions.Clear();
 				if (args.Status != CallbackStatus.Successful)
@@ -530,10 +530,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
 			UIThread.InvokeBack(() => VisualState = VisualStates.Default);
 
-			DataContext.IsBusy.Value = true;
+			ApplicationContext.IsBusy.Value = true;
 			DataContext.GetPlaceDetails(SelectedSuggestion.Reference, args =>
 			{
-				DataContext.IsBusy.Value = false;
+				ApplicationContext.IsBusy.Value = false;
 				if (args.Status != CallbackStatus.Successful)
 				{
 					const string

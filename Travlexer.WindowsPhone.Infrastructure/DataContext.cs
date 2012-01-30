@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using Codify.WindowsPhone.Extensions;
-using Codify.WindowsPhone.Models;
 using Codify.WindowsPhone.Serialization;
 using Codify.WindowsPhone.Services;
 using Codify.WindowsPhone.Storage;
@@ -23,8 +22,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 	{
 		#region Private Members
 
-		private static ushort _busyCount;
-
 		#endregion
 
 
@@ -36,9 +33,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		static DataContext()
 		{
 			Places = new ReadOnlyObservableCollection<Place>(_places);
-
-			IsBusy = new ObservableValue<bool>(false);
-			IsBusy.ValueChanging += OnIsLoadingChanging;
 		}
 
 		#endregion
@@ -120,11 +114,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		private static ISerializer<byte[]> _serializer;
-
-		/// <summary>
-		/// Gets the observable value that indicates whether this data context is doing any loading.
-		/// </summary>
-		public static ObservableValue<bool> IsBusy { get; private set; }
 
 		#endregion
 
@@ -462,25 +451,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
 
 		#region Event Handling
-
-		/// <summary>
-		/// Called before the value of <see cref="IsBusy"/> is changed.
-		/// </summary>
-		/// <param name="oldValue">The existing value of <see cref="IsBusy"/>.</param>
-		/// <param name="newValue">The desired new value.</param>
-		/// <returns>The value to be set.</returns>
-		private static bool OnIsLoadingChanging(bool oldValue, bool newValue)
-		{
-			if (newValue)
-			{
-				_busyCount++;
-			}
-			else if (_busyCount > 0)
-			{
-				_busyCount--;
-			}
-			return _busyCount > 0;
-		}
 
 		#endregion
 	}
