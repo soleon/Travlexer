@@ -29,6 +29,8 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,6 +50,7 @@
     <Reference Include="System.Windows.Interactivity, Version=3.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\DelayCollection.cs" />
     <Compile Include="DependencyShell\ApplicationBarIconButton.cs" />
     <Compile Include="DependencyShell\ApplicationBarMenuItem.cs" />
     <Compile Include="DependencyShell\ApplicationBar.cs" />

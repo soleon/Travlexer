@@ -464,31 +464,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 				DataContext.ClearSearchResults();
 				var places = args.Result;
-				UIThread.RunWorker(() =>
+				foreach (var place in args.Result)
 				{
-					var lastIndex = places.Count - 1;
-					for (var i = 0; i <= lastIndex; i++)
+					place.IsSearchResult = true;
+					DataContext.AddNewPlace(place);
+					if (Pushpins.Count <= 0 || place.Reference == null)
 					{
-						var place = places[i];
-						UIThread.InvokeAsync(() =>
-						{
-							place.IsSearchResult = true;
-							DataContext.AddNewPlace(place);
-							if (Pushpins.Count <= 0 || place.Reference == null)
-							{
-								return;
-							}
-							var vm = Pushpins[Pushpins.Count - 1];
-							vm.WorkingState = WorkingStates.Working;
-							DataContext.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
-						});
-						if (i == lastIndex)
-						{
-							break;
-						}
-						Thread.Sleep(100);
+						return;
 					}
-				});
+					var vm = Pushpins[Pushpins.Count - 1];
+					vm.WorkingState = WorkingStates.Working;
+					DataContext.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
+				}
 				IsTrackingCurrentLocation = false;
 				SearchSucceeded.ExecuteIfNotNull(places);
 			});

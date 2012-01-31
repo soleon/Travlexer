@@ -3,12 +3,14 @@
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					xmlns:WindowsPhone="clr-namespace:Travlexer.WindowsPhone"
+					xmlns:System="clr-namespace:System;assembly=mscorlib"
 					mc:Ignorable="d">
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="Controls.xaml"/>
 		<ResourceDictionary Source="Converters.xaml"/>
 		<ResourceDictionary Source="Icons.xaml"/>
 	</ResourceDictionary.MergedDictionaries>
+	<System:Double x:Key="ShellOpacity">0.9</System:Double>
 	<QuinticEase x:Key="EasingQuinticOut" EasingMode="EaseOut"/>
 	<WindowsPhone:DesignTime x:Key="DesignTime" />
 </ResourceDictionary>
