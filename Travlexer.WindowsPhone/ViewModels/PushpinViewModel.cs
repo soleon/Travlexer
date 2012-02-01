@@ -14,27 +14,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Initializes a new instance of the <see cref="PushpinViewModel"/> class.
 		/// </summary>
 		/// <param name="data">The data.</param>
-		/// <param name="isSearchResult">Determines if this pushpin is a search result.</param>
 		/// <param name="parent">The logical parent view model that owns this view model.</param>
-		public PushpinViewModel(Place data, bool isSearchResult = false, IViewModel parent = null)
-			: base(data, parent)
-		{
-			IsSearchResult = isSearchResult;
-		}
+		public PushpinViewModel(Place data, IViewModel parent = null)
+			: base(data, parent) {}
 
 		#endregion
 
 
 		#region Public Properties
-
-		public bool IsSearchResult
-		{
-			get { return _isSearchResult; }
-			set { SetProperty(ref _isSearchResult, value, IsSearchResultProperty); }
-		}
-
-		private bool _isSearchResult;
-		private const string IsSearchResultProperty = "IsSearchResult";
 
 		public WorkingStates WorkingState
 		{
@@ -44,6 +31,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private WorkingStates _workingState;
 		private const string WorkingStateProperty = "WorkingState";
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is being dragged.
+		/// </summary>
+		public bool IsDragging
+		{
+			get { return _isDragging; }
+			set { SetProperty(ref _isDragging, value, IsDraggingProperty); }
+		}
+
+		private bool _isDragging;
+		private const string IsDraggingProperty = "IsDragging";
 
 		#endregion
 	}

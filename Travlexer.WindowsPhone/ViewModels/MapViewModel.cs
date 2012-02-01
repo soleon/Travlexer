@@ -102,15 +102,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 			ApplicationContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
 		}
 
-		/// <summary>
-		/// Called when <see cref="CommandGoToDefaultState"/>.
-		/// </summary>
-		private void OnGoToDefaultState()
-		{
-			DataContext.CancelGetSuggestions();
-			VisualState = VisualStates.Default;
-		}
-
 		#endregion
 
 
@@ -139,6 +130,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 				else
 				{
+					DragPushpin = null;
 					Center = value.Data.Location;
 					VisualState = VisualStates.PushpinSelected;
 				}
@@ -147,6 +139,39 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private PushpinViewModel _selectedPushpin;
 		private const string SelectedPushpinProperty = "SelectedPushpin";
+
+		/// <summary>
+		/// Gets or sets the pushpin that's been dragged.
+		/// </summary>
+		public PushpinViewModel DragPushpin
+		{
+			get { return _dragPushpin; }
+			set
+			{
+				var old = _dragPushpin;
+				if (SetProperty(ref _dragPushpin, value, DragPushpinProperty))
+				{
+					if (old != null)
+					{
+						old.IsDragging = false;
+					}
+					if (value == null)
+					{
+						VisualState = VisualStates.Default;
+					}
+					else
+					{
+						SelectedPushpin = null;
+						value.IsDragging = true;
+						VisualState = VisualStates.Drag;
+						IsTrackingCurrentLocation = false;
+					}
+				}
+			}
+		}
+
+		private PushpinViewModel _dragPushpin;
+		private const string DragPushpinProperty = "DragPushpin";
 
 		/// <summary>
 		/// Gets or sets the map center geo-coordination.
@@ -244,7 +269,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 				{
 					return;
 				}
+				var old = _visualState;
 				_visualState = value;
+				if (old == VisualStates.Drag)
+				{
+					DragPushpin = null;
+				}
 				VisualStateChanged.ExecuteIfNotNull(value);
 			}
 		}
@@ -364,6 +394,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 
 		#region Event Handling
+
+		/// <summary>
+		/// Called when <see cref="CommandGoToDefaultState"/>.
+		/// </summary>
+		private void OnGoToDefaultState()
+		{
+			DataContext.CancelGetSuggestions();
+			VisualState = VisualStates.Default;
+		}
 
 		/// <summary>
 		/// Called when <see cref="CommandSelectPushpin"/> is executed.

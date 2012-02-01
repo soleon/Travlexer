@@ -136,6 +136,19 @@
 							</ObjectAnimationUsingKeyFrames>
 						</Storyboard>
 					</VisualTransition>
+					<VisualTransition GeneratedDuration="0"
+									  To="Drag">
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="DragPushpin" EasingFunction="{StaticResource EasingQuinticOut}" To="-90"/>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DragPushpin">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="Default" />
 				<VisualState x:Name="Search">
@@ -194,6 +207,18 @@
 						</ObjectAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
+				<VisualState x:Name="Drag">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="-90" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="DragPushpin" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DragPushpin">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 		<Maps:Map x:Name="Map"
@@ -226,9 +251,16 @@
 					<DataTemplate>
 						<Maps:Pushpin x:Name="Pushpin"
 									  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
-									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
+									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 									  PositionOrigin="BottomCenter"
-									  Tag="{Binding Data.IsSearchResult}">
+									  Tag="{Binding Data.IsSearchResult}"
+									  Visibility="{Binding IsDragging, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">
+							<toolkit:GestureService.GestureListener>
+								<toolkit:GestureListener DragStarted="OnPushpinDragStarted"
+														 DragDelta="OnPushpinDragDelta"
+														 DragCompleted="OnPushpinDragCompleted"
+														 Hold="OnPushpinHold"/>
+							</toolkit:GestureService.GestureListener>
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Tap">
 									<i:InvokeCommandAction Command="{Binding Parent.CommandSelectPushpin, Mode=OneTime}"
@@ -239,10 +271,6 @@
 									<ec:GoToStateAction StateName="Loaded"
 														TargetObject="{Binding ElementName=Pushpin}" />
 								</i:EventTrigger>
-								<i:EventTrigger EventName="Hold">
-									<i:InvokeCommandAction Command="{Binding Parent.CommandStartDrag, Mode=OneTime}"
-														   CommandParameter="{Binding}" />
-								</i:EventTrigger>
 							</i:Interaction.Triggers>
 							<ContentPresenter Height="32"
 											  Width="32"
@@ -251,19 +279,19 @@
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>
-			<Rectangle x:Name="SelectedPushpinBackground"
-					   Fill="{StaticResource BrushSemiTransparentBackground}"
-					   IsHitTestVisible="False"
-					   Opacity="0"
-					   Visibility="Collapsed" />
 			<Maps:MapLayer>
 				<i:Interaction.Behaviors>
 					<Behaviors:CancelGestureEventBehavior />
 				</i:Interaction.Behaviors>
+				<Rectangle x:Name="SelectedPushpinBackground"
+						   Fill="{StaticResource BrushSemiTransparentBackground}"
+						   IsHitTestVisible="False"
+						   Opacity="0"
+						   Visibility="Collapsed" />
 				<Maps:Pushpin x:Name="SelectedPushpin"
 							  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
 							  DataContext="{Binding SelectedPushpin}"
-							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
+							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 							  PositionOrigin="BottomCenter"
 							  RenderTransformOrigin="0.5,0.5"
 							  Tag="{Binding Data.IsSearchResult}"
@@ -281,7 +309,7 @@
 												TargetObject="{Binding ElementName=SelectedPushpin}"
 												UseTransitions="False" />
 						</i:EventTrigger>
-						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SelectedPushpin, Converter={StaticResource BooleanConverter}}">
+						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedPushpin}">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
 						</Triggers:RootTouchTrigger>
@@ -299,6 +327,26 @@
 											 WorkingState="{Binding WorkingState}" />
 				</Maps:Pushpin>
 			</Maps:MapLayer>
+			<Maps:Pushpin x:Name="DragPushpin"
+			IsHitTestVisible="False"
+				Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}}"
+				DataContext="{Binding DragPushpin.Data}"
+				Location="{Binding Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
+				PositionOrigin="BottomCenter" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed">
+				<i:Interaction.Triggers>
+					<i:EventTrigger>
+						<ec:GoToStateAction StateName="Loaded"
+							TargetObject="{Binding ElementName=DragPushpin}"
+							UseTransitions="False" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+				<Maps:Pushpin.RenderTransform>
+					<CompositeTransform/>
+				</Maps:Pushpin.RenderTransform>
+				<ContentPresenter Height="32"
+					Width="32"
+					Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}}" />
+			</Maps:Pushpin>
 		</Maps:Map>
 		<Grid x:Name="SearchPanel"
 			  Visibility="Collapsed">

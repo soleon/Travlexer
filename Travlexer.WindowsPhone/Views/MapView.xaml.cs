@@ -3,11 +3,16 @@ using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using Codify.WindowsPhone.Extensions;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Travlexer.WindowsPhone.Views
 {
@@ -24,6 +29,10 @@ namespace Travlexer.WindowsPhone.Views
 		/// A reference to the current <see cref="ApplicationBar"/>.
 		/// </summary>
 		private readonly IApplicationBar _appBar;
+
+#if	DEBUG
+		private readonly TextBlock _debugText;
+#endif
 
 		#endregion
 
@@ -49,6 +58,10 @@ namespace Travlexer.WindowsPhone.Views
 			// The "Hold" event in XAML is not recognised by Blend.
 			// Doing event handling here instead of in XAML is a hack to make the view still "blendable".
 			Map.Hold += OnMapHold;
+
+#if DEBUG
+			Map.Children.Add(_debugText = new TextBlock { Foreground = new SolidColorBrush(Colors.Red), IsHitTestVisible = false, Text = "debug", Margin = new Thickness(0,33,0,0)});
+#endif
 		}
 
 		#endregion
@@ -123,6 +136,84 @@ namespace Travlexer.WindowsPhone.Views
 			SearchBox.PopulateComplete();
 		}
 
+		private void OnCancelMapPan(object sender, MapDragEventArgs e)
+		{
+			e.Handled = true;
+		}
+
+		private void OnPushpinDragStarted(object sender, DragStartedGestureEventArgs e)
+		{
+			e.Handled = true;
+			if (_context.DragPushpin == null)
+			{
+				return;
+			}
+			Map.MouseLeftButtonUp -= OnPushpinRelease;
+			Map.MapPan -= OnCancelMapPan;
+			Map.MapPan += OnCancelMapPan;
+		}
+
+		private void OnPushpinDragDelta(object sender, DragDeltaGestureEventArgs e)
+		{
+			e.Handled = true;
+			if (_context.DragPushpin == null)
+			{
+				return;
+			}
+			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			transform.TranslateX += e.HorizontalChange;
+			transform.TranslateY += e.VerticalChange;
+		}
+
+		private void OnPushpinDragCompleted(object sender, DragCompletedGestureEventArgs e)
+		{
+			e.Handled = true;
+
+			// Only react if there's a pushpin being dragged.
+			var dragPushpinVm = _context.DragPushpin;
+			if (dragPushpinVm == null)
+			{
+				return;
+			}
+			
+			// Calculate the drop point to geo-coordinates.
+			var point = DragPushpin.TransformToVisual(Map).Transform(new Point());
+			point.X += DragPushpin.ActualWidth / 2;
+			point.Y += DragPushpin.ActualHeight;
+			var location = Map.ViewportPointToLocation(point);
+			_context.Center = dragPushpinVm.Data.Location = location;
+
+			// Select the dragged pushpin.
+			_context.SelectedPushpin = dragPushpinVm;
+
+			// Reset transformation of the drag cue.
+			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			transform.TranslateX = 0;
+			transform.TranslateY = 0;
+
+			// Unhook events.
+			Map.MouseLeftButtonUp -= OnPushpinRelease;
+			Map.MapPan -= OnCancelMapPan;
+		}
+
+		private void OnPushpinRelease(object sender, MouseButtonEventArgs e)
+		{
+			Map.MouseLeftButtonUp -= OnPushpinRelease;
+			_context.DragPushpin = null;
+		}
+
+		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
+		{
+			var pushpin = (Pushpin)sender;
+			var data = (PushpinViewModel)pushpin.DataContext;
+			if (data.Data.IsSearchResult)
+			{
+				return;
+			}
+			_context.DragPushpin = data;
+			Map.MouseLeftButtonUp -= OnPushpinRelease;
+			Map.MouseLeftButtonUp += OnPushpinRelease;
+		}
 		#endregion
 
 
@@ -152,5 +243,8 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		#endregion
+
+
+
 	}
 }
