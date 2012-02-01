@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using Codify.WindowsPhone.Collections;
 using Codify.WindowsPhone.Commands;
@@ -36,7 +35,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 		{
 			Default = 0,
 			Search,
-			PushpinSelected
+			PushpinSelected,
+			Drag
 		}
 
 		#endregion
@@ -133,19 +133,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 				{
 					return;
 				}
-				if (Pushpins == null)
+				if (value == null)
 				{
-					return;
+					VisualState = VisualStates.Default;
 				}
-				foreach (var pushpin in Pushpins)
-				{
-					pushpin.VisualState = value == pushpin ? PushpinOverlayVisualStates.Expanded : PushpinOverlayVisualStates.Collapsed;
-				}
-				if (value != null)
+				else
 				{
 					Center = value.Data.Location;
+					VisualState = VisualStates.PushpinSelected;
 				}
-				VisualState = value == null ? VisualStates.Default : VisualStates.PushpinSelected;
 			}
 		}
 
@@ -207,11 +203,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 			get { return _selectedSuggestion; }
 			set
 			{
-				if (!SetProperty(ref _selectedSuggestion, value, SelectedSuggestionProperty) || value == null)
+				if (SetProperty(ref _selectedSuggestion, value, SelectedSuggestionProperty) && value != null)
 				{
-					return;
+					OnSuggestionSelected();
 				}
-				OnSuggestionSelected();
 			}
 		}
 

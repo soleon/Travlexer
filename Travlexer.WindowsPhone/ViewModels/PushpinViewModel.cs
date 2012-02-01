@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Codify.WindowsPhone.ViewModels;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 
@@ -21,13 +20,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 			: base(data, parent)
 		{
 			IsSearchResult = isSearchResult;
-#if DEBUG
-			if (!DesignerProperties.IsInDesignTool)
-			{
-				return;
-			}
-			VisualState = PushpinOverlayVisualStates.Expanded;
-#endif
 		}
 
 		#endregion
@@ -35,16 +27,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		#region Public Properties
 
-		public bool IsSearchResult { get; private set; }
-
-		public PushpinOverlayVisualStates VisualState
+		public bool IsSearchResult
 		{
-			get { return _visualState; }
-			set { SetProperty(ref _visualState, value, VisualStateProperty); }
+			get { return _isSearchResult; }
+			set { SetProperty(ref _isSearchResult, value, IsSearchResultProperty); }
 		}
 
-		private PushpinOverlayVisualStates _visualState;
-		private const string VisualStateProperty = "VisualState";
+		private bool _isSearchResult;
+		private const string IsSearchResultProperty = "IsSearchResult";
 
 		public WorkingStates WorkingState
 		{

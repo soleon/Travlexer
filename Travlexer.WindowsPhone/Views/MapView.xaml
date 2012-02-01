@@ -56,7 +56,7 @@
 							</ObjectAnimationUsingKeyFrames>
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinContent"
 														   Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
-								<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame KeyTime="0:0:0.1">
 									<DiscreteObjectKeyFrame.Value>
 										<ViewModels:PushpinOverlayVisualStates>Expanded</ViewModels:PushpinOverlayVisualStates>
 									</DiscreteObjectKeyFrame.Value>
@@ -239,6 +239,10 @@
 									<ec:GoToStateAction StateName="Loaded"
 														TargetObject="{Binding ElementName=Pushpin}" />
 								</i:EventTrigger>
+								<i:EventTrigger EventName="Hold">
+									<i:InvokeCommandAction Command="{Binding Parent.CommandStartDrag, Mode=OneTime}"
+														   CommandParameter="{Binding}" />
+								</i:EventTrigger>
 							</i:Interaction.Triggers>
 							<ContentPresenter Height="32"
 											  Width="32"
@@ -261,8 +265,12 @@
 							  DataContext="{Binding SelectedPushpin}"
 							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
 							  PositionOrigin="BottomCenter"
-							  Tag="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}"
+							  RenderTransformOrigin="0.5,0.5"
+							  Tag="{Binding Data.IsSearchResult}"
 							  Visibility="Collapsed">
+					<Maps:Pushpin.RenderTransform>
+						<CompositeTransform />
+					</Maps:Pushpin.RenderTransform>
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Tap">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
@@ -367,16 +375,16 @@
 		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}">
 			<DependencyShell:ApplicationBar.Buttons>
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
-												 IconUri="/Assets/Track.png"
-												 IsEnabled="{Binding IsTrackingCurrentLocation, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
-												 Text="track" />
+														  IconUri="/Assets/Track.png"
+														  IsEnabled="{Binding IsTrackingCurrentLocation, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
+														  Text="track" />
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"
-												 IconUri="/Assets/Search.png"
-												 Text="search" />
+														  IconUri="/Assets/Search.png"
+														  Text="search" />
 			</DependencyShell:ApplicationBar.Buttons>
 			<DependencyShell:ApplicationBar.MenuItems>
 				<DependencyShell:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"
-											   Text="clear search" />
+														Text="clear search" />
 			</DependencyShell:ApplicationBar.MenuItems>
 		</DependencyShell:ApplicationBar>
 	</i:Interaction.Behaviors>
