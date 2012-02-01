@@ -242,7 +242,12 @@ namespace Codify.WindowsPhone.Collections
 				return;
 			}
 			_delayItemsQueue.Clear();
-			_delayItemsQueue.AddRange(itemsSource);
+			if (_controlItemsSource == null)
+			{
+				return;
+			}
+			_controlItemsSource.Clear();
+			_controlItemsSource.AddRange(itemsSource);
 		}
 
 		private void Detach()

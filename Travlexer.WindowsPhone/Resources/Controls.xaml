@@ -12,7 +12,7 @@
 					xmlns:Behaviors="clr-namespace:Codify.WindowsPhone.Behaviors;assembly=Codify.WindowsPhone"
 					mc:Ignorable="d">
 	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="Brushes.xaml"/>
+		<ResourceDictionary Source="Brushes.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 	<Style TargetType="Controls:ButtonCircle">
 		<Setter Property="Template">
@@ -97,7 +97,8 @@
 				Value="{StaticResource PhoneBorderThickness}" />
 		<Setter Property="Background"
 				Value="#40000000" />
-		<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+		<Setter Property="Foreground"
+				Value="{StaticResource PhoneForegroundBrush}" />
 	</Style>
 	<Style TargetType="Controls:PushpinContent">
 		<Setter Property="Template">
@@ -153,7 +154,7 @@
 								<VisualState x:Name="Expanded">
 									<Storyboard>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -161,7 +162,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -169,7 +170,7 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -177,15 +178,15 @@
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
 										<DoubleAnimation Storyboard.TargetName="Content"
-											Storyboard.TargetProperty="(FrameworkElement.Width)"
-											Duration="0"
-											To="230"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(FrameworkElement.Width)"
+														 Duration="0"
+														 To="230"
+														 d:IsOptimized="True" />
 										<DoubleAnimation Storyboard.TargetName="Content"
-											Storyboard.TargetProperty="(FrameworkElement.Height)"
-											Duration="0"
-											To="135"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(FrameworkElement.Height)"
+														 Duration="0"
+														 To="135"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Collapsed" />
@@ -254,12 +255,12 @@
 								<VisualState x:Name="Working">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-											Storyboard.TargetProperty="(UIElement.Opacity)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="WorkingText"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -271,12 +272,12 @@
 								<VisualState x:Name="Error">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-											Storyboard.TargetProperty="(UIElement.Opacity)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorText"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -399,35 +400,44 @@
 						  RenderTransformOrigin="0.5,1"
 						  UseLayoutRounding="False"
 						  VerticalAlignment="Bottom"
-						  d:LayoutOverrides="Width" Opacity="0">
+						  d:LayoutOverrides="Width"
+						  Opacity="0">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="LoadStates">
 								<VisualStateGroup.Transitions>
 									<VisualTransition To="Loaded">
 										<Storyboard>
 											<DoubleAnimation Storyboard.TargetName="Shadow"
-												Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
-												Duration="0:0:0.3"
-												EasingFunction="{StaticResource EasingQuinticOut}"
-												From="-400"
-												To="0" />
-											<DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Shadow" BeginTime="0:0:0.1"/>
+															 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
+															 Duration="0:0:0.3"
+															 EasingFunction="{StaticResource EasingQuinticOut}"
+															 From="-400"
+															 To="0" />
+											<DoubleAnimation Duration="0:0:0.2"
+															 To="1"
+															 Storyboard.TargetProperty="(UIElement.Opacity)"
+															 Storyboard.TargetName="Shadow"
+															 BeginTime="0:0:0.1" />
 										</Storyboard>
 									</VisualTransition>
 								</VisualStateGroup.Transitions>
 								<VisualState x:Name="Loaded">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Shadow"
-											Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<DoubleAnimation Storyboard.TargetName="Shadow"
-											Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
-										<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Shadow" d:IsOptimized="True"/>
+														 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
+										<DoubleAnimation Duration="0"
+														 To="1"
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Storyboard.TargetName="Shadow"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
@@ -453,7 +463,8 @@
 								<GradientStop />
 								<GradientStop Color="#80000000"
 											  Offset="1" />
-								<GradientStop Color="#19000000" Offset="0.6"/>
+								<GradientStop Color="#19000000"
+											  Offset="0.6" />
 							</LinearGradientBrush>
 						</Path.Fill>
 					</Path>
@@ -517,13 +528,13 @@
 							  StrokeThickness="2"
 							  VerticalAlignment="Bottom" />
 						<Icons:Search2 Height="20"
-							Margin="0,-8,-8,0"
-							Width="20"
-							Background="{TemplateBinding Background}"
-							Foreground="{StaticResource PhoneBorderBrush}"
-							HorizontalAlignment="Right"
-							VerticalAlignment="Top"
-							Visibility="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+									   Margin="0,-8,-8,0"
+									   Width="20"
+									   Background="{TemplateBinding Background}"
+									   Foreground="{StaticResource PhoneBorderBrush}"
+									   HorizontalAlignment="Right"
+									   VerticalAlignment="Top"
+									   Visibility="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -563,5 +574,75 @@
 		</Setter>
 		<Setter Property="toolkit:TiltEffect.IsTiltEnabled"
 				Value="True" />
+	</Style>
+	<ControlTemplate x:Key="PhoneDisabledTextBoxTemplate" TargetType="TextBox">
+		<ContentControl x:Name="ContentElement" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
+	</ControlTemplate>
+	<Style x:Key="TextBoxStyle" TargetType="TextBox">
+		<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
+		<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+		<Setter Property="Background" Value="{StaticResource PhoneTextBoxBrush}"/>
+		<Setter Property="Foreground" Value="{StaticResource PhoneTextBoxForegroundBrush}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource PhoneTextBoxBrush}"/>
+		<Setter Property="SelectionBackground" Value="{StaticResource PhoneAccentBrush}"/>
+		<Setter Property="SelectionForeground" Value="{StaticResource PhoneTextBoxSelectionForegroundBrush}"/>
+		<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="TextBox">
+					<Grid Background="Transparent">
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal"/>
+								<VisualState x:Name="MouseOver"/>
+								<VisualState x:Name="Disabled"/>
+								<VisualState x:Name="ReadOnly"/>
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="FocusStates">
+								<VisualState x:Name="Focused"/>
+								<VisualState x:Name="Unfocused"/>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<ContentControl x:Name="ContentElement" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="Controls:AutoCompleteBox">
+		<Setter Property="Background" Value="{StaticResource PhoneTextBoxBrush}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource PhoneTextBoxBrush}"/>
+		<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+		<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
+		<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+		<Setter Property="Foreground" Value="{StaticResource PhoneTextBoxForegroundBrush}"/>
+		<Setter Property="ItemTemplate">
+			<Setter.Value>
+				<DataTemplate>
+					<ContentControl Content="{Binding}" Margin="8,7"/>
+				</DataTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Padding" Value="6,0,6,4"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Controls:AutoCompleteBox">
+					<Grid>
+						<TextBox x:Name="Text" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" InputScope="{TemplateBinding InputScope}" Opacity="{TemplateBinding Opacity}" Padding="{TemplateBinding Padding}" Style="{TemplateBinding TextBoxStyle}"/>
+						<Popup x:Name="Popup">
+							<ListBox x:Name="Selector" BorderBrush="{StaticResource PhoneTextBoxEditBorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="White" Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" IsTabStop="False" ItemTemplate="{TemplateBinding ItemTemplate}" ItemContainerStyle="{TemplateBinding ItemContainerStyle}" Opacity="{TemplateBinding Opacity}" Padding="0,8">
+								<ListBox.Template>
+									<ControlTemplate TargetType="ListBox">
+										<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+											<ItemsPresenter/>
+										</Border>
+									</ControlTemplate>
+								</ListBox.Template>
+							</ListBox>
+						</Popup>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 </ResourceDictionary>

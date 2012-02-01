@@ -1,9 +1,11 @@
 ﻿<phone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.MapView"
 							xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-							xmlns:Codify="http://schemas.travlexer.com/codify"
+							xmlns:Behaviors="clr-namespace:Codify.WindowsPhone.Behaviors;assembly=Codify.WindowsPhone"
+							xmlns:Collections="clr-namespace:Codify.WindowsPhone.Collections;assembly=Codify.WindowsPhone"
 							xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+							xmlns:DependencyShell="clr-namespace:Codify.WindowsPhone.DependencyShell;assembly=Codify.WindowsPhone"
 							xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 							xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
@@ -11,6 +13,8 @@
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+							xmlns:Triggers="clr-namespace:Codify.WindowsPhone.Triggers;assembly=Codify.WindowsPhone"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
 							Style="{StaticResource PageDefault}"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -21,8 +25,8 @@
 							d:DesignWidth="480"
 							d:DesignHeight="768"
 							shell:SystemTray.IsVisible="True"
-							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}"
-							shell:SystemTray.Opacity="{StaticResource ShellOpacity}">
+							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
+							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
 	<i:Interaction.Triggers>
 		<i:EventTrigger EventName="BackKeyPress">
 			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
@@ -101,7 +105,7 @@
 											 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="0" />
+											 To="33" />
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
 														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
@@ -152,7 +156,8 @@
 						<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
 										 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
 										 Duration="0"
-										 To="0"
+										 EasingFunction="{StaticResource EasingQuinticOut}"
+										 To="33"
 										 d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
@@ -212,10 +217,10 @@
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>-->
-			<Maps:MapItemsControl Codify:DelayCollection.ItemsSource="{Binding Pushpins}"
-								  Codify:DelayCollection.Delay="0:0:0.100">
+			<Maps:MapItemsControl Collections:DelayCollection.ItemsSource="{Binding Pushpins}"
+								  Collections:DelayCollection.Delay="0:0:0.100">
 				<i:Interaction.Behaviors>
-					<Codify:CancelGestureEventBehavior />
+					<Behaviors:CancelGestureEventBehavior />
 				</i:Interaction.Behaviors>
 				<Maps:MapItemsControl.ItemTemplate>
 					<DataTemplate>
@@ -223,7 +228,7 @@
 									  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
 									  PositionOrigin="BottomCenter"
-									  Tag="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}">
+									  Tag="{Binding Data.IsSearchResult}">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Tap">
 									<i:InvokeCommandAction Command="{Binding Parent.CommandSelectPushpin, Mode=OneTime}"
@@ -249,7 +254,7 @@
 					   Visibility="Collapsed" />
 			<Maps:MapLayer>
 				<i:Interaction.Behaviors>
-					<Codify:CancelGestureEventBehavior />
+					<Behaviors:CancelGestureEventBehavior />
 				</i:Interaction.Behaviors>
 				<Maps:Pushpin x:Name="SelectedPushpin"
 							  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
@@ -268,10 +273,10 @@
 												TargetObject="{Binding ElementName=SelectedPushpin}"
 												UseTransitions="False" />
 						</i:EventTrigger>
-						<Codify:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SelectedPushpin, Converter={StaticResource BooleanConverter}}">
+						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SelectedPushpin, Converter={StaticResource BooleanConverter}}">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
-						</Codify:RootTouchTrigger>
+						</Triggers:RootTouchTrigger>
 					</i:Interaction.Triggers>
 					<Controls:PushpinContent x:Name="SelectedPushpinContent"
 											 Address="{Binding Data.FormattedAddress}"
@@ -298,9 +303,9 @@
 				  Background="{StaticResource PhoneChromeBrush}"
 				  VerticalAlignment="Top">
 				<i:Interaction.Triggers>
-					<Codify:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SearchPanel, Converter={StaticResource BooleanConverter}}">
+					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SearchPanel, Converter={StaticResource BooleanConverter}}">
 						<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
-					</Codify:RootTouchTrigger>
+					</Triggers:RootTouchTrigger>
 				</i:Interaction.Triggers>
 				<Grid.RenderTransform>
 					<TranslateTransform Y="-52" />
@@ -316,7 +321,6 @@
 										  ItemsSource="{Binding Suggestions}"
 										  MinimumPopulateDelay="500"
 										  MinimumPrefixLength="3"
-										  PopupVerticalOffset="30"
 										  SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
 										  Text="{Binding SearchInput, Mode=TwoWay}"
 										  ValueMemberBinding="{Binding Description}">
@@ -329,10 +333,10 @@
 						<i:EventTrigger EventName="Populating">
 							<i:InvokeCommandAction Command="{Binding CommandGetSuggestions}" />
 						</i:EventTrigger>
-						<Codify:KeyPressTrigger CanTrigger="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
-												Key="Enter">
+						<Triggers:KeyPressTrigger CanTrigger="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
+												  Key="Enter">
 							<i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}" />
-						</Codify:KeyPressTrigger>
+						</Triggers:KeyPressTrigger>
 					</i:Interaction.Triggers>
 					<Controls:AutoCompleteBox.ItemTemplate>
 						<DataTemplate>
@@ -344,7 +348,8 @@
 				<Button Grid.Column="1"
 						Command="{Binding CommandSearch, Mode=OneTime}"
 						IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
-						Template="{x:Null}">
+						Template="{x:Null}"
+						toolkit:TiltEffect.SuppressTilt="True">
 					<Border Height="52"
 							Width="52"
 							Background="{StaticResource PhoneForegroundBrush}">
@@ -359,20 +364,20 @@
 		</Grid>
 	</Grid>
 	<i:Interaction.Behaviors>
-		<Codify:ApplicationBar Opacity="{StaticResource ShellOpacity}">
-			<Codify:ApplicationBar.Buttons>
-				<Codify:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
+		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}">
+			<DependencyShell:ApplicationBar.Buttons>
+				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
 												 IconUri="/Assets/Track.png"
 												 IsEnabled="{Binding IsTrackingCurrentLocation, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
 												 Text="track" />
-				<Codify:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"
+				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"
 												 IconUri="/Assets/Search.png"
 												 Text="search" />
-			</Codify:ApplicationBar.Buttons>
-			<Codify:ApplicationBar.MenuItems>
-				<Codify:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"
+			</DependencyShell:ApplicationBar.Buttons>
+			<DependencyShell:ApplicationBar.MenuItems>
+				<DependencyShell:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"
 											   Text="clear search" />
-			</Codify:ApplicationBar.MenuItems>
-		</Codify:ApplicationBar>
+			</DependencyShell:ApplicationBar.MenuItems>
+		</DependencyShell:ApplicationBar>
 	</i:Interaction.Behaviors>
 </phone:PhoneApplicationPage>

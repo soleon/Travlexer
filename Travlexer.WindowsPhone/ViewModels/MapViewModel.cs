@@ -470,7 +470,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					DataContext.AddNewPlace(place);
 					if (Pushpins.Count <= 0 || place.Reference == null)
 					{
-						return;
+						break;
 					}
 					var vm = Pushpins[Pushpins.Count - 1];
 					vm.WorkingState = WorkingStates.Working;
