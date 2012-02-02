@@ -85,7 +85,7 @@
 						</Border>
 						<TextBlock FontSize="12"
 								   HorizontalAlignment="Center"
-								   Text="{TemplateBinding Caption}" />
+								   Text="{TemplateBinding Caption}" FontFamily="{StaticResource PhoneFontFamilySemiBold}" />
 					</StackPanel>
 				</ControlTemplate>
 			</Setter.Value>
