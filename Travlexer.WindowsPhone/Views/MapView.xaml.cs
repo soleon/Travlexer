@@ -36,7 +36,6 @@ namespace Travlexer.WindowsPhone.Views
 
 		#endregion
 
-
 		#region Constructors
 
 		/// <summary>
@@ -55,10 +54,6 @@ namespace Travlexer.WindowsPhone.Views
 				_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
 			}
 
-			// The "Hold" event in XAML is not recognised by Blend.
-			// Doing event handling here instead of in XAML is a hack to make the view still "blendable".
-			Map.Hold += OnMapHold;
-
 #if DEBUG
 			if (!DesignerProperties.IsInDesignTool)
 			{
@@ -74,12 +69,13 @@ namespace Travlexer.WindowsPhone.Views
 		#region Event Handling
 
 		/// <summary>
-		/// Called when <see cref="UIElement.Hold"/> event is raise on the map.
+		/// Called before the <see cref="E:System.Windows.UIElement.Hold"/> event occurs.
 		/// </summary>
-		private void OnMapHold(object sender, GestureEventArgs e)
+		protected override void OnHold(GestureEventArgs e)
 		{
 			var coordinate = Map.ViewportPointToLocation(e.GetPosition(Map));
 			_context.CommandAddPlace.Execute(coordinate);
+			base.OnHold(e);
 		}
 
 		/// <summary>

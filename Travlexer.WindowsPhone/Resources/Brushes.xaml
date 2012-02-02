@@ -5,4 +5,5 @@
 					mc:Ignorable="d">
 	<SolidColorBrush x:Key="BrushSemiTransparentBackground"
 					 Color="#60000000" />
+	<SolidColorBrush x:Key="BrushShadow" Color="#FFCCCCCC"/>
 </ResourceDictionary>

@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
 
@@ -14,9 +14,9 @@ namespace Travlexer.WindowsPhone.Controls
 	[TemplateVisualState(GroupName = GROUP_VisualStates, Name = STATE_Collapsed)]
 	[TemplateVisualState(GroupName = GROUP_PinTypeStates, Name = STATE_SearchResult)]
 	[TemplateVisualState(GroupName = GROUP_PinTypeStates, Name = STATE_UserPin)]
-	[TemplateVisualState(GroupName = GROUP_WorkingStates, Name = STATE_Idle)]
-	[TemplateVisualState(GroupName = GROUP_WorkingStates, Name = STATE_Working)]
-	[TemplateVisualState(GroupName = GROUP_WorkingStates, Name = STATE_Error)]
+	[TemplateVisualState(GroupName = GROUP_LoadStates, Name = STATE_Loaded)]
+	[TemplateVisualState(GroupName = GROUP_LoadStates, Name = STATE_Loading)]
+	[TemplateVisualState(GroupName = GROUP_LoadStates, Name = STATE_Error)]
 	[TemplatePart(Name = PART_Content, Type = typeof (Panel))]
 	[TemplatePart(Name = PART_SearchResultIndicator, Type = typeof (Control))]
 	[TemplatePart(Name = PART_Title, Type = typeof (TextBlock))]
@@ -37,10 +37,10 @@ namespace Travlexer.WindowsPhone.Controls
 		private const string GROUP_PinTypeStates = "PinTypeStates";
 		private const string STATE_SearchResult = "SearchResult";
 		private const string STATE_UserPin = "UserPin";
-		private const string GROUP_WorkingStates = "WorkingStates";
-		private const string STATE_Idle = "Idle";
-		private const string STATE_Working = "Working";
+		private const string GROUP_LoadStates = "LoadStates";
+		private const string STATE_Loading = "Loading";
 		private const string STATE_Error = "Error";
+		private const string STATE_Loaded = "Loaded";
 
 		// Template parts name.
 		private const string PART_Content = "Content";
@@ -243,17 +243,17 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			new PropertyMetadata(default(PushpinOverlayVisualStates), OnVisualStateChanged));
 
-		public WorkingStates WorkingState
+		public DataStates WorkingState
 		{
-			get { return (WorkingStates) GetValue(WorkingStateProperty); }
+			get { return (DataStates) GetValue(WorkingStateProperty); }
 			set { SetValue(WorkingStateProperty, value); }
 		}
 
 		public static readonly DependencyProperty WorkingStateProperty = DependencyProperty.Register(
-			"WorkingState",
-			typeof (WorkingStates),
+			"DataState",
+			typeof (DataStates),
 			typeof (PushpinContent),
-			new PropertyMetadata(default(WorkingStates), OnWorkingStateChanged));
+			new PropertyMetadata(default(DataStates), OnWorkingStateChanged));
 
 		public string Title
 		{
@@ -302,6 +302,18 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (bool),
 			typeof (PushpinContent),
 			new PropertyMetadata(false, OnIsSearchResultChanged));
+
+		public bool IsCurrentLocation
+		{
+			get { return (bool) GetValue(IsCurrentLocationProperty); }
+			set { SetValue(IsCurrentLocationProperty, value); }
+		}
+
+		public static readonly DependencyProperty IsCurrentLocationProperty = DependencyProperty.Register(
+			"IsCurrentLocation",
+			typeof (bool),
+			typeof (PushpinContent),
+			new PropertyMetadata(false));
 
 		#endregion
 

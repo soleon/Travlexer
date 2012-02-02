@@ -1,3 +1,4 @@
+using Codify.WindowsPhone;
 using Codify.WindowsPhone.ViewModels;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 
@@ -23,15 +24,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		#region Public Properties
 
-		public WorkingStates WorkingState
-		{
-			get { return _workingState; }
-			set { SetProperty(ref _workingState, value, WorkingStateProperty); }
-		}
-
-		private WorkingStates _workingState;
-		private const string WorkingStateProperty = "WorkingState";
-
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is being dragged.
 		/// </summary>
@@ -43,6 +35,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private bool _isDragging;
 		private const string IsDraggingProperty = "IsDragging";
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this pushpin represents the current location.
+		/// </summary>
+		public bool IsCurrentLocation { get; set; }
 
 		#endregion
 	}

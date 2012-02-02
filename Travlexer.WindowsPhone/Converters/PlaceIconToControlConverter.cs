@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using Travlexer.WindowsPhone.Controls.Icons;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Location = Travlexer.WindowsPhone.Controls.Icons.Location;
 
@@ -32,6 +33,8 @@ namespace Travlexer.WindowsPhone.Converters
 					return new Location();
 				case PlaceIcon.Shop:
 					return new Location();
+				case PlaceIcon.User:
+					return new User();
 				default:
 					return new Location();
 			}

@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Device.Location;
 using System.Linq;
 using System.Windows;
+using Codify.WindowsPhone;
 using Codify.WindowsPhone.Collections;
 using Codify.WindowsPhone.Commands;
 using Codify.WindowsPhone.Extensions;
@@ -25,6 +26,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		#region Private Members
 
 		private readonly GeoCoordinateWatcher _geoWatcher;
+		private PushpinViewModel _currentPushpinHolder;
 
 		#endregion
 
@@ -72,7 +74,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			IsTrackingCurrentLocation = DataContext.IsTrackingCurrentLocation;
 
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
-			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, parent: this), DataContext.Places);
+			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, this), DataContext.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 
 			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
@@ -88,6 +90,19 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandGoToSearchState = new DelegateCommand(OnGoToSearchState);
 			CommandGoToDefaultState = new DelegateCommand(OnGoToDefaultState);
 			CommandClearSearchResults = new DelegateCommand(OnClearSearchResults);
+			CommandStartGeoWatcher = new DelegateCommand(OnStartGeoWatcher);
+			CommandStopGeoWatcher = new DelegateCommand(OnStopGeoWatcher);
+
+			_currentPushpinHolder = new PushpinViewModel(new Place
+			{
+				Name = "Current Location",
+				Color = PlaceColor.Black,
+				Icon = PlaceIcon.User,
+			})
+			{
+				IsCurrentLocation = true,
+				Parent = this
+			};
 
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
@@ -132,8 +147,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 				else
 				{
 					DragPushpin = null;
-					Center = value.Data.Location;
+					var place = value.Data;
+					Center = place.Location;
+					if (place.DataState != DataStates.Loaded)
+					{
+						OnUpdatePlace(value);
+					}
 					VisualState = VisualStates.PushpinSelected;
+
 				}
 			}
 		}
@@ -173,6 +194,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private PushpinViewModel _dragPushpin;
 		private const string DragPushpinProperty = "DragPushpin";
+
+		/// <summary>
+		/// Gets or sets the pushpin that represents the current location.
+		/// </summary>
+		public PushpinViewModel CurrentPushpin
+		{
+			get { return _currentPushpin; }
+			set { SetProperty(ref _currentPushpin, value, CurrentPushpinProperty); }
+		}
+
+		private PushpinViewModel _currentPushpin;
+		private const string CurrentPushpinProperty = "CurrentPushpin";
 
 		/// <summary>
 		/// Gets or sets the map center geo-coordination.
@@ -295,19 +328,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 					return;
 				}
 				DataContext.IsTrackingCurrentLocation = value;
-				RaisePropertyChange(IsTrackingCurrentLocationProperty);
-				if (value)
+				if (value && CurrentPushpin != null)
 				{
-					_geoWatcher.Start();
+					Center = CurrentPushpin.Data.Location;
 					if (ZoomLevel < 15)
 					{
 						ZoomLevel = 15;
 					}
 				}
-				else
-				{
-					_geoWatcher.Stop();
-				}
+				RaisePropertyChange(IsTrackingCurrentLocationProperty);
 			}
 		}
 
@@ -396,10 +425,36 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public DelegateCommand<PushpinViewModel> CommandUpdatePlace { get; private set; }
 
+		/// <summary>
+		/// Gets the command that starts geo coordinate watcher.
+		/// </summary>
+		public DelegateCommand CommandStartGeoWatcher { get; private set; }
+
+		/// <summary>
+		/// Gets the command that stops geo coordinate watcher.
+		/// </summary>
+		public DelegateCommand CommandStopGeoWatcher { get; private set; }
+
 		#endregion
 
 
 		#region Event Handling
+
+		/// <summary>
+		/// Called when <see cref="CommandStopGeoWatcher"/> is executed.
+		/// </summary>
+		private void OnStopGeoWatcher()
+		{
+			_geoWatcher.Stop();
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandStartGeoWatcher"/> is executed.
+		/// </summary>
+		private void OnStartGeoWatcher()
+		{
+			_geoWatcher.Start();
+		}
 
 		/// <summary>
 		/// Called when <see cref="CommandGoToDefaultState"/>.
@@ -424,15 +479,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnAddPlace(Location location)
 		{
 			var place = DataContext.AddNewPlace(location);
-			var vm = Pushpins.LastOrDefault();
-			if (vm == null)
-			{
-				return;
-			}
-			vm.WorkingState = WorkingStates.Working;
-			DataContext.GetPlaceInformation(
-				place,
-				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
+			place.DataState = DataStates.Loading;
+			DataContext.GetPlaceInformation(place, callback => place.DataState = callback.Status == CallbackStatus.Successful ? DataStates.Loaded : DataStates.Error);
 		}
 
 		/// <summary>
@@ -493,31 +541,17 @@ namespace Travlexer.WindowsPhone.ViewModels
 			ApplicationContext.IsBusy.Value = true;
 			VisualState = VisualStates.Default;
 			DataContext.CancelGetSuggestions();
-			DataContext.Search(Center, SearchInput, args =>
+			DataContext.Search(Center, SearchInput, callback =>
 			{
 				ApplicationContext.IsBusy.Value = false;
-				if (args.Status != CallbackStatus.Successful)
+				if (callback.Status != CallbackStatus.Successful)
 				{
 					const string messageBoxText = "Nothing was found in the search.";
 					MessageBox.Show(messageBoxText);
 					return;
 				}
-				DataContext.ClearSearchResults();
-				var places = args.Result;
-				foreach (var place in args.Result)
-				{
-					place.IsSearchResult = true;
-					DataContext.AddNewPlace(place);
-					if (Pushpins.Count <= 0 || place.Reference == null)
-					{
-						break;
-					}
-					var vm = Pushpins[Pushpins.Count - 1];
-					vm.WorkingState = WorkingStates.Working;
-					DataContext.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
-				}
 				IsTrackingCurrentLocation = false;
-				SearchSucceeded.ExecuteIfNotNull(places);
+				SearchSucceeded.ExecuteIfNotNull(callback.Result);
 			});
 			ResetSearchSuggestions();
 		}
@@ -569,11 +603,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 					MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
 					return;
 				}
-				DataContext.ClearSearchResults();
-				var place = args.Result;
-				place.IsSearchResult = true;
-				DataContext.AddNewPlace(place);
-				SearchSucceeded.ExecuteIfNotNull(new List<Place> { place });
+				IsTrackingCurrentLocation = false;
+				SearchSucceeded.ExecuteIfNotNull(new List<Place> { args.Result });
 			});
 
 			ResetSearchSuggestions();
@@ -600,11 +631,25 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnGeoWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
 		{
+			if (SelectedPushpin != null && SelectedPushpin.IsCurrentLocation)
+			{
+				SelectedPushpin = null;
+			}
 			if (e.Position.Location.IsUnknown)
+			{
+				CurrentPushpin = null;
+				return;
+			}
+			var location = e.Position.Location;
+			var place = _currentPushpinHolder.Data;
+			place.Location = location;
+			place.DataState = DataStates.None;
+			CurrentPushpin = _currentPushpinHolder;
+			if (!IsTrackingCurrentLocation)
 			{
 				return;
 			}
-			Center = e.Position.Location;
+			Center = location;
 		}
 
 		/// <summary>
@@ -629,15 +674,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <param name="pushpinViewModel">The pushpin view model.</param>
 		private void OnUpdatePlace(PushpinViewModel pushpinViewModel)
 		{
-			pushpinViewModel.WorkingState = WorkingStates.Working;
 			var place = pushpinViewModel.Data;
 			if (place.Reference == null)
 			{
-				DataContext.GetPlaceInformation(place, args => pushpinViewModel.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
+				DataContext.GetPlaceInformation(place);
 			}
 			else
 			{
-				DataContext.GetPlaceDetails(place, args => pushpinViewModel.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
+				DataContext.GetPlaceDetails(place);
 			}
 		}
 

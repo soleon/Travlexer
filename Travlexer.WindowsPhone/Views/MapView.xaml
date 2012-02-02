@@ -31,6 +31,12 @@
 		<i:EventTrigger EventName="BackKeyPress">
 			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
 		</i:EventTrigger>
+		<i:EventTrigger EventName="Loaded">
+			<i:InvokeCommandAction Command="{Binding CommandStartGeoWatcher, Mode=OneTime}" />
+		</i:EventTrigger>
+		<i:EventTrigger EventName="Unloaded">
+			<i:InvokeCommandAction Command="{Binding CommandStopGeoWatcher, Mode=OneTime}" />
+		</i:EventTrigger>
 	</i:Interaction.Triggers>
 	<shell:SystemTray.ProgressIndicator>
 		<shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
@@ -264,7 +270,8 @@
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 									  PositionOrigin="BottomCenter"
 									  Tag="{Binding Data.IsSearchResult}"
-									  Visibility="{Binding IsDragging, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">
+									  Visibility="{Binding IsDragging, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}"
+									  CacheMode="BitmapCache">
 							<toolkit:GestureService.GestureListener>
 								<toolkit:GestureListener DragCompleted="OnPushpinDragCompleted"
 														 DragDelta="OnPushpinDragDelta"
@@ -278,7 +285,7 @@
 									<i:InvokeCommandAction Command="{Binding Parent.CommandStopTrackingCurrentLocation, Mode=OneTime}" />
 								</i:EventTrigger>
 								<i:EventTrigger>
-									<ec:GoToStateAction StateName="Loaded"
+									<ec:GoToStateAction StateName="Drop"
 														TargetObject="{Binding ElementName=Pushpin}" />
 								</i:EventTrigger>
 							</i:Interaction.Triggers>
@@ -289,6 +296,21 @@
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>
+			<Maps:Pushpin Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
+						  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
+						  PositionOrigin="BottomCenter"
+						  DataContext="{Binding CurrentPushpin}"
+						  Visibility="{Binding Converter={StaticResource VisibilityConverter}, TargetNullValue=Collapsed}">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Tap">
+						<i:InvokeCommandAction Command="{Binding Parent.CommandSelectPushpin, Mode=OneTime}"
+											   CommandParameter="{Binding}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+				<ContentPresenter Height="32"
+								  Width="32"
+								  Content="{Binding Data.Icon, Converter={StaticResource PlaceIconToControlConverter}}" />
+			</Maps:Pushpin>
 			<Maps:MapLayer>
 				<i:Interaction.Behaviors>
 					<Behaviors:CancelGestureEventBehavior />
@@ -314,11 +336,6 @@
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
 						</i:EventTrigger>
-						<i:EventTrigger>
-							<ec:GoToStateAction StateName="Loaded"
-												TargetObject="{Binding ElementName=SelectedPushpin}"
-												UseTransitions="False" />
-						</i:EventTrigger>
 						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedPushpin}">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
@@ -336,25 +353,18 @@
 											 IsSearchResult="{Binding Data.IsSearchResult, Mode=TwoWay}"
 											 Title="{Binding Data.Name}"
 											 VisualState="Collapsed"
-											 WorkingState="{Binding WorkingState}" />
+											 WorkingState="{Binding Data.DataState}"
+											 IsCurrentLocation="{Binding IsCurrentLocation, Mode=OneTime}"/>
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 			<Maps:Pushpin x:Name="DragPushpin"
 						  Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}}"
 						  DataContext="{Binding DragPushpin.Data}"
-						  HorizontalAlignment="Left"
 						  IsHitTestVisible="False"
 						  Location="{Binding Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 						  PositionOrigin="BottomCenter"
-						  VerticalAlignment="Top"
-						  Visibility="Collapsed">
-				<i:Interaction.Triggers>
-					<i:EventTrigger>
-						<ec:GoToStateAction StateName="Loaded"
-											TargetObject="{Binding ElementName=DragPushpin}"
-											UseTransitions="False" />
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
+						  Visibility="Collapsed"
+						  CacheMode="BitmapCache">
 				<Maps:Pushpin.RenderTransform>
 					<CompositeTransform />
 				</Maps:Pushpin.RenderTransform>
@@ -424,7 +434,7 @@
 					<Border Height="52"
 							Width="52"
 							Background="{StaticResource PhoneForegroundBrush}">
-						<Icons:Search2 Height="32"
+						<Icons:Search Height="32"
 									   Width="32"
 									   Foreground="{StaticResource PhoneBackgroundBrush}"
 									   HorizontalAlignment="Center"

@@ -25,6 +25,10 @@ namespace Codify.WindowsPhone.Converters
 			{
 				result = (bool)value;
 			}
+			else
+			{
+				result = Convert(value);
+			}
 
 			if (parameter is string && string.Equals((string)parameter, ReverseParameter, StringComparison.CurrentCultureIgnoreCase))
 			{
@@ -52,6 +56,11 @@ namespace Codify.WindowsPhone.Converters
 		private static bool Convert(Visibility value)
 		{
 			return value != Visibility.Collapsed;
+		}
+
+		private static bool Convert<T>(T value) where T : class
+		{
+			return value != null;
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using Codify.WindowsPhone;
 using Codify.WindowsPhone.Models;
 
 namespace Travlexer.WindowsPhone.Infrastructure.Models
@@ -145,6 +146,16 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 
 		private string _reference;
 		private const string ReferenceProperty = "Reference";
+
+		public DataStates DataState
+		{
+			get { return _dataState; }
+			set { SetProperty(ref _dataState, value, DataStateProperty); }
+		}
+
+		private DataStates _dataState;
+		private const string DataStateProperty = "DataState";
+
 
 		#endregion
 
