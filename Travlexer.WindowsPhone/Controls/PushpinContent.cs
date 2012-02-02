@@ -202,6 +202,30 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			null);
 
+		public ICommand CommandRefresh
+		{
+			get { return (ICommand) GetValue(CommandRefreshProperty); }
+			set { SetValue(CommandRefreshProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandRefreshProperty = DependencyProperty.Register(
+			"CommandRefresh",
+			typeof (ICommand),
+			typeof (PushpinContent),
+			null);
+
+		public object CommandRefreshParameter
+		{
+			get { return GetValue(CommandRefreshParameterProperty); }
+			set { SetValue(CommandRefreshParameterProperty, value); }
+		}
+
+		public static readonly DependencyProperty CommandRefreshParameterProperty = DependencyProperty.Register(
+			"CommandRefreshParameter",
+			typeof (object),
+			typeof (PushpinContent),
+			null);
+
 		#endregion
 
 

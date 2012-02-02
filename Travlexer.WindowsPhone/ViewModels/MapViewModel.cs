@@ -82,6 +82,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandDeselectPushpin = new DelegateCommand<PushpinViewModel>(OnDeselectPushpin);
 			CommandDeletePlace = new DelegateCommand<PushpinViewModel>(OnDeletePlace);
 			CommandPinSearchResult = new DelegateCommand<PushpinViewModel>(OnPinSearchResult);
+			CommandUpdatePlace = new DelegateCommand<PushpinViewModel>(OnUpdatePlace);
 			CommandStartTrackingCurrentLocation = new DelegateCommand(OnStartTrackingCurrentLocation);
 			CommandStopTrackingCurrentLocation = new DelegateCommand(OnStopTrackingCurrentLocation);
 			CommandGoToSearchState = new DelegateCommand(OnGoToSearchState);
@@ -390,6 +391,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public DelegateCommand CommandClearSearchResults { get; private set; }
 
+		/// <summary>
+		/// Gets the command that updates the information of a given place.
+		/// </summary>
+		public DelegateCommand<PushpinViewModel> CommandUpdatePlace { get; private set; }
+
 		#endregion
 
 
@@ -426,7 +432,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			vm.WorkingState = WorkingStates.Working;
 			DataContext.GetPlaceInformation(
 				place,
-				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
+				args => vm.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
 		}
 
 		/// <summary>
@@ -508,7 +514,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					}
 					var vm = Pushpins[Pushpins.Count - 1];
 					vm.WorkingState = WorkingStates.Working;
-					DataContext.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.Idle : WorkingStates.Error);
+					DataContext.GetPlaceDetails(place, args2 => vm.WorkingState = args2.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
 				}
 				IsTrackingCurrentLocation = false;
 				SearchSucceeded.ExecuteIfNotNull(places);
@@ -615,6 +621,24 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnClearSearchResults()
 		{
 			DataContext.ClearSearchResults();
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandUpdatePlace"/> is executed.
+		/// </summary>
+		/// <param name="pushpinViewModel">The pushpin view model.</param>
+		private void OnUpdatePlace(PushpinViewModel pushpinViewModel)
+		{
+			pushpinViewModel.WorkingState = WorkingStates.Working;
+			var place = pushpinViewModel.Data;
+			if (place.Reference == null)
+			{
+				DataContext.GetPlaceInformation(place, args => pushpinViewModel.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
+			}
+			else
+			{
+				DataContext.GetPlaceDetails(place, args => pushpinViewModel.WorkingState = args.Status == CallbackStatus.Successful ? WorkingStates.WorkFinished : WorkingStates.Error);
+			}
 		}
 
 		protected override void OnDispose()

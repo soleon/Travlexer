@@ -139,8 +139,13 @@
 					<VisualTransition GeneratedDuration="0"
 									  To="Drag">
 						<Storyboard>
-							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="DragPushpin" EasingFunction="{StaticResource EasingQuinticOut}" To="-90"/>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DragPushpin">
+							<DoubleAnimation Storyboard.TargetName="DragPushpin"
+											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}"
+											 To="-90" />
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragPushpin"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
@@ -209,8 +214,13 @@
 				</VisualState>
 				<VisualState x:Name="Drag">
 					<Storyboard>
-						<DoubleAnimation Duration="0" To="-90" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="DragPushpin" d:IsOptimized="True"/>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DragPushpin">
+						<DoubleAnimation Storyboard.TargetName="DragPushpin"
+										 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+										 Duration="0"
+										 To="-90"
+										 d:IsOptimized="True" />
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragPushpin"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
@@ -256,10 +266,10 @@
 									  Tag="{Binding Data.IsSearchResult}"
 									  Visibility="{Binding IsDragging, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">
 							<toolkit:GestureService.GestureListener>
-								<toolkit:GestureListener DragStarted="OnPushpinDragStarted"
+								<toolkit:GestureListener DragCompleted="OnPushpinDragCompleted"
 														 DragDelta="OnPushpinDragDelta"
-														 DragCompleted="OnPushpinDragCompleted"
-														 Hold="OnPushpinHold"/>
+														 DragStarted="OnPushpinDragStarted"
+														 Hold="OnPushpinHold" />
 							</toolkit:GestureService.GestureListener>
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Tap">
@@ -320,6 +330,8 @@
 											 CommandDeleteParameter="{Binding}"
 											 CommandPinSearchResult="{Binding Parent.CommandPinSearchResult, Mode=OneTime}"
 											 CommandPinSearchResultParameter="{Binding}"
+											 CommandRefresh="{Binding Parent.CommandUpdatePlace, Mode=OneTime}"
+											 CommandRefreshParameter="{Binding}"
 											 Icon="{Binding Data.Icon}"
 											 IsSearchResult="{Binding Data.IsSearchResult, Mode=TwoWay}"
 											 Title="{Binding Data.Name}"
@@ -328,24 +340,27 @@
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 			<Maps:Pushpin x:Name="DragPushpin"
-			IsHitTestVisible="False"
-				Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}}"
-				DataContext="{Binding DragPushpin.Data}"
-				Location="{Binding Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
-				PositionOrigin="BottomCenter" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed">
+						  Background="{Binding Color, Converter={StaticResource PlaceColorToHexConverter}}"
+						  DataContext="{Binding DragPushpin.Data}"
+						  HorizontalAlignment="Left"
+						  IsHitTestVisible="False"
+						  Location="{Binding Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
+						  PositionOrigin="BottomCenter"
+						  VerticalAlignment="Top"
+						  Visibility="Collapsed">
 				<i:Interaction.Triggers>
 					<i:EventTrigger>
 						<ec:GoToStateAction StateName="Loaded"
-							TargetObject="{Binding ElementName=DragPushpin}"
-							UseTransitions="False" />
+											TargetObject="{Binding ElementName=DragPushpin}"
+											UseTransitions="False" />
 					</i:EventTrigger>
 				</i:Interaction.Triggers>
 				<Maps:Pushpin.RenderTransform>
-					<CompositeTransform/>
+					<CompositeTransform />
 				</Maps:Pushpin.RenderTransform>
 				<ContentPresenter Height="32"
-					Width="32"
-					Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}}" />
+								  Width="32"
+								  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}}" />
 			</Maps:Pushpin>
 		</Maps:Map>
 		<Grid x:Name="SearchPanel"

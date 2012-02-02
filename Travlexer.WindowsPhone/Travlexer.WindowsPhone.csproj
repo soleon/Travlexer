@@ -70,6 +70,7 @@
     <Compile Include="Controls\ButtonCircle.cs" />
     <Compile Include="Controls\AutoCompleteBox.cs" />
     <Compile Include="Controls\Icons\ArrowRight.cs" />
+    <Compile Include="Controls\Icons\Attention.cs" />
     <Compile Include="Controls\Icons\Bicycle.cs" />
     <Compile Include="Controls\Icons\Camera.cs" />
     <Compile Include="Controls\Icons\Car.cs" />

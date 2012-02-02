@@ -57,6 +57,7 @@
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DependencyShell\ApplicationBarItemBase.cs" />
+    <Compile Include="DesignTime.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\ObservableValue.cs" />

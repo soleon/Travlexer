@@ -60,7 +60,11 @@ namespace Travlexer.WindowsPhone.Views
 			Map.Hold += OnMapHold;
 
 #if DEBUG
-			Map.Children.Add(_debugText = new TextBlock { Foreground = new SolidColorBrush(Colors.Red), IsHitTestVisible = false, Text = "debug", Margin = new Thickness(0,33,0,0)});
+			if (!DesignerProperties.IsInDesignTool)
+			{
+				Map.Children.Add(_debugText = new TextBlock { Foreground = new SolidColorBrush(Colors.Red), IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 } });
+				_debugText.Text = "debug";
+			}
 #endif
 		}
 
@@ -107,7 +111,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -175,7 +179,7 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			
+
 			// Calculate the drop point to geo-coordinates.
 			var point = DragPushpin.TransformToVisual(Map).Transform(new Point());
 			point.X += DragPushpin.ActualWidth / 2;
@@ -194,6 +198,9 @@ namespace Travlexer.WindowsPhone.Views
 			// Unhook events.
 			Map.MouseLeftButtonUp -= OnPushpinRelease;
 			Map.MapPan -= OnCancelMapPan;
+
+			// Update information for new location.
+			_context.CommandUpdatePlace.ExecuteIfNotNull(dragPushpinVm);
 		}
 
 		private void OnPushpinRelease(object sender, MouseButtonEventArgs e)
