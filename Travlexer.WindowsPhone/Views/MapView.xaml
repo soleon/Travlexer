@@ -270,8 +270,7 @@
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 									  PositionOrigin="BottomCenter"
 									  Tag="{Binding Data.IsSearchResult}"
-									  Visibility="{Binding IsDragging, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}"
-									  CacheMode="BitmapCache">
+									  Visibility="{Binding IsDragging, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">
 							<toolkit:GestureService.GestureListener>
 								<toolkit:GestureListener DragCompleted="OnPushpinDragCompleted"
 														 DragDelta="OnPushpinDragDelta"
@@ -363,8 +362,7 @@
 						  IsHitTestVisible="False"
 						  Location="{Binding Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 						  PositionOrigin="BottomCenter"
-						  Visibility="Collapsed"
-						  CacheMode="BitmapCache">
+						  Visibility="Collapsed">
 				<Maps:Pushpin.RenderTransform>
 					<CompositeTransform />
 				</Maps:Pushpin.RenderTransform>

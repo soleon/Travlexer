@@ -613,6 +613,8 @@
 		</Setter>
 		<Setter Property="Padding"
 				Value="5" />
+		<Setter Property="CacheMode"
+				Value="BitmapCache" />
 	</Style>
 	<Style x:Key="PageDefault"
 		   TargetType="phone:PhoneApplicationPage">
