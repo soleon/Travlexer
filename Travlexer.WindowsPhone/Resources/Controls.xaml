@@ -308,12 +308,12 @@
 								<VisualState x:Name="Loading">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-											Storyboard.TargetProperty="(UIElement.Opacity)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="WorkingText"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -325,12 +325,12 @@
 								<VisualState x:Name="Error">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-											Storyboard.TargetProperty="(UIElement.Opacity)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorText"
-											Storyboard.TargetProperty="(UIElement.Visibility)">
+																	   Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -366,22 +366,19 @@
 								   VerticalAlignment="Top"
 								   Visibility="Collapsed" />
 						<ContentPresenter HorizontalAlignment="Left"
-									
-									VerticalAlignment="Top"
-									
-									Visibility="Collapsed"
-									x:Name="ErrorText"
-									Height="60"
-									Width="230">
-							<i:Interaction.Behaviors>
-								<Behaviors:CancelGestureEventBehavior />
-							</i:Interaction.Behaviors>
+										  VerticalAlignment="Top"
+										  Visibility="Collapsed"
+										  x:Name="ErrorText"
+										  Height="60"
+										  Width="230">
 							<Button Style="{StaticResource EmptyButton}"
 									HorizontalContentAlignment="Left"
 									VerticalContentAlignment="Bottom"
 									Command="{Binding CommandRefresh, RelativeSource={RelativeSource TemplatedParent}}"
-									CommandParameter="{Binding CommandRefreshParameter, RelativeSource={RelativeSource TemplatedParent}}"
-									>
+									CommandParameter="{Binding CommandRefreshParameter, RelativeSource={RelativeSource TemplatedParent}}">
+								<i:Interaction.Behaviors>
+									<Behaviors:CancelGestureEventBehavior />
+								</i:Interaction.Behaviors>
 								<StackPanel Orientation="Horizontal">
 									<Icons:Attention Width="17"
 													 Foreground="{StaticResource PhoneForegroundBrush}" />
@@ -404,7 +401,9 @@
 									Height="65"
 									Margin="0,70,0,0"
 									VerticalAlignment="Top"
-									Visibility="Collapsed" Width="230" HorizontalAlignment="Left"
+									Visibility="Collapsed"
+									Width="230"
+									HorizontalAlignment="Left"
 									Orientation="Horizontal">
 							<i:Interaction.Behaviors>
 								<Behaviors:CancelGestureEventBehavior />
@@ -417,12 +416,14 @@
 							</Controls:ButtonCircle>
 							<Controls:ButtonCircle Caption="depart"
 												   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
-												   CommandParameter="{Binding CommandDepartParameter, RelativeSource={RelativeSource TemplatedParent}}" Margin="13,0,0,0">
+												   CommandParameter="{Binding CommandDepartParameter, RelativeSource={RelativeSource TemplatedParent}}"
+												   Margin="13,0,0,0">
 								<Icons:From />
 							</Controls:ButtonCircle>
 							<Controls:ButtonCircle Caption="arrive"
 												   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
-												   CommandParameter="{Binding CommandArriveParameter, RelativeSource={RelativeSource TemplatedParent}}" Margin="13,0,12,0">
+												   CommandParameter="{Binding CommandArriveParameter, RelativeSource={RelativeSource TemplatedParent}}"
+												   Margin="13,0,12,0">
 								<Icons:To />
 							</Controls:ButtonCircle>
 							<Controls:ButtonCircle x:Name="ButtonDelete"
@@ -488,20 +489,20 @@
 								<VisualState x:Name="Drop">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Shadow"
-											Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<DoubleAnimation Storyboard.TargetName="Shadow"
-											Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-											Duration="0"
-											To="0"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
 										<DoubleAnimation Storyboard.TargetName="Shadow"
-											Storyboard.TargetProperty="(UIElement.Opacity)"
-											Duration="0"
-											To="1"
-											d:IsOptimized="True" />
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Duration="0"
+														 To="1"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
@@ -541,8 +542,8 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="Maps:Pushpin">
 					<Grid x:Name="Root"
-						RenderTransformOrigin="0.5,0.5"
-						WindowsPhone:DesignTime.Background="White">
+						  RenderTransformOrigin="0.5,0.5"
+						  WindowsPhone:DesignTime.Background="White">
 						<Grid.RenderTransform>
 							<CompositeTransform TranslateY="-800" />
 						</Grid.RenderTransform>
@@ -550,61 +551,65 @@
 							<VisualStateGroup x:Name="LoadStates">
 								<VisualStateGroup.Transitions>
 									<VisualTransition GeneratedDuration="0"
-										To="Drop">
+													  To="Drop">
 										<Storyboard>
 											<DoubleAnimation Duration="0:0:0.3"
-												To="0"
-												Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-												Storyboard.TargetName="Root"
-												From="-800" />
+															 To="0"
+															 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+															 Storyboard.TargetName="Root"
+															 From="-800" />
 										</Storyboard>
 									</VisualTransition>
 								</VisualStateGroup.Transitions>
-								<VisualState x:Name="Drop" >
+								<VisualState x:Name="Drop">
 									<Storyboard>
-										<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="Root" d:IsOptimized="True"/>
+										<DoubleAnimation Duration="0"
+														 To="0"
+														 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+														 Storyboard.TargetName="Root"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<Path Data="M0,0 L15,29 L30,0"
-							HorizontalAlignment="Center"
-							Stroke="{StaticResource BrushShadow}"
-							StrokeThickness="2"
-							VerticalAlignment="Bottom" />
+							  HorizontalAlignment="Center"
+							  Stroke="{StaticResource BrushShadow}"
+							  StrokeThickness="2"
+							  VerticalAlignment="Bottom" />
 						<Ellipse Height="38"
-							Margin="0,0,0,-13"
-							Width="50"
-							Fill="Transparent"
-							HorizontalAlignment="Center"
-							VerticalAlignment="Bottom" />
+								 Margin="0,0,0,-13"
+								 Width="50"
+								 Fill="Transparent"
+								 HorizontalAlignment="Center"
+								 VerticalAlignment="Bottom" />
 						<Border Margin="0,0,0,24"
-							BorderBrush="{StaticResource BrushShadow}"
-							BorderThickness="1"
-							UseLayoutRounding="False">
+								BorderBrush="{StaticResource BrushShadow}"
+								BorderThickness="1"
+								UseLayoutRounding="False">
 							<Border Padding="{TemplateBinding Padding}"
-								Background="{TemplateBinding Background}"
-								BorderBrush="{StaticResource PhoneForegroundBrush}"
-								BorderThickness="2"
-								UseLayoutRounding="True">
+									Background="{TemplateBinding Background}"
+									BorderBrush="{StaticResource PhoneForegroundBrush}"
+									BorderThickness="2"
+									UseLayoutRounding="True">
 								<ContentPresenter />
 							</Border>
 						</Border>
 						<Path Data="M0,1 L12.5,25 L25,1"
-							Fill="{TemplateBinding Background}"
-							HorizontalAlignment="Center"
-							Stroke="{StaticResource PhoneForegroundBrush}"
-							StrokeThickness="2"
-							VerticalAlignment="Bottom"
-							Margin="0,0,0,2" />
+							  Fill="{TemplateBinding Background}"
+							  HorizontalAlignment="Center"
+							  Stroke="{StaticResource PhoneForegroundBrush}"
+							  StrokeThickness="2"
+							  VerticalAlignment="Bottom"
+							  Margin="0,0,0,2" />
 						<Icons:Search Height="20"
-							Margin="0,-8,-8,0"
-							Width="20"
-							Background="{TemplateBinding Background}"
-							Foreground="{StaticResource PhoneBorderBrush}"
-							HorizontalAlignment="Right"
-							VerticalAlignment="Top"
-							Visibility="{Binding Tag, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" />
+									  Margin="0,-8,-8,0"
+									  Width="20"
+									  Background="{TemplateBinding Background}"
+									  Foreground="{StaticResource PhoneBorderBrush}"
+									  HorizontalAlignment="Right"
+									  VerticalAlignment="Top"
+									  Visibility="{Binding Tag, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

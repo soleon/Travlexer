@@ -27,6 +27,11 @@
 							shell:SystemTray.IsVisible="True"
 							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
 							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
+	<i:Interaction.Triggers>
+		<i:EventTrigger EventName="BackKeyPress">
+			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
+		</i:EventTrigger>
+	</i:Interaction.Triggers>
 	<shell:SystemTray.ProgressIndicator>
 		<shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
 								 IsVisible="True" />
@@ -54,7 +59,8 @@
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
 											 To="1" />
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SelectedPushpinLayer">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+														   Storyboard.TargetName="SelectedPushpinLayer">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
@@ -70,7 +76,8 @@
 											 Storyboard.TargetProperty="(UIElement.Opacity)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}" />
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SelectedPushpinLayer">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+														   Storyboard.TargetName="SelectedPushpinLayer">
 								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
@@ -179,7 +186,8 @@
 										 Duration="0"
 										 To="1"
 										 d:IsOptimized="True" />
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SelectedPushpinLayer">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+													   Storyboard.TargetName="SelectedPushpinLayer">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
@@ -220,9 +228,6 @@
 				<i:EventTrigger EventName="DoubleTap">
 					<i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
 				</i:EventTrigger>
-				<i:EventTrigger EventName="BackKeyPress">
-					<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
-				</i:EventTrigger>
 				<i:EventTrigger EventName="Loaded">
 					<i:InvokeCommandAction Command="{Binding CommandStartGeoWatcher, Mode=OneTime}" />
 				</i:EventTrigger>
@@ -243,20 +248,25 @@
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>-->
-			<Maps:Pushpin
-				Location="{Binding CurrentLocation}"
-				Background="Black"
-				PositionOrigin="Center"
-				Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}"
-				Template="{x:Null}">
+			<Maps:Pushpin Location="{Binding CurrentLocation}"
+						  Background="Black"
+						  PositionOrigin="Center"
+						  Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}"
+						  Template="{x:Null}">
 				<i:Interaction.Triggers>
-					<Triggers:EventTrigger EventName="Tap" IsHandled="True">
-						<i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}"/>
+					<Triggers:EventTrigger EventName="Tap"
+										   IsHandled="True">
+						<i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}" />
 					</Triggers:EventTrigger>
 				</i:Interaction.Triggers>
 				<Grid>
-					<Ellipse Width="40" Height="40" Fill="Transparent"/>
-					<Icons:CurrentLocation Foreground="Black" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center"
+					<Ellipse Width="40"
+							 Height="40"
+							 Fill="Transparent" />
+					<Icons:CurrentLocation Foreground="Black"
+										   Background="Transparent"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"
 										   Width="30"
 										   Height="30" />
 				</Grid>
@@ -298,7 +308,8 @@
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>
-			<Maps:MapLayer x:Name="SelectedPushpinLayer" Visibility="Collapsed">
+			<Maps:MapLayer x:Name="SelectedPushpinLayer"
+						   Visibility="Collapsed">
 				<i:Interaction.Behaviors>
 					<Behaviors:CancelGestureEventBehavior />
 				</i:Interaction.Behaviors>
@@ -326,7 +337,9 @@
 												   CommandParameter="{Binding}" />
 						</Triggers:RootTouchTrigger>
 						<i:EventTrigger>
-							<ec:GoToStateAction TargetName="SelectedPushpin" StateName="Drop" UseTransitions="False"/>
+							<ec:GoToStateAction TargetName="SelectedPushpin"
+												StateName="Drop"
+												UseTransitions="False" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 					<Controls:PushpinContent x:Name="SelectedPushpinContent"
@@ -342,7 +355,7 @@
 											 Title="{Binding Data.Name}"
 											 VisualState="Collapsed"
 											 WorkingState="{Binding Data.DataState}"
-											 IsCurrentLocation="{Binding IsCurrentLocation, Mode=OneTime}"/>
+											 IsCurrentLocation="{Binding IsCurrentLocation, Mode=OneTime}" />
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 			<Maps:Pushpin x:Name="DragPushpin"
@@ -354,7 +367,9 @@
 						  Visibility="Collapsed">
 				<i:Interaction.Triggers>
 					<i:EventTrigger>
-						<ec:GoToStateAction TargetObject="{Binding ElementName=DragPushpin}" StateName="Drop" UseTransitions="False"/>
+						<ec:GoToStateAction TargetObject="{Binding ElementName=DragPushpin}"
+											StateName="Drop"
+											UseTransitions="False" />
 					</i:EventTrigger>
 				</i:Interaction.Triggers>
 				<Maps:Pushpin.RenderTransform>
@@ -427,10 +442,10 @@
 							Width="52"
 							Background="{StaticResource PhoneForegroundBrush}">
 						<Icons:Search Height="32"
-									   Width="32"
-									   Foreground="{StaticResource PhoneBackgroundBrush}"
-									   HorizontalAlignment="Center"
-									   VerticalAlignment="Center" />
+									  Width="32"
+									  Foreground="{StaticResource PhoneBackgroundBrush}"
+									  HorizontalAlignment="Center"
+									  VerticalAlignment="Center" />
 					</Border>
 				</Button>
 			</Grid>
