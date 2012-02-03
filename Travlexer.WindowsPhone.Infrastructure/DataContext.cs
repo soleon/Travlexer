@@ -129,6 +129,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		{
 			var p = new Place(location);
 			_places.Add(p);
+			if (p.DataState == DataStates.None || p.DataState == DataStates.Error)
+			{
+				GetPlaceDetails(p);
+			}
 			return p;
 		}
 
@@ -175,7 +179,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				(c, a) => c.GetPlaces(place.Location, a),
 				r =>
 				{
-					place.DataState = DataStates.Loaded;
 					var details = r.Result[0];
 					if (place.Details == null)
 					{
@@ -204,8 +207,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		{
 			if (place.Reference == null)
 			{
-				place.DataState = DataStates.Error;
-				callback(new CallbackEventArgs(CallbackStatus.InvalidRequest));
+				GetPlaceInformation(place, callback);
 				return;
 			}
 			place.DataState = DataStates.Loading; ;
@@ -213,7 +215,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				(c, r) => c.GetPlaceDetails(place.Reference, r),
 				r =>
 				{
-					place.DataState = DataStates.Loaded;
 					var p = r.Result;
 					if (place.Details == null)
 					{
@@ -270,8 +271,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 						p.IsSearchResult = true;
 						_places.Add(p);
 						if (p.Reference == null) continue;
-						p.DataState = DataStates.Loading;
-						GetPlaceDetails(p, args2 => p.DataState = args2.Status == CallbackStatus.Successful ? DataStates.Loaded : DataStates.Error);
+						GetPlaceDetails(p);
 					}
 					return places;
 				},

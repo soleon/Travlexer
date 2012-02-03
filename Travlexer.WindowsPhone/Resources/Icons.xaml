@@ -253,4 +253,24 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+	<Style TargetType="Icons:CurrentLocation"
+		   BasedOn="{StaticResource IconBaseStyle}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Icons:CurrentLocation">
+					<Ellipse Stretch="Uniform">
+			<Ellipse.Fill>
+				<RadialGradientBrush>
+					<GradientStop Color="{Binding Foreground.Color, RelativeSource={RelativeSource TemplatedParent}}" Offset="0"/>
+					<GradientStop Color="{Binding Background.Color, RelativeSource={RelativeSource TemplatedParent}}" Offset="0.75"/>
+					<GradientStop Color="{Binding Foreground.Color, RelativeSource={RelativeSource TemplatedParent}}" Offset="0.75"/>
+					<GradientStop Color="{Binding Foreground.Color, RelativeSource={RelativeSource TemplatedParent}}" Offset="0.6"/>
+					<GradientStop Color="{Binding Background.Color, RelativeSource={RelativeSource TemplatedParent}}" Offset="0.6"/>
+				</RadialGradientBrush>
+			</Ellipse.Fill>
+		</Ellipse>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 </ResourceDictionary>

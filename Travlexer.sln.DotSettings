@@ -112,34 +112,27 @@ public static readonly DependencyProperty $PropertyName$Property = DependencyPro
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=CURRENT_005FCLASS/InitialRange/@EntryValue">-1</s:Int64>
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=CURRENT_005FCLASS/Order/@EntryValue">2</s:Int64>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=NAME/@KeyIndexDefined">True</s:Boolean>
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=NAME/Order/@EntryValue">0</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=NAME/Order/@EntryValue">1</s:Int64>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=TYPE/@KeyIndexDefined">True</s:Boolean>
 	
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=TYPE/Order/@EntryValue">1</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Field/=TYPE/Order/@EntryValue">0</s:Int64>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Reformat/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Shortcut/@EntryValue">propd</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Text/@EntryValue">#region $NAME$&#xD;
-&#xD;
-public $TYPE$ $NAME$&#xD;
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Text/@EntryValue">public $TYPE$ $NAME$&#xD;
 {&#xD;
 	get { return ($TYPE$)GetValue($NAME$Property); }&#xD;
 	set { SetValue($NAME$Property, value); }&#xD;
 }&#xD;
 &#xD;
-/// &lt;summary&gt;&#xD;
-/// Defines the &lt;see cref="$NAME$"/&gt; dependency property.&#xD;
-/// &lt;/summary&gt;&#xD;
 public static readonly DependencyProperty $NAME$Property = DependencyProperty.Register(&#xD;
 	"$NAME$",&#xD;
 	typeof($TYPE$),&#xD;
 	typeof($CURRENT_CLASS$),&#xD;
-	null);&#xD;
-&#xD;
-#endregion</s:String>
+	null);</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B73F5D8B8FE09143B7FB8B9A24693714/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B73F5D8B8FE09143B7FB8B9A24693714/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B73F5D8B8FE09143B7FB8B9A24693714/Description/@EntryValue">Full dependency property with event handling.</s:String>
@@ -187,23 +180,31 @@ private void On$NAME$Changed($TYPE$ oldValue, $TYPE$ newValue)&#xD;
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Description/@EntryValue">Creates a property with a backing field supporting INotifyPropertyChanged using a constant property name.</s:String>
-	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=NAME/@KeyIndexDefined">True</s:Boolean>
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=NAME/Order/@EntryValue">1</s:Int64>
-	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=PRIVATE_005FNAME/@KeyIndexDefined">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=PRIVATE_005FNAME/Expression/@EntryValue">decapitalize(NAME)</s:String>
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=PRIVATE_005FNAME/Order/@EntryValue">2</s:Int64>
-	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=TYPE/@KeyIndexDefined">True</s:Boolean>
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=TYPE/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=int/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=int/Order/@EntryValue">0</s:Int64>
+	
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=name/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=Name/@KeyIndexDefined">True</s:Boolean>
+	
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=name/Order/@EntryValue">2</s:Int64>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=Name/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=private/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=private/Order/@EntryValue">3</s:Int64>
+	
+	
+	
+	
+	
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Reformat/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Shortcut/@EntryValue">propno</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Text/@EntryValue">public $TYPE$ $NAME$&#xD;
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Text/@EntryValue">public $int$ $Name$&#xD;
 {&#xD;
-	get { return _$PRIVATE_NAME$; }&#xD;
-	set { SetProperty(ref _$PRIVATE_NAME$, value, $NAME$Property); }&#xD;
+	get { return _$name$; }&#xD;
+	$private$ set { SetProperty(ref _$name$, value, $Name$Property); }&#xD;
 }&#xD;
-private $TYPE$ _$PRIVATE_NAME$;&#xD;
-private const string $NAME$Property = "$NAME$";</s:String></wpf:ResourceDictionary>
+private $int$ _$name$;&#xD;
+private const string $Name$Property = "$Name$";</s:String></wpf:ResourceDictionary>

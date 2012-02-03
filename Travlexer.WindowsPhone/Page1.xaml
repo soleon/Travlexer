@@ -13,6 +13,16 @@
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
 	<Canvas>
-		<Path Data="M98.574,67.99C96.458,57.071,67.338,58.232,60.32,49.68c-1.48-1.805-1.48-1.805-0.488-8.507 c1.694-7.502,3.229-2.846,5.651-17.809C67.517,10.798,63.177,0,50,0S32.483,10.798,34.517,23.364 c2.422,14.963,3.956,10.307,5.651,17.809c0.992,6.702,0.992,6.702-0.488,8.507C32.662,58.232,3.542,57.071,1.426,67.99 C1.175,69.282,0,76.434,0,76.434h100C100,76.434,98.825,69.282,98.574,67.99z"/>
+		<Ellipse Width="24" Height="24" StrokeThickness="2">
+			<Ellipse.Fill>
+				<RadialGradientBrush>
+					<GradientStop Color="Black" Offset="0"/>
+					<GradientStop Color="White" Offset="0.75"/>
+					<GradientStop Color="Black" Offset="0.75"/>
+					<GradientStop Color="Black" Offset="0.5"/>
+					<GradientStop Color="White" Offset="0.5"/>
+				</RadialGradientBrush>
+			</Ellipse.Fill>
+		</Ellipse>
 	</Canvas>
 </phone:PhoneApplicationPage>

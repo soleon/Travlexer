@@ -17,6 +17,18 @@ namespace Codify.WindowsPhone.Triggers
 			"CanTrigger",
 			typeof (bool),
 			typeof (EventTrigger),
+			new PropertyMetadata(true));
+
+		public bool IsHandled
+		{
+			get { return (bool) GetValue(IsHandledProperty); }
+			set { SetValue(IsHandledProperty, value); }
+		}
+
+		public static readonly DependencyProperty IsHandledProperty = DependencyProperty.Register(
+			"IsHandled",
+			typeof (bool),
+			typeof (EventTrigger),
 			null);
 
 		#endregion
@@ -29,6 +41,11 @@ namespace Codify.WindowsPhone.Triggers
 		/// </summary>
 		protected override void OnEvent(EventArgs eventArgs)
 		{
+			var handledProperty = eventArgs.GetType().GetProperty("Handled");
+			if (handledProperty != null)
+			{
+				handledProperty.SetValue(eventArgs, IsHandled, null);
+			}
 			if (CanTrigger)
 			{
 				base.OnEvent(eventArgs);

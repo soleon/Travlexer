@@ -27,17 +27,6 @@
 							shell:SystemTray.IsVisible="True"
 							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
 							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
-	<i:Interaction.Triggers>
-		<i:EventTrigger EventName="BackKeyPress">
-			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
-		</i:EventTrigger>
-		<i:EventTrigger EventName="Loaded">
-			<i:InvokeCommandAction Command="{Binding CommandStartGeoWatcher, Mode=OneTime}" />
-		</i:EventTrigger>
-		<i:EventTrigger EventName="Unloaded">
-			<i:InvokeCommandAction Command="{Binding CommandStopGeoWatcher, Mode=OneTime}" />
-		</i:EventTrigger>
-	</i:Interaction.Triggers>
 	<shell:SystemTray.ProgressIndicator>
 		<shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
 								 IsVisible="True" />
@@ -52,14 +41,6 @@
 					<VisualTransition GeneratedDuration="0:0:0.3"
 									  To="PushpinSelected">
 						<Storyboard>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinBackground"
-														   Storyboard.TargetProperty="(UIElement.Visibility)">
-								<DiscreteObjectKeyFrame KeyTime="0">
-									<DiscreteObjectKeyFrame.Value>
-										<Visibility>Visible</Visibility>
-									</DiscreteObjectKeyFrame.Value>
-								</DiscreteObjectKeyFrame>
-							</ObjectAnimationUsingKeyFrames>
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinContent"
 														   Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
 								<DiscreteObjectKeyFrame KeyTime="0:0:0.1">
@@ -68,36 +49,34 @@
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpin"
-														   Storyboard.TargetProperty="(UIElement.Visibility)">
+							<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
+											 Storyboard.TargetProperty="(UIElement.Opacity)"
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}"
+											 To="1" />
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SelectedPushpinLayer">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
-											 Storyboard.TargetProperty="(UIElement.Opacity)"
-											 Duration="0:0:0.3"
-											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="1" />
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition From="PushpinSelected"
 									  GeneratedDuration="0:0:0.2">
 						<Storyboard>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinBackground"
-														   Storyboard.TargetProperty="(UIElement.Visibility)">
+							<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
+											 Storyboard.TargetProperty="(UIElement.Opacity)"
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}" />
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SelectedPushpinLayer">
 								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
-											 Storyboard.TargetProperty="(UIElement.Opacity)"
-											 Duration="0:0:0.3"
-											 EasingFunction="{StaticResource EasingQuinticOut}" />
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition To="Search">
@@ -195,21 +174,12 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinBackground"
-													   Storyboard.TargetProperty="(UIElement.Visibility)">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Visible</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
 						<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
 										 Storyboard.TargetProperty="(UIElement.Opacity)"
 										 Duration="0"
 										 To="1"
 										 d:IsOptimized="True" />
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpin"
-													   Storyboard.TargetProperty="(UIElement.Visibility)">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SelectedPushpinLayer">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
@@ -247,7 +217,22 @@
 				<i:EventTrigger EventName="MapPan">
 					<i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
 				</i:EventTrigger>
+				<i:EventTrigger EventName="DoubleTap">
+					<i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
+				</i:EventTrigger>
+				<i:EventTrigger EventName="BackKeyPress">
+					<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
+				</i:EventTrigger>
+				<i:EventTrigger EventName="Loaded">
+					<i:InvokeCommandAction Command="{Binding CommandStartGeoWatcher, Mode=OneTime}" />
+				</i:EventTrigger>
+				<i:EventTrigger EventName="Unloaded">
+					<i:InvokeCommandAction Command="{Binding CommandStopGeoWatcher, Mode=OneTime}" />
+				</i:EventTrigger>
 			</i:Interaction.Triggers>
+			<toolkit:GestureService.GestureListener>
+				<toolkit:GestureListener PinchStarted="OnMapPinchStarted" />
+			</toolkit:GestureService.GestureListener>
 			<!--<Maps:MapItemsControl IsHitTestVisible="False"
 								  ItemsSource="{Binding Pushpins}">
 				<Maps:MapItemsControl.ItemTemplate>
@@ -258,6 +243,24 @@
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>-->
+			<Maps:Pushpin
+				Location="{Binding CurrentLocation}"
+				Background="Black"
+				PositionOrigin="Center"
+				Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}"
+				Template="{x:Null}">
+				<i:Interaction.Triggers>
+					<Triggers:EventTrigger EventName="Tap" IsHandled="True">
+						<i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}"/>
+					</Triggers:EventTrigger>
+				</i:Interaction.Triggers>
+				<Grid>
+					<Ellipse Width="40" Height="40" Fill="Transparent"/>
+					<Icons:CurrentLocation Foreground="Black" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center"
+										   Width="30"
+										   Height="30" />
+				</Grid>
+			</Maps:Pushpin>
 			<Maps:MapItemsControl Collections:DelayCollection.ItemsSource="{Binding Pushpins}"
 								  Collections:DelayCollection.Delay="0:0:0.100">
 				<i:Interaction.Behaviors>
@@ -270,7 +273,7 @@
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 									  PositionOrigin="BottomCenter"
 									  Tag="{Binding Data.IsSearchResult}"
-									  Visibility="{Binding IsDragging, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">
+									  Visibility="{Binding IsDragging, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
 							<toolkit:GestureService.GestureListener>
 								<toolkit:GestureListener DragCompleted="OnPushpinDragCompleted"
 														 DragDelta="OnPushpinDragDelta"
@@ -295,38 +298,21 @@
 					</DataTemplate>
 				</Maps:MapItemsControl.ItemTemplate>
 			</Maps:MapItemsControl>
-			<Maps:Pushpin Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
-						  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
-						  PositionOrigin="BottomCenter"
-						  DataContext="{Binding CurrentPushpin}"
-						  Visibility="{Binding Converter={StaticResource VisibilityConverter}, TargetNullValue=Collapsed}">
-				<i:Interaction.Triggers>
-					<i:EventTrigger EventName="Tap">
-						<i:InvokeCommandAction Command="{Binding Parent.CommandSelectPushpin, Mode=OneTime}"
-											   CommandParameter="{Binding}"/>
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
-				<ContentPresenter Height="32"
-								  Width="32"
-								  Content="{Binding Data.Icon, Converter={StaticResource PlaceIconToControlConverter}}" />
-			</Maps:Pushpin>
-			<Maps:MapLayer>
+			<Maps:MapLayer x:Name="SelectedPushpinLayer" Visibility="Collapsed">
 				<i:Interaction.Behaviors>
 					<Behaviors:CancelGestureEventBehavior />
 				</i:Interaction.Behaviors>
 				<Rectangle x:Name="SelectedPushpinBackground"
 						   Fill="{StaticResource BrushSemiTransparentBackground}"
 						   IsHitTestVisible="False"
-						   Opacity="0"
-						   Visibility="Collapsed" />
+						   Opacity="0" />
 				<Maps:Pushpin x:Name="SelectedPushpin"
 							  Background="{Binding Data.Color, Converter={StaticResource PlaceColorToHexConverter}}"
 							  DataContext="{Binding SelectedPushpin}"
 							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 							  PositionOrigin="BottomCenter"
 							  RenderTransformOrigin="0.5,0.5"
-							  Tag="{Binding Data.IsSearchResult}"
-							  Visibility="Collapsed">
+							  Tag="{Binding Data.IsSearchResult}">
 					<Maps:Pushpin.RenderTransform>
 						<CompositeTransform />
 					</Maps:Pushpin.RenderTransform>
@@ -339,6 +325,9 @@
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
 						</Triggers:RootTouchTrigger>
+						<i:EventTrigger>
+							<ec:GoToStateAction TargetName="SelectedPushpin" StateName="Drop" UseTransitions="False"/>
+						</i:EventTrigger>
 					</i:Interaction.Triggers>
 					<Controls:PushpinContent x:Name="SelectedPushpinContent"
 											 Address="{Binding Data.FormattedAddress}"
@@ -363,6 +352,11 @@
 						  Location="{Binding Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 						  PositionOrigin="BottomCenter"
 						  Visibility="Collapsed">
+				<i:Interaction.Triggers>
+					<i:EventTrigger>
+						<ec:GoToStateAction TargetObject="{Binding ElementName=DragPushpin}" StateName="Drop" UseTransitions="False"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
 				<Maps:Pushpin.RenderTransform>
 					<CompositeTransform />
 				</Maps:Pushpin.RenderTransform>
@@ -446,7 +440,7 @@
 		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}">
 			<DependencyShell:ApplicationBar.Buttons>
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
-														  IconUri="/Assets/Track.png"
+														  IconUri="/Assets/CurrentLocation.png"
 														  IsEnabled="{Binding IsTrackingCurrentLocation, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
 														  Text="track" />
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"

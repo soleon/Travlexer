@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace Travlexer.WindowsPhone.Views
 #endif
 
 		#endregion
+
 
 		#region Constructors
 
@@ -99,7 +101,7 @@ namespace Travlexer.WindowsPhone.Views
 					{
 						Map.SetView(place.ViewPort);
 					}
-					catch (System.ArgumentOutOfRangeException)
+					catch (ArgumentOutOfRangeException)
 					{
 						Map.SetView(place.Location, 15D);
 					}
@@ -107,7 +109,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -160,7 +162,7 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			var transform = (CompositeTransform) DragPushpin.RenderTransform;
 			transform.TranslateX += e.HorizontalChange;
 			transform.TranslateY += e.VerticalChange;
 		}
@@ -187,7 +189,7 @@ namespace Travlexer.WindowsPhone.Views
 			_context.SelectedPushpin = dragPushpinVm;
 
 			// Reset transformation of the drag cue.
-			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			var transform = (CompositeTransform) DragPushpin.RenderTransform;
 			transform.TranslateX = 0;
 			transform.TranslateY = 0;
 
@@ -207,8 +209,8 @@ namespace Travlexer.WindowsPhone.Views
 
 		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
 		{
-			var pushpin = (Pushpin)sender;
-			var data = (PushpinViewModel)pushpin.DataContext;
+			var pushpin = (Pushpin) sender;
+			var data = (PushpinViewModel) pushpin.DataContext;
 			if (data.Data.IsSearchResult)
 			{
 				return;
@@ -217,6 +219,12 @@ namespace Travlexer.WindowsPhone.Views
 			Map.MouseLeftButtonUp -= OnPushpinRelease;
 			Map.MouseLeftButtonUp += OnPushpinRelease;
 		}
+
+		private void OnMapPinchStarted(object sender, PinchStartedGestureEventArgs e)
+		{
+			_context.CommandStopTrackingCurrentLocation.ExecuteIfNotNull();
+		}
+
 		#endregion
 
 
@@ -246,8 +254,5 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		#endregion
-
-
-
 	}
 }

@@ -14,7 +14,7 @@ namespace Codify.WindowsPhone.Collections
 		#region Private Members
 
 		private ItemsControl _control;
-		private ObservableCollection<object> _controlItemsSource; 
+		private ObservableCollection<object> _controlItemsSource;
 		private readonly ObservableCollection<object> _delayItemsQueue;
 
 		#endregion
@@ -43,13 +43,11 @@ namespace Codify.WindowsPhone.Collections
 
 		#region Constructors
 
-
 		public DelayCollection()
 		{
 			_delayItemsQueue = new ObservableCollection<object>();
 			_delayItemsQueue.CollectionChanged += OnDelayItemsQueueCollectionChanged;
 		}
-
 
 		#endregion
 
@@ -61,7 +59,7 @@ namespace Codify.WindowsPhone.Collections
 
 		public static INotifyCollectionChanged GetItemsSource(DependencyObject obj)
 		{
-			return (INotifyCollectionChanged) obj.GetValue(ItemsSourceProperty);
+			return (INotifyCollectionChanged)obj.GetValue(ItemsSourceProperty);
 		}
 
 		public static void SetItemsSource(DependencyObject obj, INotifyCollectionChanged value)
@@ -71,8 +69,8 @@ namespace Codify.WindowsPhone.Collections
 
 		public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.RegisterAttached(
 			"ItemsSource",
-			typeof (INotifyCollectionChanged),
-			typeof (DelayCollection),
+			typeof(INotifyCollectionChanged),
+			typeof(DelayCollection),
 			new PropertyMetadata(null, OnItemsSourceChanged));
 
 		#endregion
@@ -82,7 +80,7 @@ namespace Codify.WindowsPhone.Collections
 
 		private static DelayCollection GetDelayCollection(DependencyObject obj)
 		{
-			return (DelayCollection) obj.GetValue(_delayCollectionProperty);
+			return (DelayCollection)obj.GetValue(_delayCollectionProperty);
 		}
 
 		private static void SetDelayCollection(DependencyObject obj, DelayCollection value)
@@ -92,8 +90,8 @@ namespace Codify.WindowsPhone.Collections
 
 		private static readonly DependencyProperty _delayCollectionProperty = DependencyProperty.RegisterAttached(
 			"DelayCollection",
-			typeof (DelayCollection),
-			typeof (DelayCollection),
+			typeof(DelayCollection),
+			typeof(DelayCollection),
 			new PropertyMetadata(default(DelayCollection), OnDelayCollectionChanged));
 
 		#endregion
@@ -103,7 +101,7 @@ namespace Codify.WindowsPhone.Collections
 
 		public static TimeSpan GetDelay(DependencyObject obj)
 		{
-			return (TimeSpan) obj.GetValue(DelayProperty);
+			return (TimeSpan)obj.GetValue(DelayProperty);
 		}
 
 		public static void SetDelay(DependencyObject obj, TimeSpan value)
@@ -113,8 +111,8 @@ namespace Codify.WindowsPhone.Collections
 
 		public static readonly DependencyProperty DelayProperty = DependencyProperty.RegisterAttached(
 			"Delay",
-			typeof (TimeSpan),
-			typeof (DelayCollection),
+			typeof(TimeSpan),
+			typeof(DelayCollection),
 			new PropertyMetadata(default(TimeSpan), OnDelayChanged));
 
 		#endregion
@@ -162,6 +160,7 @@ namespace Codify.WindowsPhone.Collections
 			switch (e.Action)
 			{
 				case NotifyCollectionChangedAction.Add:
+					var items = e.NewItems;
 					_delayItemsQueue.AddRange(e.NewItems);
 					break;
 				case NotifyCollectionChangedAction.Remove:
@@ -203,6 +202,13 @@ namespace Codify.WindowsPhone.Collections
 			switch (e.Action)
 			{
 				case NotifyCollectionChangedAction.Add:
+					// Do not delay the first item.
+					var first = e.NewItems[0];
+					if (first == _delayItemsQueue[0])
+					{
+						_controlItemsSource.Add(first);
+					}
+					// Start the timer for the rest of the items.
 					timer.Start();
 					break;
 				case NotifyCollectionChangedAction.Remove:
@@ -216,17 +222,7 @@ namespace Codify.WindowsPhone.Collections
 
 		private void OnTimerTick(object sender, EventArgs eventArgs)
 		{
-			if (_delayItemsQueue.Count < 1)
-			{
-				_timer.Stop();
-			}
-			if (_delayItemsQueue.Count == 0)
-			{
-				return;
-			}
-			var item = _delayItemsQueue[0];
-			_delayItemsQueue.RemoveAt(0);
-			_controlItemsSource.Add(item);
+			AddNextItem();
 		}
 
 		#endregion
@@ -280,6 +276,28 @@ namespace Codify.WindowsPhone.Collections
 				return;
 			}
 			itemsSource.CollectionChanged += OnItemsSourceCollectionChanged;
+		}
+
+		private void AddNextItem()
+		{
+			if (_delayItemsQueue.Count < 1)
+			{
+				_timer.Stop();
+			}
+			if (_delayItemsQueue.Count == 0)
+			{
+				return;
+			}
+			var item = _delayItemsQueue[0];
+			_delayItemsQueue.RemoveAt(0);
+			if (_controlItemsSource.Contains(item))
+			{
+				AddNextItem();
+			}
+			else
+			{
+				_controlItemsSource.Add(item);
+			}
 		}
 
 		#endregion

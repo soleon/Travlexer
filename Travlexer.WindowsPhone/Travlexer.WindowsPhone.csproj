@@ -74,6 +74,7 @@
     <Compile Include="Controls\Icons\Bicycle.cs" />
     <Compile Include="Controls\Icons\Camera.cs" />
     <Compile Include="Controls\Icons\Car.cs" />
+    <Compile Include="Controls\Icons\CurrentLocation.cs" />
     <Compile Include="Controls\Icons\Delete.cs" />
     <Compile Include="Controls\Icons\IconBase.cs" />
     <Compile Include="Controls\Icons\Pin.cs" />
@@ -142,6 +143,7 @@
     <None Include="Properties\WMAppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\CurrentLocation.png" />
     <Content Include="Assets\Search.png" />
     <Content Include="Assets\AppIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

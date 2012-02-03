@@ -26,7 +26,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 		#region Private Members
 
 		private readonly GeoCoordinateWatcher _geoWatcher;
-		private PushpinViewModel _currentPushpinHolder;
 
 		#endregion
 
@@ -92,17 +91,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandClearSearchResults = new DelegateCommand(OnClearSearchResults);
 			CommandStartGeoWatcher = new DelegateCommand(OnStartGeoWatcher);
 			CommandStopGeoWatcher = new DelegateCommand(OnStopGeoWatcher);
-
-			_currentPushpinHolder = new PushpinViewModel(new Place
-			{
-				Name = "Current Location",
-				Color = PlaceColor.Black,
-				Icon = PlaceIcon.User,
-			})
-			{
-				IsCurrentLocation = true,
-				Parent = this
-			};
+			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
 
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
@@ -195,17 +184,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private PushpinViewModel _dragPushpin;
 		private const string DragPushpinProperty = "DragPushpin";
 
-		/// <summary>
-		/// Gets or sets the pushpin that represents the current location.
-		/// </summary>
-		public PushpinViewModel CurrentPushpin
+		public GeoCoordinate CurrentLocation
 		{
-			get { return _currentPushpin; }
-			set { SetProperty(ref _currentPushpin, value, CurrentPushpinProperty); }
+			get { return _currentLocation; }
+			set { SetProperty(ref _currentLocation, value, CurrentLocationProperty); }
 		}
 
-		private PushpinViewModel _currentPushpin;
-		private const string CurrentPushpinProperty = "CurrentPushpin";
+		private GeoCoordinate _currentLocation;
+		private const string CurrentLocationProperty = "CurrentLocation";
 
 		/// <summary>
 		/// Gets or sets the map center geo-coordination.
@@ -328,9 +314,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 					return;
 				}
 				DataContext.IsTrackingCurrentLocation = value;
-				if (value && CurrentPushpin != null)
+				if (value && CurrentLocation != null && !CurrentLocation.IsUnknown)
 				{
-					Center = CurrentPushpin.Data.Location;
+					Center = CurrentLocation;
 					if (ZoomLevel < 15)
 					{
 						ZoomLevel = 15;
@@ -435,6 +421,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public DelegateCommand CommandStopGeoWatcher { get; private set; }
 
+		/// <summary>
+		/// Gets the command that adds a place at the <see cref="CurrentLocation"/>.
+		/// </summary>
+		public DelegateCommand CommandAddCurrentPlace { get; private set; }
+
 		#endregion
 
 
@@ -478,9 +469,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnAddPlace(Location location)
 		{
-			var place = DataContext.AddNewPlace(location);
-			place.DataState = DataStates.Loading;
-			DataContext.GetPlaceInformation(place, callback => place.DataState = callback.Status == CallbackStatus.Successful ? DataStates.Loaded : DataStates.Error);
+			DataContext.AddNewPlace(location);
 		}
 
 		/// <summary>
@@ -631,20 +620,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnGeoWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
 		{
-			if (SelectedPushpin != null && SelectedPushpin.IsCurrentLocation)
+			var location = e.Position.Location;
+			if (location.IsUnknown)
 			{
-				SelectedPushpin = null;
-			}
-			if (e.Position.Location.IsUnknown)
-			{
-				CurrentPushpin = null;
 				return;
 			}
-			var location = e.Position.Location;
-			var place = _currentPushpinHolder.Data;
-			place.Location = location;
-			place.DataState = DataStates.None;
-			CurrentPushpin = _currentPushpinHolder;
+			CurrentLocation = location;
 			if (!IsTrackingCurrentLocation)
 			{
 				return;
@@ -671,18 +652,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Called when <see cref="CommandUpdatePlace"/> is executed.
 		/// </summary>
-		/// <param name="pushpinViewModel">The pushpin view model.</param>
-		private void OnUpdatePlace(PushpinViewModel pushpinViewModel)
+		/// <param name="pushpin">The pushpin view model.</param>
+		private void OnUpdatePlace(PushpinViewModel pushpin)
 		{
-			var place = pushpinViewModel.Data;
-			if (place.Reference == null)
-			{
-				DataContext.GetPlaceInformation(place);
-			}
-			else
-			{
-				DataContext.GetPlaceDetails(place);
-			}
+			DataContext.GetPlaceDetails(pushpin.Data);
 		}
 
 		protected override void OnDispose()
