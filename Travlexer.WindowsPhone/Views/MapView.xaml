@@ -251,8 +251,9 @@
 			<Maps:Pushpin Location="{Binding CurrentLocation}"
 						  Background="Black"
 						  PositionOrigin="Center"
-						  Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}"
-						  Template="{x:Null}">
+						  Visibility="{Binding CurrentLocation, TargetNullValue=Collapsed}"
+						  Template="{x:Null}"
+						  IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}">
 				<i:Interaction.Triggers>
 					<Triggers:EventTrigger EventName="Tap"
 										   IsHandled="True">
@@ -283,7 +284,7 @@
 									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 									  PositionOrigin="BottomCenter"
 									  Tag="{Binding Data.IsSearchResult}"
-									  Visibility="{Binding IsDragging, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
+									  Visibility="{Binding Parent.DragPushpin, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
 							<toolkit:GestureService.GestureListener>
 								<toolkit:GestureListener DragCompleted="OnPushpinDragCompleted"
 														 DragDelta="OnPushpinDragDelta"
@@ -323,7 +324,8 @@
 							  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
 							  PositionOrigin="BottomCenter"
 							  RenderTransformOrigin="0.5,0.5"
-							  Tag="{Binding Data.IsSearchResult}">
+							  Tag="{Binding Data.IsSearchResult}"
+							  Visibility="{Binding TargetNullValue=Collapsed}">
 					<Maps:Pushpin.RenderTransform>
 						<CompositeTransform />
 					</Maps:Pushpin.RenderTransform>
@@ -354,8 +356,7 @@
 											 IsSearchResult="{Binding Data.IsSearchResult, Mode=TwoWay}"
 											 Title="{Binding Data.Name}"
 											 VisualState="Collapsed"
-											 WorkingState="{Binding Data.DataState}"
-											 IsCurrentLocation="{Binding IsCurrentLocation, Mode=OneTime}" />
+											 WorkingState="{Binding Data.DataState}" />
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 			<Maps:Pushpin x:Name="DragPushpin"

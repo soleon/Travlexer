@@ -77,7 +77,7 @@
     <Compile Include="Triggers\EventTrigger.cs" />
     <Compile Include="Triggers\KeyPressTrigger.cs" />
     <Compile Include="Triggers\RootTouchTrigger.cs" />
-    <Compile Include="ViewModels\DataViewModelBase.cs" />
+    <Compile Include="ViewModels\DataViewModel.cs" />
     <Compile Include="ViewModels\IViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="WorkingStates.cs" />

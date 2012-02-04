@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
-using System.Linq;
 using System.Windows;
 using Codify.WindowsPhone;
 using Codify.WindowsPhone.Collections;
@@ -73,17 +72,17 @@ namespace Travlexer.WindowsPhone.ViewModels
 			IsTrackingCurrentLocation = DataContext.IsTrackingCurrentLocation;
 
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
-			Pushpins = new AdaptedObservableCollection<Place, PushpinViewModel>(p => new PushpinViewModel(p, this), DataContext.Places);
+			Pushpins = new AdaptedObservableCollection<Place, DataViewModel<Place>>(p => new DataViewModel<Place>(p, this), DataContext.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 
 			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
 			CommandSearch = new DelegateCommand(OnSearch);
 			CommandAddPlace = new DelegateCommand<Location>(OnAddPlace);
-			CommandSelectPushpin = new DelegateCommand<PushpinViewModel>(OnSelectPushpin);
-			CommandDeselectPushpin = new DelegateCommand<PushpinViewModel>(OnDeselectPushpin);
-			CommandDeletePlace = new DelegateCommand<PushpinViewModel>(OnDeletePlace);
-			CommandPinSearchResult = new DelegateCommand<PushpinViewModel>(OnPinSearchResult);
-			CommandUpdatePlace = new DelegateCommand<PushpinViewModel>(OnUpdatePlace);
+			CommandSelectPushpin = new DelegateCommand<DataViewModel<Place>>(OnSelectPushpin);
+			CommandDeselectPushpin = new DelegateCommand<DataViewModel<Place>>(OnDeselectPushpin);
+			CommandDeletePlace = new DelegateCommand<DataViewModel<Place>>(OnDeletePlace);
+			CommandPinSearchResult = new DelegateCommand<DataViewModel<Place>>(OnPinSearchResult);
+			CommandUpdatePlace = new DelegateCommand<DataViewModel<Place>>(OnUpdatePlace);
 			CommandStartTrackingCurrentLocation = new DelegateCommand(OnStartTrackingCurrentLocation);
 			CommandStopTrackingCurrentLocation = new DelegateCommand(OnStopTrackingCurrentLocation);
 			CommandGoToSearchState = new DelegateCommand(OnGoToSearchState);
@@ -115,12 +114,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the collection of all user pins.
 		/// </summary>
-		public AdaptedObservableCollection<Place, PushpinViewModel> Pushpins { get; private set; }
+		public AdaptedObservableCollection<Place, DataViewModel<Place>> Pushpins { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the selected place.
 		/// </summary>
-		public PushpinViewModel SelectedPushpin
+		public DataViewModel<Place> SelectedPushpin
 		{
 			get { return _selectedPushpin; }
 			set
@@ -148,40 +147,35 @@ namespace Travlexer.WindowsPhone.ViewModels
 			}
 		}
 
-		private PushpinViewModel _selectedPushpin;
+		private DataViewModel<Place> _selectedPushpin;
 		private const string SelectedPushpinProperty = "SelectedPushpin";
 
 		/// <summary>
 		/// Gets or sets the pushpin that's been dragged.
 		/// </summary>
-		public PushpinViewModel DragPushpin
+		public DataViewModel<Place> DragPushpin
 		{
 			get { return _dragPushpin; }
 			set
 			{
-				var old = _dragPushpin;
-				if (SetProperty(ref _dragPushpin, value, DragPushpinProperty))
+				if (!SetProperty(ref _dragPushpin, value, DragPushpinProperty))
 				{
-					if (old != null)
-					{
-						old.IsDragging = false;
-					}
-					if (value == null)
-					{
-						VisualState = VisualStates.Default;
-					}
-					else
-					{
-						SelectedPushpin = null;
-						value.IsDragging = true;
-						VisualState = VisualStates.Drag;
-						IsTrackingCurrentLocation = false;
-					}
+					return;
+				}
+				if (value == null)
+				{
+					VisualState = VisualStates.Default;
+				}
+				else
+				{
+					SelectedPushpin = null;
+					VisualState = VisualStates.Drag;
+					IsTrackingCurrentLocation = false;
 				}
 			}
 		}
 
-		private PushpinViewModel _dragPushpin;
+		private DataViewModel<Place> _dragPushpin;
 		private const string DragPushpinProperty = "DragPushpin";
 
 		public GeoCoordinate CurrentLocation
@@ -354,22 +348,22 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the command that toggles the pushpin content state.
 		/// </summary>
-		public DelegateCommand<PushpinViewModel> CommandSelectPushpin { get; private set; }
+		public DelegateCommand<DataViewModel<Place>> CommandSelectPushpin { get; private set; }
 
 		/// <summary>
 		/// Gets the command that collapses the user pin.
 		/// </summary>
-		public DelegateCommand<PushpinViewModel> CommandDeselectPushpin { get; private set; }
+		public DelegateCommand<DataViewModel<Place>> CommandDeselectPushpin { get; private set; }
 
 		/// <summary>
 		/// Gets the command deletes a user pin.
 		/// </summary>
-		public DelegateCommand<PushpinViewModel> CommandDeletePlace { get; private set; }
+		public DelegateCommand<DataViewModel<Place>> CommandDeletePlace { get; private set; }
 
 		/// <summary>
 		/// Gets the command that pins a search result.
 		/// </summary>
-		public DelegateCommand<PushpinViewModel> CommandPinSearchResult { get; private set; }
+		public DelegateCommand<DataViewModel<Place>> CommandPinSearchResult { get; private set; }
 
 		/// <summary>
 		/// Gets the command that gets suggestions that based on the <see cref="SearchInput"/>.
@@ -409,7 +403,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the command that updates the information of a given place.
 		/// </summary>
-		public DelegateCommand<PushpinViewModel> CommandUpdatePlace { get; private set; }
+		public DelegateCommand<DataViewModel<Place>> CommandUpdatePlace { get; private set; }
 
 		/// <summary>
 		/// Gets the command that starts geo coordinate watcher.
@@ -459,7 +453,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Called when <see cref="CommandSelectPushpin"/> is executed.
 		/// </summary>
-		private void OnSelectPushpin(PushpinViewModel pushpin)
+		private void OnSelectPushpin(DataViewModel<Place> pushpin)
 		{
 			SelectedPushpin = pushpin;
 		}
@@ -475,7 +469,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Called when <see cref="CommandDeselectPushpin"/> is executed.
 		/// </summary>
-		private void OnDeselectPushpin(PushpinViewModel vm)
+		private void OnDeselectPushpin(DataViewModel<Place> vm)
 		{
 			if (SelectedPushpin != vm)
 			{
@@ -487,7 +481,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Called when <see cref="CommandDeletePlace"/> is executed.
 		/// </summary>
-		private void OnDeletePlace(PushpinViewModel vm)
+		private void OnDeletePlace(DataViewModel<Place> vm)
 		{
 			DataContext.RemovePlace(vm.Data);
 		}
@@ -495,7 +489,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Called when <see cref="CommandPinSearchResult"/> is executed.
 		/// </summary>
-		private void OnPinSearchResult(PushpinViewModel vm)
+		private void OnPinSearchResult(DataViewModel<Place> vm)
 		{
 			vm.Data.IsSearchResult = false;
 		}
@@ -510,13 +504,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 			switch (e.Action)
 			{
 				case NotifyCollectionChangedAction.Remove:
-					foreach (var pushpin in e.OldItems.Cast<PushpinViewModel>())
+					foreach (var pushpin in e.OldItems)
 					{
 						if (SelectedPushpin == pushpin)
 						{
 							SelectedPushpin = null;
 						}
-						pushpin.Dispose();
+						return;
 					}
 					break;
 			}
@@ -653,7 +647,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Called when <see cref="CommandUpdatePlace"/> is executed.
 		/// </summary>
 		/// <param name="pushpin">The pushpin view model.</param>
-		private void OnUpdatePlace(PushpinViewModel pushpin)
+		private void OnUpdatePlace(DataViewModel<Place> pushpin)
 		{
 			DataContext.GetPlaceDetails(pushpin.Data);
 		}

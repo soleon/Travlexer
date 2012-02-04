@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Codify.WindowsPhone.Extensions;
+using Codify.WindowsPhone.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
@@ -210,7 +211,7 @@ namespace Travlexer.WindowsPhone.Views
 		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
 		{
 			var pushpin = (Pushpin) sender;
-			var data = (PushpinViewModel) pushpin.DataContext;
+			var data = (DataViewModel<Place>) pushpin.DataContext;
 			if (data.Data.IsSearchResult)
 			{
 				return;

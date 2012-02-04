@@ -3,16 +3,16 @@ using Codify.WindowsPhone.Models;
 
 namespace Codify.WindowsPhone.ViewModels
 {
-	public abstract class DataViewModelBase<T> : ViewModelBase where T : IModel
+	public class DataViewModel<T> : ViewModelBase where T : IModel
 	{
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DataViewModelBase&lt;T&gt;"/> class.
+		/// Initializes a new instance of the <see cref="DataViewModel{T}"/> class.
 		/// </summary>
 		/// <param name="data">The data.</param>
 		/// <param name="parent">The logical parent view model that owns this view model.</param>
-		protected DataViewModelBase(T data, IViewModel parent = null)
+		public DataViewModel(T data, IViewModel parent = null)
 			: base(parent)
 		{
 			if (data.Equals(null))

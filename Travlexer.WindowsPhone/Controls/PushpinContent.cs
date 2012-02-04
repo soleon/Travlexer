@@ -304,18 +304,6 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof (PushpinContent),
 			new PropertyMetadata(false, OnIsSearchResultChanged));
 
-		public bool IsCurrentLocation
-		{
-			get { return (bool) GetValue(IsCurrentLocationProperty); }
-			set { SetValue(IsCurrentLocationProperty, value); }
-		}
-
-		public static readonly DependencyProperty IsCurrentLocationProperty = DependencyProperty.Register(
-			"IsCurrentLocation",
-			typeof (bool),
-			typeof (PushpinContent),
-			new PropertyMetadata(false));
-
 		#endregion
 
 
