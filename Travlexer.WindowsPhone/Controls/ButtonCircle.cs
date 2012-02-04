@@ -3,11 +3,11 @@ using System.Windows.Controls;
 
 namespace Travlexer.WindowsPhone.Controls
 {
-	public class ButtonCircle : Button
+	public class CircleButton : Button
 	{
-		public ButtonCircle()
+		public CircleButton()
 		{
-			DefaultStyleKey = typeof (ButtonCircle);
+			DefaultStyleKey = typeof (CircleButton);
 		}
 
 		public string Caption
@@ -19,7 +19,7 @@ namespace Travlexer.WindowsPhone.Controls
 		public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(
 			"Caption",
 			typeof (string),
-			typeof (ButtonCircle),
+			typeof (CircleButton),
 			null);
 	}
 }

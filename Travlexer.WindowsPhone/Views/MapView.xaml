@@ -70,6 +70,13 @@
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition From="PushpinSelected"
@@ -84,6 +91,13 @@
 								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
@@ -147,6 +161,13 @@
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
 						</Storyboard>
 					</VisualTransition>
 				</VisualStateGroup.Transitions>
@@ -197,6 +218,13 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="Drag">
@@ -214,65 +242,82 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-					</Storyboard>
-				</VisualState>
-			</VisualStateGroup>
-			<VisualStateGroup x:Name="ToolbarStates">
-				<VisualStateGroup.Transitions>
-					<VisualTransition GeneratedDuration="0" To="Expanded">
-						<Storyboard>
-							<DoubleAnimation Duration="0:0:0.5" To="180" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="ExpandButton">
-								<DoubleAnimation.EasingFunction>
-									<CircleEase EasingMode="EaseOut"/>
-								</DoubleAnimation.EasingFunction>
-							</DoubleAnimation>
-							<DoubleAnimation Duration="0:0:0.5" To="214" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
-						</Storyboard>
-					</VisualTransition>
-					<VisualTransition From="Expanded" GeneratedDuration="0" To="Collapsed">
-						<Storyboard>
-							<DoubleAnimation Duration="0:0:0.6" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="ExpandButton" From="180">
-								<DoubleAnimation.EasingFunction>
-									<CircleEase EasingMode="EaseOut"/>
-								</DoubleAnimation.EasingFunction>
-							</DoubleAnimation>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CollapseButton">
-								<DiscreteObjectKeyFrame KeyTime="0">
-									<DiscreteObjectKeyFrame.Value>
-										<Visibility>Collapsed</Visibility>
-									</DiscreteObjectKeyFrame.Value>
-								</DiscreteObjectKeyFrame>
-							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandButton">
-								<DiscreteObjectKeyFrame KeyTime="0">
-									<DiscreteObjectKeyFrame.Value>
-										<Visibility>Visible</Visibility>
-									</DiscreteObjectKeyFrame.Value>
-								</DiscreteObjectKeyFrame>
-							</ObjectAnimationUsingKeyFrames>
-							<DoubleAnimation Duration="0:0:0.5" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
-						</Storyboard>
-					</VisualTransition>
-				</VisualStateGroup.Transitions>
-				<VisualState x:Name="Collapsed"/>
-				<VisualState x:Name="Expanded">
-					<Storyboard>
-						<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="ExpandButton" d:IsOptimized="True"/>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CollapseButton">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Visible</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandButton">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Collapsed</Visibility>
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-						<DoubleAnimation Duration="0" To="214" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+			<VisualStateGroup x:Name="ToolbarStates">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0"
+									  To="Expanded">
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.3" To="320" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandButton">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CollapseButton">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="Expanded"
+									  GeneratedDuration="0"
+									  To="Collapsed">
+						<Storyboard>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+														   Storyboard.TargetName="CollapseButton">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+														   Storyboard.TargetName="ExpandButton">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
+						</Storyboard>
+					</VisualTransition>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="Collapsed" />
+				<VisualState x:Name="Expanded">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+													   Storyboard.TargetName="CollapseButton">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+													   Storyboard.TargetName="ExpandButton">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="320" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -303,9 +348,14 @@
 			<toolkit:GestureService.GestureListener>
 				<toolkit:GestureListener PinchStarted="OnMapPinchStarted" />
 			</toolkit:GestureService.GestureListener>
-			<Maps:MapTileLayer>
+			<Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
 				<Maps:MapTileLayer.TileSources>
-					<CodifyMaps:GoogleMapsTileSource />
+					<CodifyMaps:GoogleMapsTileSource Layer="Street" />
+				</Maps:MapTileLayer.TileSources>
+			</Maps:MapTileLayer>
+			<Maps:MapTileLayer Visibility="{Binding IsSatelliteHybridLayerVisible}">
+				<Maps:MapTileLayer.TileSources>
+					<CodifyMaps:GoogleMapsTileSource Layer="SatelliteHybrid" />
 				</Maps:MapTileLayer.TileSources>
 			</Maps:MapTileLayer>
 			<Maps:Pushpin Location="{Binding CurrentLocation}"
@@ -441,43 +491,68 @@
 								  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}}" />
 			</Maps:Pushpin>
 		</Maps:Map>
-		<Border x:Name="Toolbar" Background="{StaticResource PhoneChromeBrush}" Opacity="{StaticResource ShellOpacity}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Padding="10" CornerRadius="34" Width="68" Height="98">
+		<Border x:Name="Toolbar"
+				Background="{StaticResource PhoneChromeBrush}"
+				Opacity="{StaticResource ShellOpacity}"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Center"
+				Margin="10,0,0,0"
+				Padding="10"
+				CornerRadius="34"
+				Width="68" Height="108">
 			<StackPanel>
-				<Controls:ButtonCircle Click="OnCaptureScreen" toolkit:TiltEffect.SuppressTilt="True">
-					<Icons:Camera/>
-				</Controls:ButtonCircle>
-				<Button x:Name="ExpandButton" Style="{StaticResource EmptyButton}" toolkit:TiltEffect.SuppressTilt="True">
+				<Controls:CircleButton Click="OnCaptureScreen"
+									   toolkit:TiltEffect.SuppressTilt="True">
+					<Icons:Camera />
+				</Controls:CircleButton>
+				<Button x:Name="ExpandButton"
+						Style="{StaticResource EmptyButton}"
+						toolkit:TiltEffect.SuppressTilt="True">
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Click">
-							<ec:GoToStateAction StateName="Expanded"/>
+							<ec:GoToStateAction StateName="Expanded" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
-					<Button.Projection>
-						<PlaneProjection/>
-					</Button.Projection>
-					<Icons:DownArrow Height="40" Width="20">
+					<Icons:DownArrow Height="40"
+									 Width="20">
 						<Icons:DownArrow.Projection>
-							<PlaneProjection/>
+							<PlaneProjection />
 						</Icons:DownArrow.Projection>
 					</Icons:DownArrow>
 				</Button>
-				<Button x:Name="CollapseButton" Style="{StaticResource EmptyButton}" Visibility="Collapsed" toolkit:TiltEffect.SuppressTilt="True">
+				<Button x:Name="CollapseButton"
+						Style="{StaticResource EmptyButton}"
+						Visibility="Collapsed"
+						toolkit:TiltEffect.SuppressTilt="True">
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Click">
-							<ec:GoToStateAction StateName="Collapsed"/>
+							<ec:GoToStateAction StateName="Collapsed" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
-					<Button.Projection>
-						<PlaneProjection/>
-					</Button.Projection>
-					<Icons:UpArrow Height="40" Width="20"/>
+					<Icons:UpArrow Height="40"
+								   Width="20" />
 				</Button>
-				<Controls:ButtonCircle Margin="0,0,0,10" Command="{Binding CommandZoomIn, Mode=OneTime}" toolkit:TiltEffect.SuppressTilt="True">
-					<Icons:Plus/>
-				</Controls:ButtonCircle>
-				<Controls:ButtonCircle Command="{Binding CommandZoomOut, Mode=OneTime}" toolkit:TiltEffect.SuppressTilt="True">
-					<Icons:Minus/>
-				</Controls:ButtonCircle>
+				<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}"
+									   toolkit:TiltEffect.SuppressTilt="True">
+					<Icons:Plus />
+				</Controls:CircleButton>
+				<Controls:CircleButton Command="{Binding CommandZoomOut, Mode=OneTime}"
+									   toolkit:TiltEffect.SuppressTilt="True" Margin="0,10,0,0">
+					<Icons:Minus />
+				</Controls:CircleButton>
+				<Icons:Ellipsis Height="35"/>
+				<Controls:CircleButton Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
+									   toolkit:TiltEffect.SuppressTilt="True" Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="street">
+					<Controls:CircleButton.Background>
+						<ImageBrush Stretch="None" ImageSource="/Travlexer.WindowsPhone;component/Assets/StreetView.png"/>
+					</Controls:CircleButton.Background>
+				</Controls:CircleButton>
+				<Controls:CircleButton Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
+									   toolkit:TiltEffect.SuppressTilt="True" Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="satellite">
+					<Controls:CircleButton.Background>
+						<ImageBrush Stretch="None" ImageSource="/Travlexer.WindowsPhone;component/Assets/SatelliteView.png"/>
+					</Controls:CircleButton.Background>
+				</Controls:CircleButton>
 			</StackPanel>
 		</Border>
 		<Grid x:Name="SearchPanel"

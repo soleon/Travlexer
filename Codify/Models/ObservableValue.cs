@@ -5,16 +5,6 @@ namespace Codify.Models
 {
 	public class ObservableValue<T>
 	{
-		#region Constructors
-
-		public ObservableValue(T value)
-		{
-			_value = value;
-		}
-
-		#endregion
-
-
 		#region Public Events
 
 		public event Action<T, T> ValueChanged;

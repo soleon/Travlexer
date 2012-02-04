@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
+using System.Linq;
 using System.Windows;
 using Codify;
 using Codify.Collections;
 using Codify.Commands;
+using Codify.Controls.Maps;
 using Codify.Extensions;
 using Codify.Services;
 using Codify.Threading;
 using Codify.ViewModels;
+using Microsoft.Phone.Controls.Maps;
+using Microsoft.Phone.Controls.Maps.Core;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Views;
@@ -93,6 +97,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
 			CommandZoomIn = new DelegateCommand(() => ZoomLevel++);
 			CommandZoomOut = new DelegateCommand(() => ZoomLevel--);
+			CommandShowStreetLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.Street);
+			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.SatelliteHybrid);
 
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
@@ -105,8 +111,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 				_geoWatcher.Start();
 			}
 
+			DataContext.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
 			ApplicationContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
 		}
+
 
 		#endregion
 
@@ -337,6 +345,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private const string IsBusyProperty = "IsBusy";
 
+		public Visibility IsStreetLayerVisible { get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.Street ? Visibility.Visible : Visibility.Collapsed; } }
+		private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
+		public Visibility IsSatelliteHybridLayerVisible { get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; } }
+		private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
 		#endregion
 
 
@@ -431,6 +443,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the command that zooms out the map.
 		/// </summary>
 		public DelegateCommand CommandZoomOut { get; private set; }
+
+		/// <summary>
+		/// Gets the command that shows the street layer.
+		/// </summary>
+		public DelegateCommand CommandShowStreetLayer { get; private set; }
+
+		/// <summary>
+		/// Gets the command that shows the satellite hybrid layer.
+		/// </summary>
+		public DelegateCommand CommandShowSatelliteHybridLayer { get; private set; }
 
 		#endregion
 

@@ -70,7 +70,6 @@
     </Compile>
     <Compile Include="Controls\ButtonCircle.cs" />
     <Compile Include="Controls\AutoCompleteBox.cs" />
-    <Compile Include="Controls\Class1.cs" />
     <Compile Include="Controls\Icons\ArrowRight.cs" />
     <Compile Include="Controls\Icons\Attention.cs" />
     <Compile Include="Controls\Icons\Bicycle.cs" />
@@ -78,15 +77,20 @@
     <Compile Include="Controls\Icons\Car.cs" />
     <Compile Include="Controls\Icons\CurrentLocation.cs" />
     <Compile Include="Controls\Icons\Delete.cs" />
+    <Compile Include="Controls\Icons\DownArrow.cs" />
+    <Compile Include="Controls\Icons\Ellipsis.cs" />
     <Compile Include="Controls\Icons\IconBase.cs" />
+    <Compile Include="Controls\Icons\Minus.cs" />
     <Compile Include="Controls\Icons\Pin.cs" />
     <Compile Include="Controls\Icons\Edit.cs" />
     <Compile Include="Controls\Icons\From.cs" />
     <Compile Include="Controls\Icons\Info.cs" />
     <Compile Include="Controls\Icons\Location.cs" />
+    <Compile Include="Controls\Icons\Plus.cs" />
     <Compile Include="Controls\Icons\Search.cs" />
     <Compile Include="Controls\Icons\Swap.cs" />
     <Compile Include="Controls\Icons\To.cs" />
+    <Compile Include="Controls\Icons\UpArrow.cs" />
     <Compile Include="Controls\Icons\User.cs" />
     <Compile Include="Controls\Icons\Walk.cs" />
     <Compile Include="Controls\PushpinContent.cs" />
@@ -144,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\CurrentLocation.png" />
+    <Resource Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />
     <Content Include="Assets\AppIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -151,6 +156,7 @@
     <Content Include="Assets\AppTile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Assets\StreetView.png" />
     <Content Include="Assets\Track.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>

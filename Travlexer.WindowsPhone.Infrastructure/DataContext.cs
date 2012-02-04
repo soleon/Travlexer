@@ -6,7 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using Codify;
+using Codify.Controls.Maps;
 using Codify.Extensions;
+using Codify.Models;
 using Codify.Serialization;
 using Codify.Services;
 using Codify.Storage;
@@ -34,6 +36,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		static DataContext()
 		{
 			Places = new ReadOnlyObservableCollection<Place>(_places);
+			MapBaseLayer = new ObservableValue<GoogleMapsLayer>();
 			MapZoomLevel = 1D;
 		}
 
@@ -45,7 +48,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Gets the collection that contains all user pins.
 		/// </summary>
-		[DataMember]
 		public static ReadOnlyObservableCollection<Place> Places { get; private set; }
 
 		private static readonly ObservableCollection<Place> _places = new ObservableCollection<Place>();
@@ -83,6 +85,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static bool IsTrackingCurrentLocation { get; set; }
 
 		private const string IsTrackingCurrentLocationProperty = "IsTrackingCurrentLocation";
+
+		/// <summary>
+		/// Gets or sets the map base layer.
+		/// </summary>
+		public static ObservableValue<GoogleMapsLayer> MapBaseLayer { get; private set; }
+		private const string MapBaseLayerProperty = "MapBaseLayer";
 
 		/// <summary>
 		/// Gets or sets the google maps client.
@@ -344,6 +352,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save current location tracking flag.
 			StorageProvider.SaveSetting(IsTrackingCurrentLocationProperty, IsTrackingCurrentLocation);
 
+			// Save map base layer.
+			StorageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
+
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
@@ -380,6 +391,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			if (StorageProvider.TryGetSetting(IsTrackingCurrentLocationProperty, out isTrackingCurrnetLocation))
 			{
 				IsTrackingCurrentLocation = isTrackingCurrnetLocation;
+			}
+
+			// Load map base layer.
+			GoogleMapsLayer mapBaseLayer;
+			if (StorageProvider.TryGetSetting(MapBaseLayerProperty, out mapBaseLayer))
+			{
+				MapBaseLayer.Value = mapBaseLayer;
 			}
 
 			// Load places.

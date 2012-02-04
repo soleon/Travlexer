@@ -70,12 +70,14 @@ namespace Travlexer.WindowsPhone.Views
 				_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
 			}
 
+			// This is to hack a problem that the map does not redraw it's tile layers if the layers were set before the map is loaded;
+
 #if DEBUG
 			if (DesignerProperties.IsInDesignTool)
 			{
 				return;
 			}
-			Map.Children.Add(_debugText = new ShadowText { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 }, HorizontalAlignment = HorizontalAlignment.Left});
+			Map.Children.Add(_debugText = new ShadowText { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 }, HorizontalAlignment = HorizontalAlignment.Left });
 			_debugText.Text = "debug";
 #endif
 		}
@@ -124,7 +126,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -163,7 +165,7 @@ namespace Travlexer.WindowsPhone.Views
 				var bmp = new WriteableBitmap(Map, null);
 				using (var ms = new MemoryStream())
 				{
-					bmp.SaveJpeg(ms, (int)ActualWidth, (int)ActualHeight, 0, 100);
+					bmp.SaveJpeg(ms, (int) ActualWidth, (int) ActualHeight, 0, 100);
 					ms.Seek(0, SeekOrigin.Begin);
 
 					var lib = new MediaLibrary();
@@ -206,7 +208,7 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			var transform = (CompositeTransform) DragPushpin.RenderTransform;
 			transform.TranslateX += e.HorizontalChange;
 			transform.TranslateY += e.VerticalChange;
 		}
@@ -233,7 +235,7 @@ namespace Travlexer.WindowsPhone.Views
 			_context.SelectedPushpin = dragPushpinVm;
 
 			// Reset transformation of the drag cue.
-			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			var transform = (CompositeTransform) DragPushpin.RenderTransform;
 			transform.TranslateX = 0;
 			transform.TranslateY = 0;
 
@@ -253,8 +255,8 @@ namespace Travlexer.WindowsPhone.Views
 
 		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
 		{
-			var pushpin = (Pushpin)sender;
-			var data = (DataViewModel<Place>)pushpin.DataContext;
+			var pushpin = (Pushpin) sender;
+			var data = (DataViewModel<Place>) pushpin.DataContext;
 			if (data.Data.IsSearchResult)
 			{
 				return;
@@ -291,6 +293,9 @@ namespace Travlexer.WindowsPhone.Views
 					_appBar.IsVisible = false;
 					break;
 				case MapViewModel.VisualStates.PushpinSelected:
+					_appBar.IsVisible = false;
+					break;
+				case MapViewModel.VisualStates.Drag:
 					_appBar.IsVisible = false;
 					break;
 			}

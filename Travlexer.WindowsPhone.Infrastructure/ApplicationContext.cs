@@ -21,7 +21,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		static ApplicationContext()
 		{
-			IsBusy = new ObservableValue<bool>(false);
+			IsBusy = new ObservableValue<bool> { Value = false };
 			IsBusy.ValueChanging += OnIsLoadingChanging;
 		}
 

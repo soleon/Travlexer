@@ -15,10 +15,10 @@
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="Brushes.xaml" />
 	</ResourceDictionary.MergedDictionaries>
-	<Style TargetType="Controls:ButtonCircle">
+	<Style TargetType="Controls:CircleButton">
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="Controls:ButtonCircle">
+				<ControlTemplate TargetType="Controls:CircleButton">
 					<StackPanel Width="48">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="CommonStates">
@@ -408,44 +408,44 @@
 							<i:Interaction.Behaviors>
 								<Behaviors:CancelGestureEventBehavior />
 							</i:Interaction.Behaviors>
-							<Controls:ButtonCircle Padding="5"
+							<Controls:CircleButton Padding="5"
 												   Caption="details"
 												   Command="{Binding CommandViewDetails, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandViewDetailsParameter, RelativeSource={RelativeSource TemplatedParent}}">
 								<Icons:Info />
-							</Controls:ButtonCircle>
-							<Controls:ButtonCircle Caption="depart"
+							</Controls:CircleButton>
+							<Controls:CircleButton Caption="depart"
 												   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandDepartParameter, RelativeSource={RelativeSource TemplatedParent}}"
 												   Margin="13,0,0,0">
 								<Icons:From />
-							</Controls:ButtonCircle>
-							<Controls:ButtonCircle Caption="arrive"
+							</Controls:CircleButton>
+							<Controls:CircleButton Caption="arrive"
 												   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandArriveParameter, RelativeSource={RelativeSource TemplatedParent}}"
 												   Margin="13,0,12,0">
 								<Icons:To />
-							</Controls:ButtonCircle>
-							<Controls:ButtonCircle x:Name="ButtonDelete"
+							</Controls:CircleButton>
+							<Controls:CircleButton x:Name="ButtonDelete"
 												   Caption="delete"
 												   Command="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandDeleteParameter, RelativeSource={RelativeSource TemplatedParent}}">
-								<Controls:ButtonCircle.Projection>
+								<Controls:CircleButton.Projection>
 									<PlaneProjection />
-								</Controls:ButtonCircle.Projection>
+								</Controls:CircleButton.Projection>
 								<Icons:Delete />
-							</Controls:ButtonCircle>
-							<Controls:ButtonCircle x:Name="ButtonPin"
+							</Controls:CircleButton>
+							<Controls:CircleButton x:Name="ButtonPin"
 												   Caption="keep"
 												   Command="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandPinSearchResultParameter, RelativeSource={RelativeSource TemplatedParent}}"
 												   RenderTransformOrigin="0.5,0.5"
 												   Visibility="Collapsed">
-								<Controls:ButtonCircle.Projection>
+								<Controls:CircleButton.Projection>
 									<PlaneProjection />
-								</Controls:ButtonCircle.Projection>
+								</Controls:CircleButton.Projection>
 								<Icons:Pin />
-							</Controls:ButtonCircle>
+							</Controls:CircleButton>
 						</StackPanel>
 					</Grid>
 				</ControlTemplate>

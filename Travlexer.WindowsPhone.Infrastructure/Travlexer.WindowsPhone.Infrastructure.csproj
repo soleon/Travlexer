@@ -97,6 +97,10 @@
     <Compile Include="Serialization\JsonSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Codify.Controls.Maps\Codify.Controls.Maps.csproj">
+      <Project>{E8BAB17A-A62D-400B-B138-245A933F61C6}</Project>
+      <Name>Codify.Controls.Maps</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
       <Name>Codify</Name>
