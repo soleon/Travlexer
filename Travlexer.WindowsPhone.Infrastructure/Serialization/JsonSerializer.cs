@@ -1,4 +1,4 @@
-using Codify.WindowsPhone.Serialization;
+using Codify.Serialization;
 using Newtonsoft.Json;
 
 namespace Travlexer.WindowsPhone.Infrastructure.Serialization

@@ -5,14 +5,14 @@ using System.Device.Location;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Codify.WindowsPhone.Extensions;
-using Codify.WindowsPhone.ViewModels;
+using Codify.Extensions;
+using Codify.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
+using Microsoft.Phone.Controls.Maps.Overlays;
 using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework.Media;
 using Travlexer.WindowsPhone.Infrastructure.Models;
@@ -46,7 +46,7 @@ namespace Travlexer.WindowsPhone.Views
 		private readonly IApplicationBar _appBar;
 
 #if	DEBUG
-		private readonly TextBlock _debugText;
+		private readonly ShadowText _debugText;
 #endif
 
 		#endregion
@@ -71,11 +71,12 @@ namespace Travlexer.WindowsPhone.Views
 			}
 
 #if DEBUG
-			if (!DesignerProperties.IsInDesignTool)
+			if (DesignerProperties.IsInDesignTool)
 			{
-				Map.Children.Add(_debugText = new TextBlock { Foreground = new SolidColorBrush(Colors.Red), IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 } });
-				_debugText.Text = "debug";
+				return;
 			}
+			Map.Children.Add(_debugText = new ShadowText { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 }, HorizontalAlignment = HorizontalAlignment.Left});
+			_debugText.Text = "debug";
 #endif
 		}
 

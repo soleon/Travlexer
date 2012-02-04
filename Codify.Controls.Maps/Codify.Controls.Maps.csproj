@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6E495B32-0B3C-4677-A2E1-53F76E7FFE4C}</ProjectGuid>
+    <ProjectGuid>{E8BAB17A-A62D-400B-B138-245A933F61C6}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Travlexer.WindowsPhone.Infrastructure</RootNamespace>
-    <AssemblyName>Travlexer.WindowsPhone.Infrastructure</AssemblyName>
+    <RootNamespace>Codify.Controls.Maps</RootNamespace>
+    <AssemblyName>Codify.Controls.Maps</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
@@ -42,65 +42,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp.WindowsPhone">
-      <HintPath>..\Libraries\RestSharp.WindowsPhone.dll</HintPath>
-    </Reference>
-    <Reference Include="Serialization">
-      <HintPath>..\Libraries\Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Device" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
+    <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationContext.cs" />
-    <Compile Include="DataContext.cs" />
-    <Compile Include="Models\Location.cs" />
-    <Compile Include="Models\Place.cs" />
-    <Compile Include="Models\PlaceColor.cs" />
-    <Compile Include="Models\PlaceDetails.cs" />
-    <Compile Include="Models\PlaceIcon.cs" />
-    <Compile Include="Models\Route.cs" />
-    <Compile Include="Models\SearchSuggestion.cs" />
-    <Compile Include="Models\ViewPort.cs" />
+    <Compile Include="GoogleMapsTileSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\GoogleMaps\AddressComponent.cs" />
-    <Compile Include="Services\GoogleMaps\AutoCompleteResponse.cs" />
-    <Compile Include="Services\GoogleMaps\Distance.cs" />
-    <Compile Include="Services\GoogleMaps\Duration.cs" />
-    <Compile Include="Services\GoogleMaps\Geometry.cs" />
-    <Compile Include="Services\GoogleMaps\GoogleMapsClient.cs" />
-    <Compile Include="Services\GoogleMaps\IResponse.cs" />
-    <Compile Include="Services\GoogleMaps\LatLng.cs" />
-    <Compile Include="Services\GoogleMaps\Leg.cs" />
-    <Compile Include="Services\GoogleMaps\ListResponse.cs" />
-    <Compile Include="Services\GoogleMaps\Place.cs" />
-    <Compile Include="Services\GoogleMaps\PlaceDetails.cs" />
-    <Compile Include="Services\GoogleMaps\PlaceType.cs" />
-    <Compile Include="Services\GoogleMaps\Polyline.cs" />
-    <Compile Include="Services\GoogleMaps\Response.cs" />
-    <Compile Include="Services\GoogleMaps\Route.cs" />
-    <Compile Include="Services\GoogleMaps\RoutesResponse.cs" />
-    <Compile Include="Services\GoogleMaps\Size.cs" />
-    <Compile Include="Services\GoogleMaps\StatusCodes.cs" />
-    <Compile Include="Services\GoogleMaps\Step.cs" />
-    <Compile Include="Services\GoogleMaps\Suggestion.cs" />
-    <Compile Include="Services\GoogleMaps\TravelMode.cs" />
-    <Compile Include="Services\GoogleMaps\ViewPort.cs" />
-    <Compile Include="Serialization\BinarySerializer.cs" />
-    <Compile Include="Serialization\JsonSerializer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Codify\Codify.csproj">
-      <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
-      <Name>Codify</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

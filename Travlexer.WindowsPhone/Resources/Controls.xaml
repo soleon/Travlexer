@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:Behaviors="clr-namespace:Codify.WindowsPhone.Behaviors;assembly=Codify.WindowsPhone"
 					xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
@@ -10,7 +9,8 @@
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 					xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-					xmlns:WindowsPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
+					xmlns:Codify="clr-namespace:Codify;assembly=Codify"
+					xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
 					mc:Ignorable="d">
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="Brushes.xaml" />
@@ -160,7 +160,7 @@
 					<Grid x:Name="Content"
 						  Height="32"
 						  Width="32"
-						  WindowsPhone:DesignTime.Background="{StaticResource PhoneBackgroundBrush}">
+						  Codify:DesignTime.Background="{StaticResource PhoneBackgroundBrush}">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="VisualStates">
 								<VisualStateGroup.Transitions>
@@ -543,7 +543,7 @@
 				<ControlTemplate TargetType="Maps:Pushpin">
 					<Grid x:Name="Root"
 						  RenderTransformOrigin="0.5,0.5"
-						  WindowsPhone:DesignTime.Background="White">
+						  Codify:DesignTime.Background="White">
 						<Grid.RenderTransform>
 							<CompositeTransform TranslateY="-800" />
 						</Grid.RenderTransform>

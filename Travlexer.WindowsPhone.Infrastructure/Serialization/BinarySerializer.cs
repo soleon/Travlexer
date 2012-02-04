@@ -1,4 +1,4 @@
-﻿using Codify.WindowsPhone.Serialization;
+﻿using Codify.Serialization;
 using Serialization;
 
 namespace Travlexer.WindowsPhone.Infrastructure.Serialization

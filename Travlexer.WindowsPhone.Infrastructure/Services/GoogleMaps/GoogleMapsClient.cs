@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using Codify.WindowsPhone.Extensions;
+using Codify.Extensions;
 using Newtonsoft.Json;
 using RestSharp;
 using JsonSerializer = Travlexer.WindowsPhone.Infrastructure.Serialization.JsonSerializer;

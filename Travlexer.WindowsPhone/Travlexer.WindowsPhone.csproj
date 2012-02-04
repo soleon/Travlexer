@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="Controls\ButtonCircle.cs" />
     <Compile Include="Controls\AutoCompleteBox.cs" />
+    <Compile Include="Controls\Class1.cs" />
     <Compile Include="Controls\Icons\ArrowRight.cs" />
     <Compile Include="Controls\Icons\Attention.cs" />
     <Compile Include="Controls\Icons\Bicycle.cs" />
@@ -154,9 +155,13 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Codify.WindowsPhone\Codify.WindowsPhone.csproj">
+    <ProjectReference Include="..\Codify.Controls.Maps\Codify.Controls.Maps.csproj">
+      <Project>{E8BAB17A-A62D-400B-B138-245A933F61C6}</Project>
+      <Name>Codify.Controls.Maps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
-      <Name>Codify.WindowsPhone</Name>
+      <Name>Codify</Name>
     </ProjectReference>
     <ProjectReference Include="..\Travlexer.WindowsPhone.Infrastructure\Travlexer.WindowsPhone.Infrastructure.csproj">
       <Project>{6E495B32-0B3C-4677-A2E1-53F76E7FFE4C}</Project>

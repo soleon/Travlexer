@@ -1,11 +1,11 @@
 ﻿<phone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.MapView"
 							xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-							xmlns:Behaviors="clr-namespace:Codify.WindowsPhone.Behaviors;assembly=Codify.WindowsPhone"
-							xmlns:Collections="clr-namespace:Codify.WindowsPhone.Collections;assembly=Codify.WindowsPhone"
+							xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
+							xmlns:Collections="clr-namespace:Codify.Collections;assembly=Codify"
 							xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-							xmlns:DependencyShell="clr-namespace:Codify.WindowsPhone.DependencyShell;assembly=Codify.WindowsPhone"
+							xmlns:DependencyShell="clr-namespace:Codify.DependencyShell;assembly=Codify"
 							xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 							xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
@@ -14,9 +14,11 @@
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
 							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-							xmlns:Triggers="clr-namespace:Codify.WindowsPhone.Triggers;assembly=Codify.WindowsPhone"
+							xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
-							xmlns:WindowsPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
+							xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
+							xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
+							xmlns:CodifyMaps="clr-namespace:Codify.Controls.Maps;assembly=Codify.Controls.Maps"
 							Style="{StaticResource PageDefault}"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -281,6 +283,9 @@
 				  CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
 				  LogoVisibility="Collapsed"
 				  ZoomLevel="{Binding ZoomLevel, Mode=TwoWay}">
+			<Maps:Map.Mode>
+				<Core:MercatorMode />
+			</Maps:Map.Mode>
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="MapPan">
 					<i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
@@ -298,16 +303,11 @@
 			<toolkit:GestureService.GestureListener>
 				<toolkit:GestureListener PinchStarted="OnMapPinchStarted" />
 			</toolkit:GestureService.GestureListener>
-			<!--<Maps:MapItemsControl IsHitTestVisible="False"
-								  ItemsSource="{Binding Pushpins}">
-				<Maps:MapItemsControl.ItemTemplate>
-					<DataTemplate>
-						<Maps:Pushpin Style="{StaticResource PushpinShadow}"
-									  Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}, Mode=TwoWay}"
-									  PositionOrigin="BottomCenter" />
-					</DataTemplate>
-				</Maps:MapItemsControl.ItemTemplate>
-			</Maps:MapItemsControl>-->
+			<Maps:MapTileLayer>
+				<Maps:MapTileLayer.TileSources>
+					<CodifyMaps:GoogleMapsTileSource />
+				</Maps:MapTileLayer.TileSources>
+			</Maps:MapTileLayer>
 			<Maps:Pushpin Location="{Binding CurrentLocation}"
 						  Background="Black"
 						  PositionOrigin="Center"

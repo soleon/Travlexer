@@ -1,6 +1,6 @@
 using System;
-using Codify.WindowsPhone;
-using Codify.WindowsPhone.Models;
+using Codify;
+using Codify.Models;
 
 namespace Travlexer.WindowsPhone.Infrastructure.Models
 {

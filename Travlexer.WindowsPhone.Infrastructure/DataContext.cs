@@ -5,11 +5,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
-using Codify.WindowsPhone;
-using Codify.WindowsPhone.Extensions;
-using Codify.WindowsPhone.Serialization;
-using Codify.WindowsPhone.Services;
-using Codify.WindowsPhone.Storage;
+using Codify;
+using Codify.Extensions;
+using Codify.Serialization;
+using Codify.Services;
+using Codify.Storage;
 using RestSharp;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Infrastructure.Serialization;
@@ -34,6 +34,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		static DataContext()
 		{
 			Places = new ReadOnlyObservableCollection<Place>(_places);
+			MapZoomLevel = 1D;
 		}
 
 		#endregion

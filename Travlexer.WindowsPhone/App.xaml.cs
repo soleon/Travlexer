@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
 using Travlexer.WindowsPhone.Infrastructure;
 
