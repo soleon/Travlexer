@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Device.Location;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Codify.WindowsPhone.Extensions;
 using Codify.WindowsPhone.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
+using Microsoft.Xna.Framework.Media;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
@@ -20,6 +23,16 @@ namespace Travlexer.WindowsPhone.Views
 {
 	public partial class MapView
 	{
+		#region Constants
+
+		/// <summary>
+		/// A fixed path to save the screen shot when the capture screen button is pressed.
+		/// </summary>
+		private const string PathScreenCapture = "Travlexer.jpg";
+
+		#endregion
+
+
 		#region Private Members
 
 		/// <summary>
@@ -110,7 +123,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -139,6 +152,35 @@ namespace Travlexer.WindowsPhone.Views
 			SearchBox.PopulateComplete();
 		}
 
+		/// <summary>
+		/// Tries to capture and save the current screen to the media library.
+		/// </summary>
+		private void OnCaptureScreen(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				var bmp = new WriteableBitmap(Map, null);
+				using (var ms = new MemoryStream())
+				{
+					bmp.SaveJpeg(ms, (int)ActualWidth, (int)ActualHeight, 0, 100);
+					ms.Seek(0, SeekOrigin.Begin);
+
+					var lib = new MediaLibrary();
+					lib.SavePicture(PathScreenCapture, ms);
+				}
+
+				const string messageBoxText = "A screenshot is saved in your media library.";
+				const string caption = "Screenshot Saved";
+				MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
+			}
+			catch
+			{
+				const string messageBoxText = "There was an error saving the screenshot. Please disconnect your phone from the computer or make sure you phone's storage is not full.";
+				const string caption = "Error Saving Screenshot";
+				MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
+			}
+		}
+
 		private void OnCancelMapPan(object sender, MapDragEventArgs e)
 		{
 			e.Handled = true;
@@ -163,7 +205,7 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			var transform = (CompositeTransform) DragPushpin.RenderTransform;
+			var transform = (CompositeTransform)DragPushpin.RenderTransform;
 			transform.TranslateX += e.HorizontalChange;
 			transform.TranslateY += e.VerticalChange;
 		}
@@ -190,7 +232,7 @@ namespace Travlexer.WindowsPhone.Views
 			_context.SelectedPushpin = dragPushpinVm;
 
 			// Reset transformation of the drag cue.
-			var transform = (CompositeTransform) DragPushpin.RenderTransform;
+			var transform = (CompositeTransform)DragPushpin.RenderTransform;
 			transform.TranslateX = 0;
 			transform.TranslateY = 0;
 
@@ -210,8 +252,8 @@ namespace Travlexer.WindowsPhone.Views
 
 		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
 		{
-			var pushpin = (Pushpin) sender;
-			var data = (DataViewModel<Place>) pushpin.DataContext;
+			var pushpin = (Pushpin)sender;
+			var data = (DataViewModel<Place>)pushpin.DataContext;
 			if (data.Data.IsSearchResult)
 			{
 				return;

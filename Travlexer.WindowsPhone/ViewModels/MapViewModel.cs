@@ -91,6 +91,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandStartGeoWatcher = new DelegateCommand(OnStartGeoWatcher);
 			CommandStopGeoWatcher = new DelegateCommand(OnStopGeoWatcher);
 			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
+			CommandZoomIn = new DelegateCommand(() => ZoomLevel++);
+			CommandZoomOut = new DelegateCommand(() => ZoomLevel--);
 
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
@@ -216,7 +218,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			get { return DataContext.MapZoomLevel; }
 			set
 			{
-				if (DataContext.MapZoomLevel.Equals(value))
+				if (value < 1 || value > 20 || DataContext.MapZoomLevel.Equals(value))
 				{
 					return;
 				}
@@ -419,6 +421,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the command that adds a place at the <see cref="CurrentLocation"/>.
 		/// </summary>
 		public DelegateCommand CommandAddCurrentPlace { get; private set; }
+
+		/// <summary>
+		/// Gets the command that zooms in the map.
+		/// </summary>
+		public DelegateCommand CommandZoomIn { get; private set; }
+
+		/// <summary>
+		/// Gets the command that zooms out the map.
+		/// </summary>
+		public DelegateCommand CommandZoomOut { get; private set; }
 
 		#endregion
 

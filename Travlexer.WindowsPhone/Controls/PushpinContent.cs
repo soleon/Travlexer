@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.Infrastructure.Models;
-using Travlexer.WindowsPhone.ViewModels;
 
 namespace Travlexer.WindowsPhone.Controls
 {
@@ -74,7 +73,7 @@ namespace Travlexer.WindowsPhone.Controls
 			Title = pin.Name;
 			Address = pin.FormattedAddress;
 			Icon = pin.Icon;
-			VisualState = PushpinOverlayVisualStates.Expanded;
+			VisualState = ExpansionStates.Expanded;
 #endif
 		}
 
@@ -232,17 +231,17 @@ namespace Travlexer.WindowsPhone.Controls
 
 		#region Public Properties
 
-		public PushpinOverlayVisualStates VisualState
+		public ExpansionStates VisualState
 		{
-			get { return (PushpinOverlayVisualStates) GetValue(VisualStateProperty); }
+			get { return (ExpansionStates) GetValue(VisualStateProperty); }
 			set { SetValue(VisualStateProperty, value); }
 		}
 
 		public static readonly DependencyProperty VisualStateProperty = DependencyProperty.Register(
 			"VisualState",
-			typeof (PushpinOverlayVisualStates),
+			typeof (ExpansionStates),
 			typeof (PushpinContent),
-			new PropertyMetadata(default(PushpinOverlayVisualStates), OnVisualStateChanged));
+			new PropertyMetadata(default(ExpansionStates), OnVisualStateChanged));
 
 		public DataStates WorkingState
 		{
