@@ -8,8 +8,8 @@ namespace Codify.Controls.Maps
 	{
 		#region Private Members
 
-		const int XModulus = 2;
-		const int YModulus = 2;
+		private const int XModulus = 2;
+		private const int YModulus = 2;
 		private static readonly string[][] _subDomains = new[] { new[] { "0", "2" }, new[] { "1", "3" } };
 
 		private static readonly Dictionary<GoogleMapsLayer, string> _layersMapping = new Dictionary<GoogleMapsLayer, string>
@@ -44,7 +44,38 @@ namespace Codify.Controls.Maps
 		{
 			var subDomain = _subDomains[x % XModulus][y % YModulus];
 			var layer = _layersMapping[Layer];
+
+			// NOTE: the commented out code is for when "isostore" schema is competible with the map control in future.
+			// So that offline caching is possible.
+
+			//var name = string.Format("tile_{0}_{1}_{2}_{3}", layer, x, y, zoomLevel);
+			//using (var store = IsolatedStorageFile.GetUserStoreForApplication())
+			//{
+			//    if (store.FileExists(name))
+			//    {
+			//        return new Uri("isostore:/" + name);
+			//    }
+			//}
+
 			var uri = new Uri("http://mt" + subDomain + ".google.com/vt/lyrs=" + layer + "&x=" + x + "&y=" + y + "&z=" + zoomLevel);
+
+			//var c = new WebClient();
+			//c.OpenReadCompleted += (s, e) =>
+			//{
+			//    using (var stream = e.Result)
+			//    {
+			//        var bytes = new byte[stream.Length];
+			//        e.Result.Read(bytes, 0, bytes.Length);
+			//        using (var store = IsolatedStorageFile.GetUserStoreForApplication())
+			//        {
+			//            using (var fileStream = store.CreateFile(name))
+			//            {
+			//                fileStream.Write(bytes, 0, bytes.Length);
+			//            }
+			//        }
+			//    }
+			//};
+			//c.OpenReadAsync(uri);
 			return uri;
 		}
 
