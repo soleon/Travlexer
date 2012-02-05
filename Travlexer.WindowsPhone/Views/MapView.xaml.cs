@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+using Codify;
 using Codify.Extensions;
 using Codify.ViewModels;
 using Microsoft.Phone.Controls;
@@ -68,8 +68,12 @@ namespace Travlexer.WindowsPhone.Views
 			if (_context != null)
 			{
 				_context.SearchSucceeded += OnSearchSucceeded;
-				_context.VisualStateChanged += GoToState;
 				_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
+				_context.VisualState.ValueChanged += (old, @new) => GoToVisualState(@new);
+				_context.ToolbarState.ValueChanged += (old, @new) => GoToToolbarState(@new);
+
+				GoToVisualState(_context.VisualState.Value, false);
+				GoToToolbarState(_context.ToolbarState.Value, false);
 			}
 
 #if DEBUG
@@ -77,12 +81,9 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			((Grid)Content).Children.Add(_debugText = new ShadowText { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 } });
+			((Grid) Content).Children.Add(_debugText = new ShadowText { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 } });
 
-			Loaded += (s, e) =>
-			{
-				_debugText.Text = "Start Up Time: " + (DateTime.Now - Globals.StartUpTime).TotalMilliseconds / 1000;
-			};
+			Loaded += (s, e) => { _debugText.Text = "Start Up Time: " + (DateTime.Now - Globals.StartUpTime).TotalMilliseconds / 1000; };
 #endif
 		}
 
@@ -130,7 +131,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -145,7 +146,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		protected override void OnBackKeyPress(CancelEventArgs e)
 		{
-			if (_context.VisualState != MapViewModel.VisualStates.Default)
+			if (_context.VisualState.Value != MapViewModel.VisualStates.Default)
 			{
 				e.Cancel = true;
 			}
@@ -169,7 +170,7 @@ namespace Travlexer.WindowsPhone.Views
 				var bmp = new WriteableBitmap(Map, null);
 				using (var ms = new MemoryStream())
 				{
-					bmp.SaveJpeg(ms, (int)ActualWidth, (int)ActualHeight, 0, 100);
+					bmp.SaveJpeg(ms, (int) ActualWidth, (int) ActualHeight, 0, 100);
 					ms.Seek(0, SeekOrigin.Begin);
 
 					var lib = new MediaLibrary();
@@ -212,7 +213,7 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			var transform = (CompositeTransform) DragPushpin.RenderTransform;
 			transform.TranslateX += e.HorizontalChange;
 			transform.TranslateY += e.VerticalChange;
 		}
@@ -239,7 +240,7 @@ namespace Travlexer.WindowsPhone.Views
 			_context.SelectedPushpin = dragPushpinVm;
 
 			// Reset transformation of the drag cue.
-			var transform = (CompositeTransform)DragPushpin.RenderTransform;
+			var transform = (CompositeTransform) DragPushpin.RenderTransform;
 			transform.TranslateX = 0;
 			transform.TranslateY = 0;
 
@@ -259,8 +260,8 @@ namespace Travlexer.WindowsPhone.Views
 
 		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
 		{
-			var pushpin = (Pushpin)sender;
-			var data = (DataViewModel<Place>)pushpin.DataContext;
+			var pushpin = (Pushpin) sender;
+			var data = (DataViewModel<Place>) pushpin.DataContext;
 			if (data.Data.IsSearchResult)
 			{
 				return;
@@ -283,9 +284,8 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Sets the <see cref="MapViewModel.VisualState"/> and focuses on the map control if the state is Default.
 		/// </summary>
-		private void GoToState(MapViewModel.VisualStates state)
+		private void GoToVisualState(MapViewModel.VisualStates state, bool useTransition = true)
 		{
-			_context.VisualState = state;
 			switch (state)
 			{
 				case MapViewModel.VisualStates.Default:
@@ -303,7 +303,15 @@ namespace Travlexer.WindowsPhone.Views
 					_appBar.IsVisible = false;
 					break;
 			}
-			VisualStateManager.GoToState(this, state.ToString(), true);
+			VisualStateManager.GoToState(this, state.ToString(), useTransition);
+		}
+
+		/// <summary>
+		/// Sets the state of to toolbar.
+		/// </summary>
+		private void GoToToolbarState(ExpansionStates state, bool useTransition = true)
+		{
+			VisualStateManager.GoToState(this, state.ToString(), useTransition);
 		}
 
 		#endregion

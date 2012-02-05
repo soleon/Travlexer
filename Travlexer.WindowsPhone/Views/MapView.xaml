@@ -2,13 +2,16 @@
 							xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 							xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
+							xmlns:CodifyMaps="clr-namespace:Codify.Controls.Maps;assembly=Codify.Controls.Maps"
 							xmlns:Collections="clr-namespace:Codify.Collections;assembly=Codify"
 							xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
+							xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 							xmlns:DependencyShell="clr-namespace:Codify.DependencyShell;assembly=Codify"
 							xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 							xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
+							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
 							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
@@ -16,9 +19,6 @@
 							xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
 							xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
-							xmlns:CodifyMaps="clr-namespace:Codify.Controls.Maps;assembly=Codify.Controls.Maps"
-							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
-							xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
 							Style="{StaticResource PageDefault}"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -62,15 +62,16 @@
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
 											 To="1" />
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-														   Storyboard.TargetName="SelectedPushpinLayer">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinLayer"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
@@ -86,15 +87,16 @@
 											 Storyboard.TargetProperty="(UIElement.Opacity)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}" />
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-														   Storyboard.TargetName="SelectedPushpinLayer">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinLayer"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
@@ -161,7 +163,8 @@
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
@@ -210,15 +213,16 @@
 										 Duration="0"
 										 To="1"
 										 d:IsOptimized="True" />
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-													   Storyboard.TargetName="SelectedPushpinLayer">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinLayer"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Collapsed</Visibility>
@@ -242,7 +246,8 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Toolbar">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Collapsed</Visibility>
@@ -257,70 +262,68 @@
 					<VisualTransition GeneratedDuration="0"
 									  To="Expanded">
 						<Storyboard>
-							<DoubleAnimation Duration="0:0:0.3" To="469" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandButton">
-								<DiscreteObjectKeyFrame KeyTime="0">
-									<DiscreteObjectKeyFrame.Value>
-										<Visibility>Collapsed</Visibility>
-									</DiscreteObjectKeyFrame.Value>
-								</DiscreteObjectKeyFrame>
-							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandedPanel">
+							<DoubleAnimation Storyboard.TargetName="Toolbar"
+											 Storyboard.TargetProperty="(FrameworkElement.Height)"
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}"
+											 To="469" />
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
+							<DoubleAnimation Storyboard.TargetName="ExpandButton"
+											 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
+											 Duration="0:0:0.3"
+											 To="180" />
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition From="Expanded"
 									  GeneratedDuration="0"
 									  To="Collapsed">
 						<Storyboard>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-														   Storyboard.TargetName="ExpandButton">
-								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
-									<DiscreteObjectKeyFrame.Value>
-										<Visibility>Visible</Visibility>
-									</DiscreteObjectKeyFrame.Value>
-								</DiscreteObjectKeyFrame>
-							</ObjectAnimationUsingKeyFrames>
-							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandedPanel">
+							<DoubleAnimation Storyboard.TargetName="Toolbar"
+											 Storyboard.TargetProperty="(FrameworkElement.Height)"
+											 Duration="0:0:0.3"
+											 EasingFunction="{StaticResource EasingQuinticOut}" />
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
+														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Collapsed</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<DoubleAnimation Duration="0:0:0.3" To="180" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="CollapseButton"/>
+							<DoubleAnimation Storyboard.TargetName="ExpandButton"
+											 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
+											 Duration="0:0:0.3" />
 						</Storyboard>
 					</VisualTransition>
 				</VisualStateGroup.Transitions>
-				<VisualState x:Name="Collapsed" >
-					<Storyboard>
-						<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="CollapseButton" d:IsOptimized="True"/>
-					</Storyboard>
-				</VisualState>
+				<VisualState x:Name="Collapsed" />
 				<VisualState x:Name="Expanded">
 					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-													   Storyboard.TargetName="ExpandButton">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Collapsed</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
-						<DoubleAnimation Duration="0" To="469" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" d:IsOptimized="True"/>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandedPanel">
+						<DoubleAnimation Storyboard.TargetName="Toolbar"
+										 Storyboard.TargetProperty="(FrameworkElement.Height)"
+										 Duration="0"
+										 To="469"
+										 d:IsOptimized="True" />
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Storyboard.TargetName="ExpandButton"
+										 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
+										 Duration="0"
+										 To="180"
+										 d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -371,12 +374,12 @@
 					<CodifyMaps:GoogleMapsTileSource Layer="TransitOverlay" />
 				</Maps:MapTileLayer.TileSources>
 			</Maps:MapTileLayer>
-			<Maps:Pushpin Location="{Binding CurrentLocation}"
-						  Background="Black"
+			<Maps:Pushpin Background="Black"
+						  IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
+						  Location="{Binding CurrentLocation}"
 						  PositionOrigin="Center"
-						  Visibility="{Binding CurrentLocation, TargetNullValue=Collapsed}"
 						  Template="{x:Null}"
-						  IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}">
+						  Visibility="{Binding CurrentLocation, TargetNullValue=Collapsed}">
 				<i:Interaction.Triggers>
 					<Triggers:EventTrigger EventName="Tap"
 										   IsHandled="True">
@@ -384,15 +387,15 @@
 					</Triggers:EventTrigger>
 				</i:Interaction.Triggers>
 				<Grid>
-					<Ellipse Width="40"
-							 Height="40"
+					<Ellipse Height="40"
+							 Width="40"
 							 Fill="Transparent" />
-					<Icons:CurrentLocation Foreground="Black"
-										   Background="Transparent"
-										   VerticalAlignment="Center"
-										   HorizontalAlignment="Center"
+					<Icons:CurrentLocation Height="30"
 										   Width="30"
-										   Height="30" />
+										   Background="Transparent"
+										   Foreground="Black"
+										   HorizontalAlignment="Center"
+										   VerticalAlignment="Center" />
 				</Grid>
 			</Maps:Pushpin>
 			<Maps:MapItemsControl Collections:DelayCollection.ItemsSource="{Binding Pushpins}"
@@ -462,8 +465,8 @@
 												   CommandParameter="{Binding}" />
 						</Triggers:RootTouchTrigger>
 						<i:EventTrigger>
-							<ec:GoToStateAction TargetName="SelectedPushpin"
-												StateName="Drop"
+							<ec:GoToStateAction StateName="Drop"
+												TargetName="SelectedPushpin"
 												UseTransitions="False" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
@@ -491,8 +494,8 @@
 						  Visibility="Collapsed">
 				<i:Interaction.Triggers>
 					<i:EventTrigger>
-						<ec:GoToStateAction TargetObject="{Binding ElementName=DragPushpin}"
-											StateName="Drop"
+						<ec:GoToStateAction StateName="Drop"
+											TargetObject="{Binding ElementName=DragPushpin}"
 											UseTransitions="False" />
 					</i:EventTrigger>
 				</i:Interaction.Triggers>
@@ -505,25 +508,27 @@
 			</Maps:Pushpin>
 		</Maps:Map>
 		<Border x:Name="Toolbar"
-				Background="{StaticResource PhoneChromeBrush}"
-				Opacity="{StaticResource ShellOpacity}"
-				HorizontalAlignment="Left"
-				VerticalAlignment="Center"
+				Height="108"
 				Margin="10,0,0,0"
 				Padding="10"
+				Width="68"
+				Background="{StaticResource PhoneChromeBrush}"
 				CornerRadius="34"
-				Width="68" Height="108">
+				HorizontalAlignment="Left"
+				Opacity="{StaticResource ShellOpacity}"
+				VerticalAlignment="Center">
 			<StackPanel>
-				<Controls:CircleButton Click="OnCaptureScreen"
-									   >
+				<Controls:CircleButton Click="OnCaptureScreen">
 					<Icons:Camera />
 				</Controls:CircleButton>
-				<Button x:Name="ExpandButton"
-						Style="{StaticResource EmptyButton}"
-						>
+				<Button Style="{StaticResource EmptyButton}"
+						x:Name="ExpandButton">
+					<Button.Projection>
+						<PlaneProjection />
+					</Button.Projection>
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Click">
-							<ec:GoToStateAction StateName="Expanded" />
+							<i:InvokeCommandAction Command="{Binding CommandToggleToolbar, Mode=OneTime}" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 					<Icons:DownArrow Height="40"
@@ -533,52 +538,50 @@
 						</Icons:DownArrow.Projection>
 					</Icons:DownArrow>
 				</Button>
-				<StackPanel x:Name="ExpandedPanel" Orientation="Vertical" Visibility="Collapsed">
-					<Button x:Name="CollapseButton"
-						Style="{StaticResource EmptyButton}">
-						<Button.Projection>
-							<PlaneProjection/>
-						</Button.Projection>
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="Click">
-								<ec:GoToStateAction StateName="Collapsed" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-						<Icons:UpArrow Height="40"
-							Width="20" />
-					</Button>
+				<StackPanel x:Name="ExpandedPanel"
+							Orientation="Vertical"
+							Visibility="Collapsed">
 					<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}">
 						<Icons:Plus />
 					</Controls:CircleButton>
-					<Controls:CircleButton Command="{Binding CommandZoomOut, Mode=OneTime}" Margin="0,10,0,0">
+					<Controls:CircleButton Margin="0,10,0,0"
+										   Command="{Binding CommandZoomOut, Mode=OneTime}">
 						<Icons:Minus />
 					</Controls:CircleButton>
-					<Icons:Ellipsis Height="35"/>
-					<Controls:CircleButton Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
-						Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="street">
+					<Icons:Ellipsis Height="35" />
+					<Controls:CircleButton Caption="street"
+										   Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
+										   Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
 						<Controls:CircleButton.Background>
-							<ImageBrush Stretch="None" ImageSource="/Assets/StreetView.png"/>
+							<ImageBrush ImageSource="/Assets/StreetView.png"
+										Stretch="None" />
 						</Controls:CircleButton.Background>
 					</Controls:CircleButton>
-					<Controls:CircleButton Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
-						Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="satellite">
+					<Controls:CircleButton Caption="satellite"
+										   Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
+										   Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
 						<Controls:CircleButton.Background>
-							<ImageBrush Stretch="None" ImageSource="/Assets/SatelliteView.png"/>
+							<ImageBrush ImageSource="/Assets/SatelliteView.png"
+										Stretch="None" />
 						</Controls:CircleButton.Background>
 					</Controls:CircleButton>
-					<Controls:CircleToggleButton Caption="traffic"
-						Command="{Binding CommandToggleMapOverlay, Mode=OneTime}" IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}" Margin="0,10,0,0">
+					<Controls:CircleToggleButton Margin="0,10,0,0"
+												 Caption="traffic"
+												 Command="{Binding CommandToggleMapOverlay, Mode=OneTime}"
+												 IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TrafficOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Icons:Traffic/>
+						<Icons:Traffic />
 					</Controls:CircleToggleButton>
-					<Controls:CircleToggleButton Caption="transport"
-						Command="{Binding CommandToggleMapOverlay, Mode=OneTime}" IsChecked="{Binding IsTransitLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}" Margin="0,10,0,0">
+					<Controls:CircleToggleButton Margin="0,10,0,0"
+												 Caption="transport"
+												 Command="{Binding CommandToggleMapOverlay, Mode=OneTime}"
+												 IsChecked="{Binding IsTransitLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TransitOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Icons:Train/>
+						<Icons:Train />
 					</Controls:CircleToggleButton>
 				</StackPanel>
 			</StackPanel>
@@ -639,8 +642,7 @@
 				<Button Grid.Column="1"
 						Command="{Binding CommandSearch, Mode=OneTime}"
 						IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
-						Template="{x:Null}"
-						>
+						Template="{x:Null}">
 					<Border Height="52"
 							Width="52"
 							Background="{StaticResource PhoneForegroundBrush}">

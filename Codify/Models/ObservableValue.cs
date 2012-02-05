@@ -5,6 +5,26 @@ namespace Codify.Models
 {
 	public class ObservableValue<T>
 	{
+		#region Constructors
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ObservableValue{T}"/> class.
+		/// </summary>
+		public ObservableValue() {}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ObservableValue{T}"/> class.
+		/// </summary>
+		/// <param name="defaultValue">The default value for <see cref="Value"/> property.</param>
+		/// <remarks>Supplying the default value does not raise the <see cref="ValueChanged"/> event.</remarks>
+		public ObservableValue(T defaultValue)
+		{
+			_value = defaultValue;
+		}
+
+		#endregion
+
+
 		#region Public Events
 
 		public event Action<T, T> ValueChanged;

@@ -369,8 +369,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			StorageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
 
 			// Save map overlays.
-			var overlayBytes = Serializer.Serialize(MapOverlays.ToArray());
-			StorageProvider.SaveSetting(MapOverlayProperty, overlayBytes);
+			var overlays = MapOverlays.ToArray();
+			StorageProvider.SaveSetting(MapOverlayProperty, overlays);
 
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
@@ -429,9 +429,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			}
 
 			// Load map overlays.
-			byte[] overlayBytes;
 			GoogleMapsLayer[] overlays;
-			if (StorageProvider.TryGetSetting(MapOverlayProperty, out overlayBytes) && Serializer.TryDeserialize(overlayBytes, out overlays))
+			if (StorageProvider.TryGetSetting(MapOverlayProperty, out overlays))
 			{
 				overlays.ForEach(MapOverlays.Add);
 			}

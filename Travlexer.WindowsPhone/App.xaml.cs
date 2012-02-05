@@ -69,7 +69,11 @@ namespace Travlexer.WindowsPhone
 
 		private void OnApplicationLaunching(object sender, LaunchingEventArgs e)
 		{
-			UIThread.RunWorker(DataContext.LoadContext);
+			UIThread.RunWorker(() =>
+			{
+				DataContext.LoadContext();
+				ApplicationContext.LoadContext();
+			});
 		}
 
 		private void OnApplicationActivated(object sender, ActivatedEventArgs e)
@@ -78,17 +82,23 @@ namespace Travlexer.WindowsPhone
 			{
 				return;
 			}
-			UIThread.RunWorker(DataContext.LoadContext);
+			UIThread.RunWorker(() =>
+			{
+				DataContext.LoadContext();
+				ApplicationContext.LoadContext();
+			});
 		}
 
 		private void OnApplicationDeactivated(object sender, DeactivatedEventArgs e)
 		{
 			DataContext.SaveContext();
+			ApplicationContext.SaveContext();
 		}
 
 		private void OnApplicationClosing(object sender, ClosingEventArgs e)
 		{
 			DataContext.SaveContext();
+			ApplicationContext.SaveContext();
 		}
 
 		private static void OnRootFrameNavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -98,15 +108,9 @@ namespace Travlexer.WindowsPhone
 				// A navigation has failed; break into the debugger
 				Debugger.Break();
 			}
-			else
-			{
-#if DEBUG
-				MessageBox.Show(e.Exception.Message, "Navigation Failed", MessageBoxButton.OK);
-#endif
-			}
 		}
 
-		private static void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
+		private void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
 		{
 			if (Debugger.IsAttached)
 			{
@@ -116,7 +120,11 @@ namespace Travlexer.WindowsPhone
 			else
 			{
 #if DEBUG
-				MessageBox.Show(e.ExceptionObject.Message, "Unhandled Exception", MessageBoxButton.OK);
+				var n = Environment.NewLine;
+				var debug =
+					e.ExceptionObject.Message + n + n +
+					RootFrame.CurrentSource + n + e.ExceptionObject.StackTrace;
+				MessageBox.Show(debug);
 #endif
 			}
 		}

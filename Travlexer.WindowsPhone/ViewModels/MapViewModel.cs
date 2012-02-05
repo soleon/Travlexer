@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
-using System.Linq;
 using System.Windows;
 using Codify;
 using Codify.Collections;
 using Codify.Commands;
 using Codify.Controls.Maps;
 using Codify.Extensions;
+using Codify.Models;
 using Codify.Services;
 using Codify.Threading;
 using Codify.ViewModels;
-using Microsoft.Phone.Controls.Maps;
-using Microsoft.Phone.Controls.Maps.Core;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Views;
@@ -54,11 +52,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public event Action<IList<Place>> SearchSucceeded;
 
 		/// <summary>
-		/// Occurs when <see cref="VisualState"/> is changed.
-		/// </summary>
-		public event Action<VisualStates> VisualStateChanged;
-
-		/// <summary>
 		/// Occurs when <see cref="Suggestions"/> are retrieved from service client.
 		/// </summary>
 		public event Action SuggestionsRetrieved;
@@ -70,15 +63,20 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		public MapViewModel()
 		{
+			// Get values from global context.
 			Center = DataContext.MapCenter;
 			ZoomLevel = DataContext.MapZoomLevel;
 			SearchInput = DataContext.SearchInput;
 			IsTrackingCurrentLocation = DataContext.IsTrackingCurrentLocation;
+			ToolbarState = ApplicationContext.ToolbarState;
+			VisualState = new ObservableValue<VisualStates>();
 
+			// Initialise collections.
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
 			Pushpins = new AdaptedObservableCollection<Place, DataViewModel<Place>>(p => new DataViewModel<Place>(p, this), DataContext.Places);
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 
+			// Initialise commands.
 			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
 			CommandSearch = new DelegateCommand(OnSearch);
 			CommandAddPlace = new DelegateCommand<Location>(OnAddPlace);
@@ -100,19 +98,25 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandShowStreetLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.Street);
 			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.SatelliteHybrid);
 			CommandToggleMapOverlay = new DelegateCommand<GoogleMapsLayer>(DataContext.ToggleMapOverlay);
+			CommandToggleToolbar = new DelegateCommand(ApplicationContext.ToggleToolbarState);
 
+			// Initialise geo-coordinate watcher.
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
 
+			// Handle necessary events.
 			DataContext.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
 			DataContext.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
 			ApplicationContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
+			VisualState.ValueChanged += OnVisualStateChanged;
 
+			// Automatically track current position at first run.
 			if (DataContext.IsFirstRun)
 			{
 				IsTrackingCurrentLocation = true;
 			}
 
+			// Try centering on current location if available.
 			if (IsTrackingCurrentLocation)
 			{
 				if (!_geoWatcher.Position.Location.IsUnknown)
@@ -147,7 +151,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 				if (value == null)
 				{
-					VisualState = VisualStates.Default;
+					VisualState.Value = VisualStates.Default;
 				}
 				else
 				{
@@ -158,8 +162,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					{
 						OnUpdatePlace(value);
 					}
-					VisualState = VisualStates.PushpinSelected;
-
+					VisualState.Value = VisualStates.PushpinSelected;
 				}
 			}
 		}
@@ -181,12 +184,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 				if (value == null)
 				{
-					VisualState = VisualStates.Default;
+					VisualState.Value = VisualStates.Default;
 				}
 				else
 				{
 					SelectedPushpin = null;
-					VisualState = VisualStates.Drag;
+					VisualState.Value = VisualStates.Drag;
 					IsTrackingCurrentLocation = false;
 				}
 			}
@@ -289,28 +292,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private const string SearchInputProperty = "SearchInput";
 
 		/// <summary>
-		/// Gets or sets the visual state for the view.
+		/// Gets the visual state of the view.
 		/// </summary>
-		public VisualStates VisualState
-		{
-			get { return _visualState; }
-			set
-			{
-				if (_visualState == value)
-				{
-					return;
-				}
-				var old = _visualState;
-				_visualState = value;
-				if (old == VisualStates.Drag)
-				{
-					DragPushpin = null;
-				}
-				VisualStateChanged.ExecuteIfNotNull(value);
-			}
-		}
-
-		private VisualStates _visualState;
+		public ObservableValue<VisualStates> VisualState { get; private set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the map is tracking current location.
@@ -352,26 +336,47 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the visibility of street layer.
 		/// </summary>
-		public Visibility IsStreetLayerVisible { get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.Street ? Visibility.Visible : Visibility.Collapsed; } }
+		public Visibility IsStreetLayerVisible
+		{
+			get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.Street ? Visibility.Visible : Visibility.Collapsed; }
+		}
+
 		private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
 
 		/// <summary>
 		/// Gets the visibility of satellite hybrid layer.
 		/// </summary>
-		public Visibility IsSatelliteHybridLayerVisible { get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; } }
+		public Visibility IsSatelliteHybridLayerVisible
+		{
+			get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
+		}
+
 		private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
 
 		/// <summary>
 		/// Gets the visibility of traffic layer.
 		/// </summary>
-		public Visibility IsTrafficLayerVisible { get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; } }
+		public Visibility IsTrafficLayerVisible
+		{
+			get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+		}
+
 		private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
 
 		/// <summary>
 		/// Gets the visibility of transit layer.
 		/// </summary>
-		public Visibility IsTransitLayerVisible { get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; } }
+		public Visibility IsTransitLayerVisible
+		{
+			get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+		}
+
 		private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
+
+		/// <summary>
+		/// Gets the state of the toolbar.
+		/// </summary>
+		public ObservableValue<ExpansionStates> ToolbarState { get; private set; }
 
 		#endregion
 
@@ -483,6 +488,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public DelegateCommand<GoogleMapsLayer> CommandToggleMapOverlay { get; private set; }
 
+		/// <summary>
+		/// Gets the command that toggles the <see cref="ToolbarState"/>.
+		/// </summary>
+		public DelegateCommand CommandToggleToolbar { get; private set; }
+
 		#endregion
 
 
@@ -510,7 +520,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnGoToDefaultState()
 		{
 			DataContext.CancelGetSuggestions();
-			VisualState = VisualStates.Default;
+			VisualState.Value = VisualStates.Default;
 		}
 
 		/// <summary>
@@ -585,7 +595,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnSearch()
 		{
 			ApplicationContext.IsBusy.Value = true;
-			VisualState = VisualStates.Default;
+			VisualState.Value = VisualStates.Default;
 			DataContext.CancelGetSuggestions();
 			DataContext.Search(Center, SearchInput, callback =>
 			{
@@ -608,7 +618,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnGetSuggestions()
 		{
 			// Do not get suggestion visual state is not Search.
-			if (VisualState != VisualStates.Search)
+			if (VisualState.Value != VisualStates.Search)
 			{
 				return;
 			}
@@ -635,7 +645,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnSuggestionSelected()
 		{
 			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
-			UIThread.InvokeBack(() => VisualState = VisualStates.Default);
+			UIThread.InvokeBack(() => VisualState.Value = VisualStates.Default);
 
 			ApplicationContext.IsBusy.Value = true;
 			DataContext.GetPlaceDetails(SelectedSuggestion.Reference, args =>
@@ -703,7 +713,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnGoToSearchState()
 		{
-			VisualState = VisualStates.Search;
+			VisualState.Value = VisualStates.Search;
 		}
 
 		/// <summary>
@@ -723,13 +733,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 			DataContext.GetPlaceDetails(pushpin.Data);
 		}
 
-		protected override void OnDispose()
+		/// <summary>
+		/// Called when the value of <see cref="VisualState"/> is chagned.
+		/// </summary>
+		private void OnVisualStateChanged(VisualStates old, VisualStates @new)
 		{
-			Pushpins.CollectionChanged -= OnPushpinsCollectionChanged;
-			Pushpins = null;
-			SelectedPushpin = null;
-
-			base.OnDispose();
+			if (old == VisualStates.Drag)
+			{
+				DragPushpin = null;
+			}
 		}
 
 		#endregion

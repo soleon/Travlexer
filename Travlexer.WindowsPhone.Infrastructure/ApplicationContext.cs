@@ -1,4 +1,6 @@
+using Codify;
 using Codify.Models;
+using Codify.Storage;
 
 namespace Travlexer.WindowsPhone.Infrastructure
 {
@@ -21,6 +23,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		static ApplicationContext()
 		{
+			ToolbarState = new ObservableValue<ExpansionStates>();
 			IsBusy = new ObservableValue<bool> { Value = false };
 			IsBusy.ValueChanging += OnIsLoadingChanging;
 		}
@@ -30,10 +33,63 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
 		#region Public Properties
 
+
+		/// <summary>
+		/// Gets or sets the storage provider for saving and loading data.
+		/// </summary>
+		public static IStorage StorageProvider
+		{
+			get { return _storageProvider ?? (_storageProvider = new IsolatedStorage()); }
+			set { _storageProvider = value; }
+		}
+
+		private static IStorage _storageProvider;
+
 		/// <summary>
 		/// Gets the observable value that indicates whether this data context is doing any loading.
 		/// </summary>
 		public static ObservableValue<bool> IsBusy { get; private set; }
+
+		/// <summary>
+		/// Gets the state of the toolbar.
+		/// </summary>
+		public static ObservableValue<ExpansionStates> ToolbarState { get; private set; }
+		private const string ToolbarStateProperty = "ToolbarState";
+
+		#endregion
+
+
+		#region Public Methods
+
+		/// <summary>
+		/// Toggles the state of the toolbar.
+		/// </summary>
+		public static void ToggleToolbarState()
+		{
+			ToolbarState.Value = ToolbarState.Value == ExpansionStates.Collapsed ? ExpansionStates.Expanded : ExpansionStates.Collapsed;
+		}
+
+		/// <summary>
+		/// Saves the data context to the storage provided by <see cref="StorageProvider"/>.
+		/// </summary>
+		public static void SaveContext()
+		{
+			// Save toolbar state.
+			StorageProvider.SaveSetting(ToolbarStateProperty, ToolbarState.Value);
+		}
+
+		/// <summary>
+		/// Loads the data context from the storage provided by <see cref="StorageProvider"/>.
+		/// </summary>
+		public static void LoadContext()
+		{
+			// Load toolbar state.
+			ExpansionStates toolbarState;
+			if (StorageProvider.TryGetSetting(ToolbarStateProperty, out toolbarState))
+			{
+				ToolbarState.Value = toolbarState;
+			}
+		}
 
 		#endregion
 
