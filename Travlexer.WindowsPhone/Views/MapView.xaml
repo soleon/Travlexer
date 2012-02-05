@@ -265,7 +265,7 @@
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CollapseButton">
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandedPanel">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
@@ -279,36 +279,32 @@
 									  To="Collapsed">
 						<Storyboard>
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-														   Storyboard.TargetName="CollapseButton">
-								<DiscreteObjectKeyFrame KeyTime="0">
-									<DiscreteObjectKeyFrame.Value>
-										<Visibility>Collapsed</Visibility>
-									</DiscreteObjectKeyFrame.Value>
-								</DiscreteObjectKeyFrame>
-							</ObjectAnimationUsingKeyFrames>
-							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
 														   Storyboard.TargetName="ExpandButton">
-								<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
 									<DiscreteObjectKeyFrame.Value>
 										<Visibility>Visible</Visibility>
 									</DiscreteObjectKeyFrame.Value>
 								</DiscreteObjectKeyFrame>
 							</ObjectAnimationUsingKeyFrames>
 							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandedPanel">
+								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<DoubleAnimation Duration="0:0:0.3" To="180" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="CollapseButton"/>
 						</Storyboard>
 					</VisualTransition>
 				</VisualStateGroup.Transitions>
-				<VisualState x:Name="Collapsed" />
+				<VisualState x:Name="Collapsed" >
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="CollapseButton" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
 				<VisualState x:Name="Expanded">
 					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-													   Storyboard.TargetName="CollapseButton">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Visibility>Visible</Visibility>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
 													   Storyboard.TargetName="ExpandButton">
 							<DiscreteObjectKeyFrame KeyTime="0">
@@ -318,6 +314,13 @@
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
 						<DoubleAnimation Duration="0" To="469" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandedPanel">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -530,54 +533,54 @@
 						</Icons:DownArrow.Projection>
 					</Icons:DownArrow>
 				</Button>
-				<Button x:Name="CollapseButton"
-						Style="{StaticResource EmptyButton}"
-						Visibility="Collapsed"
-						>
-					<i:Interaction.Triggers>
-						<i:EventTrigger EventName="Click">
-							<ec:GoToStateAction StateName="Collapsed" />
-						</i:EventTrigger>
-					</i:Interaction.Triggers>
-					<Icons:UpArrow Height="40"
-								   Width="20" />
-				</Button>
-				<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}"
-									   >
-					<Icons:Plus />
-				</Controls:CircleButton>
-				<Controls:CircleButton Command="{Binding CommandZoomOut, Mode=OneTime}"
-									    Margin="0,10,0,0">
-					<Icons:Minus />
-				</Controls:CircleButton>
-				<Icons:Ellipsis Height="35"/>
-				<Controls:CircleButton Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
-									    Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="street">
-					<Controls:CircleButton.Background>
-						<ImageBrush Stretch="None" ImageSource="/Assets/StreetView.png"/>
-					</Controls:CircleButton.Background>
-				</Controls:CircleButton>
-				<Controls:CircleButton Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
-									    Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="satellite">
-					<Controls:CircleButton.Background>
-						<ImageBrush Stretch="None" ImageSource="/Assets/SatelliteView.png"/>
-					</Controls:CircleButton.Background>
-				</Controls:CircleButton>
-				<Controls:CircleToggleButton Caption="traffic"
-											 Margin="0,10,0,0"
-											 Command="{Binding CommandToggleMapOverlay, Mode=OneTime}" IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
-					<Controls:CircleToggleButton.CommandParameter>
-						<CodifyMaps:GoogleMapsLayer>TrafficOverlay</CodifyMaps:GoogleMapsLayer>
-					</Controls:CircleToggleButton.CommandParameter>
-					<Icons:Traffic/>
-				</Controls:CircleToggleButton>
-				<Controls:CircleToggleButton Caption="transport" Margin="0,10,0,0"
-											 Command="{Binding CommandToggleMapOverlay,Mode=OneTime}" IsChecked="{Binding IsTransitLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
-					<Controls:CircleToggleButton.CommandParameter>
-						<CodifyMaps:GoogleMapsLayer>TransitOverlay</CodifyMaps:GoogleMapsLayer>
-					</Controls:CircleToggleButton.CommandParameter>
-					<Icons:Train/>
-				</Controls:CircleToggleButton>
+				<StackPanel x:Name="ExpandedPanel" Orientation="Vertical" Visibility="Collapsed">
+					<Button x:Name="CollapseButton"
+						Style="{StaticResource EmptyButton}">
+						<Button.Projection>
+							<PlaneProjection/>
+						</Button.Projection>
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="Click">
+								<ec:GoToStateAction StateName="Collapsed" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+						<Icons:UpArrow Height="40"
+							Width="20" />
+					</Button>
+					<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}">
+						<Icons:Plus />
+					</Controls:CircleButton>
+					<Controls:CircleButton Command="{Binding CommandZoomOut, Mode=OneTime}" Margin="0,10,0,0">
+						<Icons:Minus />
+					</Controls:CircleButton>
+					<Icons:Ellipsis Height="35"/>
+					<Controls:CircleButton Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
+						Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="street">
+						<Controls:CircleButton.Background>
+							<ImageBrush Stretch="None" ImageSource="/Assets/StreetView.png"/>
+						</Controls:CircleButton.Background>
+					</Controls:CircleButton>
+					<Controls:CircleButton Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
+						Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="satellite">
+						<Controls:CircleButton.Background>
+							<ImageBrush Stretch="None" ImageSource="/Assets/SatelliteView.png"/>
+						</Controls:CircleButton.Background>
+					</Controls:CircleButton>
+					<Controls:CircleToggleButton Caption="traffic"
+						Command="{Binding CommandToggleMapOverlay, Mode=OneTime}" IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}" Margin="0,10,0,0">
+						<Controls:CircleToggleButton.CommandParameter>
+							<CodifyMaps:GoogleMapsLayer>TrafficOverlay</CodifyMaps:GoogleMapsLayer>
+						</Controls:CircleToggleButton.CommandParameter>
+						<Icons:Traffic/>
+					</Controls:CircleToggleButton>
+					<Controls:CircleToggleButton Caption="transport"
+						Command="{Binding CommandToggleMapOverlay, Mode=OneTime}" IsChecked="{Binding IsTransitLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}" Margin="0,10,0,0">
+						<Controls:CircleToggleButton.CommandParameter>
+							<CodifyMaps:GoogleMapsLayer>TransitOverlay</CodifyMaps:GoogleMapsLayer>
+						</Controls:CircleToggleButton.CommandParameter>
+						<Icons:Train/>
+					</Controls:CircleToggleButton>
+				</StackPanel>
 			</StackPanel>
 		</Border>
 		<Grid x:Name="SearchPanel"

@@ -38,5 +38,10 @@ namespace Travlexer.WindowsPhone
 		}
 
 		#endregion
+
+
+#if DEBUG
+		public static DateTime StartUpTime;
+#endif
 	}
 }

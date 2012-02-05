@@ -103,18 +103,24 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
-			if (DataContext.IsTrackingCurrentLocation)
-			{
-				if (!_geoWatcher.Position.Location.IsUnknown)
-				{
-					Center = _geoWatcher.Position.Location;
-				}
-				_geoWatcher.Start();
-			}
 
 			DataContext.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
 			DataContext.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
 			ApplicationContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
+
+			if (DataContext.IsFirstRun)
+			{
+				IsTrackingCurrentLocation = true;
+			}
+
+			if (IsTrackingCurrentLocation)
+			{
+				if (!_geoWatcher.Position.Location.IsUnknown)
+				{
+					Center = _geoWatcher.Position.Location;
+					ZoomLevel = 15;
+				}
+			}
 		}
 
 		#endregion
@@ -148,7 +154,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					DragPushpin = null;
 					var place = value.Data;
 					Center = place.Location;
-					if (place.DataState != DataStates.Loaded)
+					if (place.DataState != DataStates.Finished)
 					{
 						OnUpdatePlace(value);
 					}
@@ -322,10 +328,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				if (value && CurrentLocation != null && !CurrentLocation.IsUnknown)
 				{
 					Center = CurrentLocation;
-					if (ZoomLevel < 15)
-					{
-						ZoomLevel = 15;
-					}
+					ZoomLevel = 15;
 				}
 				RaisePropertyChange(IsTrackingCurrentLocationProperty);
 			}
@@ -679,12 +682,20 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				return;
 			}
+			var oldCurrentLocation = CurrentLocation;
 			CurrentLocation = location;
 			if (!IsTrackingCurrentLocation)
 			{
 				return;
 			}
 			Center = location;
+
+			// This is to determine whether this is the first current location update.
+			// The first update should set the zoom level to 15.
+			if (oldCurrentLocation == null)
+			{
+				ZoomLevel = 15;
+			}
 		}
 
 		/// <summary>

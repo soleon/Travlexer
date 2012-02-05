@@ -1,8 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
+using Codify.Threading;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
 using Travlexer.WindowsPhone.Infrastructure;
 
@@ -11,19 +12,26 @@ namespace Travlexer.WindowsPhone
 	public partial class App
 	{
 		#region Public Properties
+
 		/// <summary>
 		/// Provides easy access to the root frame of the Phone Application.
 		/// </summary>
 		/// <returns>The root frame of the Phone Application.</returns>
-		public PhoneApplicationFrame RootFrame { get; private set; } 
+		public PhoneApplicationFrame RootFrame { get; private set; }
+
 		#endregion
 
+
 		#region Constructors
+
 		/// <summary>
 		/// Constructor for the Application object.
 		/// </summary>
 		public App()
 		{
+#if DEBUG
+			Globals.StartUpTime = DateTime.Now;
+#endif
 			// Global handler for uncaught exceptions. 
 			UnhandledException += OnApplicationUnhandledException;
 
@@ -53,12 +61,15 @@ namespace Travlexer.WindowsPhone
 				PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
 			}
 		}
+
 		#endregion
 
+
 		#region Event Handling
+
 		private void OnApplicationLaunching(object sender, LaunchingEventArgs e)
 		{
-			DataContext.LoadContext();
+			UIThread.RunWorker(DataContext.LoadContext);
 		}
 
 		private void OnApplicationActivated(object sender, ActivatedEventArgs e)
@@ -67,7 +78,7 @@ namespace Travlexer.WindowsPhone
 			{
 				return;
 			}
-			DataContext.LoadContext();
+			UIThread.RunWorker(DataContext.LoadContext);
 		}
 
 		private void OnApplicationDeactivated(object sender, DeactivatedEventArgs e)
@@ -87,6 +98,12 @@ namespace Travlexer.WindowsPhone
 				// A navigation has failed; break into the debugger
 				Debugger.Break();
 			}
+			else
+			{
+#if DEBUG
+				MessageBox.Show(e.Exception.Message, "Navigation Failed", MessageBoxButton.OK);
+#endif
+			}
 		}
 
 		private static void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
@@ -96,7 +113,14 @@ namespace Travlexer.WindowsPhone
 				// An unhandled exception has occurred; break into the debugger
 				Debugger.Break();
 			}
+			else
+			{
+#if DEBUG
+				MessageBox.Show(e.ExceptionObject.Message, "Unhandled Exception", MessageBoxButton.OK);
+#endif
+			}
 		}
+
 		#endregion
 
 

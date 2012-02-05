@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
-using System.Runtime.Serialization;
 using Codify;
 using Codify.Controls.Maps;
 using Codify.Extensions;
@@ -34,6 +33,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			MapOverlays = new ObservableCollection<GoogleMapsLayer>();
 			MapBaseLayer = new ObservableValue<GoogleMapsLayer>();
 			MapZoomLevel = 1D;
+			IsFirstRun = true;
 		}
 
 		#endregion
@@ -86,12 +86,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// Gets or sets the map base layer.
 		/// </summary>
 		public static ObservableValue<GoogleMapsLayer> MapBaseLayer { get; private set; }
+
 		private const string MapBaseLayerProperty = "MapBaseLayer";
 
 		/// <summary>
 		/// Gets the map overlays.
 		/// </summary>
 		public static ObservableCollection<GoogleMapsLayer> MapOverlays { get; private set; }
+
 		private const string MapOverlayProperty = "MapOverlay";
 
 		/// <summary>
@@ -126,6 +128,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		private static ISerializer<byte[]> _serializer;
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is the first run.
+		/// </summary>
+		public static bool IsFirstRun { get; private set; }
+
+		private const string IsFirstRunProperty = "IsFirstRun";
 
 		#endregion
 
@@ -185,7 +194,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
 		public static void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null)
 		{
-			place.DataState = DataStates.Loading;
+			place.DataState = DataStates.Busy;
 			ProcessCall<ListResponse<Services.GoogleMaps.PlaceDetails>, List<Services.GoogleMaps.PlaceDetails>>(
 				(c, a) => c.GetPlaces(place.Location, a),
 				r =>
@@ -203,8 +212,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				},
 				args =>
 				{
-
-					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Loaded : DataStates.Error;
+					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Finished : DataStates.Error;
 					callback.ExecuteIfNotNull(args);
 				});
 		}
@@ -221,7 +229,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				GetPlaceInformation(place, callback);
 				return;
 			}
-			place.DataState = DataStates.Loading; ;
+			place.DataState = DataStates.Busy;
 			ProcessCall<Response<Services.GoogleMaps.PlaceDetails>, Services.GoogleMaps.PlaceDetails>(
 				(c, r) => c.GetPlaceDetails(place.Reference, r),
 				r =>
@@ -238,7 +246,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				},
 				args =>
 				{
-					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Loaded : DataStates.Error;
+					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Finished : DataStates.Error;
 					callback.ExecuteIfNotNull(args);
 				});
 		}
@@ -255,7 +263,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				r =>
 				{
 					ClearSearchResults();
-					var place = (Place)r.Result;
+					var place = (Place) r.Result;
 					place.IsSearchResult = true;
 					_places.Add(place);
 					return place;
@@ -276,12 +284,15 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				r =>
 				{
 					ClearSearchResults();
-					var places = r.Result.Count > 10 ? r.Result.Take(10).Select(p => (Place)p).ToList() : r.Result.Select(p => (Place)p).ToList();
+					var places = r.Result.Count > 10 ? r.Result.Take(10).Select(p => (Place) p).ToList() : r.Result.Select(p => (Place) p).ToList();
 					foreach (var p in places)
 					{
 						p.IsSearchResult = true;
 						_places.Add(p);
-						if (p.Reference == null) continue;
+						if (p.Reference == null)
+						{
+							continue;
+						}
 						GetPlaceDetails(p);
 					}
 					return places;
@@ -301,13 +312,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 						r =>
 						{
 							ClearSearchResults();
-							var place = (Place)r.Result[0];
+							var place = (Place) r.Result[0];
 							if (string.IsNullOrEmpty(place.Name))
 							{
 								place.Name = defaultSearchName;
 							}
 							place.IsSearchResult = true;
-							place.DataState = DataStates.Loaded;
+							place.DataState = DataStates.Finished;
 							_places.Add(place);
 							return new List<Place> { place };
 						},
@@ -325,7 +336,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		{
 			ProcessCall<AutoCompleteResponse, List<Suggestion>, List<SearchSuggestion>>(
 				(c, r) => c.GetSuggestions(location, input, r),
-				r => new List<SearchSuggestion>(r.Result.Select(s => (SearchSuggestion)s).ToList()),
+				r => new List<SearchSuggestion>(r.Result.Select(s => (SearchSuggestion) s).ToList()),
 				callback);
 		}
 
@@ -364,6 +375,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
+
+			// Save first run flag.
+			// Always save false, otherwise it's not called the "first run" flag isn't it.
+			StorageProvider.SaveSetting(IsFirstRunProperty, false);
 		}
 
 		/// <summary>
@@ -371,6 +386,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		public static void LoadContext()
 		{
+			// Load first run flag.
+			bool isFirstRun;
+			if (StorageProvider.TryGetSetting(IsFirstRunProperty, out isFirstRun))
+			{
+				IsFirstRun = isFirstRun;
+			}
+
 			// Load map center.
 			Location mapCenter;
 			if (StorageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
@@ -457,10 +479,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				TResponse data = null;
 				TResult result;
 				if (r.StatusCode != HttpStatusCode.OK ||
-					(data = r.Data) == null ||
-					data.Status != StatusCodes.OK ||
-					(result = data.Result) == null ||
-					(result is IList && ((IList)result).Count == 0))
+				    (data = r.Data) == null ||
+				    data.Status != StatusCodes.OK ||
+				    (result = data.Result) == null ||
+				    (result is IList && ((IList) result).Count == 0))
 				{
 					var exception = r.ErrorException;
 					if (exception != null)
@@ -496,10 +518,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				TResponse data = null;
 				TResult result;
 				if (r.StatusCode != HttpStatusCode.OK ||
-					(data = r.Data) == null ||
-					data.Status != StatusCodes.OK ||
-					(result = data.Result) == null ||
-					(result is IList && ((IList)result).Count == 0))
+				    (data = r.Data) == null ||
+				    data.Status != StatusCodes.OK ||
+				    (result = data.Result) == null ||
+				    (result is IList && ((IList) result).Count == 0))
 				{
 					var exception = r.ErrorException;
 					if (exception != null)
@@ -520,11 +542,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(callbackResult));
 			});
 		}
-
-		#endregion
-
-
-		#region Event Handling
 
 		#endregion
 	}

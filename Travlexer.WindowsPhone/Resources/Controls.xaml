@@ -304,8 +304,8 @@
 								</VisualState>
 							</VisualStateGroup>
 							<VisualStateGroup x:Name="WorkingStates">
-								<VisualState x:Name="Loaded" />
-								<VisualState x:Name="Loading">
+								<VisualState x:Name="Finished" />
+								<VisualState x:Name="Busy">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
 														 Storyboard.TargetProperty="(UIElement.Opacity)"
@@ -627,10 +627,10 @@
 			<Setter.Value>
 				<toolkit:NavigationInTransition>
 					<toolkit:NavigationInTransition.Backward>
-						<toolkit:TurnstileTransition Mode="BackwardIn" />
+						<toolkit:SlideTransition Mode="SlideDownFadeIn" />
 					</toolkit:NavigationInTransition.Backward>
 					<toolkit:NavigationInTransition.Forward>
-						<toolkit:TurnstileTransition Mode="ForwardIn" />
+						<toolkit:SlideTransition Mode="SlideUpFadeIn" />
 					</toolkit:NavigationInTransition.Forward>
 				</toolkit:NavigationInTransition>
 			</Setter.Value>
@@ -639,10 +639,10 @@
 			<Setter.Value>
 				<toolkit:NavigationOutTransition>
 					<toolkit:NavigationOutTransition.Backward>
-						<toolkit:TurnstileTransition Mode="BackwardOut" />
+						<toolkit:SlideTransition Mode="SlideDownFadeOut" />
 					</toolkit:NavigationOutTransition.Backward>
 					<toolkit:NavigationOutTransition.Forward>
-						<toolkit:TurnstileTransition Mode="ForwardOut" />
+						<toolkit:SlideTransition Mode="SlideUpFadeOut" />
 					</toolkit:NavigationOutTransition.Forward>
 				</toolkit:NavigationOutTransition>
 			</Setter.Value>

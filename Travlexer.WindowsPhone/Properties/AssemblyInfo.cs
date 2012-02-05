@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Travlexer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Run your travel plan so flexible, like you have never experienced before.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Travlexer.WindowsPhone")]
-[assembly: AssemblyCopyright("Copyright ©  2011")]
+[assembly: AssemblyCompany("Travlexer")]
+[assembly: AssemblyProduct("Travlexer for Windows Phone")]
+[assembly: AssemblyCopyright("Copyright © Travlexer 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
