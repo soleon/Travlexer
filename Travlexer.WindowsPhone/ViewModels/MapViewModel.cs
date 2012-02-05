@@ -99,6 +99,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandZoomOut = new DelegateCommand(() => ZoomLevel--);
 			CommandShowStreetLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.Street);
 			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.SatelliteHybrid);
+			CommandToggleMapOverlay = new DelegateCommand<GoogleMapsLayer>(DataContext.ToggleMapOverlay);
 
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
@@ -112,9 +113,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 			}
 
 			DataContext.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
+			DataContext.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
 			ApplicationContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
 		}
-
 
 		#endregion
 
@@ -345,10 +346,30 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private const string IsBusyProperty = "IsBusy";
 
+		/// <summary>
+		/// Gets the visibility of street layer.
+		/// </summary>
 		public Visibility IsStreetLayerVisible { get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.Street ? Visibility.Visible : Visibility.Collapsed; } }
 		private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
+
+		/// <summary>
+		/// Gets the visibility of satellite hybrid layer.
+		/// </summary>
 		public Visibility IsSatelliteHybridLayerVisible { get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; } }
 		private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
+
+		/// <summary>
+		/// Gets the visibility of traffic layer.
+		/// </summary>
+		public Visibility IsTrafficLayerVisible { get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; } }
+		private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
+
+		/// <summary>
+		/// Gets the visibility of transit layer.
+		/// </summary>
+		public Visibility IsTransitLayerVisible { get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; } }
+		private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
+
 		#endregion
 
 
@@ -453,6 +474,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the command that shows the satellite hybrid layer.
 		/// </summary>
 		public DelegateCommand CommandShowSatelliteHybridLayer { get; private set; }
+
+		/// <summary>
+		/// Gets the command that toggles traffic layer.
+		/// </summary>
+		public DelegateCommand<GoogleMapsLayer> CommandToggleMapOverlay { get; private set; }
 
 		#endregion
 

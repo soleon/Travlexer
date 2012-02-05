@@ -12,17 +12,5 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
-	<Canvas>
-		<Ellipse Width="24" Height="24" StrokeThickness="2">
-			<Ellipse.Fill>
-				<RadialGradientBrush>
-					<GradientStop Color="Black" Offset="0"/>
-					<GradientStop Color="White" Offset="0.75"/>
-					<GradientStop Color="Black" Offset="0.75"/>
-					<GradientStop Color="Black" Offset="0.5"/>
-					<GradientStop Color="White" Offset="0.5"/>
-				</RadialGradientBrush>
-			</Ellipse.Fill>
-		</Ellipse>
-	</Canvas>
+	<Canvas/>
 </phone:PhoneApplicationPage>

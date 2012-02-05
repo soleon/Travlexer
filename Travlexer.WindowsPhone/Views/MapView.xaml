@@ -17,9 +17,9 @@
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
 							xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
 							xmlns:CodifyMaps="clr-namespace:Codify.Controls.Maps;assembly=Codify.Controls.Maps"
-                            xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
-                            xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
-                            Style="{StaticResource PageDefault}"
+							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+							xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
+							Style="{StaticResource PageDefault}"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
 							Foreground="{StaticResource PhoneForegroundBrush}"
@@ -257,7 +257,7 @@
 					<VisualTransition GeneratedDuration="0"
 									  To="Expanded">
 						<Storyboard>
-							<DoubleAnimation Duration="0:0:0.3" To="320" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
+							<DoubleAnimation Duration="0:0:0.3" To="469" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" EasingFunction="{StaticResource EasingQuinticOut}"/>
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ExpandButton">
 								<DiscreteObjectKeyFrame KeyTime="0">
 									<DiscreteObjectKeyFrame.Value>
@@ -317,7 +317,7 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-						<DoubleAnimation Duration="0" To="320" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="469" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="Toolbar" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -328,9 +328,6 @@
 				  CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
 				  LogoVisibility="Collapsed"
 				  ZoomLevel="{Binding ZoomLevel, Mode=TwoWay}">
-			<Maps:Map.Mode>
-				<Core:MercatorMode />
-			</Maps:Map.Mode>
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="MapPan">
 					<i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
@@ -348,6 +345,9 @@
 			<toolkit:GestureService.GestureListener>
 				<toolkit:GestureListener PinchStarted="OnMapPinchStarted" />
 			</toolkit:GestureService.GestureListener>
+			<Maps:Map.Mode>
+				<Core:MercatorMode />
+			</Maps:Map.Mode>
 			<Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
 				<Maps:MapTileLayer.TileSources>
 					<CodifyMaps:GoogleMapsTileSource Layer="Street" />
@@ -356,6 +356,16 @@
 			<Maps:MapTileLayer Visibility="{Binding IsSatelliteHybridLayerVisible}">
 				<Maps:MapTileLayer.TileSources>
 					<CodifyMaps:GoogleMapsTileSource Layer="SatelliteHybrid" />
+				</Maps:MapTileLayer.TileSources>
+			</Maps:MapTileLayer>
+			<Maps:MapTileLayer Visibility="{Binding IsTrafficLayerVisible}">
+				<Maps:MapTileLayer.TileSources>
+					<CodifyMaps:GoogleMapsTileSource Layer="TrafficOverlay" />
+				</Maps:MapTileLayer.TileSources>
+			</Maps:MapTileLayer>
+			<Maps:MapTileLayer Visibility="{Binding IsTransitLayerVisible}">
+				<Maps:MapTileLayer.TileSources>
+					<CodifyMaps:GoogleMapsTileSource Layer="TransitOverlay" />
 				</Maps:MapTileLayer.TileSources>
 			</Maps:MapTileLayer>
 			<Maps:Pushpin Location="{Binding CurrentLocation}"
@@ -502,12 +512,12 @@
 				Width="68" Height="108">
 			<StackPanel>
 				<Controls:CircleButton Click="OnCaptureScreen"
-									   toolkit:TiltEffect.SuppressTilt="True">
+									   >
 					<Icons:Camera />
 				</Controls:CircleButton>
 				<Button x:Name="ExpandButton"
 						Style="{StaticResource EmptyButton}"
-						toolkit:TiltEffect.SuppressTilt="True">
+						>
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Click">
 							<ec:GoToStateAction StateName="Expanded" />
@@ -523,7 +533,7 @@
 				<Button x:Name="CollapseButton"
 						Style="{StaticResource EmptyButton}"
 						Visibility="Collapsed"
-						toolkit:TiltEffect.SuppressTilt="True">
+						>
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Click">
 							<ec:GoToStateAction StateName="Collapsed" />
@@ -533,26 +543,41 @@
 								   Width="20" />
 				</Button>
 				<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}"
-									   toolkit:TiltEffect.SuppressTilt="True">
+									   >
 					<Icons:Plus />
 				</Controls:CircleButton>
 				<Controls:CircleButton Command="{Binding CommandZoomOut, Mode=OneTime}"
-									   toolkit:TiltEffect.SuppressTilt="True" Margin="0,10,0,0">
+									    Margin="0,10,0,0">
 					<Icons:Minus />
 				</Controls:CircleButton>
 				<Icons:Ellipsis Height="35"/>
 				<Controls:CircleButton Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
-									   toolkit:TiltEffect.SuppressTilt="True" Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="street">
+									    Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="street">
 					<Controls:CircleButton.Background>
 						<ImageBrush Stretch="None" ImageSource="/Assets/StreetView.png"/>
 					</Controls:CircleButton.Background>
 				</Controls:CircleButton>
 				<Controls:CircleButton Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
-									   toolkit:TiltEffect.SuppressTilt="True" Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="satellite">
+									    Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" Caption="satellite">
 					<Controls:CircleButton.Background>
 						<ImageBrush Stretch="None" ImageSource="/Assets/SatelliteView.png"/>
 					</Controls:CircleButton.Background>
 				</Controls:CircleButton>
+				<Controls:CircleToggleButton Caption="traffic"
+											 Margin="0,10,0,0"
+											 Command="{Binding CommandToggleMapOverlay, Mode=OneTime}" IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
+					<Controls:CircleToggleButton.CommandParameter>
+						<CodifyMaps:GoogleMapsLayer>TrafficOverlay</CodifyMaps:GoogleMapsLayer>
+					</Controls:CircleToggleButton.CommandParameter>
+					<Icons:Traffic/>
+				</Controls:CircleToggleButton>
+				<Controls:CircleToggleButton Caption="transport" Margin="0,10,0,0"
+											 Command="{Binding CommandToggleMapOverlay,Mode=OneTime}" IsChecked="{Binding IsTransitLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
+					<Controls:CircleToggleButton.CommandParameter>
+						<CodifyMaps:GoogleMapsLayer>TransitOverlay</CodifyMaps:GoogleMapsLayer>
+					</Controls:CircleToggleButton.CommandParameter>
+					<Icons:Train/>
+				</Controls:CircleToggleButton>
 			</StackPanel>
 		</Border>
 		<Grid x:Name="SearchPanel"
@@ -612,7 +637,7 @@
 						Command="{Binding CommandSearch, Mode=OneTime}"
 						IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
 						Template="{x:Null}"
-						toolkit:TiltEffect.SuppressTilt="True">
+						>
 					<Border Height="52"
 							Width="52"
 							Background="{StaticResource PhoneForegroundBrush}">

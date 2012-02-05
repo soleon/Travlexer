@@ -59,66 +59,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 	{
 		#region Private Members
 
-		private static readonly JsonSerializer _jsonSerializer = new JsonSerializer(); 
-
-		private static readonly string[] _supportedLanguageCodes = new[]
-		{
-			"ar",
-			"eu",
-			"bg",
-			"bn",
-			"ca",
-			"cs",
-			"da",
-			"de",
-			"el",
-			"en",
-			"en-AU",
-			"en-GB",
-			"es",
-			"eu",
-			"fa",
-			"fi",
-			"fil",
-			"fr",
-			"gl",
-			"gu",
-			"hi",
-			"hr",
-			"hu",
-			"id",
-			"it",
-			"iw",
-			"ja",
-			"kn",
-			"ko",
-			"lt",
-			"lv",
-			"ml",
-			"mr",
-			"nl",
-			"no",
-			"pl",
-			"pt",
-			"pt-BR",
-			"pt-PT",
-			"ro",
-			"ru",
-			"sk",
-			"sl",
-			"sr",
-			"sv",
-			"tl",
-			"ta",
-			"te",
-			"th",
-			"tr",
-			"uk",
-			"vi",
-			"zh-CN",
-			"zh-TW"
-		};
-
+		private static readonly JsonSerializer _jsonSerializer = new JsonSerializer();
 
 		private const string UnitImperial = "imperial";
 		private const string UnitMetric = "metric";
@@ -146,7 +87,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		/// </summary>
 		public GoogleMapsClient()
 		{
-			_language = GetLanguageCode(CultureInfo.CurrentCulture);
+			_language = Codify.Controls.Maps.GoogleMaps.CurrentLanguageCode;
 
 			_region = RegionInfo.CurrentRegion.TwoLetterISORegionName;
 			_basePlacesSearchUrl = "place/search/json?radius=50000&sensor=true&key=" + ApiKey + "&language=" + _language;
@@ -251,17 +192,6 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 
 
 		#region Private Methods
-
-		/// <summary>
-		/// Gets the supported language code based on the specified culture information.
-		/// </summary>
-		/// <returns>A language code that supported by Google Maps' APIs, or the two letter ISO language name of the specified culture if no supported language code is found.</returns>
-		private static string GetLanguageCode(CultureInfo cultureInfo)
-		{
-			var culture = cultureInfo;
-			var lng = culture.Name;
-			return _supportedLanguageCodes.Contains(lng) ? lng : culture.TwoLetterISOLanguageName;
-		}
 
 		/// <summary>
 		/// Processes an async REST request.

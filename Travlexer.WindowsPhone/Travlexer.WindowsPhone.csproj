@@ -68,8 +68,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ButtonCircle.cs" />
+    <Compile Include="Controls\CircleButton.cs" />
     <Compile Include="Controls\AutoCompleteBox.cs" />
+    <Compile Include="Controls\CircleToggleButton.cs" />
     <Compile Include="Controls\Icons\ArrowRight.cs" />
     <Compile Include="Controls\Icons\Attention.cs" />
     <Compile Include="Controls\Icons\Bicycle.cs" />
@@ -88,8 +89,10 @@
     <Compile Include="Controls\Icons\Location.cs" />
     <Compile Include="Controls\Icons\Plus.cs" />
     <Compile Include="Controls\Icons\Search.cs" />
+    <Compile Include="Controls\Icons\Slash.cs" />
     <Compile Include="Controls\Icons\Swap.cs" />
     <Compile Include="Controls\Icons\To.cs" />
+    <Compile Include="Controls\Icons\Traffic.cs" />
     <Compile Include="Controls\Icons\UpArrow.cs" />
     <Compile Include="Controls\Icons\User.cs" />
     <Compile Include="Controls\Icons\Walk.cs" />

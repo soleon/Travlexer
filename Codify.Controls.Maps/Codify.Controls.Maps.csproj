@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GoogleMaps.cs" />
     <Compile Include="GoogleMapsLayer.cs" />
     <Compile Include="GoogleMapsTileSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

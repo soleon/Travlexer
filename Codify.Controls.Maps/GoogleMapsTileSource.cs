@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.Phone.Controls.Maps;
 
 namespace Codify.Controls.Maps
@@ -44,6 +45,7 @@ namespace Codify.Controls.Maps
 		{
 			var subDomain = _subDomains[x % XModulus][y % YModulus];
 			var layer = _layersMapping[Layer];
+			var lng = GoogleMaps.CurrentLanguageCode;
 
 			// NOTE: the commented out code is for when "isostore" schema is competible with the map control in future.
 			// So that offline caching is possible.
@@ -57,7 +59,7 @@ namespace Codify.Controls.Maps
 			//    }
 			//}
 
-			var uri = new Uri("http://mt" + subDomain + ".google.com/vt/lyrs=" + layer + "&x=" + x + "&y=" + y + "&z=" + zoomLevel);
+			var uri = new Uri("http://mt" + subDomain + ".google.com/vt/lyrs=" + layer + "&x=" + x + "&y=" + y + "&z=" + zoomLevel + "&hl=" + lng);
 
 			//var c = new WebClient();
 			//c.OpenReadCompleted += (s, e) =>

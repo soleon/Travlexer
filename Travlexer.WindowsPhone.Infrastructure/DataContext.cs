@@ -23,11 +23,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 {
 	public static class DataContext
 	{
-		#region Private Members
-
-		#endregion
-
-
 		#region Constructors
 
 		/// <summary>
@@ -36,6 +31,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		static DataContext()
 		{
 			Places = new ReadOnlyObservableCollection<Place>(_places);
+			MapOverlays = new ObservableCollection<GoogleMapsLayer>();
 			MapBaseLayer = new ObservableValue<GoogleMapsLayer>();
 			MapZoomLevel = 1D;
 		}
@@ -91,6 +87,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		public static ObservableValue<GoogleMapsLayer> MapBaseLayer { get; private set; }
 		private const string MapBaseLayerProperty = "MapBaseLayer";
+
+		/// <summary>
+		/// Gets the map overlays.
+		/// </summary>
+		public static ObservableCollection<GoogleMapsLayer> MapOverlays { get; private set; }
+		private const string MapOverlayProperty = "MapOverlay";
 
 		/// <summary>
 		/// Gets or sets the google maps client.
@@ -355,6 +357,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save map base layer.
 			StorageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
 
+			// Save map overlays.
+			var overlayBytes = Serializer.Serialize(MapOverlays.ToArray());
+			StorageProvider.SaveSetting(MapOverlayProperty, overlayBytes);
+
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
@@ -400,12 +406,35 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				MapBaseLayer.Value = mapBaseLayer;
 			}
 
+			// Load map overlays.
+			byte[] overlayBytes;
+			GoogleMapsLayer[] overlays;
+			if (StorageProvider.TryGetSetting(MapOverlayProperty, out overlayBytes) && Serializer.TryDeserialize(overlayBytes, out overlays))
+			{
+				overlays.ForEach(MapOverlays.Add);
+			}
+
 			// Load places.
 			byte[] placeBytes;
 			Place[] places;
 			if (StorageProvider.TryGetSetting(PlacesProperty, out placeBytes) && Serializer.TryDeserialize(placeBytes, out places))
 			{
 				places.ForEach(_places.Add);
+			}
+		}
+
+		/// <summary>
+		/// Toggles the specified map overlay.
+		/// </summary>
+		public static void ToggleMapOverlay(GoogleMapsLayer layer)
+		{
+			if (MapOverlays.Contains(layer))
+			{
+				MapOverlays.Remove(layer);
+			}
+			else
+			{
+				MapOverlays.Add(layer);
 			}
 		}
 
