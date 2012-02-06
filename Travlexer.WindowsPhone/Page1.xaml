@@ -12,5 +12,7 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
-	<Canvas/>
+	<Canvas>
+		<Border Background="{StaticResource TestBrush}" Width="50" Height="50"/>
+	</Canvas>
 </phone:PhoneApplicationPage>

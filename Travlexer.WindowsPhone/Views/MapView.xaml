@@ -178,7 +178,7 @@
 				<VisualState x:Name="Search">
 					<Storyboard>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
-													   Storyboard.TargetProperty="(UIElement.Visibility)">
+							Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
@@ -186,16 +186,16 @@
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
 						<DoubleAnimation Storyboard.TargetName="SearchBackground"
-										 Storyboard.TargetProperty="(UIElement.Opacity)"
-										 Duration="0"
-										 To="1"
-										 d:IsOptimized="True" />
+							Storyboard.TargetProperty="(UIElement.Opacity)"
+							Duration="0"
+							To="1"
+							d:IsOptimized="True" />
 						<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-										 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-										 Duration="0"
-										 EasingFunction="{StaticResource EasingQuinticOut}"
-										 To="33"
-										 d:IsOptimized="True" />
+							Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+							Duration="0"
+							EasingFunction="{StaticResource EasingQuinticOut}"
+							To="33"
+							d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="PushpinSelected">
@@ -374,8 +374,7 @@
 					<CodifyMaps:GoogleMapsTileSource Layer="TransitOverlay" />
 				</Maps:MapTileLayer.TileSources>
 			</Maps:MapTileLayer>
-			<Maps:Pushpin Background="Black"
-						  IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
+			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
 						  Location="{Binding CurrentLocation}"
 						  PositionOrigin="Center"
 						  Template="{x:Null}"
@@ -390,12 +389,10 @@
 					<Ellipse Height="40"
 							 Width="40"
 							 Fill="Transparent" />
-					<Icons:CurrentLocation Height="30"
+					<Rectangle Height="30"
 										   Width="30"
-										   Background="Transparent"
-										   Foreground="Black"
 										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" />
+										   VerticalAlignment="Center" Fill="{StaticResource BrushIconCurrentLocation}" />
 				</Grid>
 			</Maps:Pushpin>
 			<Maps:MapItemsControl Collections:DelayCollection.ItemsSource="{Binding Pushpins}"
@@ -519,10 +516,13 @@
 				VerticalAlignment="Center">
 			<StackPanel>
 				<Controls:CircleButton Click="OnCaptureScreen">
-					<Icons:Camera />
+					<Rectangle Fill="{StaticResource BrushIconCamera}"/>
 				</Controls:CircleButton>
 				<Button Style="{StaticResource EmptyButton}"
-						x:Name="ExpandButton">
+						x:Name="ExpandButton"
+						Height="40"
+						HorizontalContentAlignment="Stretch"
+						VerticalContentAlignment="Stretch">
 					<Button.Projection>
 						<PlaneProjection />
 					</Button.Projection>
@@ -531,24 +531,19 @@
 							<i:InvokeCommandAction Command="{Binding CommandToggleToolbar, Mode=OneTime}" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
-					<Icons:DownArrow Height="40"
-									 Width="20">
-						<Icons:DownArrow.Projection>
-							<PlaneProjection />
-						</Icons:DownArrow.Projection>
-					</Icons:DownArrow>
+					<Rectangle Fill="{StaticResource BrushIconDownArrow}"/>
 				</Button>
 				<StackPanel x:Name="ExpandedPanel"
 							Orientation="Vertical"
 							Visibility="Collapsed">
 					<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}">
-						<Icons:Plus />
+						<Rectangle Fill="{StaticResource BrushIconPlus}"/>
 					</Controls:CircleButton>
 					<Controls:CircleButton Margin="0,10,0,0"
 										   Command="{Binding CommandZoomOut, Mode=OneTime}">
-						<Icons:Minus />
+						<Rectangle Fill="{StaticResource BrushIconMinus}"/>
 					</Controls:CircleButton>
-					<Icons:Ellipsis Height="35" />
+					<Rectangle Height="35" Fill="{StaticResource BrushIconEllipsis}"/>
 					<Controls:CircleButton Caption="street"
 										   Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
 										   Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
@@ -572,7 +567,7 @@
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TrafficOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Icons:Traffic />
+						<Rectangle Fill="{StaticResource BrushIconTraffic}"/>
 					</Controls:CircleToggleButton>
 					<Controls:CircleToggleButton Margin="0,10,0,0"
 												 Caption="transport"
@@ -581,7 +576,7 @@
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TransitOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Icons:Train />
+						<Rectangle Fill="{StaticResource BrushIconTrain}"/>
 					</Controls:CircleToggleButton>
 				</StackPanel>
 			</StackPanel>
@@ -645,10 +640,10 @@
 						Template="{x:Null}">
 					<Border Height="52"
 							Width="52"
-							Background="{StaticResource PhoneForegroundBrush}">
-						<Icons:Search Height="32"
+							Background="{StaticResource PhoneBackgroundBrush}">
+						<Rectangle Height="32"
 									  Width="32"
-									  Foreground="{StaticResource PhoneBackgroundBrush}"
+									  Fill="{StaticResource BrushIconSearch}"
 									  HorizontalAlignment="Center"
 									  VerticalAlignment="Center" />
 					</Border>

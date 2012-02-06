@@ -76,6 +76,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 
 		// Rest request handles for aborting overlapping requests.
 		private RestRequestAsyncHandle _getSuggestionsAsyncHandle;
+		private RestRequestAsyncHandle _searchAsyncHandle;
 
 		#endregion
 
@@ -151,15 +152,16 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		public void GetSuggestions(LatLng center, string input, Action<RestResponse<AutoCompleteResponse>> callback = null)
 		{
 			// Ensure single request response.
-			if (_getSuggestionsAsyncHandle != null)
-			{
-				_getSuggestionsAsyncHandle.Abort();
-			}
+			_getSuggestionsAsyncHandle.ExecuteIfNotNull(handle => handle.Abort());
 
 			_getSuggestionsAsyncHandle = ProcessRequest<AutoCompleteResponse, List<Suggestion>>(
 				new RestRequest(_baseAutoCompleteUrl + "&location=" + center + "&input=" + input),
 				r => r.Data = _jsonSerializer.Deserialize<AutoCompleteResponse>(r.Content),
-				callback: callback);
+				callback: r =>
+				{
+					_getSuggestionsAsyncHandle = null;
+					callback.ExecuteIfNotNull(r);
+				});
 		}
 
 		/// <summary>
@@ -170,10 +172,17 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		public void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
-			ProcessRequest<ListResponse<Place>, List<Place>>(
+			// Ensure single request response.
+			_searchAsyncHandle.ExecuteIfNotNull(handle => handle.Abort());
+
+			_searchAsyncHandle = ProcessRequest<ListResponse<Place>, List<Place>>(
 				new RestRequest(_basePlacesSearchUrl + "&location=" + center + "&keyword=" + HttpUtility.UrlEncode(input)),
 				r => r.Data = _jsonSerializer.Deserialize<ListResponse<Place>>(r.Content),
-				callback: callback);
+				callback: r =>
+				{
+					_searchAsyncHandle = null;
+					callback.ExecuteIfNotNull(r);
+				});
 		}
 
 		/// <summary>
@@ -457,7 +466,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 
 		public void CancelGetSuggestions()
 		{
-			
+
 		}
 
 		#endregion

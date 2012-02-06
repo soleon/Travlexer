@@ -8,7 +8,7 @@
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="Controls.xaml"/>
 		<ResourceDictionary Source="Converters.xaml"/>
-		<ResourceDictionary Source="Icons.xaml"/>
+		<!--<ResourceDictionary Source="Icons.xaml"/>-->
 	</ResourceDictionary.MergedDictionaries>
 	<System:Double x:Key="ShellOpacity">0.9</System:Double>
 	<QuinticEase x:Key="EasingQuinticOut" EasingMode="EaseOut"/>

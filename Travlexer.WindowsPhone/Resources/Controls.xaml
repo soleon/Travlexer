@@ -101,6 +101,8 @@
 				Value="#40000000" />
 		<Setter Property="Foreground"
 				Value="{StaticResource PhoneForegroundBrush}" />
+		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+		<Setter Property="VerticalContentAlignment" Value="Stretch"/>
 	</Style>
 	<Style x:Key="EmptyButton"
 		   TargetType="Button">
@@ -380,8 +382,9 @@
 									<Behaviors:CancelGestureEventBehavior />
 								</i:Interaction.Behaviors>
 								<StackPanel Orientation="Horizontal">
-									<Icons:Attention Width="17"
-													 Foreground="{StaticResource PhoneForegroundBrush}" />
+									<Rectangle Width="17"
+											   Height="17"
+											   Fill="{StaticResource BrushIconAttention}" />
 									<TextBlock Margin="10,0,0,3"
 											   Text="No info, tap to refresh"
 											   TextDecorations="Underline" />
@@ -408,23 +411,22 @@
 							<i:Interaction.Behaviors>
 								<Behaviors:CancelGestureEventBehavior />
 							</i:Interaction.Behaviors>
-							<Controls:CircleButton Padding="5"
-												   Caption="details"
+							<Controls:CircleButton Caption="details"
 												   Command="{Binding CommandViewDetails, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandViewDetailsParameter, RelativeSource={RelativeSource TemplatedParent}}">
-								<Icons:Info />
+								<Rectangle Fill="{StaticResource BrushIconInfo}"/>
 							</Controls:CircleButton>
 							<Controls:CircleButton Caption="depart"
 												   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandDepartParameter, RelativeSource={RelativeSource TemplatedParent}}"
 												   Margin="13,0,0,0">
-								<Icons:From />
+								<Rectangle Fill="{StaticResource BrushIconFrom}"/>
 							</Controls:CircleButton>
 							<Controls:CircleButton Caption="arrive"
 												   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandArriveParameter, RelativeSource={RelativeSource TemplatedParent}}"
 												   Margin="13,0,12,0">
-								<Icons:To />
+								<Rectangle Fill="{StaticResource BrushIconTo}"/>
 							</Controls:CircleButton>
 							<Controls:CircleButton x:Name="ButtonDelete"
 												   Caption="delete"
@@ -433,7 +435,7 @@
 								<Controls:CircleButton.Projection>
 									<PlaneProjection />
 								</Controls:CircleButton.Projection>
-								<Icons:Delete />
+								<Rectangle Fill="{StaticResource BrushIconDelete}"/>
 							</Controls:CircleButton>
 							<Controls:CircleButton x:Name="ButtonPin"
 												   Caption="keep"
@@ -444,7 +446,7 @@
 								<Controls:CircleButton.Projection>
 									<PlaneProjection />
 								</Controls:CircleButton.Projection>
-								<Icons:Pin />
+								<Rectangle Fill="{StaticResource BrushIconPin}"/>
 							</Controls:CircleButton>
 						</StackPanel>
 					</Grid>
@@ -602,11 +604,8 @@
 							  StrokeThickness="2"
 							  VerticalAlignment="Bottom"
 							  Margin="0,0,0,2" />
-						<Icons:Search Height="20"
-									  Margin="0,-8,-8,0"
-									  Width="20"
-									  Background="{TemplateBinding Background}"
-									  Foreground="{StaticResource PhoneBorderBrush}"
+						<Rectangle Fill="{StaticResource BrushIconSearch}" Width="20" Height="20" 
+								   Margin="0,-8,-8,0"
 									  HorizontalAlignment="Right"
 									  VerticalAlignment="Top"
 									  Visibility="{Binding Tag, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" />
@@ -866,7 +865,7 @@
 									Foreground="{TemplateBinding Foreground}"
 									HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
 									VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-								<Icons:Slash x:Name="UncheckedMark" Height="36" Width="36"/>
+								<Rectangle x:Name="UncheckedMark" Fill="{StaticResource BrushIconSlash}"/>
 							</Grid>
 						</Border>
 						<TextBlock FontSize="12"
@@ -877,5 +876,7 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+		<Setter Property="VerticalContentAlignment" Value="Stretch"/>
 	</Style>
 </ResourceDictionary>

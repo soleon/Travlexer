@@ -1,42 +1,34 @@
 using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
-using Travlexer.WindowsPhone.Controls.Icons;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using Travlexer.WindowsPhone.Infrastructure.Models;
-using Location = Travlexer.WindowsPhone.Controls.Icons.Location;
 
 namespace Travlexer.WindowsPhone.Converters
 {
 	public class PlaceIconToControlConverter : IValueConverter
 	{
+		private static ResourceDictionary _resources;
+		private static ImageBrush _brushIconLocation;
+
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (!(value is PlaceIcon))
 			{
 				return null;
 			}
-			switch ((PlaceIcon) value)
+			if(_resources == null)
+			_resources = Application.Current.Resources;
+			if (_brushIconLocation == null)
 			{
-				case PlaceIcon.General:
-					return new Location();
-				case PlaceIcon.Recreation:
-					return new Location();
-				case PlaceIcon.Vehicle:
-					return new Location();
-				case PlaceIcon.Drink:
-					return new Location();
-				case PlaceIcon.Fuel:
-					return new Location();
-				case PlaceIcon.Property:
-					return new Location();
-				case PlaceIcon.Restaurant:
-					return new Location();
-				case PlaceIcon.Shop:
-					return new Location();
-				case PlaceIcon.User:
-					return new User();
+				_brushIconLocation = (ImageBrush)_resources["BrushIconLocation"];
+			}
+			switch ((PlaceIcon)value)
+			{
 				default:
-					return new Location();
+					return new Rectangle { Fill = _brushIconLocation };
 			}
 		}
 

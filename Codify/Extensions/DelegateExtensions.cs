@@ -88,5 +88,14 @@ namespace Codify.Extensions
 			}
 			return function(param1, param2);
 		}
+
+		public static void ExecuteIfNotNull<T>(this T obj, Action<T> action)where T:class
+		{
+			if (obj == null || action ==null)
+			{
+				return;
+			}
+			action(obj);
+		}
 	}
 }

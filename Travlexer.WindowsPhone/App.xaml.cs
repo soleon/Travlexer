@@ -69,11 +69,8 @@ namespace Travlexer.WindowsPhone
 
 		private void OnApplicationLaunching(object sender, LaunchingEventArgs e)
 		{
-			UIThread.RunWorker(() =>
-			{
-				DataContext.LoadContext();
-				ApplicationContext.LoadContext();
-			});
+			DataContext.LoadContext();
+			ApplicationContext.LoadContext();
 		}
 
 		private void OnApplicationActivated(object sender, ActivatedEventArgs e)
@@ -82,11 +79,8 @@ namespace Travlexer.WindowsPhone
 			{
 				return;
 			}
-			UIThread.RunWorker(() =>
-			{
-				DataContext.LoadContext();
-				ApplicationContext.LoadContext();
-			});
+			DataContext.LoadContext();
+			ApplicationContext.LoadContext();
 		}
 
 		private void OnApplicationDeactivated(object sender, DeactivatedEventArgs e)
