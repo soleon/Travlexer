@@ -113,7 +113,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			// Automatically track current position at first run.
 			if (DataContext.IsFirstRun)
 			{
-				IsTrackingCurrentLocation = true;
+				//IsTrackingCurrentLocation = true;
 			}
 
 			// Try centering on current location if available.

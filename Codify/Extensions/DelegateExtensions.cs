@@ -82,11 +82,12 @@ namespace Codify.Extensions
 
 		public static TResult ExecuteIfNotNull<T1, T2, TResult>(this Func<T1, T2, TResult> function, T1 param1, T2 param2, TResult defaultResult = default(TResult))
 		{
-			if (function == null)
-			{
-				return defaultResult;
-			}
-			return function(param1, param2);
+			return function == null ? defaultResult : function(param1, param2);
+		}
+
+		public static TResult ExecuteIfNotNull<T1, T2, T3, T4, TResult>(this Func<T1, T2, T3, T4, TResult> function, T1 param1, T2 param2, T3 param3, T4 param4, TResult defaultResult = default(TResult))
+		{
+			return function == null ? defaultResult : function(param1, param2, param3, param4);
 		}
 
 		public static void ExecuteIfNotNull<T>(this T obj, Action<T> action)where T:class

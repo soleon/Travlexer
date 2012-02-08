@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using Codify.Extensions;
 using Microsoft.Phone.Controls.Maps;
 
 namespace Codify.Controls.Maps
@@ -43,14 +43,20 @@ namespace Codify.Controls.Maps
 
 		public override Uri GetUri(int x, int y, int zoomLevel)
 		{
+			var isHandled = TileRequested.ExecuteIfNotNull(x, y, zoomLevel, Layer, false);
+			return isHandled ? null : GetUri(x, y, zoomLevel, Layer);
+		}
+
+		public static Uri GetUri(int x, int y, int z, GoogleMapsLayer layer)
+		{
 			var subDomain = _subDomains[x % XModulus][y % YModulus];
-			var layer = _layersMapping[Layer];
+			var lyr = _layersMapping[layer];
 			var lng = GoogleMaps.CurrentLanguageCode;
 
-			// NOTE: the commented out code is for when "isostore" schema is competible with the map control in future.
+			// NOTE: the commented code is for when "isostore" schema is supported by the map control in future.
 			// So that offline caching is possible.
 
-			//var name = string.Format("tile_{0}_{1}_{2}_{3}", layer, x, y, zoomLevel);
+			//var name = string.Concat(layer, "_", new QuadKey(x, y, z).Key);
 			//using (var store = IsolatedStorageFile.GetUserStoreForApplication())
 			//{
 			//    if (store.FileExists(name))
@@ -59,7 +65,7 @@ namespace Codify.Controls.Maps
 			//    }
 			//}
 
-			var uri = new Uri("http://mt" + subDomain + ".google.com/vt/lyrs=" + layer + "&x=" + x + "&y=" + y + "&z=" + zoomLevel + "&hl=" + lng);
+			var uri = new Uri("http://mt" + subDomain + ".google.com/vt/lyrs=" + lyr + "&x=" + x + "&y=" + y + "&z=" + z + "&hl=" + lng);
 
 			//var c = new WebClient();
 			//c.OpenReadCompleted += (s, e) =>
@@ -80,6 +86,13 @@ namespace Codify.Controls.Maps
 			//c.OpenReadAsync(uri);
 			return uri;
 		}
+
+		#endregion
+
+
+		#region Public Events
+
+		public static event Func<int, int, int, GoogleMapsLayer, bool> TileRequested;
 
 		#endregion
 	}

@@ -354,7 +354,7 @@
 			<Maps:Map.Mode>
 				<Core:MercatorMode />
 			</Maps:Map.Mode>
-			<Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
+			<!--<Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
 				<Maps:MapTileLayer.TileSources>
 					<CodifyMaps:GoogleMapsTileSource Layer="Street" />
 				</Maps:MapTileLayer.TileSources>
@@ -373,7 +373,8 @@
 				<Maps:MapTileLayer.TileSources>
 					<CodifyMaps:GoogleMapsTileSource Layer="TransitOverlay" />
 				</Maps:MapTileLayer.TileSources>
-			</Maps:MapTileLayer>
+			</Maps:MapTileLayer>-->
+			<Maps:MapLayer x:Name="OfflineLayer" />
 			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
 						  Location="{Binding CurrentLocation}"
 						  PositionOrigin="Center"

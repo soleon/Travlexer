@@ -55,7 +55,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps
 		void CancelGetSuggestions();
 	}
 
-	public class GoogleMapsClient : IGoogleMapsClient
+	internal class GoogleMapsClient : IGoogleMapsClient
 	{
 		#region Private Members
 

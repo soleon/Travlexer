@@ -4,16 +4,20 @@ using System.ComponentModel;
 using System.Device.Location;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using Codify;
+using Codify.Controls.Maps;
 using Codify.Extensions;
 using Codify.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
+using Microsoft.Phone.Controls.Maps.Core;
 using Microsoft.Phone.Controls.Maps.Overlays;
 using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework.Media;
@@ -31,6 +35,8 @@ namespace Travlexer.WindowsPhone.Views
 		/// A fixed path to save the screen shot when the capture screen button is pressed.
 		/// </summary>
 		private const string PathScreenCapture = "Travlexer.jpg";
+
+		private const int TileDimension = 256;
 
 		#endregion
 
@@ -81,13 +87,124 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			((Grid) Content).Children.Add(_debugText = new ShadowText { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 } });
+			((Grid)Content).Children.Add(_debugText = new ShadowText { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 } });
 
-			Loaded += (s, e) => { _debugText.Text = "Start Up Time: " + (DateTime.Now - Globals.StartUpTime).TotalMilliseconds / 1000; };
+			Map.MouseLeftButtonDown += (s, e) => { _debugText.Text = Map.ViewportPointToLocation(e.GetPosition(Map)).ToString(); };
+
+			_context.PropertyChanged += (s, e) =>
+			{
+				switch (e.PropertyName)
+				{
+					case "ZoomLevel":
+						_keys.Clear();
+						OfflineLayer.Children.Clear();
+						ShowOfflineArea();
+						break;
+					case "Center":
+						ShowOfflineArea();
+						break;
+				}
+			};
+
+			Map.Loaded += (s, e) => ShowOfflineArea();
 #endif
 		}
 
 		#endregion
+
+#if DEBUG
+		private readonly List<QuadKey> _keys = new List<QuadKey>();
+		private QuadKey ToQuadKey(Location location, int zoomLevel)
+		{
+			var tileNumber1D = Math.Floor(Math.Pow(2D, zoomLevel));
+			var quadMapDimension = TileDimension * tileNumber1D / 2;
+			var geoCenterPoint = Map.LocationToViewportPoint(new GeoCoordinate(0, 0));
+			var geoCenterPointX = geoCenterPoint.X;
+			var geoCenterPointY = geoCenterPoint.Y;
+			var currentPoint = Map.LocationToViewportPoint(location);
+			var currentPointX = currentPoint.X;
+			var currentPointY = currentPoint.Y;
+			var mapEdgeToScreenEdgeX = quadMapDimension - geoCenterPointX;
+			var mapEdgeToScreenEdgeY = quadMapDimension - geoCenterPointY;
+			var mapEdgeToCurrentPointX = mapEdgeToScreenEdgeX + currentPointX;
+			var mapEdgeToCurrentPointY = mapEdgeToScreenEdgeY + currentPointY;
+
+			var x = mapEdgeToCurrentPointX / TileDimension;
+			var y = mapEdgeToCurrentPointY / TileDimension;
+			return new QuadKey((int)x, (int)y, zoomLevel);
+		}
+
+		private void ShowOfflineArea()
+		{
+			var center = Map.Center;
+			var z = (int)Math.Floor(Map.ZoomLevel);
+			var key = ToQuadKey(center, z);
+			var x = key.X;
+			var y = key.Y;
+			AddOfflineTile(x, y, z, GoogleMapsLayer.Street);
+			AddOfflineTile(x, GetRealTileNumber(y + 1, z), z, GoogleMapsLayer.Street);
+			AddOfflineTile(GetRealTileNumber(x + 1, z), y, z, GoogleMapsLayer.Street);
+			AddOfflineTile(GetRealTileNumber(x + 1, z), GetRealTileNumber(y + 1, z), z, GoogleMapsLayer.Street);
+			AddOfflineTile(GetRealTileNumber(x - 1, z), y, z, GoogleMapsLayer.Street);
+			AddOfflineTile(x, GetRealTileNumber(y - 1, z), z, GoogleMapsLayer.Street);
+			AddOfflineTile(GetRealTileNumber(x - 1, z), GetRealTileNumber(y - 1, z), z, GoogleMapsLayer.Street);
+			AddOfflineTile(GetRealTileNumber(x + 1, z), GetRealTileNumber(y - 1, z), z, GoogleMapsLayer.Street);
+			AddOfflineTile(GetRealTileNumber(x - 1, z), GetRealTileNumber(y + 1, z), z, GoogleMapsLayer.Street);
+		}
+
+		private void AddOfflineTile(int x, int y, int z, GoogleMapsLayer layer)
+		{
+			var key = new QuadKey(x, y, z);
+			if (_keys.Contains(key))
+			{
+				return;
+			}
+			var tailNumber1D = (int)Math.Floor(Math.Pow(2D, z));
+			var uri = GoogleMapsTileSource.GetUri(x, y, z, layer);
+			var tailNumberToGeoCenter = tailNumber1D / 2;
+			var modifierX = x >= tailNumberToGeoCenter ? 1 : -1;
+			var modifierY = y >= tailNumberToGeoCenter ? 1 : -1;
+			var xNumberToGeoCenter = Math.Abs(x - tailNumberToGeoCenter);
+			var yNumberToGeoCenter = Math.Abs(y - tailNumberToGeoCenter);
+			var geoCenterPoint = Map.LocationToViewportPoint(new GeoCoordinate(0, 0));
+			var geoCenterPointX = geoCenterPoint.X;
+			var geoCenterPointY = geoCenterPoint.Y;
+
+			var tailPointX = geoCenterPointX + (TileDimension * xNumberToGeoCenter * modifierX);
+			var tailPointY = geoCenterPointY + (TileDimension * yNumberToGeoCenter * modifierY);
+			var tailPoint = new Point(tailPointX, tailPointY);
+			var tailLocation = Map.ViewportPointToLocation(tailPoint);
+
+			var tilePushpin = new Pushpin
+			{
+				PositionOrigin = PositionOrigin.TopLeft,
+				Template = null,
+				Content = new Rectangle
+				{
+					Width = TileDimension,
+					Height = TileDimension,
+					Fill = new ImageBrush { ImageSource = new BitmapImage(uri) }
+				},
+				Location = tailLocation
+			};
+			OfflineLayer.Children.Add(tilePushpin);
+			_keys.Add(key);
+		}
+
+		private int GetRealTileNumber(int logicalTileNumber, int zoomLevel)
+		{
+			var tileNumber1D = (int)Math.Floor(Math.Pow(2D, zoomLevel));
+			if (logicalTileNumber < 0)
+			{
+				return tileNumber1D + logicalTileNumber;
+			}
+			if (logicalTileNumber >= tileNumber1D)
+			{
+				return logicalTileNumber - tileNumber1D;
+			}
+			return logicalTileNumber;
+		}
+#endif
 
 
 		#region Event Handling
@@ -131,7 +248,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate) p.Location).ToArray();
+				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -170,7 +287,7 @@ namespace Travlexer.WindowsPhone.Views
 				var bmp = new WriteableBitmap(Map, null);
 				using (var ms = new MemoryStream())
 				{
-					bmp.SaveJpeg(ms, (int) ActualWidth, (int) ActualHeight, 0, 100);
+					bmp.SaveJpeg(ms, (int)ActualWidth, (int)ActualHeight, 0, 100);
 					ms.Seek(0, SeekOrigin.Begin);
 
 					var lib = new MediaLibrary();
@@ -213,7 +330,7 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				return;
 			}
-			var transform = (CompositeTransform) DragPushpin.RenderTransform;
+			var transform = (CompositeTransform)DragPushpin.RenderTransform;
 			transform.TranslateX += e.HorizontalChange;
 			transform.TranslateY += e.VerticalChange;
 		}
@@ -240,7 +357,7 @@ namespace Travlexer.WindowsPhone.Views
 			_context.SelectedPushpin = dragPushpinVm;
 
 			// Reset transformation of the drag cue.
-			var transform = (CompositeTransform) DragPushpin.RenderTransform;
+			var transform = (CompositeTransform)DragPushpin.RenderTransform;
 			transform.TranslateX = 0;
 			transform.TranslateY = 0;
 
@@ -260,8 +377,8 @@ namespace Travlexer.WindowsPhone.Views
 
 		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
 		{
-			var pushpin = (Pushpin) sender;
-			var data = (DataViewModel<Place>) pushpin.DataContext;
+			var pushpin = (Pushpin)sender;
+			var data = (DataViewModel<Place>)pushpin.DataContext;
 			if (data.Data.IsSearchResult)
 			{
 				return;
