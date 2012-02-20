@@ -32,7 +32,7 @@ namespace Codify.DependencyShell
 		/// </summary>
 		public ApplicationBar()
 		{
-			_applicationBar = new Microsoft.Phone.Shell.ApplicationBar();
+			_applicationBar = new Microsoft.Phone.Shell.ApplicationBar();			
 			_buttons = new ObservableCollection<ApplicationBarIconButton>();
 			_buttons.CollectionChanged += OnButtonsCollectionChanged;
 			_menuItems = new ObservableCollection<ApplicationBarMenuItem>();

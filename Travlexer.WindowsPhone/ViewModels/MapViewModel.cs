@@ -61,15 +61,19 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		#region Constructors
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MapViewModel"/> class.
+		/// </summary>
 		public MapViewModel()
 		{
 			// Get values from global context.
-			Center = DataContext.MapCenter;
-			ZoomLevel = DataContext.MapZoomLevel;
+			Center = new ObservableValue<GeoCoordinate>(DataContext.MapCenter);
+			ZoomLevel = new ObservableValue<double>(DataContext.MapZoomLevel);
 			SearchInput = DataContext.SearchInput;
 			IsTrackingCurrentLocation = DataContext.IsTrackingCurrentLocation;
 			ToolbarState = ApplicationContext.ToolbarState;
 			VisualState = new ObservableValue<VisualStates>();
+			IsOffline = new ObservableValue<bool>(DataContext.IsOffline);
 
 			// Initialise collections.
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
@@ -93,12 +97,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandStartGeoWatcher = new DelegateCommand(OnStartGeoWatcher);
 			CommandStopGeoWatcher = new DelegateCommand(OnStopGeoWatcher);
 			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
-			CommandZoomIn = new DelegateCommand(() => ZoomLevel++);
-			CommandZoomOut = new DelegateCommand(() => ZoomLevel--);
+			CommandZoomIn = new DelegateCommand(() => { if(ZoomLevel.Value < 20D) ZoomLevel.Value = Math.Min(ZoomLevel.Value+=0.5D, 20D); });
+			CommandZoomOut = new DelegateCommand(() => { if (ZoomLevel.Value > 1D) ZoomLevel.Value = Math.Max(ZoomLevel.Value-=0.5D, 1D); });
 			CommandShowStreetLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.Street);
 			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.SatelliteHybrid);
 			CommandToggleMapOverlay = new DelegateCommand<GoogleMapsLayer>(DataContext.ToggleMapOverlay);
 			CommandToggleToolbar = new DelegateCommand(ApplicationContext.ToggleToolbarState);
+			CommandToggleConnectivityMode = new DelegateCommand(OnToggleConnectivityMode);
 
 			// Initialise geo-coordinate watcher.
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
@@ -108,12 +113,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 			DataContext.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
 			DataContext.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
 			ApplicationContext.IsBusy.ValueChanged += (oldValue, newValue) => RaisePropertyChange(IsBusyProperty);
+			GoogleMapsTileSource.TileRequested += key => IsOffline.Value;
 			VisualState.ValueChanged += OnVisualStateChanged;
+			ZoomLevel.ValueChanged += OnZoomLevelChanged;
+			Center.ValueChanged += OnCenterChanged;
+			IsOffline.ValueChanged += OnIsOfflineChanged;
 
 			// Automatically track current position at first run.
 			if (DataContext.IsFirstRun)
 			{
-				//IsTrackingCurrentLocation = true;
+				IsTrackingCurrentLocation = true;
 			}
 
 			// Try centering on current location if available.
@@ -121,8 +130,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				if (!_geoWatcher.Position.Location.IsUnknown)
 				{
-					Center = _geoWatcher.Position.Location;
-					ZoomLevel = 15;
+					Center.Value = _geoWatcher.Position.Location;
+					ZoomLevel.Value = 15;
 				}
 			}
 		}
@@ -157,7 +166,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				{
 					DragPushpin = null;
 					var place = value.Data;
-					Center = place.Location;
+					Center.Value = place.Location;
 					if (place.DataState != DataStates.Finished)
 					{
 						OnUpdatePlace(value);
@@ -210,42 +219,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets or sets the map center geo-coordination.
 		/// </summary>
-		public GeoCoordinate Center
-		{
-			get { return DataContext.MapCenter; }
-			set
-			{
-				var mapCenter = DataContext.MapCenter;
-				if (value == mapCenter)
-				{
-					return;
-				}
-				mapCenter.Latitude = value.Latitude;
-				mapCenter.Longitude = value.Longitude;
-				RaisePropertyChange(CenterProperty);
-			}
-		}
-
-		private const string CenterProperty = "Center";
+		public ObservableValue<GeoCoordinate> Center { get; private set; } 
 
 		/// <summary>
 		/// Gets or sets the zoom level of the map.
 		/// </summary>
-		public double ZoomLevel
-		{
-			get { return DataContext.MapZoomLevel; }
-			set
-			{
-				if (value < 1 || value > 20 || DataContext.MapZoomLevel.Equals(value))
-				{
-					return;
-				}
-				DataContext.MapZoomLevel = value;
-				RaisePropertyChange(ZoomLevelProperty);
-			}
-		}
-
-		private const string ZoomLevelProperty = "ZoomLevel";
+		public ObservableValue<double> ZoomLevel { get; private set; }
 
 		/// <summary>
 		/// Gets the suggestions based on the <see cref="SearchInput"/>.
@@ -311,8 +290,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 				DataContext.IsTrackingCurrentLocation = value;
 				if (value && CurrentLocation != null && !CurrentLocation.IsUnknown)
 				{
-					Center = CurrentLocation;
-					ZoomLevel = 15;
+					Center.Value = CurrentLocation;
+					ZoomLevel.Value = 15;
 				}
 				RaisePropertyChange(IsTrackingCurrentLocationProperty);
 			}
@@ -334,7 +313,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private const string IsBusyProperty = "IsBusy";
 
 		/// <summary>
-		/// Gets the visibility of street layer.
+		/// Gets the visibility of online street layer.
 		/// </summary>
 		public Visibility IsStreetLayerVisible
 		{
@@ -344,7 +323,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
 
 		/// <summary>
-		/// Gets the visibility of satellite hybrid layer.
+		/// Gets the visibility of online satellite hybrid layer.
 		/// </summary>
 		public Visibility IsSatelliteHybridLayerVisible
 		{
@@ -354,21 +333,21 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
 
 		/// <summary>
-		/// Gets the visibility of traffic layer.
+		/// Gets the visibility of online traffic layer.
 		/// </summary>
 		public Visibility IsTrafficLayerVisible
 		{
-			get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return  DataContext.MapOverlays.Contains(GoogleMapsLayer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
 
 		/// <summary>
-		/// Gets the visibility of transit layer.
+		/// Gets the visibility of online transit layer.
 		/// </summary>
 		public Visibility IsTransitLayerVisible
 		{
-			get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return  DataContext.MapOverlays.Contains(GoogleMapsLayer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
@@ -377,6 +356,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the state of the toolbar.
 		/// </summary>
 		public ObservableValue<ExpansionStates> ToolbarState { get; private set; }
+
+		/// <summary>
+		/// Gets the value indicates if the application is working in offline mode.
+		/// </summary>
+		public ObservableValue<bool> IsOffline { get; private set; }
 
 		#endregion
 
@@ -493,10 +477,37 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public DelegateCommand CommandToggleToolbar { get; private set; }
 
+		/// <summary>
+		/// Gets the command that toggles connectivity mode.
+		/// </summary>
+		public DelegateCommand CommandToggleConnectivityMode { get; private set; }
+
 		#endregion
 
 
 		#region Event Handling
+
+		/// <summary>
+		/// Called when the value of <see cref="Center"/> has changed.
+		/// </summary>
+		private void OnCenterChanged(GeoCoordinate old, GeoCoordinate @new)
+		{
+			var mapCenter = DataContext.MapCenter;
+			mapCenter.Latitude = @new.Latitude;
+			mapCenter.Longitude = @new.Longitude;
+		}
+
+		/// <summary>
+		/// Called when the value of <see cref="ZoomLevel"/> has changed.
+		/// </summary>
+		private void OnZoomLevelChanged(double old, double @new)
+		{
+			if (@new < 1 || @new > 20 || DataContext.MapZoomLevel.Equals(@new))
+			{
+				return;
+			}
+			DataContext.MapZoomLevel = @new;
+		}
 
 		/// <summary>
 		/// Called when <see cref="CommandStopGeoWatcher"/> is executed.
@@ -597,7 +608,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			ApplicationContext.IsBusy.Value = true;
 			VisualState.Value = VisualStates.Default;
 			DataContext.CancelGetSuggestions();
-			DataContext.Search(Center, SearchInput, callback =>
+			DataContext.Search(Center.Value, SearchInput, callback =>
 			{
 				ApplicationContext.IsBusy.Value = false;
 				if (callback.Status != CallbackStatus.Successful)
@@ -624,7 +635,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			}
 
 			ApplicationContext.IsBusy.Value = true;
-			DataContext.GetSuggestions(Center, SearchInput, args =>
+			DataContext.GetSuggestions(Center.Value, SearchInput, args =>
 			{
 				ApplicationContext.IsBusy.Value = false;
 				SelectedSuggestion = null;
@@ -698,13 +709,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				return;
 			}
-			Center = location;
+			Center.Value = location;
 
 			// This is to determine whether this is the first current location update.
 			// The first update should set the zoom level to 15.
 			if (oldCurrentLocation == null)
 			{
-				ZoomLevel = 15;
+				ZoomLevel.Value = 15;
 			}
 		}
 
@@ -742,6 +753,22 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				DragPushpin = null;
 			}
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandToggleConnectivityMode"/> is executed.
+		/// </summary>
+		private void OnToggleConnectivityMode()
+		{
+
+		}
+
+		/// <summary>
+		/// Called when the value of <see cref="IsOffline"/> has changed.
+		/// </summary>
+		private void OnIsOfflineChanged(bool old, bool @new)
+		{
+			DataContext.IsOffline = @new;
 		}
 
 		#endregion

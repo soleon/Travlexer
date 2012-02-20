@@ -10,7 +10,6 @@
 							xmlns:DependencyShell="clr-namespace:Codify.DependencyShell;assembly=Codify"
 							xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-							xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
 							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -30,6 +29,41 @@
 							shell:SystemTray.IsVisible="True"
 							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
 							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
+	<phone:PhoneApplicationPage.Resources>
+		<ScaleTransform x:Key="MapTileScale" />
+		<Style x:Key="MapTilePushpin"
+			   TargetType="Maps:Pushpin">
+			<Setter Property="UseLayoutRounding"
+					Value="False" />
+			<Setter Property="Foreground"
+					Value="{x:Null}" />
+			<Setter Property="Width"
+					Value="256" />
+			<Setter Property="Height"
+					Value="256" />
+			<Setter Property="Content"
+					Value="{x:Null}" />
+			<Setter Property="IsHitTestVisible"
+					Value="False" />
+			<Setter Property="IsTabStop"
+					Value="False" />
+			<Setter Property="RenderTransform"
+					Value="{StaticResource MapTileScale}" />
+			<Setter Property="CacheMode"
+					Value="BitmapCache" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Maps:Pushpin">
+						<Rectangle Fill="{TemplateBinding Background}"
+								   Width="256"
+								   Height="256"
+								   Stroke="Red"
+								   StrokeThickness="1"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</phone:PhoneApplicationPage.Resources>
 	<i:Interaction.Triggers>
 		<i:EventTrigger EventName="BackKeyPress">
 			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
@@ -178,7 +212,7 @@
 				<VisualState x:Name="Search">
 					<Storyboard>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
-							Storyboard.TargetProperty="(UIElement.Visibility)">
+													   Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
@@ -186,16 +220,16 @@
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
 						<DoubleAnimation Storyboard.TargetName="SearchBackground"
-							Storyboard.TargetProperty="(UIElement.Opacity)"
-							Duration="0"
-							To="1"
-							d:IsOptimized="True" />
+										 Storyboard.TargetProperty="(UIElement.Opacity)"
+										 Duration="0"
+										 To="1"
+										 d:IsOptimized="True" />
 						<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-							Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-							Duration="0"
-							EasingFunction="{StaticResource EasingQuinticOut}"
-							To="33"
-							d:IsOptimized="True" />
+										 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+										 Duration="0"
+										 EasingFunction="{StaticResource EasingQuinticOut}"
+										 To="33"
+										 d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="PushpinSelected">
@@ -266,7 +300,7 @@
 											 Storyboard.TargetProperty="(FrameworkElement.Height)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="469" />
+											 To="570" />
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
 														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
@@ -309,7 +343,7 @@
 						<DoubleAnimation Storyboard.TargetName="Toolbar"
 										 Storyboard.TargetProperty="(FrameworkElement.Height)"
 										 Duration="0"
-										 To="469"
+										 To="570"
 										 d:IsOptimized="True" />
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
 													   Storyboard.TargetProperty="(UIElement.Visibility)">
@@ -329,11 +363,11 @@
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 		<Maps:Map x:Name="Map"
-				  Center="{Binding Center, Mode=TwoWay}"
+				  Center="{Binding Center.Value, Mode=TwoWay}"
 				  CopyrightVisibility="Collapsed"
 				  CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
 				  LogoVisibility="Collapsed"
-				  ZoomLevel="{Binding ZoomLevel, Mode=TwoWay}">
+				  ZoomLevel="{Binding ZoomLevel.Value, Mode=TwoWay}">
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="MapPan">
 					<i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
@@ -354,27 +388,32 @@
 			<Maps:Map.Mode>
 				<Core:MercatorMode />
 			</Maps:Map.Mode>
-			<!--<Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
-				<Maps:MapTileLayer.TileSources>
-					<CodifyMaps:GoogleMapsTileSource Layer="Street" />
-				</Maps:MapTileLayer.TileSources>
-			</Maps:MapTileLayer>
-			<Maps:MapTileLayer Visibility="{Binding IsSatelliteHybridLayerVisible}">
-				<Maps:MapTileLayer.TileSources>
-					<CodifyMaps:GoogleMapsTileSource Layer="SatelliteHybrid" />
-				</Maps:MapTileLayer.TileSources>
-			</Maps:MapTileLayer>
-			<Maps:MapTileLayer Visibility="{Binding IsTrafficLayerVisible}">
-				<Maps:MapTileLayer.TileSources>
-					<CodifyMaps:GoogleMapsTileSource Layer="TrafficOverlay" />
-				</Maps:MapTileLayer.TileSources>
-			</Maps:MapTileLayer>
-			<Maps:MapTileLayer Visibility="{Binding IsTransitLayerVisible}">
-				<Maps:MapTileLayer.TileSources>
-					<CodifyMaps:GoogleMapsTileSource Layer="TransitOverlay" />
-				</Maps:MapTileLayer.TileSources>
-			</Maps:MapTileLayer>-->
-			<Maps:MapLayer x:Name="OfflineLayer" />
+			<Maps:MapLayer Visibility="{Binding IsOffline.Value, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
+				<Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
+					<Maps:MapTileLayer.TileSources>
+						<CodifyMaps:GoogleMapsTileSource Layer="Street" />
+					</Maps:MapTileLayer.TileSources>
+				</Maps:MapTileLayer>
+				<Maps:MapTileLayer Visibility="{Binding IsSatelliteHybridLayerVisible}">
+					<Maps:MapTileLayer.TileSources>
+						<CodifyMaps:GoogleMapsTileSource Layer="SatelliteHybrid" />
+					</Maps:MapTileLayer.TileSources>
+				</Maps:MapTileLayer>
+				<Maps:MapTileLayer Visibility="{Binding IsTrafficLayerVisible}">
+					<Maps:MapTileLayer.TileSources>
+						<CodifyMaps:GoogleMapsTileSource Layer="TrafficOverlay" />
+					</Maps:MapTileLayer.TileSources>
+				</Maps:MapTileLayer>
+				<Maps:MapTileLayer Visibility="{Binding IsTransitLayerVisible}">
+					<Maps:MapTileLayer.TileSources>
+						<CodifyMaps:GoogleMapsTileSource Layer="TransitOverlay" />
+					</Maps:MapTileLayer.TileSources>
+				</Maps:MapTileLayer>
+			</Maps:MapLayer>
+			<Maps:MapLayer Visibility="{Binding IsOffline.Value, Converter={StaticResource VisibilityConverter}}">
+				<Maps:MapLayer x:Name="OfflineStreetLayer"
+					Visibility="{Binding IsStreetLayerVisible, Mode=OneWay}" />
+			</Maps:MapLayer>
 			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
 						  Location="{Binding CurrentLocation}"
 						  PositionOrigin="Center"
@@ -391,9 +430,10 @@
 							 Width="40"
 							 Fill="Transparent" />
 					<Rectangle Height="30"
-										   Width="30"
-										   HorizontalAlignment="Center"
-										   VerticalAlignment="Center" Fill="{StaticResource BrushIconCurrentLocation}" />
+							   Width="30"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"
+							   Fill="{StaticResource BrushIconCurrentLocation}" />
 				</Grid>
 			</Maps:Pushpin>
 			<Maps:MapItemsControl Collections:DelayCollection.ItemsSource="{Binding Pushpins}"
@@ -517,7 +557,7 @@
 				VerticalAlignment="Center">
 			<StackPanel>
 				<Controls:CircleButton Click="OnCaptureScreen">
-					<Rectangle Fill="{StaticResource BrushIconCamera}"/>
+					<Rectangle Fill="{StaticResource BrushIconCamera}" />
 				</Controls:CircleButton>
 				<Button Style="{StaticResource EmptyButton}"
 						x:Name="ExpandButton"
@@ -532,19 +572,20 @@
 							<i:InvokeCommandAction Command="{Binding CommandToggleToolbar, Mode=OneTime}" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
-					<Rectangle Fill="{StaticResource BrushIconDownArrow}"/>
+					<Rectangle Fill="{StaticResource BrushIconDownArrow}" />
 				</Button>
 				<StackPanel x:Name="ExpandedPanel"
 							Orientation="Vertical"
 							Visibility="Collapsed">
 					<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}">
-						<Rectangle Fill="{StaticResource BrushIconPlus}"/>
+						<Rectangle Fill="{StaticResource BrushIconPlus}" />
 					</Controls:CircleButton>
 					<Controls:CircleButton Margin="0,10,0,0"
 										   Command="{Binding CommandZoomOut, Mode=OneTime}">
-						<Rectangle Fill="{StaticResource BrushIconMinus}"/>
+						<Rectangle Fill="{StaticResource BrushIconMinus}" />
 					</Controls:CircleButton>
-					<Rectangle Height="35" Fill="{StaticResource BrushIconEllipsis}"/>
+					<Rectangle Height="35"
+							   Fill="{StaticResource BrushIconEllipsis}" />
 					<Controls:CircleButton Caption="street"
 										   Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
 										   Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
@@ -564,11 +605,12 @@
 					<Controls:CircleToggleButton Margin="0,10,0,0"
 												 Caption="traffic"
 												 Command="{Binding CommandToggleMapOverlay, Mode=OneTime}"
-												 IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
+												 IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
+												 IsEnabled="{Binding IsOffline.Value, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}">
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TrafficOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Rectangle Fill="{StaticResource BrushIconTraffic}"/>
+						<Rectangle Fill="{StaticResource BrushIconTraffic}" />
 					</Controls:CircleToggleButton>
 					<Controls:CircleToggleButton Margin="0,10,0,0"
 												 Caption="transport"
@@ -577,7 +619,13 @@
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TransitOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Rectangle Fill="{StaticResource BrushIconTrain}"/>
+						<Rectangle Fill="{StaticResource BrushIconTrain}" />
+					</Controls:CircleToggleButton>
+					<Rectangle Height="35"
+							   Fill="{StaticResource BrushIconEllipsis}" />
+					<Controls:CircleToggleButton Caption="network"
+												 IsChecked="{Binding IsOffline.Value, Mode=TwoWay}">
+						<Rectangle Fill="{StaticResource BrushIconWifi}" />
 					</Controls:CircleToggleButton>
 				</StackPanel>
 			</StackPanel>
@@ -643,17 +691,18 @@
 							Width="52"
 							Background="{StaticResource PhoneBackgroundBrush}">
 						<Rectangle Height="32"
-									  Width="32"
-									  Fill="{StaticResource BrushIconSearch}"
-									  HorizontalAlignment="Center"
-									  VerticalAlignment="Center" />
+								   Width="32"
+								   Fill="{StaticResource BrushIconSearch}"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center" />
 					</Border>
 				</Button>
 			</Grid>
 		</Grid>
 	</Grid>
 	<i:Interaction.Behaviors>
-		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}">
+		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}"
+										IsVisible="False">
 			<DependencyShell:ApplicationBar.Buttons>
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
 														  IconUri="/Assets/CurrentLocation.png"

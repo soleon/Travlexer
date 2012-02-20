@@ -3,7 +3,7 @@ using Codify.Extensions;
 
 namespace Codify.Models
 {
-	public class ObservableValue<T>
+	public class ObservableValue<T> : NotifyBase
 	{
 		#region Constructors
 
@@ -66,11 +66,13 @@ namespace Codify.Models
 					return;
 				}
 				_value = @new;
+				RaisePropertyChanged(ValueProperty);
 				RaiseValueChanged(old, @new);
 			}
 		}
 
 		private T _value;
+		private const string ValueProperty = "Value";
 
 		#endregion
 	}

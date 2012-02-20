@@ -68,6 +68,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
 		private const string MapZoomLevelProperty = "MapZoomLevel";
 
+
+
 		/// <summary>
 		/// Gets or sets the search input.
 		/// </summary>
@@ -81,6 +83,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static bool IsTrackingCurrentLocation { get; set; }
 
 		private const string IsTrackingCurrentLocationProperty = "IsTrackingCurrentLocation";
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is offline.
+		/// </summary>
+		public static bool IsOffline { get; set; }
+		private const string IsOfflineProperty = "IsOffline";
 
 		/// <summary>
 		/// Gets or sets the map base layer.
@@ -365,6 +373,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save current location tracking flag.
 			StorageProvider.SaveSetting(IsTrackingCurrentLocationProperty, IsTrackingCurrentLocation);
 
+			// Save offline flag.
+			StorageProvider.SaveSetting(IsOfflineProperty, IsOffline);
+
 			// Save map base layer.
 			StorageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
 
@@ -419,6 +430,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			if (StorageProvider.TryGetSetting(IsTrackingCurrentLocationProperty, out isTrackingCurrnetLocation))
 			{
 				IsTrackingCurrentLocation = isTrackingCurrnetLocation;
+			}
+
+			// Load offline flag.
+			bool isOffline;
+			if (StorageProvider.TryGetSetting(IsOfflineProperty, out isOffline))
+			{
+				IsOffline = isOffline;
 			}
 
 			// Load map base layer.

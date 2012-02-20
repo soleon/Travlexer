@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
+using Codify.Controls.Maps;
 using Codify.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -29,9 +30,6 @@ namespace Travlexer.WindowsPhone
 		/// </summary>
 		public App()
 		{
-#if DEBUG
-			Globals.StartUpTime = DateTime.Now;
-#endif
 			// Global handler for uncaught exceptions. 
 			UnhandledException += OnApplicationUnhandledException;
 

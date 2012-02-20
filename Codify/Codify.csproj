@@ -61,6 +61,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Imaging\UIBitmap.cs" />
     <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\NotifyBase.cs" />
     <Compile Include="Models\ObservableValue.cs" />
     <Compile Include="ExpansionStates.cs" />
     <Compile Include="Serialization\ISerializer.cs" />

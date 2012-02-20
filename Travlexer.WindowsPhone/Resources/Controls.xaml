@@ -4,7 +4,6 @@
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 					xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 					xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
 					xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -154,6 +153,89 @@
 				Value="{StaticResource PhoneFontSizeNormal}" />
 		<Setter Property="FontFamily"
 				Value="{StaticResource PhoneFontFamilyNormal}" />
+	</Style>
+	<Style x:Key="PushpinShadow"
+		   TargetType="Maps:Pushpin">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Maps:Pushpin">
+					<Path x:Name="Shadow"
+						  Data="M1,1 L12.5,25 L25,1"
+						  HorizontalAlignment="Center"
+						  Opacity="0"
+						  RenderTransformOrigin="0.5,1"
+						  UseLayoutRounding="False"
+						  VerticalAlignment="Bottom"
+						  d:LayoutOverrides="Width">
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="LoadStates">
+								<VisualStateGroup.Transitions>
+									<VisualTransition To="Drop">
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Shadow"
+															 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
+															 Duration="0:0:0.3"
+															 EasingFunction="{StaticResource EasingQuinticOut}"
+															 From="-400"
+															 To="0" />
+											<DoubleAnimation Storyboard.TargetName="Shadow"
+															 Storyboard.TargetProperty="(UIElement.Opacity)"
+															 BeginTime="0:0:0.1"
+															 Duration="0:0:0.2"
+															 To="1" />
+										</Storyboard>
+									</VisualTransition>
+								</VisualStateGroup.Transitions>
+								<VisualState x:Name="Drop">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="Shadow"
+														 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
+										<DoubleAnimation Storyboard.TargetName="Shadow"
+														 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+														 Duration="0"
+														 To="0"
+														 d:IsOptimized="True" />
+										<DoubleAnimation Storyboard.TargetName="Shadow"
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Duration="0"
+														 To="1"
+														 d:IsOptimized="True" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<i:Interaction.Triggers>
+							<i:EventTrigger>
+								<ec:GoToStateAction StateName="Drop" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+						<Path.RenderTransform>
+							<CompositeTransform ScaleX="2"
+												ScaleY="2" />
+						</Path.RenderTransform>
+						<Path.Projection>
+							<PlaneProjection CenterOfRotationY="1"
+											 LocalOffsetY="-400"
+											 RotationX="-63"
+											 RotationY="37" />
+						</Path.Projection>
+						<Path.Fill>
+							<LinearGradientBrush EndPoint="0.5,1"
+												 StartPoint="0.5,0">
+								<GradientStop />
+								<GradientStop Color="#80000000"
+											  Offset="1" />
+								<GradientStop Color="#19000000"
+											  Offset="0.6" />
+							</LinearGradientBrush>
+						</Path.Fill>
+					</Path>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 	<Style TargetType="Controls:PushpinContent">
 		<Setter Property="Template">
@@ -456,89 +538,6 @@
 		<Setter Property="Foreground"
 				Value="{StaticResource PhoneForegroundBrush}" />
 	</Style>
-	<Style x:Key="PushpinShadow"
-		   TargetType="Maps:Pushpin">
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="Maps:Pushpin">
-					<Path x:Name="Shadow"
-						  Data="M1,1 L12.5,25 L25,1"
-						  HorizontalAlignment="Center"
-						  Opacity="0"
-						  RenderTransformOrigin="0.5,1"
-						  UseLayoutRounding="False"
-						  VerticalAlignment="Bottom"
-						  d:LayoutOverrides="Width">
-						<VisualStateManager.VisualStateGroups>
-							<VisualStateGroup x:Name="LoadStates">
-								<VisualStateGroup.Transitions>
-									<VisualTransition To="Drop">
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="Shadow"
-															 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
-															 Duration="0:0:0.3"
-															 EasingFunction="{StaticResource EasingQuinticOut}"
-															 From="-400"
-															 To="0" />
-											<DoubleAnimation Storyboard.TargetName="Shadow"
-															 Storyboard.TargetProperty="(UIElement.Opacity)"
-															 BeginTime="0:0:0.1"
-															 Duration="0:0:0.2"
-															 To="1" />
-										</Storyboard>
-									</VisualTransition>
-								</VisualStateGroup.Transitions>
-								<VisualState x:Name="Drop">
-									<Storyboard>
-										<DoubleAnimation Storyboard.TargetName="Shadow"
-														 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetY)"
-														 Duration="0"
-														 To="0"
-														 d:IsOptimized="True" />
-										<DoubleAnimation Storyboard.TargetName="Shadow"
-														 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-														 Duration="0"
-														 To="0"
-														 d:IsOptimized="True" />
-										<DoubleAnimation Storyboard.TargetName="Shadow"
-														 Storyboard.TargetProperty="(UIElement.Opacity)"
-														 Duration="0"
-														 To="1"
-														 d:IsOptimized="True" />
-									</Storyboard>
-								</VisualState>
-							</VisualStateGroup>
-						</VisualStateManager.VisualStateGroups>
-						<i:Interaction.Triggers>
-							<i:EventTrigger>
-								<ec:GoToStateAction StateName="Drop" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-						<Path.RenderTransform>
-							<CompositeTransform ScaleX="2"
-												ScaleY="2" />
-						</Path.RenderTransform>
-						<Path.Projection>
-							<PlaneProjection CenterOfRotationY="1"
-											 LocalOffsetY="-400"
-											 RotationX="-63"
-											 RotationY="37" />
-						</Path.Projection>
-						<Path.Fill>
-							<LinearGradientBrush EndPoint="0.5,1"
-												 StartPoint="0.5,0">
-								<GradientStop />
-								<GradientStop Color="#80000000"
-											  Offset="1" />
-								<GradientStop Color="#19000000"
-											  Offset="0.6" />
-							</LinearGradientBrush>
-						</Path.Fill>
-					</Path>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
 	<Style TargetType="Maps:Pushpin">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -604,11 +603,17 @@
 							  StrokeThickness="2"
 							  VerticalAlignment="Bottom"
 							  Margin="0,0,0,2" />
-						<Rectangle Fill="{StaticResource BrushIconSearch}" Width="20" Height="20" 
-								   Margin="0,-8,-8,0"
-									  HorizontalAlignment="Right"
-									  VerticalAlignment="Top"
-									  Visibility="{Binding Tag, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" />
+						<Path Data="M20,32 L8.9125004,43.170834 M48,20 C48,28.836555 40.836555,36 32,36 C23.163445,36 16,28.836555 16,20 C16,11.163444 23.163445,4 32,4 C40.836555,4 48,11.163444 48,20 z"
+						      StrokeThickness="4"
+							  Stroke="{StaticResource PhoneBorderBrush}"
+							  Fill="{TemplateBinding Background}"
+							  Width="20"
+							  Height="20"
+							  Stretch="Uniform"
+							  Margin="0,-6,-6,0"
+							  HorizontalAlignment="Right"
+							  VerticalAlignment="Top"
+							  Visibility="{Binding Tag, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -647,15 +652,6 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<ControlTemplate x:Key="PhoneDisabledTextBoxTemplate"
-					 TargetType="TextBox">
-		<ContentControl x:Name="ContentElement"
-						Margin="{StaticResource PhoneTextBoxInnerMargin}"
-						Padding="{TemplateBinding Padding}"
-						BorderThickness="0"
-						HorizontalContentAlignment="Stretch"
-						VerticalContentAlignment="Stretch" />
-	</ControlTemplate>
 	<Style x:Key="TextBoxStyle"
 		   TargetType="TextBox">
 		<Setter Property="FontFamily"

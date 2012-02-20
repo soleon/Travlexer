@@ -51,6 +51,7 @@
     <Compile Include="GoogleMapsLayer.cs" />
     <Compile Include="GoogleMapsTileSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuadKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codify\Codify.csproj">
