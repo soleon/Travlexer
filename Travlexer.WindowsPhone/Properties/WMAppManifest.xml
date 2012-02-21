@@ -26,7 +26,7 @@
         <TemplateType5>
           <BackgroundImageURI IsRelative="true" IsResource="false">Assets\AppTile.png</BackgroundImageURI>
           <Count>0</Count>
-          <Title>Travlexer</Title>
+          <Title></Title>
         </TemplateType5>
       </PrimaryToken>
     </Tokens>
