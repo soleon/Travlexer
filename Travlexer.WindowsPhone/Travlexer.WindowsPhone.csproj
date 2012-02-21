@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\CurrentLocation.png" />
+    <Content Include="Assets\EmptyTile.png" />
     <Content Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />
     <Content Include="Assets\AppIcon.png">

@@ -30,25 +30,20 @@
 							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
 							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
 	<phone:PhoneApplicationPage.Resources>
-		<ScaleTransform x:Key="MapTileScale" />
-		<Style x:Key="MapTilePushpin"
+		<ScaleTransform x:Key="TileScale" />
+		<!--This style is used in code behind, do not remove-->
+		<Style x:Key="TilePushpin"
 			   TargetType="Maps:Pushpin">
 			<Setter Property="UseLayoutRounding"
 					Value="False" />
-			<Setter Property="Foreground"
-					Value="{x:Null}" />
 			<Setter Property="Width"
 					Value="256" />
 			<Setter Property="Height"
 					Value="256" />
-			<Setter Property="Content"
-					Value="{x:Null}" />
 			<Setter Property="IsHitTestVisible"
 					Value="False" />
-			<Setter Property="IsTabStop"
-					Value="False" />
 			<Setter Property="RenderTransform"
-					Value="{StaticResource MapTileScale}" />
+					Value="{StaticResource TileScale}" />
 			<Setter Property="CacheMode"
 					Value="BitmapCache" />
 			<Setter Property="Template">
@@ -56,9 +51,7 @@
 					<ControlTemplate TargetType="Maps:Pushpin">
 						<Rectangle Fill="{TemplateBinding Background}"
 								   Width="256"
-								   Height="256"
-								   Stroke="Red"
-								   StrokeThickness="1"/>
+								   Height="256"/>
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>
