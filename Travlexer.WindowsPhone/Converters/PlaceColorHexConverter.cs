@@ -20,7 +20,7 @@ namespace Travlexer.WindowsPhone.Converters
 			{ PlaceColor.Orange, "#F09609" },
 			{ PlaceColor.Red, "#E51400" },
 			{ PlaceColor.Green, "#339933" },
-			{PlaceColor.Black, "#000000" }
+			{ PlaceColor.Black, "#000000" }
 		};
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

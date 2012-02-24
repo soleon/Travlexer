@@ -11,7 +11,7 @@ namespace Codify.Converters
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var result = false;
+			bool result;
 
 			if (value is string)
 			{
@@ -58,9 +58,9 @@ namespace Codify.Converters
 			return value != Visibility.Collapsed;
 		}
 
-		private static bool Convert<T>(T value) where T : class
+		private static bool Convert<T>(T value)
 		{
-			return value != null;
+			return !Equals(value, default(T));
 		}
 	}
 }

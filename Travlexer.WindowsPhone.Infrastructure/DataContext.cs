@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Device.Location;
 using System.Linq;
 using System.Net;
 using Codify;
@@ -29,11 +30,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		static DataContext()
 		{
+			MapCenter = new ObservableValue<GeoCoordinate>(new Location());
+			MapZoomLevel = new ObservableValue<double>(1D);
+			MapBaseLayer = new ObservableValue<GoogleMapsLayer>();
+			SearchInput = new ObservableValue<string>();
+
 			Places = new ReadOnlyObservableCollection<Place>(_places);
 			MapOverlays = new ObservableCollection<GoogleMapsLayer>();
-			MapBaseLayer = new ObservableValue<GoogleMapsLayer>();
-			MapZoomLevel = 1D;
-			IsFirstRun = true;
 		}
 
 		#endregion
@@ -52,43 +55,23 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Gets or sets the map center geo-location.
 		/// </summary>
-		public static Location MapCenter
-		{
-			get { return _mapCenter ?? (_mapCenter = new Location()); }
-			set { _mapCenter = value; }
-		}
+		public static ObservableValue<GeoCoordinate> MapCenter { get; private set; }
 
-		private static Location _mapCenter;
 		private const string MapCenterProperty = "MapCenter";
 
 		/// <summary>
 		/// Gets or sets the map zoom level.
 		/// </summary>
-		public static double MapZoomLevel { get; set; }
+		public static ObservableValue<double> MapZoomLevel { get; private set; }
 
 		private const string MapZoomLevelProperty = "MapZoomLevel";
-
-
 
 		/// <summary>
 		/// Gets or sets the search input.
 		/// </summary>
-		public static string SearchInput { get; set; }
+		public static ObservableValue<string> SearchInput { get; private set; }
 
 		private const string SearchInputProperty = "SearchInput";
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is tracking current location.
-		/// </summary>
-		public static bool IsTrackingCurrentLocation { get; set; }
-
-		private const string IsTrackingCurrentLocationProperty = "IsTrackingCurrentLocation";
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this instance is offline.
-		/// </summary>
-		public static bool IsOffline { get; set; }
-		private const string IsOfflineProperty = "IsOffline";
 
 		/// <summary>
 		/// Gets or sets the map base layer.
@@ -136,13 +119,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		private static ISerializer<byte[]> _serializer;
-
-		/// <summary>
-		/// Gets a value indicating whether this instance is the first run.
-		/// </summary>
-		public static bool IsFirstRun { get; private set; }
-
-		private const string IsFirstRunProperty = "IsFirstRun";
 
 		#endregion
 
@@ -362,19 +338,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static void SaveContext()
 		{
 			// Save map center.
-			StorageProvider.SaveSetting(MapCenterProperty, MapCenter);
+			StorageProvider.SaveSetting(MapCenterProperty, (Location) MapCenter.Value);
 
 			// Save map zoom level.
-			StorageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel);
+			StorageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel.Value);
 
 			// Save search input.
-			StorageProvider.SaveSetting(SearchInputProperty, SearchInput);
-
-			// Save current location tracking flag.
-			StorageProvider.SaveSetting(IsTrackingCurrentLocationProperty, IsTrackingCurrentLocation);
-
-			// Save offline flag.
-			StorageProvider.SaveSetting(IsOfflineProperty, IsOffline);
+			StorageProvider.SaveSetting(SearchInputProperty, SearchInput.Value);
 
 			// Save map base layer.
 			StorageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
@@ -386,10 +356,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
-
-			// Save first run flag.
-			// Always save false, otherwise it's not called the "first run" flag isn't it.
-			StorageProvider.SaveSetting(IsFirstRunProperty, false);
 		}
 
 		/// <summary>
@@ -397,46 +363,25 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		public static void LoadContext()
 		{
-			// Load first run flag.
-			bool isFirstRun;
-			if (StorageProvider.TryGetSetting(IsFirstRunProperty, out isFirstRun))
-			{
-				IsFirstRun = isFirstRun;
-			}
-
 			// Load map center.
 			Location mapCenter;
 			if (StorageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
 			{
-				MapCenter = mapCenter;
+				MapCenter.Value = mapCenter;
 			}
 
 			// Load map zoom level.
 			double mapZoomLevel;
 			if (StorageProvider.TryGetSetting(MapZoomLevelProperty, out mapZoomLevel))
 			{
-				MapZoomLevel = mapZoomLevel;
+				MapZoomLevel.Value = mapZoomLevel;
 			}
 
 			// Load search input.
 			string searchInput;
 			if (StorageProvider.TryGetSetting(SearchInputProperty, out searchInput))
 			{
-				SearchInput = searchInput;
-			}
-
-			// Load current location tracking flag.
-			bool isTrackingCurrnetLocation;
-			if (StorageProvider.TryGetSetting(IsTrackingCurrentLocationProperty, out isTrackingCurrnetLocation))
-			{
-				IsTrackingCurrentLocation = isTrackingCurrnetLocation;
-			}
-
-			// Load offline flag.
-			bool isOffline;
-			if (StorageProvider.TryGetSetting(IsOfflineProperty, out isOffline))
-			{
-				IsOffline = isOffline;
+				SearchInput.Value = searchInput;
 			}
 
 			// Load map base layer.

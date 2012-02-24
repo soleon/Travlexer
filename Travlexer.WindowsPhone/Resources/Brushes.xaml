@@ -130,16 +130,37 @@
 				  Stroke="{StaticResource PhoneForegroundBrush}"/>
 		</Imaging:UIBitmap.Content>
 	</ImageBrush>
-	<ImageBrush x:Key="BrushIconCurrentLocation" Stretch="None">
+	<ImageBrush x:Key="BrushIconRoute" Stretch="None">
+		<Imaging:UIBitmap.Content>
+			<Path Data="M35.265999,29.141001 L19.469,24.153 C18.863001,23.959999 18.056,22.860001 18.056,22.223 L18.056,15.278 L25,15.278 L12.5,0 L0,15.277 L6.9450002,15.277 L6.9450002,22.222 C6.9450002,27.709999 10.892,33.096001 16.125,34.747002 L31.921,39.736 C32.528,39.929001 33.333,41.028 33.333,41.666 L33.333,58.333 C33.333,58.972 32.528,60.07 31.917999,60.263 L16.128,65.252998 C10.892,66.903 6.9450002,72.289001 6.9450002,77.777 L6.9450002,100 L18.055,100 L18.055,77.777 C18.055,77.139999 18.862,76.040001 19.472,75.847 L35.262001,70.859001 C40.495998,69.207001 44.445,63.823002 44.445,58.333 L44.445,41.667 C44.445,36.176998 40.497002,30.792999 35.265999,29.141001 z M18.056,60.272999 L18.056,39.727001 L14.871,38.722 C11.754,37.737999 9.0220003,35.816002 6.9450002,33.342999 L6.9450002,66.660004 C9.0220003,64.184998 11.755,62.263 14.872,61.278 L18.056,60.272999 z"
+				  Style="{StaticResource IconPathBase}"/>
+		</Imaging:UIBitmap.Content>
+	</ImageBrush>
+	<ImageBrush x:Key="BrushIconCurrentLocationBlack" Stretch="None">
 		<Imaging:UIBitmap.Content>
 			<Ellipse Width="30" Height="30">
 				<Ellipse.Fill>
 					<RadialGradientBrush>
-						<GradientStop Color="Black" Offset="0"/>
-						<GradientStop Color="Transparent" Offset="0.75"/>
-						<GradientStop Color="Black" Offset="0.75"/>
-						<GradientStop Color="Black" Offset="0.6"/>
-						<GradientStop Color="Transparent" Offset="0.6"/>
+						<GradientStop Color="#FF000000" Offset="0"/>
+						<GradientStop Color="#00000000" Offset="0.75"/>
+						<GradientStop Color="#FF000000" Offset="0.75"/>
+						<GradientStop Color="#FF000000" Offset="0.6"/>
+						<GradientStop Color="#00000000" Offset="0.6"/>
+					</RadialGradientBrush>
+				</Ellipse.Fill>
+			</Ellipse>
+		</Imaging:UIBitmap.Content>
+	</ImageBrush>
+	<ImageBrush x:Key="BrushIconCurrentLocationWhite" Stretch="None">
+		<Imaging:UIBitmap.Content>
+			<Ellipse Width="26" Height="26">
+				<Ellipse.Fill>
+					<RadialGradientBrush>
+						<GradientStop Color="#FFFFFFFF" Offset="0"/>
+						<GradientStop Color="#00000000" Offset="0.75"/>
+						<GradientStop Color="#FFFFFFFF" Offset="0.75"/>
+						<GradientStop Color="#FFFFFFFF" Offset="0.6"/>
+						<GradientStop Color="#00000000" Offset="0.6"/>
 					</RadialGradientBrush>
 				</Ellipse.Fill>
 			</Ellipse>

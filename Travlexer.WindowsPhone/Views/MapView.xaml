@@ -56,6 +56,8 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+		<Color x:Key="ColorGridLineSolid">#FFAAAAAA</Color>
+		<Color x:Key="ColorGridLineTransparent">#00AAAAAA</Color>
 	</phone:PhoneApplicationPage.Resources>
 	<i:Interaction.Triggers>
 		<i:EventTrigger EventName="BackKeyPress">
@@ -63,13 +65,13 @@
 		</i:EventTrigger>
 	</i:Interaction.Triggers>
 	<shell:SystemTray.ProgressIndicator>
-		<shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
+		<shell:ProgressIndicator IsIndeterminate="{Binding IsBusy.Value}"
 								 IsVisible="True" />
 	</shell:SystemTray.ProgressIndicator>
 	<phone:PhoneApplicationPage.DataContext>
 		<ViewModels:MapViewModel />
 	</phone:PhoneApplicationPage.DataContext>
-	<Grid>
+	<Grid Background="#FFDDDDDD">
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="VisualStates">
 				<VisualStateGroup.Transitions>
@@ -137,13 +139,12 @@
 							<DoubleAnimation Storyboard.TargetName="SearchBackground"
 											 Storyboard.TargetProperty="(UIElement.Opacity)"
 											 Duration="0:0:0.3"
-											 EasingFunction="{StaticResource EasingQuinticOut}"
 											 To="1" />
 							<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-											 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="33" />
+											 To="32" />
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
 														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
@@ -158,10 +159,9 @@
 						<Storyboard>
 							<DoubleAnimation Storyboard.TargetName="SearchBackground"
 											 Storyboard.TargetProperty="(UIElement.Opacity)"
-											 Duration="0:0:0.3"
-											 EasingFunction="{StaticResource EasingQuinticOut}" />
+											 Duration="0:0:0.3" />
 							<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-											 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}" />
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
@@ -200,12 +200,38 @@
 							</ObjectAnimationUsingKeyFrames>
 						</Storyboard>
 					</VisualTransition>
+					<VisualTransition GeneratedDuration="0" To="Route">
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.3" To="32" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="RouteContentPanel" EasingFunction="{StaticResource EasingQuinticOut}"/>
+							<DoubleAnimation Duration="0:0:0.3" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="RouteBackground"/>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="RoutePanel">
+								<DiscreteObjectKeyFrame KeyTime="0">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="Route" GeneratedDuration="0">
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="RouteContentPanel" To="-213" EasingFunction="{StaticResource EasingQuinticOut}"/>
+							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="RouteBackground"/>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="RoutePanel">
+								<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Collapsed</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="Default" />
 				<VisualState x:Name="Search">
 					<Storyboard>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
-													   Storyboard.TargetProperty="(UIElement.Visibility)">
+							Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
@@ -213,16 +239,16 @@
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
 						<DoubleAnimation Storyboard.TargetName="SearchBackground"
-										 Storyboard.TargetProperty="(UIElement.Opacity)"
-										 Duration="0"
-										 To="1"
-										 d:IsOptimized="True" />
+							Storyboard.TargetProperty="(UIElement.Opacity)"
+							Duration="0"
+							To="1"
+							d:IsOptimized="True" />
 						<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-										 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-										 Duration="0"
-										 EasingFunction="{StaticResource EasingQuinticOut}"
-										 To="33"
-										 d:IsOptimized="True" />
+							Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+							Duration="0"
+							EasingFunction="{StaticResource EasingQuinticOut}"
+							To="32"
+							d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="PushpinSelected">
@@ -261,12 +287,12 @@
 				<VisualState x:Name="Drag">
 					<Storyboard>
 						<DoubleAnimation Storyboard.TargetName="DragPushpin"
-										 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-										 Duration="0"
-										 To="-90"
-										 d:IsOptimized="True" />
+							Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+							Duration="0"
+							To="-90"
+							d:IsOptimized="True" />
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragPushpin"
-													   Storyboard.TargetProperty="(UIElement.Visibility)">
+							Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Visible</Visibility>
@@ -274,10 +300,23 @@
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
-													   Storyboard.TargetProperty="(UIElement.Visibility)">
+							Storyboard.TargetProperty="(UIElement.Visibility)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="Route">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="32" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="RouteContentPanel" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="RouteBackground" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="RoutePanel">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
@@ -355,6 +394,34 @@
 				</VisualState>
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
+		<Rectangle>
+			<Rectangle.Fill>
+				<LinearGradientBrush SpreadMethod="Repeat" MappingMode="Absolute" EndPoint="0,30">
+					<LinearGradientBrush.GradientStops>
+						<GradientStopCollection>
+							<GradientStop Offset="0.49" Color="{StaticResource ColorGridLineTransparent}"/>
+							<GradientStop Offset="0.49" Color="{StaticResource ColorGridLineSolid}"/>
+							<GradientStop Offset="0.50" Color="{StaticResource ColorGridLineSolid}"/>
+							<GradientStop Offset="0.50" Color="{StaticResource ColorGridLineTransparent}"/>
+						</GradientStopCollection>
+					</LinearGradientBrush.GradientStops>
+			   </LinearGradientBrush>
+			</Rectangle.Fill>
+		</Rectangle>
+		<Rectangle>
+			<Rectangle.Fill>
+				<LinearGradientBrush MappingMode="Absolute" SpreadMethod="Repeat" EndPoint="30,0">
+					<LinearGradientBrush.GradientStops>
+						<GradientStopCollection>
+							<GradientStop Offset="0.49" Color="{StaticResource ColorGridLineTransparent}"/>
+							<GradientStop Offset="0.49" Color="{StaticResource ColorGridLineSolid}"/>
+							<GradientStop Offset="0.50" Color="{StaticResource ColorGridLineSolid}"/>
+							<GradientStop Offset="0.50" Color="{StaticResource ColorGridLineTransparent}"/>
+						</GradientStopCollection>
+					</LinearGradientBrush.GradientStops>
+   </LinearGradientBrush>
+			</Rectangle.Fill>
+		</Rectangle>
 		<Maps:Map x:Name="Map"
 				  Center="{Binding Center.Value, Mode=TwoWay}"
 				  CopyrightVisibility="Collapsed"
@@ -381,7 +448,7 @@
 			<Maps:Map.Mode>
 				<Core:MercatorMode />
 			</Maps:Map.Mode>
-			<Maps:MapLayer Visibility="{Binding IsOffline.Value, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
+			<Maps:MapLayer Visibility="{Binding IsOnline.Value, Converter={StaticResource VisibilityConverter}}">
 				<Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
 					<Maps:MapTileLayer.TileSources>
 						<CodifyMaps:GoogleMapsTileSource Layer="Street" />
@@ -403,18 +470,18 @@
 					</Maps:MapTileLayer.TileSources>
 				</Maps:MapTileLayer>
 			</Maps:MapLayer>
-			<Maps:MapLayer Visibility="{Binding IsOffline.Value, Converter={StaticResource VisibilityConverter}}">
-				<Maps:MapLayer x:Name="OfflineStreetLayer"
-					Visibility="{Binding IsStreetLayerVisible, Mode=OneWay}" />
+			<Maps:MapLayer Visibility="{Binding IsOnline.Value, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}" Margin="2,0,-2,0">
+				<Maps:MapLayer x:Name="OfflineBaseLayer" />
+				<Maps:MapLayer x:Name="OfflineTransitLayer" Visibility="{Binding IsTransitLayerVisible, Mode=OneWay}" />
 			</Maps:MapLayer>
-			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
+			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
 						  Location="{Binding CurrentLocation}"
 						  PositionOrigin="Center"
 						  Template="{x:Null}"
 						  Visibility="{Binding CurrentLocation, TargetNullValue=Collapsed}">
 				<i:Interaction.Triggers>
 					<Triggers:EventTrigger EventName="Tap"
-										   IsHandled="True">
+						IsHandled="True">
 						<i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}" />
 					</Triggers:EventTrigger>
 				</i:Interaction.Triggers>
@@ -426,7 +493,7 @@
 							   Width="30"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"
-							   Fill="{StaticResource BrushIconCurrentLocation}" />
+							   Fill="{StaticResource BrushIconCurrentLocationBlack}" />
 				</Grid>
 			</Maps:Pushpin>
 			<Maps:MapItemsControl Collections:DelayCollection.ItemsSource="{Binding Pushpins}"
@@ -451,12 +518,12 @@
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Tap">
 									<i:InvokeCommandAction Command="{Binding Parent.CommandSelectPushpin, Mode=OneTime}"
-														   CommandParameter="{Binding}" />
+										CommandParameter="{Binding}" />
 									<i:InvokeCommandAction Command="{Binding Parent.CommandStopTrackingCurrentLocation, Mode=OneTime}" />
 								</i:EventTrigger>
 								<i:EventTrigger>
 									<ec:GoToStateAction StateName="Drop"
-														TargetObject="{Binding ElementName=Pushpin}" />
+										TargetObject="{Binding ElementName=Pushpin}" />
 								</i:EventTrigger>
 							</i:Interaction.Triggers>
 							<ContentPresenter Height="32"
@@ -489,16 +556,16 @@
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Tap">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
-												   CommandParameter="{Binding}" />
+								CommandParameter="{Binding}" />
 						</i:EventTrigger>
 						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedPushpin}">
 							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
-												   CommandParameter="{Binding}" />
+								CommandParameter="{Binding}" />
 						</Triggers:RootTouchTrigger>
 						<i:EventTrigger>
 							<ec:GoToStateAction StateName="Drop"
-												TargetName="SelectedPushpin"
-												UseTransitions="False" />
+								TargetName="SelectedPushpin"
+								UseTransitions="False" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 					<Controls:PushpinContent x:Name="SelectedPushpinContent"
@@ -526,8 +593,8 @@
 				<i:Interaction.Triggers>
 					<i:EventTrigger>
 						<ec:GoToStateAction StateName="Drop"
-											TargetObject="{Binding ElementName=DragPushpin}"
-											UseTransitions="False" />
+							TargetObject="{Binding ElementName=DragPushpin}"
+							UseTransitions="False" />
 					</i:EventTrigger>
 				</i:Interaction.Triggers>
 				<Maps:Pushpin.RenderTransform>
@@ -548,6 +615,9 @@
 				HorizontalAlignment="Left"
 				Opacity="{StaticResource ShellOpacity}"
 				VerticalAlignment="Center">
+			<i:Interaction.Behaviors>
+				<Behaviors:CancelGestureEventBehavior/>
+			</i:Interaction.Behaviors>
 			<StackPanel>
 				<Controls:CircleButton Click="OnCaptureScreen">
 					<Rectangle Fill="{StaticResource BrushIconCamera}" />
@@ -580,16 +650,16 @@
 					<Rectangle Height="35"
 							   Fill="{StaticResource BrushIconEllipsis}" />
 					<Controls:CircleButton Caption="street"
-										   Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
-										   Visibility="{Binding IsStreetLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
+										   Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
+										   Visibility="{Binding IsStreetLayerVisible, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
 						<Controls:CircleButton.Background>
 							<ImageBrush ImageSource="/Assets/StreetView.png"
 										Stretch="None" />
 						</Controls:CircleButton.Background>
 					</Controls:CircleButton>
 					<Controls:CircleButton Caption="satellite"
-										   Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
-										   Visibility="{Binding IsSatelliteHybridLayerVisible, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
+										   Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
+										   Visibility="{Binding IsSatelliteHybridLayerVisible, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
 						<Controls:CircleButton.Background>
 							<ImageBrush ImageSource="/Assets/SatelliteView.png"
 										Stretch="None" />
@@ -598,8 +668,8 @@
 					<Controls:CircleToggleButton Margin="0,10,0,0"
 												 Caption="traffic"
 												 Command="{Binding CommandToggleMapOverlay, Mode=OneTime}"
-												 IsChecked="{Binding IsTrafficLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
-												 IsEnabled="{Binding IsOffline.Value, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}">
+												 IsChecked="{Binding IsTrafficLayerVisible, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
+												 IsEnabled="{Binding IsOnline.Value, Converter={StaticResource BooleanConverter}}">
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TrafficOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
@@ -608,7 +678,7 @@
 					<Controls:CircleToggleButton Margin="0,10,0,0"
 												 Caption="transport"
 												 Command="{Binding CommandToggleMapOverlay, Mode=OneTime}"
-												 IsChecked="{Binding IsTransitLayerVisible, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
+												 IsChecked="{Binding IsTransitLayerVisible, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
 						<Controls:CircleToggleButton.CommandParameter>
 							<CodifyMaps:GoogleMapsLayer>TransitOverlay</CodifyMaps:GoogleMapsLayer>
 						</Controls:CircleToggleButton.CommandParameter>
@@ -617,7 +687,7 @@
 					<Rectangle Height="35"
 							   Fill="{StaticResource BrushIconEllipsis}" />
 					<Controls:CircleToggleButton Caption="network"
-												 IsChecked="{Binding IsOffline.Value, Mode=TwoWay}">
+												 IsChecked="{Binding IsOnline.Value, Mode=TwoWay}">
 						<Rectangle Fill="{StaticResource BrushIconWifi}" />
 					</Controls:CircleToggleButton>
 				</StackPanel>
@@ -634,12 +704,12 @@
 				  Background="{StaticResource PhoneChromeBrush}"
 				  VerticalAlignment="Top">
 				<i:Interaction.Triggers>
-					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, ElementName=SearchPanel, Converter={StaticResource BooleanConverter}}">
+					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SearchPanel}">
 						<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
 					</Triggers:RootTouchTrigger>
 				</i:Interaction.Triggers>
 				<Grid.RenderTransform>
-					<TranslateTransform Y="-52" />
+					<CompositeTransform TranslateY="-52"/>
 				</Grid.RenderTransform>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition />
@@ -653,19 +723,15 @@
 										  MinimumPopulateDelay="500"
 										  MinimumPrefixLength="3"
 										  SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
-										  Text="{Binding SearchInput, Mode=TwoWay}"
-										  ValueMemberBinding="{Binding Description}">
-					<Controls:AutoCompleteBox.InputScope>
-						<InputScope>
-							<InputScopeName NameValue="Search" />
-						</InputScope>
-					</Controls:AutoCompleteBox.InputScope>
+										  Text="{Binding SearchInput.Value, Mode=TwoWay}"
+										  ValueMemberBinding="{Binding Description}"
+										  InputScope="{StaticResource InputScopeSearch}">
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Populating">
 							<i:InvokeCommandAction Command="{Binding CommandGetSuggestions}" />
 						</i:EventTrigger>
 						<Triggers:KeyPressTrigger CanTrigger="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
-												  Key="Enter">
+							Key="Enter">
 							<i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}" />
 						</Triggers:KeyPressTrigger>
 					</i:Interaction.Triggers>
@@ -692,18 +758,57 @@
 				</Button>
 			</Grid>
 		</Grid>
+		<Grid x:Name="RoutePanel" Visibility="Collapsed">
+			<Rectangle x:Name="RouteBackground"
+					   Fill="{StaticResource BrushSemiTransparentBackground}"
+					   IsHitTestVisible="False"
+					   Opacity="0" />
+			<Grid x:Name="RouteContentPanel" VerticalAlignment="Top" Background="{StaticResource PhoneChromeBrush}" RenderTransformOrigin="0.5,0.5">
+				<i:Interaction.Triggers>
+					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}">
+						<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
+					</Triggers:RootTouchTrigger>
+				</i:Interaction.Triggers>
+				<Grid.RenderTransform>
+					<CompositeTransform TranslateY="-213"/>
+				</Grid.RenderTransform>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="From:" VerticalAlignment="Center"/>
+			<TextBox x:Name="FromTextBox" Grid.Column="1" VerticalAlignment="Center" InputScope="{StaticResource InputScopeSearch}" GotFocus="OnTextBoxGotFocus"/>
+			<Controls:CircleButton Grid.Column="2" VerticalAlignment="Center">
+				<Rectangle Fill="{StaticResource BrushIconCurrentLocationWhite}"/>
+			</Controls:CircleButton>
+			<TextBlock Text="To:" VerticalAlignment="Center" Grid.Row="1"/>
+			<TextBox x:Name="ToTextBox" Grid.Column="1" VerticalAlignment="Center" Grid.Row="1" InputScope="{StaticResource InputScopeSearch}" GotFocus="OnTextBoxGotFocus"/>
+			<Controls:CircleButton Grid.Column="2" VerticalAlignment="Center" Grid.Row="1">
+				<Rectangle Fill="{StaticResource BrushIconCurrentLocationWhite}"/>
+			</Controls:CircleButton>
+			<Button Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Right" Margin="0,0,-12,0" Content="Find Routes"/>
+			</Grid>
+		</Grid>
 	</Grid>
 	<i:Interaction.Behaviors>
-		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}"
-										IsVisible="False">
+		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}">
 			<DependencyShell:ApplicationBar.Buttons>
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
 														  IconUri="/Assets/CurrentLocation.png"
-														  IsEnabled="{Binding IsTrackingCurrentLocation, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
+														  IsEnabled="{Binding IsTrackingCurrentLocation.Value, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
 														  Text="track" />
 				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"
 														  IconUri="/Assets/Search.png"
 														  Text="search" />
+				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandGoToRouteState,Mode=OneTime}"
+														  IconUri="/Assets/Route.png"
+														  Text="route" />
 			</DependencyShell:ApplicationBar.Buttons>
 			<DependencyShell:ApplicationBar.MenuItems>
 				<DependencyShell:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"

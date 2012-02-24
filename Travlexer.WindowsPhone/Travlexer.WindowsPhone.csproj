@@ -71,31 +71,9 @@
     <Compile Include="Controls\CircleButton.cs" />
     <Compile Include="Controls\AutoCompleteBox.cs" />
     <Compile Include="Controls\CircleToggleButton.cs" />
-    <None Include="Controls\Icons\ArrowRight.cs" />
-    <None Include="Controls\Icons\Attention.cs" />
-    <None Include="Controls\Icons\Bicycle.cs" />
-    <None Include="Controls\Icons\Camera.cs" />
-    <None Include="Controls\Icons\Car.cs" />
-    <None Include="Controls\Icons\CurrentLocation.cs" />
-    <None Include="Controls\Icons\Delete.cs" />
-    <None Include="Controls\Icons\DownArrow.cs" />
-    <None Include="Controls\Icons\Ellipsis.cs" />
-    <None Include="Controls\Icons\IconBase.cs" />
-    <None Include="Controls\Icons\Minus.cs" />
-    <None Include="Controls\Icons\Pin.cs" />
-    <None Include="Controls\Icons\Edit.cs" />
-    <None Include="Controls\Icons\From.cs" />
-    <None Include="Controls\Icons\Info.cs" />
-    <None Include="Controls\Icons\Location.cs" />
-    <None Include="Controls\Icons\Plus.cs" />
-    <None Include="Controls\Icons\Search.cs" />
-    <None Include="Controls\Icons\Slash.cs" />
-    <None Include="Controls\Icons\Swap.cs" />
-    <None Include="Controls\Icons\To.cs" />
-    <None Include="Controls\Icons\Traffic.cs" />
-    <None Include="Controls\Icons\UpArrow.cs" />
-    <None Include="Controls\Icons\User.cs" />
-    <None Include="Controls\Icons\Walk.cs" />
+    <Compile Include="Controls\Icons\IconBase.cs" />
+    <Compile Include="Controls\Icons\Search.cs" />
+    <Compile Include="Controls\Icons\Slash.cs" />
     <Compile Include="Controls\PushpinContent.cs" />
     <Compile Include="Converters\LocationGeoCoordinateConverter.cs" />
     <Compile Include="Converters\PlaceColorHexConverter.cs" />
@@ -118,10 +96,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Include="Resources\Icons.xaml">
+    <Page Include="Resources\Icons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </None>
+    </Page>
     <Page Include="Resources\Converters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -151,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\CurrentLocation.png" />
-    <Content Include="Assets\EmptyTile.png" />
+    <Content Include="Assets\Route.png" />
     <Content Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />
     <Content Include="Assets\AppIcon.png">

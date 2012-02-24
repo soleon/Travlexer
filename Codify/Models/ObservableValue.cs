@@ -10,7 +10,7 @@ namespace Codify.Models
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ObservableValue{T}"/> class.
 		/// </summary>
-		public ObservableValue() {}
+		public ObservableValue() { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ObservableValue{T}"/> class.

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Device.Location;
 using System.IO;
@@ -15,6 +17,7 @@ using System.Windows.Threading;
 using Codify;
 using Codify.Controls.Maps;
 using Codify.Extensions;
+using Codify.Models;
 using Codify.Threading;
 using Codify.ViewModels;
 using Microsoft.Phone.Controls;
@@ -42,8 +45,7 @@ namespace Travlexer.WindowsPhone.Views
 			OfflineTileImagePrefix = "t_",
 			OfflineTilesSearchPattern = OfflineTileImagePrefix + "*",
 			MapTilePushpinStyleName = "TilePushpin",
-			MapTileScaleName = "TileScale",
-			TileEmptyBackgroundPath = "/Assets/EmptyTile.png";
+			MapTileScaleName = "TileScale";
 
 		private const int AbsoluteTileDimension = 256;
 
@@ -57,17 +59,24 @@ namespace Travlexer.WindowsPhone.Views
 		private readonly Dictionary<int, List<QuadKey>> _cachedTileImageKeys = new Dictionary<int, List<QuadKey>>();
 		private readonly Style _tilePushpinStyle;
 		private readonly ScaleTransform _tileScaleTransform;
-		private readonly BitmapImage _tileEmptyBackground;
 
 		private readonly IsolatedStorageFile _fileStore = IsolatedStorageFile.GetUserStoreForApplication();
 		private readonly GeoCoordinate _centerGeoCoordinate = new GeoCoordinate(0D, 0D);
-		private readonly DispatcherTimer _zoomTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300D) };
-		private readonly object _zoomTimerLockTarget = new object();
+		private readonly DispatcherTimer _zoomTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200D) };
 		private readonly Queue<KeyValuePair<QuadKey, Stream>> _tileImageCache = new Queue<KeyValuePair<QuadKey, Stream>>(50);
-		private bool _isZooming, _isOfflineModeInitialized;
+
+		private readonly ObservableValue<ExpansionStates> _toolbarState = Infrastructure.ApplicationContext.ToolbarState;
+		private readonly ObservableValue<bool> _isOnline = Infrastructure.ApplicationContext.IsOnline;
+		private readonly ObservableValue<GeoCoordinate> _mapCenter = Infrastructure.DataContext.MapCenter;
+		private readonly ObservableValue<GoogleMapsLayer> _mapBase = Infrastructure.DataContext.MapBaseLayer;
+		private readonly ObservableValue<double> _mapZoomLevel = Infrastructure.DataContext.MapZoomLevel;
+		private readonly ObservableCollection<GoogleMapsLayer> _mapOverlays = Infrastructure.DataContext.MapOverlays;
+
+		private bool _isZooming;
 		private double _tileScale;
 		private int _zoomFloor, _tileMatrixLengthX, _tileMatrixLengthY;
-		private Pushpin[,] _tileMatrix;
+		private GoogleMapsLayer _currentLayer;
+		private Pushpin[,] _baseTileMatrix, _transitTileMatrix;
 
 		#endregion
 
@@ -98,39 +107,63 @@ namespace Travlexer.WindowsPhone.Views
 			_context.SearchSucceeded += OnSearchSucceeded;
 			_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
 			_context.VisualState.ValueChanged += (old, @new) => GoToVisualState(@new);
-			_context.ToolbarState.ValueChanged += (old, @new) => GoToToolbarState(@new);
-			_context.IsOffline.ValueChanged += (old, @new) =>
-			{
-				if (@new)
-				{
-					if (!_isOfflineModeInitialized)
-					{
-						InitializeOfflineMode();
-					}
-					EnterOfflineMode();
-				}
-				else
-				{
-					LeaveOfflineMode();
-				}
-			};
+			_toolbarState.ValueChanged += (old, @new) => GoToToolbarState(@new);
+			_isOnline.ValueChanged += OnIsOnlineValueChanged;
 
 			GoToVisualState(_context.VisualState.Value, false);
-			GoToToolbarState(_context.ToolbarState.Value, false);
-
+			GoToToolbarState(_toolbarState.Value, false);
 
 			_tilePushpinStyle = (Style)Resources[MapTilePushpinStyleName];
 			_tileScaleTransform = (ScaleTransform)Resources[MapTileScaleName];
-			_tileEmptyBackground = new BitmapImage(new Uri(TileEmptyBackgroundPath, UriKind.Relative));
 			_tileScale = 1D;
 
-			if (_context.IsOffline.Value)
+			if (!_isOnline.Value)
 			{
 				Map.Loaded += (s, e) =>
 				{
-					InitializeOfflineMode();
-					EnterOfflineMode();
+					InitializeOfflineLayer(ref _baseTileMatrix, OfflineBaseLayer, _mapBase.Value);
+					if (OfflineBaseLayer.Visibility == Visibility.Visible)
+					{
+						InitializeOfflineLayer(ref _transitTileMatrix, OfflineTransitLayer, GoogleMapsLayer.TransitOverlay);
+					}
+					RegisterOfflineModeEventListeners();
 				};
+			}
+		}
+
+		private void OnIsOnlineValueChanged(bool old, bool @new)
+		{
+			if (@new)
+			{
+				UnregisterOfflineModeEventListeners();
+			}
+			else
+			{
+				// Check base layer.
+				if (OfflineBaseLayer.Tag == null)
+				{
+					InitializeOfflineLayer(ref _baseTileMatrix, OfflineBaseLayer, _mapBase.Value);
+				}
+				else
+				{
+					RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value, false);
+				}
+
+				// Check transit layer.
+				if (OfflineBaseLayer.Visibility == Visibility.Visible)
+				{
+					if (OfflineTransitLayer.Tag == null)
+					{
+						InitializeOfflineLayer(ref _transitTileMatrix, OfflineTransitLayer, GoogleMapsLayer.TransitOverlay);
+					}
+					else
+					{
+						RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay, false);
+					}
+				}
+
+				// Register necessary event listeners.
+				RegisterOfflineModeEventListeners();
 			}
 		}
 
@@ -281,7 +314,7 @@ namespace Travlexer.WindowsPhone.Views
 			point.X += DragPushpin.ActualWidth / 2;
 			point.Y += DragPushpin.ActualHeight;
 			var location = Map.ViewportPointToLocation(point);
-			_context.Center.Value = dragPushpinVm.Data.Location = location;
+			_mapCenter.Value = dragPushpinVm.Data.Location = location;
 
 			// Select the dragged pushpin.
 			_context.SelectedPushpin = dragPushpinVm;
@@ -328,46 +361,12 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void OnZoomTimerTick(object sender, EventArgs eventArgs)
 		{
-			lock (_zoomTimerLockTarget)
+			_zoomTimer.Stop();
+			_isZooming = false;
+			RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value);
+			if (OfflineTransitLayer.Visibility == Visibility.Visible)
 			{
-				_zoomTimer.Stop();
-
-				var oldZoomFloor = _zoomFloor;
-				_zoomFloor = (int)Map.ZoomLevel;
-				_tileScaleTransform.ScaleX = _tileScaleTransform.ScaleY = _tileScale = Math.Pow(2D, (Map.ZoomLevel - _zoomFloor));
-				if (oldZoomFloor == _zoomFloor)
-				{
-					return;
-				}
-
-				// Update all tiles if the zoom level has reached a new floor.
-				var centerKey = GetQuadKey(Map.Center, _zoomFloor, default(GoogleMapsLayer));
-
-				// Calculate X index and Y index in the matrix of the center tile.
-				var centerX = _tileMatrixLengthX / 2;
-				var centerY = _tileMatrixLengthY / 2;
-
-				// Update location and image of tile pushpins.
-				for (var x = 0; x < _tileMatrixLengthX; x++)
-				{
-					for (var y = 0; y < _tileMatrixLengthY; y++)
-					{
-						// Create the tile pushpin.
-						var tile = _tileMatrix[x, y];
-
-						// Calculate the differences between this tile's X/Y index and the center tile's X/Y index.
-						var diffX = x - centerX;
-						var diffY = y - centerY;
-
-						// Calculate the quad key for this current tile.
-						var key = new QuadKey(centerKey.X + diffX, centerKey.Y + diffY, _zoomFloor, centerKey.Layer);
-
-						// Update this tile with the calculated quad key.
-						UpdateTile(tile, key);
-					}
-				}
-
-				_isZooming = false;
+				RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay);
 			}
 		}
 
@@ -376,12 +375,9 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void OnZoomLevelChanged(double old, double @new)
 		{
-			lock (_zoomTimerLockTarget)
-			{
-				_isZooming = true;
-				UpdateTileScale();
-				_zoomTimer.Start();
-			}
+			_isZooming = true;
+			UpdateTileScale();
+			_zoomTimer.Start();
 		}
 
 		/// <summary>
@@ -394,108 +390,19 @@ namespace Travlexer.WindowsPhone.Views
 				return;
 			}
 
-			var maxTileIndex = GetTileCount(_zoomFloor) - 1;
-			var maxIndexX = _tileMatrixLengthX - 1;
-			var maxIndexY = _tileMatrixLengthY - 1;
-
-			// Skip arrangement if the matrix is larger than the entire map.
-			if (maxIndexX >= maxTileIndex && maxIndexY >= maxTileIndex)
+			RearrangeMatrix(_baseTileMatrix);
+			if (OfflineTransitLayer.Visibility == Visibility.Visible)
 			{
-				return;
+				RearrangeMatrix(_transitTileMatrix);
 			}
+		}
 
-			// Check representative edge tiles to see if they are fully moved into view.
-
-			// Top left:
-			var tile = _tileMatrix[0, 0];
-			var key = (QuadKey)tile.Tag;
-			var y = key.Y;
-			if (IsInView(tile))
-			{
-				RearrangeMatrixRightToLeft(updateLastTileImage: y == 0);
-				if (y > 0)
-				{
-					RearrangeMatrixBottomToTop();
-				}
-				return;
-			}
-
-			// Top right:
-			tile = _tileMatrix[maxIndexX, 0];
-			key = (QuadKey)tile.Tag;
-			y = key.Y;
-			if (IsInView(_tileMatrix[maxIndexX, 0]))
-			{
-				RearrangeMatrixLeftToRight(updateLastTileImage: y == 0);
-				if (y > 0)
-				{
-					RearrangeMatrixBottomToTop();
-				}
-				return;
-			}
-
-			// Bottom left:
-			tile = _tileMatrix[0, maxIndexY];
-			key = (QuadKey)tile.Tag;
-			y = key.Y;
-			if (IsInView(tile))
-			{
-				if (y < maxTileIndex)
-				{
-					RearrangeMatrixTopToBottom(updateLastTileImage: false);
-				}
-				RearrangeMatrixRightToLeft();
-				return;
-			}
-
-			// Bottom right:
-			tile = _tileMatrix[maxIndexX, maxIndexY];
-			key = (QuadKey)tile.Tag;
-			y = key.Y;
-			if (IsInView(tile))
-			{
-				if (y < maxTileIndex)
-				{
-					RearrangeMatrixTopToBottom(false);
-				}
-				RearrangeMatrixLeftToRight();
-				return;
-			}
-
-			// Top:
-			tile = _tileMatrix[maxIndexX / 2 + maxIndexX % 2, 0];
-			key = (QuadKey)tile.Tag;
-			y = key.Y;
-			if (y > 0 && IsVerticalInView(tile))
-			{
-				RearrangeMatrixBottomToTop();
-				return;
-			}
-
-			// Bottom:
-			tile = _tileMatrix[maxIndexX / 2 + maxIndexX % 2, maxIndexY];
-			key = (QuadKey)tile.Tag;
-			y = key.Y;
-			if (y < maxTileIndex && IsVerticalInView(tile))
-			{
-				RearrangeMatrixTopToBottom();
-				return;
-			}
-
-			// Left:
-			tile = _tileMatrix[0, maxIndexY / 2 + maxIndexY % 2];
-			if (IsHorizontalInView(tile))
-			{
-				RearrangeMatrixRightToLeft();
-				return;
-			}
-
-			// Right:
-			tile = _tileMatrix[maxIndexX, maxIndexY / 2 + maxIndexY % 2];
-			if (IsHorizontalInView(tile))
-			{
-				RearrangeMatrixLeftToRight();
-			}
+		/// <summary>
+		/// Called when the value of <see cref="Infrastructure.DataContext.MapBaseLayer"/> has changed.
+		/// </summary>
+		private void OnMapBaseLayerValueChanged(GoogleMapsLayer old, GoogleMapsLayer @new)
+		{
+			RefreshOfflineTiles(_baseTileMatrix, @new, false);
 		}
 
 		#endregion
@@ -524,6 +431,21 @@ namespace Travlexer.WindowsPhone.Views
 				case MapViewModel.VisualStates.Drag:
 					_appBar.IsVisible = false;
 					break;
+				case MapViewModel.VisualStates.Route:
+					_appBar.IsVisible = false;
+					if (FromTextBox.Text.Length == 0)
+					{
+						FromTextBox.Focus();
+					}
+					else if (ToTextBox.Text.Length == 0)
+					{
+						ToTextBox.Focus();
+					}
+					else
+					{
+						FromTextBox.Focus();
+					}
+					break;
 			}
 			VisualStateManager.GoToState(this, state.ToString(), useTransition);
 		}
@@ -539,15 +461,18 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Performs all necessary initialization for offline mapping. Happens only once.
 		/// </summary>
-		private void InitializeOfflineMode()
+		private void InitializeOfflineLayer(ref Pushpin[,] matrix, Panel mapLayer, GoogleMapsLayer layer)
 		{
-			if (_isOfflineModeInitialized)
+			// Check if this layer has already been initialised.
+			if (mapLayer.Tag != null)
 			{
 				return;
 			}
 
 			// Get the zoom level floor from the current map zoom level.
 			_zoomFloor = (int)Map.ZoomLevel;
+
+			_currentLayer = _mapBase.Value;
 
 			// Update the tile scaling ratio according to the current map zoom level.
 			UpdateTileScale();
@@ -560,7 +485,7 @@ namespace Travlexer.WindowsPhone.Views
 			}
 
 			// Initialize the offline tile matrix.
-			var centerKey = GetQuadKey(Map.Center, _zoomFloor, default(GoogleMapsLayer));
+			var centerKey = GetQuadKey(Map.Center, _zoomFloor, layer);
 			var width = Map.ActualWidth;
 			var height = Map.ActualHeight;
 
@@ -571,7 +496,7 @@ namespace Travlexer.WindowsPhone.Views
 			_tileMatrixLengthY = (int)(height / AbsoluteTileDimension) + 2;
 
 			// Create the logical tile matrix.
-			_tileMatrix = new Pushpin[_tileMatrixLengthX, _tileMatrixLengthY];
+			matrix = new Pushpin[_tileMatrixLengthX, _tileMatrixLengthY];
 
 			// Calculate X index and Y index in the matrix of the center tile.
 			var centerX = _tileMatrixLengthX / 2;
@@ -582,69 +507,86 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				for (var y = 0; y < _tileMatrixLengthY; y++)
 				{
-					// Create the tile pushpin.
+					// Create tile pushpin.
 					var tile = new Pushpin
 					{
 						PositionOrigin = PositionOrigin.TopLeft,
 						Style = _tilePushpinStyle,
 						Background = new ImageBrush
 						{
-							ImageSource = _tileEmptyBackground,
 							Stretch = Stretch.None
 						}
 					};
 
 					// Add the tile to the matrix.
-					_tileMatrix[x, y] = tile;
+					matrix[x, y] = tile;
 
 					// Calculate the differences between this tile's X/Y index and the center tile's X/Y index.
 					var diffX = x - centerX;
 					var diffY = y - centerY;
 
 					// Calculate the quad key for this current tile.
-
 					var key = GetNewKey(centerKey, diffX, diffY);
 
 					// Update this tile with the calculated quad key.
 					UpdateTile(tile, key);
 
 					// Add this tile to the visual tree.
-					OfflineStreetLayer.Children.Add(tile);
+					mapLayer.Children.Add(tile);
 				}
 			}
 
-			_isOfflineModeInitialized = true;
+			// Flag that this layer is now initialised.
+			mapLayer.Tag = true;
 		}
 
 		/// <summary>
-		/// Performs necessary actions start reacting to the offline tiles.
+		/// Listens to all necessary events for the offline mode.
 		/// </summary>
-		private void EnterOfflineMode()
+		private void RegisterOfflineModeEventListeners()
 		{
-			// Unhook event listeners to prevent duplicate event listening.
-			_context.Center.ValueChanged -= OnCenterChanged;
-			_context.ZoomLevel.ValueChanged -= OnZoomLevelChanged;
-			_zoomTimer.Tick -= OnZoomTimerTick;
+			// Unregister event listeners to prevent duplicate event listening.
+			UnregisterOfflineModeEventListeners();
 
 			// Listen to any map movements, and performs necessary re-arrangement for the offline tiles.
-			_context.Center.ValueChanged += OnCenterChanged;
+			_mapCenter.ValueChanged += OnCenterChanged;
 
 			// Listen to zome level changes and update the scaling ratio of all offline tiles.
-			_context.ZoomLevel.ValueChanged += OnZoomLevelChanged;
+			_mapZoomLevel.ValueChanged += OnZoomLevelChanged;
 
 			// Listen to zoom timer tick for re-arranging the offline tiles.
 			_zoomTimer.Tick += OnZoomTimerTick;
+
+			// Listen to map base layer change and refersh offline tile images.
+			_mapBase.ValueChanged += OnMapBaseLayerValueChanged;
+
+			// Listen to map overlay changes and show/hide the transit layer.
+			_mapOverlays.CollectionChanged += OnMapOverlaysCollectionChanged;
+		}
+
+		/// <summary>
+		/// Called when items in <see cref="Infrastructure.DataContext.MapOverlays"/> has changed.
+		/// This handler specifically checks if <see cref="GoogleMapsLayer.TransitOverlay"/> is added to the collection, and refershes the offline transit layer if the map is in offline mode.
+		/// </summary>
+		private void OnMapOverlaysCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if (OfflineTransitLayer.Visibility == Visibility.Visible)
+			{
+				RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay, false);
+			}
 		}
 
 		/// <summary>
 		/// Performs necessary actions to stop reacting to the offline tiles.
 		/// </summary>
-		private void LeaveOfflineMode()
+		private void UnregisterOfflineModeEventListeners()
 		{
 			_zoomTimer.Stop();
-			_context.Center.ValueChanged -= OnCenterChanged;
-			_context.ZoomLevel.ValueChanged -= OnZoomLevelChanged;
+			_mapCenter.ValueChanged -= OnCenterChanged;
+			_mapZoomLevel.ValueChanged -= OnZoomLevelChanged;
 			_zoomTimer.Tick -= OnZoomTimerTick;
+			_mapBase.ValueChanged -= OnMapBaseLayerValueChanged;
+			_isZooming = false;
 		}
 
 		/// <summary>
@@ -754,6 +696,7 @@ namespace Travlexer.WindowsPhone.Views
 					stream = _fileStore.OpenFile(file, FileMode.Open);
 					_tileImageCache.Enqueue(new KeyValuePair<QuadKey, Stream>(key, stream));
 				}
+				catch { }
 				finally
 				{
 					callback(stream);
@@ -786,6 +729,7 @@ namespace Travlexer.WindowsPhone.Views
 							}
 						}
 					}
+					catch { }
 					finally
 					{
 						UIThread.InvokeAsync(() => callback(stream));
@@ -799,22 +743,132 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
+		/// Rearranges the target tile matrix according to which edge tile has been moved into view.
+		/// </summary>
+		private void RearrangeMatrix(Pushpin[,] matrix)
+		{
+			var maxTileIndex = GetTileCount(_zoomFloor) - 1;
+			var maxIndexX = _tileMatrixLengthX - 1;
+			var maxIndexY = _tileMatrixLengthY - 1;
+
+			// Skip arrangement if the matrix is larger than the entire map.
+			if (maxIndexX >= maxTileIndex && maxIndexY >= maxTileIndex)
+			{
+				return;
+			}
+
+			// Check representative edge tiles to see if they are fully moved into view.
+
+			// Top left:
+			var tile = matrix[0, 0];
+			var key = (QuadKey)tile.Tag;
+			var y = key.Y;
+			if (IsInView(tile))
+			{
+				RearrangeMatrixRightToLeft(matrix, updateLastTileImage: y == 0);
+				if (y > 0)
+				{
+					RearrangeMatrixBottomToTop(matrix);
+				}
+				return;
+			}
+
+			// Top right:
+			tile = matrix[maxIndexX, 0];
+			key = (QuadKey)tile.Tag;
+			y = key.Y;
+			if (IsInView(_baseTileMatrix[maxIndexX, 0]))
+			{
+				RearrangeMatrixLeftToRight(matrix, updateLastTileImage: y == 0);
+				if (y > 0)
+				{
+					RearrangeMatrixBottomToTop(matrix);
+				}
+				return;
+			}
+
+			// Bottom left:
+			tile = matrix[0, maxIndexY];
+			key = (QuadKey)tile.Tag;
+			y = key.Y;
+			if (IsInView(tile))
+			{
+				if (y < maxTileIndex)
+				{
+					RearrangeMatrixTopToBottom(matrix, updateLastTileImage: false);
+				}
+				RearrangeMatrixRightToLeft(matrix);
+				return;
+			}
+
+			// Bottom right:
+			tile = matrix[maxIndexX, maxIndexY];
+			key = (QuadKey)tile.Tag;
+			y = key.Y;
+			if (IsInView(tile))
+			{
+				if (y < maxTileIndex)
+				{
+					RearrangeMatrixTopToBottom(matrix, false);
+				}
+				RearrangeMatrixLeftToRight(matrix);
+				return;
+			}
+
+			// Top:
+			tile = matrix[maxIndexX / 2 + maxIndexX % 2, 0];
+			key = (QuadKey)tile.Tag;
+			y = key.Y;
+			if (y > 0 && IsVerticalInView(tile))
+			{
+				RearrangeMatrixBottomToTop(matrix);
+				return;
+			}
+
+			// Bottom:
+			tile = matrix[maxIndexX / 2 + maxIndexX % 2, maxIndexY];
+			key = (QuadKey)tile.Tag;
+			y = key.Y;
+			if (y < maxTileIndex && IsVerticalInView(tile))
+			{
+				RearrangeMatrixTopToBottom(matrix);
+				return;
+			}
+
+			// Left:
+			tile = matrix[0, maxIndexY / 2 + maxIndexY % 2];
+			if (IsHorizontalInView(tile))
+			{
+				RearrangeMatrixRightToLeft(matrix);
+				return;
+			}
+
+			// Right:
+			tile = matrix[maxIndexX, maxIndexY / 2 + maxIndexY % 2];
+			if (IsHorizontalInView(tile))
+			{
+				RearrangeMatrixLeftToRight(matrix);
+			}
+		}
+
+		/// <summary>
 		/// Rearranges the offline tiles in the matrix from top to bottom.
 		/// </summary>
+		/// <param name="matrix">The target matrix to arrange the tiles.</param>
 		/// <param name="updateFirstTileImage">if set to <c>false</c> ignore updating the image of the first tile.</param>
 		/// <param name="updateLastTileImage">if set to <c>false</c> ignore updating the image of the last tile.</param>
-		private void RearrangeMatrixTopToBottom(bool updateFirstTileImage = true, bool updateLastTileImage = true)
+		private void RearrangeMatrixTopToBottom(Pushpin[,] matrix, bool updateFirstTileImage = true, bool updateLastTileImage = true)
 		{
 			var maxIndexX = _tileMatrixLengthX - 1;
 			var maxIndexY = _tileMatrixLengthY - 1;
 			for (var x = 0; x <= maxIndexX; x++)
 			{
-				var temp = _tileMatrix[x, 0];
+				var temp = matrix[x, 0];
 				for (var y = 0; y < maxIndexY; y++)
 				{
-					_tileMatrix[x, y] = _tileMatrix[x, y + 1];
+					matrix[x, y] = matrix[x, y + 1];
 				}
-				_tileMatrix[x, maxIndexY] = temp;
+				matrix[x, maxIndexY] = temp;
 
 				// Calculate the quad key of the new location.
 				var newKey = GetNewKey((QuadKey)temp.Tag, 0, _tileMatrixLengthY);
@@ -827,20 +881,21 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Rearranges the offline tiles in the matrix from left to right.
 		/// </summary>
+		/// <param name="matrix">The target matrix to arrange the tiles.</param>
 		/// <param name="updateFirstTileImage">if set to <c>false</c> ignore updating the image of the first tile.</param>
 		/// <param name="updateLastTileImage">if set to <c>false</c> ignore updating the image of the last tile.</param>
-		private void RearrangeMatrixLeftToRight(bool updateFirstTileImage = true, bool updateLastTileImage = true)
+		private void RearrangeMatrixLeftToRight(Pushpin[,] matrix, bool updateFirstTileImage = true, bool updateLastTileImage = true)
 		{
 			var maxIndexX = _tileMatrixLengthX - 1;
 			var maxIndexY = _tileMatrixLengthY - 1;
 			for (var y = 0; y <= maxIndexY; y++)
 			{
-				var temp = _tileMatrix[0, y];
+				var temp = matrix[0, y];
 				for (var x = 0; x < maxIndexX; x++)
 				{
-					_tileMatrix[x, y] = _tileMatrix[x + 1, y];
+					matrix[x, y] = matrix[x + 1, y];
 				}
-				_tileMatrix[maxIndexX, y] = temp;
+				matrix[maxIndexX, y] = temp;
 
 				// Calculate the quad key of the new location.
 				var newKey = GetNewKey((QuadKey)temp.Tag, _tileMatrixLengthX, 0);
@@ -853,20 +908,21 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Rearranges the offline tiles in the matrix from right to left.
 		/// </summary>
+		/// <param name="matrix">The target matrix to arrange the tiles.</param>
 		/// <param name="updateFirstTileImage">if set to <c>false</c> ignore updating the image of the first tile.</param>
 		/// <param name="updateLastTileImage">if set to <c>false</c> ignore updating the image of the last tile.</param>
-		private void RearrangeMatrixRightToLeft(bool updateFirstTileImage = true, bool updateLastTileImage = true)
+		private void RearrangeMatrixRightToLeft(Pushpin[,] matrix, bool updateFirstTileImage = true, bool updateLastTileImage = true)
 		{
 			var maxIndexX = _tileMatrixLengthX - 1;
 			var maxIndexY = _tileMatrixLengthY - 1;
 			for (var y = 0; y <= maxIndexY; y++)
 			{
-				var temp = _tileMatrix[maxIndexX, y];
+				var temp = matrix[maxIndexX, y];
 				for (var x = maxIndexX; x > 0; x--)
 				{
-					_tileMatrix[x, y] = _tileMatrix[x - 1, y];
+					matrix[x, y] = matrix[x - 1, y];
 				}
-				_tileMatrix[0, y] = temp;
+				matrix[0, y] = temp;
 
 				// Calculate the quad key of the new location.
 				var newKey = GetNewKey((QuadKey)temp.Tag, -_tileMatrixLengthX, 0);
@@ -879,20 +935,21 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Rearranges the offline tiles in the matrix from bottom to top.
 		/// </summary>
+		/// <param name="matrix">The target matrix to arrange the tiles.</param>
 		/// <param name="updateFirstTileImage">if set to <c>false</c> ignore updating the image of the first tile.</param>
 		/// <param name="updateLastTileImage">if set to <c>false</c> ignore updating the image of the last tile.</param>
-		private void RearrangeMatrixBottomToTop(bool updateFirstTileImage = true, bool updateLastTileImage = true)
+		private void RearrangeMatrixBottomToTop(Pushpin[,] matrix, bool updateFirstTileImage = true, bool updateLastTileImage = true)
 		{
 			var maxIndexX = _tileMatrixLengthX - 1;
 			var maxIndexY = _tileMatrixLengthY - 1;
 			for (var x = 0; x <= maxIndexX; x++)
 			{
-				var temp = _tileMatrix[x, maxIndexY];
+				var temp = matrix[x, maxIndexY];
 				for (var y = maxIndexY; y > 0; y--)
 				{
-					_tileMatrix[x, y] = _tileMatrix[x, y - 1];
+					matrix[x, y] = matrix[x, y - 1];
 				}
-				_tileMatrix[x, 0] = temp;
+				matrix[x, 0] = temp;
 
 				// Calculate the quad key of the new location.
 				var newKey = GetNewKey((QuadKey)temp.Tag, 0, -_tileMatrixLengthY);
@@ -981,7 +1038,7 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			tile.Tag = key;
 			var brush = ((ImageBrush)tile.Background);
-			brush.ImageSource = _tileEmptyBackground;
+			brush.ImageSource = null;
 			if (!IsValidKey(key))
 			{
 				return;
@@ -1006,7 +1063,7 @@ namespace Travlexer.WindowsPhone.Views
 					return;
 				}
 				var source = (BitmapImage)brush.ImageSource;
-				if (source == _tileEmptyBackground)
+				if (source == null)
 				{
 					brush.ImageSource = source = new BitmapImage();
 				}
@@ -1020,6 +1077,66 @@ namespace Travlexer.WindowsPhone.Views
 		private void UpdateTileScale()
 		{
 			_tileScaleTransform.ScaleX = _tileScaleTransform.ScaleY = _tileScale = Math.Pow(2D, (Map.ZoomLevel - _zoomFloor));
+		}
+
+		/// <summary>
+		/// Rearranges all offline tiles and updates their image according to the current location, zoom level and layer.
+		/// </summary>
+		private void RefreshOfflineTiles(Pushpin[,] matrix, GoogleMapsLayer layer, bool similarityCheck = true)
+		{
+			if (_isZooming)
+			{
+				return;
+			}
+
+			var oldZoomFloor = _zoomFloor;
+			_zoomFloor = (int)Map.ZoomLevel;
+
+			var oldLayer = _currentLayer;
+			_currentLayer = layer;
+
+			if (similarityCheck && oldZoomFloor == _zoomFloor && oldLayer == _currentLayer)
+			{
+				return;
+			}
+
+			UpdateTileScale();
+
+			// Update all tiles if the zoom level has reached a new floor.
+			var centerKey = GetQuadKey(Map.Center, _zoomFloor, layer);
+
+			// Calculate X index and Y index in the matrix of the center tile.
+			var centerX = _tileMatrixLengthX / 2;
+			var centerY = _tileMatrixLengthY / 2;
+
+			// Update location and image of tile pushpins.
+			for (var x = 0; x < _tileMatrixLengthX; x++)
+			{
+				for (var y = 0; y < _tileMatrixLengthY; y++)
+				{
+					// Create the tile pushpin.
+					var tile = matrix[x, y];
+
+					// Calculate the differences between this tile's X/Y index and the center tile's X/Y index.
+					var diffX = x - centerX;
+					var diffY = y - centerY;
+
+					// Calculate the quad key for this current tile.
+					var key = new QuadKey(centerKey.X + diffX, centerKey.Y + diffY, _zoomFloor, layer);
+
+					// Update this tile with the calculated quad key.
+					UpdateTile(tile, key);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Called when a <see cref="TextBox"/> gets its focus.
+		/// Selects all texts of the <see cref="TextBox"/>.
+		/// </summary>
+		private void OnTextBoxGotFocus(object sender, RoutedEventArgs e)
+		{
+			((TextBox)sender).SelectAll();
 		}
 
 		#endregion
