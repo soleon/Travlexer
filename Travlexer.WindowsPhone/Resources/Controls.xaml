@@ -83,10 +83,9 @@
 											HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
 											VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
 						</Border>
-						<TextBlock FontSize="12"
+						<TextBlock FontSize="13"
 								   HorizontalAlignment="Center"
-								   Text="{TemplateBinding Caption}"
-								   FontFamily="{StaticResource PhoneFontFamilySemiBold}" />
+								   Text="{TemplateBinding Caption}" FontFamily="{StaticResource PhoneFontFamilySemiBold}" />
 					</StackPanel>
 				</ControlTemplate>
 			</Setter.Value>
@@ -186,7 +185,7 @@
 								<Icons:Slash x:Name="UncheckedMark" Foreground="{StaticResource PhoneForegroundBrush}" Width="35" Height="35"/>
 							</Grid>
 						</Border>
-						<TextBlock FontSize="12"
+						<TextBlock FontSize="13"
 							HorizontalAlignment="Center"
 							Text="{TemplateBinding Caption}"
 							FontFamily="{StaticResource PhoneFontFamilySemiBold}" />

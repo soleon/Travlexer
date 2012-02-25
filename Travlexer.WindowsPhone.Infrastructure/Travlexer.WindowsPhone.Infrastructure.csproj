@@ -67,6 +67,8 @@
     <Compile Include="Models\PlaceDetails.cs" />
     <Compile Include="Models\PlaceIcon.cs" />
     <Compile Include="Models\Route.cs" />
+    <Compile Include="Models\RouteMethod.cs" />
+    <Compile Include="Models\RouteMode.cs" />
     <Compile Include="Models\SearchSuggestion.cs" />
     <Compile Include="Models\ViewPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

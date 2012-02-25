@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
 using System.Windows;
+using System.Windows.Media;
 using Codify;
 using Codify.Collections;
 using Codify.Commands;
@@ -13,6 +14,7 @@ using Codify.Models;
 using Codify.Services;
 using Codify.Threading;
 using Codify.ViewModels;
+using Travlexer.WindowsPhone.Converters;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Views;
@@ -330,6 +332,26 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the value indicates if the application is working in offline mode.
 		/// </summary>
 		public ObservableValue<bool> IsOnline { get { return ApplicationContext.IsOnline; } }
+
+		/// <summary>
+		/// Gets the available route modes.
+		/// </summary>
+		public List<KeyValueIcon<RouteMode, string, ImageBrush>> RouteModes { get { return RouteModeKeyValueIconConverter.RouteModes; } }
+
+		/// <summary>
+		/// Gets the selected route mode.
+		/// </summary>
+		public ObservableValue<RouteMode> SelectedRouteMode { get { return DataContext.RouteMode; } }
+
+		/// <summary>
+		/// Gets the available route methods.
+		/// </summary>
+		public List<KeyValueIcon<RouteMethod, string, ImageBrush>> RouteMethods { get { return RouteMethodKeyValueIconConverter.RouteMethods; } }
+
+		/// <summary>
+		/// Gets the selected route method.
+		/// </summary>
+		public ObservableValue<RouteMethod> SelectedRouteMethod { get { return DataContext.RouteMethod; } }
 
 		#endregion
 

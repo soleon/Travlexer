@@ -19,8 +19,8 @@ namespace Travlexer.WindowsPhone.Converters
 			{
 				return null;
 			}
-			if(_resources == null)
-			_resources = Application.Current.Resources;
+			if (_resources == null)
+				_resources = Application.Current.Resources;
 			if (_brushIconLocation == null)
 			{
 				_brushIconLocation = (ImageBrush)_resources["BrushIconLocation"];

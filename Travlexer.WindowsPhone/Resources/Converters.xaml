@@ -7,4 +7,6 @@
 	<Converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
 	<CoreConverters:BooleanConverter x:Key="BooleanConverter" />
 	<CoreConverters:VisibilityConverter x:Key="VisibilityConverter" />
+	<Converters:RouteMethodKeyValueIconConverter x:Key="RouteMethodKeyValueIconConverter" />
+	<Converters:RouteModeKeyValueIconConverter x:Key="RouteModeKeyValueIconConverter" />
 </ResourceDictionary>

@@ -34,6 +34,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			MapZoomLevel = new ObservableValue<double>(1D);
 			MapBaseLayer = new ObservableValue<GoogleMapsLayer>();
 			SearchInput = new ObservableValue<string>();
+			RouteMethod = new ObservableValue<RouteMethod>();
+			RouteMode = new ObservableValue<RouteMode>();
 
 			Places = new ReadOnlyObservableCollection<Place>(_places);
 			MapOverlays = new ObservableCollection<GoogleMapsLayer>();
@@ -72,6 +74,18 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static ObservableValue<string> SearchInput { get; private set; }
 
 		private const string SearchInputProperty = "SearchInput";
+
+		/// <summary>
+		/// Gets the route method.
+		/// </summary>
+		public static ObservableValue<RouteMethod> RouteMethod { get; private set; }
+		private const string RouteMethodProperty = "RouteMethod";
+
+		/// <summary>
+		/// Gets the route mode.
+		/// </summary>
+		public static ObservableValue<RouteMode> RouteMode { get; private set; }
+		private const string RouteModeProperty = "RouteMode";
 
 		/// <summary>
 		/// Gets or sets the map base layer.
@@ -356,6 +370,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Save places.
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
+
+			// Save route method.
+			StorageProvider.SaveSetting(RouteMethodProperty, RouteMethod.Value);
+
+			// Save route mode.
+			StorageProvider.SaveSetting(RouteModeProperty, RouteMode.Value);
 		}
 
 		/// <summary>
@@ -404,6 +424,20 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			if (StorageProvider.TryGetSetting(PlacesProperty, out placeBytes) && Serializer.TryDeserialize(placeBytes, out places))
 			{
 				places.ForEach(_places.Add);
+			}
+
+			// Load route method.
+			RouteMethod method;
+			if (StorageProvider.TryGetSetting(RouteMethodProperty, out method))
+			{
+				RouteMethod.Value = method;
+			}
+
+			// Load route mode.
+			RouteMode mode;
+			if (StorageProvider.TryGetSetting(RouteMethodProperty, out mode))
+			{
+				RouteMode.Value = mode;
 			}
 		}
 
