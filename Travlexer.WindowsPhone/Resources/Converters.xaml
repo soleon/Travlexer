@@ -9,4 +9,5 @@
 	<CoreConverters:VisibilityConverter x:Key="VisibilityConverter" />
 	<Converters:RouteMethodKeyValueIconConverter x:Key="RouteMethodKeyValueIconConverter" />
 	<Converters:RouteModeKeyValueIconConverter x:Key="RouteModeKeyValueIconConverter" />
+	<Converters:LocationListToLocationCollectionConverter x:Key="LocationListToLocationCollectionConverter" />
 </ResourceDictionary>

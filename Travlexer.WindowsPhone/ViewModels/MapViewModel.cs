@@ -8,8 +8,9 @@ using System.Windows.Media;
 using Codify;
 using Codify.Collections;
 using Codify.Commands;
-using Codify.Controls.Maps;
 using Codify.Extensions;
+using Codify.GoogleMaps.Controls;
+using Codify.GoogleMaps.Entities;
 using Codify.Models;
 using Codify.Services;
 using Codify.Threading;
@@ -18,6 +19,8 @@ using Travlexer.WindowsPhone.Converters;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Views;
+using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
+using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
@@ -26,6 +29,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 	/// </summary>
 	public class MapViewModel : ViewModelBase
 	{
+		#region Constants
+
+		private const string CurrentLocationString = "Current Location";
+
+		#endregion
+
+
 		#region Private Members
 
 		private readonly GeoCoordinateWatcher _geoWatcher;
@@ -58,6 +68,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Occurs when <see cref="Suggestions"/> are retrieved from service client.
 		/// </summary>
 		public event Action SuggestionsRetrieved;
+
+		/// <summary>
+		/// Occurs when <see cref="CommandRoute"/> is successfully finished.
+		/// </summary>
+		public event Action<Route> RouteSucceeded;
 
 		#endregion
 
@@ -92,13 +107,28 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandStartGeoWatcher = new DelegateCommand(() => _geoWatcher.Start());
 			CommandStopGeoWatcher = new DelegateCommand(() => _geoWatcher.Stop());
 			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
-			CommandZoomIn = new DelegateCommand(() => { if (ZoomLevel.Value < 20D) ZoomLevel.Value = Math.Min(ZoomLevel.Value += 1D, 20D); });
-			CommandZoomOut = new DelegateCommand(() => { if (ZoomLevel.Value > 1D) ZoomLevel.Value = Math.Max(ZoomLevel.Value -= 1D, 1D); });
-			CommandShowStreetLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.Street);
-			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = GoogleMapsLayer.SatelliteHybrid);
-			CommandToggleMapOverlay = new DelegateCommand<GoogleMapsLayer>(DataContext.ToggleMapOverlay);
+			CommandZoomIn = new DelegateCommand(() =>
+			{
+				if (ZoomLevel.Value < 20D)
+				{
+					ZoomLevel.Value = Math.Min(ZoomLevel.Value += 1D, 20D);
+				}
+			});
+			CommandZoomOut = new DelegateCommand(() =>
+			{
+				if (ZoomLevel.Value > 1D)
+				{
+					ZoomLevel.Value = Math.Max(ZoomLevel.Value -= 1D, 1D);
+				}
+			});
+			CommandShowStreetLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = Layer.Street);
+			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = Layer.SatelliteHybrid);
+			CommandToggleMapOverlay = new DelegateCommand<Layer>(DataContext.ToggleMapOverlay);
 			CommandToggleToolbar = new DelegateCommand(ApplicationContext.ToggleToolbarState);
-			CommandToggleConnectivityMode = new DelegateCommand(OnToggleConnectivityMode);
+			CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartLocation.Value = CurrentLocationString);
+			CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArriveLocation.Value = CurrentLocationString);
+			CommandRoute = new DelegateCommand(OnRoute);
+			CommandClearRoutes = new DelegateCommand(OnClearRoutes);
 
 			// Initialise geo-coordinate watcher.
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
@@ -108,7 +138,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
 			DataContext.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
 			DataContext.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
-			GoogleMapsTileSource.TileRequested += key => !IsOnline.Value;
 			VisualState.ValueChanged += OnVisualStateChanged;
 			IsTrackingCurrentLocation.ValueChanged += OnIsTrackingCurrentLocationValueChanged;
 
@@ -127,19 +156,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 					ZoomLevel.Value = 15;
 				}
 			}
-		}
-
-		/// <summary>
-		/// Called when the value of <see cref="IsTrackingCurrentLocation"/> has changed.
-		/// </summary>
-		private void OnIsTrackingCurrentLocationValueChanged(bool old, bool @new)
-		{
-			if (!@new || CurrentLocation == null || CurrentLocation.IsUnknown)
-			{
-				return;
-			}
-			Center.Value = CurrentLocation;
-			ZoomLevel.Value = 15;
 		}
 
 		#endregion
@@ -225,12 +241,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets or sets the map center geo-coordination.
 		/// </summary>
-		public ObservableValue<GeoCoordinate> Center { get { return DataContext.MapCenter; } }
+		public ObservableValue<GeoCoordinate> Center
+		{
+			get { return DataContext.MapCenter; }
+		}
 
 		/// <summary>
 		/// Gets or sets the zoom level of the map.
 		/// </summary>
-		public ObservableValue<double> ZoomLevel { get { return DataContext.MapZoomLevel; } }
+		public ObservableValue<double> ZoomLevel
+		{
+			get { return DataContext.MapZoomLevel; }
+		}
 
 		/// <summary>
 		/// Gets the suggestions based on the <see cref="SearchInput"/>.
@@ -260,7 +282,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets or sets the search input.
 		/// </summary>
-		public ObservableValue<string> SearchInput { get { return DataContext.SearchInput; } }
+		public ObservableValue<string> SearchInput
+		{
+			get { return DataContext.SearchInput; }
+		}
 
 		/// <summary>
 		/// Gets the visual state of the view.
@@ -270,7 +295,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets or sets a value indicating whether the map is tracking current location.
 		/// </summary>
-		public ObservableValue<bool> IsTrackingCurrentLocation { get { return ApplicationContext.IsTrackingCurrentLocation; } }
+		public ObservableValue<bool> IsTrackingCurrentLocation
+		{
+			get { return ApplicationContext.IsTrackingCurrentLocation; }
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is busy.
@@ -288,7 +316,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsStreetLayerVisible
 		{
-			get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.Street ? Visibility.Visible : Visibility.Collapsed; }
+			get { return DataContext.MapBaseLayer.Value == Layer.Street ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
@@ -298,7 +326,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsSatelliteHybridLayerVisible
 		{
-			get { return DataContext.MapBaseLayer.Value == GoogleMapsLayer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
+			get { return DataContext.MapBaseLayer.Value == Layer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
@@ -308,7 +336,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsTrafficLayerVisible
 		{
-			get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return DataContext.MapOverlays.Contains(Layer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
@@ -318,7 +346,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsTransitLayerVisible
 		{
-			get { return DataContext.MapOverlays.Contains(GoogleMapsLayer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return DataContext.MapOverlays.Contains(Layer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
@@ -326,32 +354,68 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the state of the toolbar.
 		/// </summary>
-		public ObservableValue<ExpansionStates> ToolbarState { get { return ApplicationContext.ToolbarState; } }
+		public ObservableValue<ExpansionStates> ToolbarState
+		{
+			get { return ApplicationContext.ToolbarState; }
+		}
 
 		/// <summary>
 		/// Gets the value indicates if the application is working in offline mode.
 		/// </summary>
-		public ObservableValue<bool> IsOnline { get { return ApplicationContext.IsOnline; } }
+		public ObservableValue<bool> IsOnline
+		{
+			get { return ApplicationContext.IsOnline; }
+		}
 
 		/// <summary>
 		/// Gets the available route modes.
 		/// </summary>
-		public List<KeyValueIcon<RouteMode, string, ImageBrush>> RouteModes { get { return RouteModeKeyValueIconConverter.RouteModes; } }
+		public List<KeyValueIcon<TravelMode, string, ImageBrush>> TravelModes
+		{
+			get { return RouteModeKeyValueIconConverter.TravelModes; }
+		}
 
 		/// <summary>
 		/// Gets the selected route mode.
 		/// </summary>
-		public ObservableValue<RouteMode> SelectedRouteMode { get { return DataContext.RouteMode; } }
+		public ObservableValue<TravelMode> SelectedTravelMode
+		{
+			get { return DataContext.TravelMode; }
+		}
 
 		/// <summary>
 		/// Gets the available route methods.
 		/// </summary>
-		public List<KeyValueIcon<RouteMethod, string, ImageBrush>> RouteMethods { get { return RouteMethodKeyValueIconConverter.RouteMethods; } }
+		public List<KeyValueIcon<RouteMethod, string, ImageBrush>> RouteMethods
+		{
+			get { return RouteMethodKeyValueIconConverter.RouteMethods; }
+		}
 
 		/// <summary>
 		/// Gets the selected route method.
 		/// </summary>
-		public ObservableValue<RouteMethod> SelectedRouteMethod { get { return DataContext.RouteMethod; } }
+		public ObservableValue<RouteMethod> SelectedRouteMethod
+		{
+			get { return DataContext.RouteMethod; }
+		}
+
+		/// <summary>
+		/// Gets the depart location.
+		/// </summary>
+		public ObservableValue<string> DepartLocation
+		{
+			get { return DataContext.DepartLocation; }
+		}
+
+		/// <summary>
+		/// Gets the arrive location.
+		/// </summary>
+		public ObservableValue<string> ArriveLocation
+		{
+			get { return DataContext.ArriveLocation; }
+		}
+
+		public ReadOnlyObservableCollection<Route> Routes { get { return DataContext.Routes; } }
 
 		#endregion
 
@@ -466,7 +530,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Gets the command that toggles traffic layer.
 		/// </summary>
-		public DelegateCommand<GoogleMapsLayer> CommandToggleMapOverlay { get; private set; }
+		public DelegateCommand<Layer> CommandToggleMapOverlay { get; private set; }
 
 		/// <summary>
 		/// Gets the command that toggles the <see cref="ToolbarState"/>.
@@ -474,9 +538,24 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public DelegateCommand CommandToggleToolbar { get; private set; }
 
 		/// <summary>
-		/// Gets the command that toggles connectivity mode.
+		/// Gets the command that sets depart location to current location.
 		/// </summary>
-		public DelegateCommand CommandToggleConnectivityMode { get; private set; }
+		public DelegateCommand CommandSetDepartLocationToCurrentLocation { get; private set; }
+
+		/// <summary>
+		/// Gets the command that sets arrive location to current location.
+		/// </summary>
+		public DelegateCommand CommandSetArriveLocationToCurrentLocation { get; private set; }
+
+		/// <summary>
+		/// Gets the command that finds a route.
+		/// </summary>
+		public DelegateCommand CommandRoute { get; private set; }
+
+		/// <summary>
+		/// Gets the command that clears all routes.
+		/// </summary>
+		public DelegateCommand CommandClearRoutes { get; private set; }
 
 		#endregion
 
@@ -682,6 +761,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnClearSearchResults()
 		{
+			
 			DataContext.ClearSearchResults();
 		}
 
@@ -706,11 +786,51 @@ namespace Travlexer.WindowsPhone.ViewModels
 		}
 
 		/// <summary>
-		/// Called when <see cref="CommandToggleConnectivityMode"/> is executed.
+		/// Called when the value of <see cref="IsTrackingCurrentLocation"/> has changed.
 		/// </summary>
-		private void OnToggleConnectivityMode()
+		private void OnIsTrackingCurrentLocationValueChanged(bool old, bool @new)
 		{
+			if (!@new || CurrentLocation == null || CurrentLocation.IsUnknown)
+			{
+				return;
+			}
+			Center.Value = CurrentLocation;
+			ZoomLevel.Value = 15;
+		}
 
+		/// <summary>
+		/// Called when <see cref="CommandRoute"/> is executed.
+		/// </summary>
+		private void OnRoute()
+		{
+			IsBusy.Value = true;
+			VisualState.Value = VisualStates.Default;
+			DataContext.GetRoute(DepartLocation.Value, ArriveLocation.Value, SelectedTravelMode.Value, SelectedRouteMethod.Value, callback =>
+			{
+				IsBusy.Value = false;
+				if (callback.Status != CallbackStatus.Successful)
+				{
+					MessageBox.Show("We couldn't find a route between the 2 specified location.");
+					return;
+				}
+				IsTrackingCurrentLocation.Value = false;
+				RouteSucceeded.ExecuteIfNotNull(callback.Result);
+			});
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandClearRoutes"/> is executed.
+		/// </summary>
+		private void OnClearRoutes()
+		{
+			if (DataContext.Routes.Count == 0)
+			{
+				return;
+			}
+			if (MessageBox.Show("This will clear all routes on the map. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+			{
+				DataContext.ClearRoutes();
+			}
 		}
 
 		#endregion

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
+using Codify.GoogleMaps;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
-using Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps;
 using Travlexer.WindowsPhone.ViewModels;
 using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
 

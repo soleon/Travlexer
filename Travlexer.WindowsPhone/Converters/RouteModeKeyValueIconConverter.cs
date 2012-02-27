@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Codify.GoogleMaps.Entities;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
 
@@ -12,7 +13,7 @@ namespace Travlexer.WindowsPhone.Converters
 {
 	public class RouteModeKeyValueIconConverter : IValueConverter
 	{
-		public static List<KeyValueIcon<RouteMode, string, ImageBrush>> RouteModes
+		public static List<KeyValueIcon<TravelMode, string, ImageBrush>> TravelModes
 		{
 			get
 			{
@@ -20,51 +21,51 @@ namespace Travlexer.WindowsPhone.Converters
 				{
 					_resources = Application.Current.Resources;
 				}
-				return _routeMethods ?? (_routeMethods = new List<KeyValueIcon<RouteMode, string, ImageBrush>>
+				return _routeMethods ?? (_routeMethods = new List<KeyValueIcon<TravelMode, string, ImageBrush>>
 				{
-					new KeyValueIcon<RouteMode, string, ImageBrush>
+					new KeyValueIcon<TravelMode, string, ImageBrush>
 					{
-						Key = RouteMode.Driving,
+						Key = TravelMode.Driving,
 						Value = "Driving",
 						Icon = (ImageBrush)_resources["BrushIconCar"]
 					},
-					new KeyValueIcon<RouteMode, string, ImageBrush>
+					new KeyValueIcon<TravelMode, string, ImageBrush>
 					{
-						Key = RouteMode.Walking,
+						Key = TravelMode.Walking,
 						Value = "Walking",
 						Icon = (ImageBrush)_resources["BrushIconWalk"]
 					},
-					new KeyValueIcon<RouteMode, string, ImageBrush>
+					new KeyValueIcon<TravelMode, string, ImageBrush>
 					{
-						Key = RouteMode.Bicycling,
+						Key = TravelMode.Bicycling,
 						Value = "Bicycling",
 						Icon = (ImageBrush)_resources["BrushIconBicycle"]
 					}
 				});
 			}
 		}
-		private static List<KeyValueIcon<RouteMode, string, ImageBrush>> _routeMethods;
+		private static List<KeyValueIcon<TravelMode, string, ImageBrush>> _routeMethods;
 
 		private static ResourceDictionary _resources;
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is RouteMode))
+			if (!(value is TravelMode))
 			{
 				return null;
 			}
-			var method = (RouteMode)value;
-			return RouteModes.First(kvi => kvi.Key == method);
+			var method = (TravelMode)value;
+			return TravelModes.First(kvi => kvi.Key == method);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is KeyValueIcon<RouteMode, string, ImageBrush>))
+			if (!(value is KeyValueIcon<TravelMode, string, ImageBrush>))
 			{
 				return null;
 			}
-			var target = (KeyValueIcon<RouteMode, string, ImageBrush>)value;
-			return RouteModes.First(kvi => kvi.Key == target.Key).Key;
+			var target = (KeyValueIcon<TravelMode, string, ImageBrush>)value;
+			return TravelModes.First(kvi => kvi.Key == target.Key).Key;
 		}
 	}
 }

@@ -178,5 +178,34 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		}
 
 		#endregion
+
+
+		#region Operators
+
+		public static implicit operator Place(Codify.GoogleMaps.Entities.Place place)
+		{
+			if (place == null)
+			{
+				return null;
+			}
+			return new Place(place.Geometry.Location, name: place.Name)
+			{
+				ViewPort = place.Geometry.ViewPort,
+				Reference = place.Reference
+			};
+		}
+
+		public static implicit operator Place(Codify.GoogleMaps.Entities.PlaceDetails details)
+		{
+			return new Place(details.Geometry.Location, name: details.Name)
+			{
+				Details = new PlaceDetails { ContactNumber = details.FormattedPhoneNumber },
+				FormattedAddress = details.FormattedAddress,
+				ViewPort = details.Geometry.ViewPort,
+				Reference = details.Reference
+			};
+		}
+
+		#endregion
 	}
 }

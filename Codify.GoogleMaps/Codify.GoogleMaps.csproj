@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E8BAB17A-A62D-400B-B138-245A933F61C6}</ProjectGuid>
+    <ProjectGuid>{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Codify.Controls.Maps</RootNamespace>
-    <AssemblyName>Codify.Controls.Maps</AssemblyName>
+    <RootNamespace>Codify.GoogleMaps</RootNamespace>
+    <AssemblyName>Codify.GoogleMaps</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
@@ -42,18 +42,54 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp.WindowsPhone">
+      <HintPath>..\Libraries\RestSharp.WindowsPhone.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Device" />
+    <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows" />
+    <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Layer.cs" />
+    <Compile Include="Controls\QuadKey.cs" />
+    <Compile Include="Controls\TileSource.cs" />
+    <Compile Include="Entities\AddressComponent.cs" />
+    <Compile Include="Entities\AutoCompleteResponse.cs" />
+    <Compile Include="Entities\Distance.cs" />
+    <Compile Include="Entities\Duration.cs" />
+    <Compile Include="Entities\Geometry.cs" />
+    <Compile Include="Entities\IResponse.cs" />
+    <Compile Include="Entities\LatLng.cs" />
+    <Compile Include="Entities\Leg.cs" />
+    <Compile Include="Entities\ListResponse.cs" />
+    <Compile Include="Entities\Place.cs" />
+    <Compile Include="Entities\PlaceDetails.cs" />
+    <Compile Include="Entities\PlaceType.cs" />
+    <Compile Include="Entities\Polyline.cs" />
+    <Compile Include="Entities\Response.cs" />
+    <Compile Include="Entities\Route.cs" />
+    <Compile Include="Entities\RouteMethod.cs" />
+    <Compile Include="Entities\RouteMode.cs" />
+    <Compile Include="Entities\RoutesResponse.cs" />
+    <Compile Include="Entities\Size.cs" />
+    <Compile Include="Entities\StatusCodes.cs" />
+    <Compile Include="Entities\Step.cs" />
+    <Compile Include="Entities\Suggestion.cs" />
+    <Compile Include="Entities\ViewPort.cs" />
+    <Compile Include="GoogleMapsClient.cs" />
+    <Compile Include="GoogleMapsClientMock.cs" />
+    <Compile Include="IGoogleMapsClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\JsonSerializer.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\Codify.GoogleMaps\Codify.GoogleMaps.csproj">
-      <Project>{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}</Project>
-      <Name>Codify.GoogleMaps</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
       <Name>Codify</Name>

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -168,6 +169,12 @@ namespace Codify.DependencyShell
 		/// </summary>
 		private void OnButtonsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
+#if DEBUG
+			if (DesignerProperties.IsInDesignTool)
+			{
+				return;
+			}
+#endif
 			var buttons = _applicationBar.Buttons;
 			switch (e.Action)
 			{
@@ -194,6 +201,12 @@ namespace Codify.DependencyShell
 		/// </summary>
 		private void OnMenuItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
+#if DEBUG
+			if (DesignerProperties.IsInDesignTool)
+			{
+				return;
+			}
+#endif
 			var items = _applicationBar.MenuItems;
 			switch (e.Action)
 			{

@@ -6,8 +6,10 @@ using System.Device.Location;
 using System.Linq;
 using System.Net;
 using Codify;
-using Codify.Controls.Maps;
 using Codify.Extensions;
+using Codify.GoogleMaps;
+using Codify.GoogleMaps.Controls;
+using Codify.GoogleMaps.Entities;
 using Codify.Models;
 using Codify.Serialization;
 using Codify.Services;
@@ -15,9 +17,9 @@ using Codify.Storage;
 using RestSharp;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Infrastructure.Serialization;
-using Travlexer.WindowsPhone.Infrastructure.Services.GoogleMaps;
 using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
 using PlaceDetails = Travlexer.WindowsPhone.Infrastructure.Models.PlaceDetails;
+using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
 
 namespace Travlexer.WindowsPhone.Infrastructure
 {
@@ -32,13 +34,17 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		{
 			MapCenter = new ObservableValue<GeoCoordinate>(new Location());
 			MapZoomLevel = new ObservableValue<double>(1D);
-			MapBaseLayer = new ObservableValue<GoogleMapsLayer>();
+			MapBaseLayer = new ObservableValue<Layer>();
 			SearchInput = new ObservableValue<string>();
 			RouteMethod = new ObservableValue<RouteMethod>();
-			RouteMode = new ObservableValue<RouteMode>();
+			TravelMode = new ObservableValue<TravelMode>();
+			DepartLocation = new ObservableValue<string>();
+			ArriveLocation = new ObservableValue<string>();
+			Unit = new ObservableValue<Unit>();
 
 			Places = new ReadOnlyObservableCollection<Place>(_places);
-			MapOverlays = new ObservableCollection<GoogleMapsLayer>();
+			MapOverlays = new ObservableCollection<Layer>();
+			Routes = new ReadOnlyObservableCollection<Route>(_routes = new ObservableCollection<Route>());
 		}
 
 		#endregion
@@ -79,27 +85,56 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// Gets the route method.
 		/// </summary>
 		public static ObservableValue<RouteMethod> RouteMethod { get; private set; }
+
 		private const string RouteMethodProperty = "RouteMethod";
 
 		/// <summary>
 		/// Gets the route mode.
 		/// </summary>
-		public static ObservableValue<RouteMode> RouteMode { get; private set; }
-		private const string RouteModeProperty = "RouteMode";
+		public static ObservableValue<TravelMode> TravelMode { get; private set; }
+
+		private const string TravelModeProperty = "TravelMode";
+
+		/// <summary>
+		/// Gets the depart location.
+		/// </summary>
+		public static ObservableValue<string> DepartLocation { get; private set; }
+
+		private const string DepartLocationProperty = "DepartLocation";
+
+		/// <summary>
+		/// Gets the arrive location.
+		/// </summary>
+		public static ObservableValue<string> ArriveLocation { get; private set; }
+
+		private const string ArriveLocationProperty = "ArriveLocation";
 
 		/// <summary>
 		/// Gets or sets the map base layer.
 		/// </summary>
-		public static ObservableValue<GoogleMapsLayer> MapBaseLayer { get; private set; }
+		public static ObservableValue<Layer> MapBaseLayer { get; private set; }
 
 		private const string MapBaseLayerProperty = "MapBaseLayer";
 
 		/// <summary>
 		/// Gets the map overlays.
 		/// </summary>
-		public static ObservableCollection<GoogleMapsLayer> MapOverlays { get; private set; }
+		public static ObservableCollection<Layer> MapOverlays { get; private set; }
 
 		private const string MapOverlayProperty = "MapOverlay";
+
+		/// <summary>
+		/// Gets the collection of all routes planned by the user.
+		/// </summary>
+		public static ReadOnlyObservableCollection<Route> Routes { get; private set; }
+
+		private static readonly ObservableCollection<Route> _routes;
+		private const string RoutesProperty = "Routes";
+
+		/// <summary>
+		/// Gets the unit system that is currently in use.
+		/// </summary>
+		public static ObservableValue<Unit> Unit { get; private set; }
 
 		/// <summary>
 		/// Gets or sets the google maps client.
@@ -193,7 +228,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null)
 		{
 			place.DataState = DataStates.Busy;
-			ProcessCall<ListResponse<Services.GoogleMaps.PlaceDetails>, List<Services.GoogleMaps.PlaceDetails>>(
+			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.PlaceDetails>, List<Codify.GoogleMaps.Entities.PlaceDetails>>(
 				(c, a) => c.GetPlaces(place.Location, a),
 				r =>
 				{
@@ -216,6 +251,23 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		/// <summary>
+		/// Gets information of the specified <see cref="Place"/>.
+		/// </summary>
+		/// <param name="location">The geo-location to get the information for.</param>
+		/// <param name="callback">The callback to be executed after this process is finished.</param>
+		public static void GetAddress(Location location, Action<CallbackEventArgs<string>> callback = null)
+		{
+			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.PlaceDetails>, List<Codify.GoogleMaps.Entities.PlaceDetails>, string>(
+				(c, a) => c.GetPlaces(location, a),
+				r =>
+				{
+					var details = r.Result[0];
+					return details.FormattedAddress;
+				},
+				callback);
+		}
+
+		/// <summary>
 		/// Gets the details for the specified place by its reference key.
 		/// </summary>
 		/// <param name="place">The place to get the details for.</param>
@@ -228,7 +280,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				return;
 			}
 			place.DataState = DataStates.Busy;
-			ProcessCall<Response<Services.GoogleMaps.PlaceDetails>, Services.GoogleMaps.PlaceDetails>(
+			ProcessCall<Response<Codify.GoogleMaps.Entities.PlaceDetails>, Codify.GoogleMaps.Entities.PlaceDetails>(
 				(c, r) => c.GetPlaceDetails(place.Reference, r),
 				r =>
 				{
@@ -256,7 +308,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <param name="callback">The callback to be executed when this process is finished.</param>
 		public static void GetPlaceDetails(string reference, Action<CallbackEventArgs<Place>> callback = null)
 		{
-			ProcessCall<Response<Services.GoogleMaps.PlaceDetails>, Services.GoogleMaps.PlaceDetails, Place>(
+			ProcessCall<Response<Codify.GoogleMaps.Entities.PlaceDetails>, Codify.GoogleMaps.Entities.PlaceDetails, Place>(
 				(c, r) => c.GetPlaceDetails(reference, r),
 				r =>
 				{
@@ -277,7 +329,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		public static void Search(Location baseLocation, string input, Action<CallbackEventArgs<List<Place>>> callback = null)
 		{
-			ProcessCall<ListResponse<Services.GoogleMaps.Place>, List<Services.GoogleMaps.Place>, List<Place>>(
+			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>, List<Place>>(
 				(c, r) => c.Search(baseLocation, input, r),
 				r =>
 				{
@@ -305,7 +357,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
 					// If search come back with empty result, try using the input as an address to get the first matching place.
 					const string defaultSearchName = "Search Result";
-					ProcessCall<ListResponse<Services.GoogleMaps.PlaceDetails>, List<Services.GoogleMaps.PlaceDetails>, List<Place>>(
+					ProcessCall<ListResponse<Codify.GoogleMaps.Entities.PlaceDetails>, List<Codify.GoogleMaps.Entities.PlaceDetails>, List<Place>>(
 						(c, r) => c.GetPlaces(input, r),
 						r =>
 						{
@@ -347,6 +399,58 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		/// <summary>
+		/// Finds the route between the depart location and arrive location.
+		/// </summary>
+		/// <param name="depart">The depart location.</param>
+		/// <param name="arrive">The arrive location.</param>
+		/// <param name="mode">The travel mode for the route.</param>
+		/// <param name="method">The routing method for the route.</param>
+		/// <param name="callback">The callback to execute after the process is finished.</param>
+		public static void GetRoute(string depart, string arrive, TravelMode mode, RouteMethod method, Action<CallbackEventArgs<Route>> callback = null)
+		{
+			ProcessCall<RoutesResponse, List<Codify.GoogleMaps.Entities.Route>, Route>(
+				(c, r) => c.GetDirections(depart, arrive, mode, method, Unit.Value, r),
+				response =>
+				{
+					Route route = response.Result.FirstOrDefault();
+					if (route != null && _routes.All(r => r != route))
+					{
+						_routes.Add(route);
+						var points = route.Points;
+						var count = points.Count;
+
+						// Add the depart and arrive location if they are not already in the place list.
+						if (count > 0)
+						{
+							var location = points[0];
+							if (_places.All(p => p.Location != location))
+							{
+								AddNewPlace(location);
+							}
+							if (count > 1)
+							{
+								location = points[count - 1];
+								if (_places.All(p => p.Location != location))
+								{
+									AddNewPlace(location);
+								}
+							}
+						}
+					}
+					return route;
+				},
+				callback);
+		}
+
+		/// <summary>
+		/// Clears all routes.
+		/// </summary>
+		public static void ClearRoutes()
+		{
+			_routes.Clear();
+		}
+
+		/// <summary>
 		/// Saves the data context to the storage provided by <see cref="StorageProvider"/>.
 		/// </summary>
 		public static void SaveContext()
@@ -371,11 +475,21 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			var placeBytes = Serializer.Serialize(_places.ToArray());
 			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
 
+			// Save routes.
+			var routeBytes = Serializer.Serialize(_routes.ToArray());
+			StorageProvider.SaveSetting(RoutesProperty, routeBytes);
+
 			// Save route method.
 			StorageProvider.SaveSetting(RouteMethodProperty, RouteMethod.Value);
 
-			// Save route mode.
-			StorageProvider.SaveSetting(RouteModeProperty, RouteMode.Value);
+			// Save travel mode.
+			StorageProvider.SaveSetting(TravelModeProperty, TravelMode.Value);
+
+			// Save depart location.
+			StorageProvider.SaveSetting(DepartLocationProperty, DepartLocation.Value);
+
+			// Save arrive location.
+			StorageProvider.SaveSetting(ArriveLocationProperty, ArriveLocation.Value);
 		}
 
 		/// <summary>
@@ -405,14 +519,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			}
 
 			// Load map base layer.
-			GoogleMapsLayer mapBaseLayer;
+			Layer mapBaseLayer;
 			if (StorageProvider.TryGetSetting(MapBaseLayerProperty, out mapBaseLayer))
 			{
 				MapBaseLayer.Value = mapBaseLayer;
 			}
 
 			// Load map overlays.
-			GoogleMapsLayer[] overlays;
+			Layer[] overlays;
 			if (StorageProvider.TryGetSetting(MapOverlayProperty, out overlays))
 			{
 				overlays.ForEach(MapOverlays.Add);
@@ -423,7 +537,15 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			Place[] places;
 			if (StorageProvider.TryGetSetting(PlacesProperty, out placeBytes) && Serializer.TryDeserialize(placeBytes, out places))
 			{
-				places.ForEach(_places.Add);
+				_places.AddRange(places);
+			}
+
+			// Load routes.
+			byte[] routeBytes;
+			Route[] routes;
+			if (StorageProvider.TryGetSetting(RoutesProperty, out routeBytes) && Serializer.TryDeserialize(routeBytes, out routes))
+			{
+				_routes.AddRange(routes);
 			}
 
 			// Load route method.
@@ -433,18 +555,32 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				RouteMethod.Value = method;
 			}
 
-			// Load route mode.
-			RouteMode mode;
+			// Load travel mode.
+			TravelMode mode;
 			if (StorageProvider.TryGetSetting(RouteMethodProperty, out mode))
 			{
-				RouteMode.Value = mode;
+				TravelMode.Value = mode;
+			}
+
+			// Load depart location.
+			string departLocation;
+			if (StorageProvider.TryGetSetting(DepartLocationProperty, out departLocation))
+			{
+				DepartLocation.Value = departLocation;
+			}
+
+			// Load arrive location.
+			string arriveLocation;
+			if (StorageProvider.TryGetSetting(ArriveLocationProperty, out arriveLocation))
+			{
+				ArriveLocation.Value = arriveLocation;
 			}
 		}
 
 		/// <summary>
 		/// Toggles the specified map overlay.
 		/// </summary>
-		public static void ToggleMapOverlay(GoogleMapsLayer layer)
+		public static void ToggleMapOverlay(Layer layer)
 		{
 			if (MapOverlays.Contains(layer))
 			{

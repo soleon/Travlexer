@@ -15,8 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Codify;
-using Codify.Controls.Maps;
 using Codify.Extensions;
+using Codify.GoogleMaps.Controls;
 using Codify.Models;
 using Codify.Threading;
 using Codify.ViewModels;
@@ -24,10 +24,12 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework.Media;
+using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
-using QuadKey = Codify.Controls.Maps.QuadKey;
+using QuadKey = Codify.GoogleMaps.Controls.QuadKey;
+using TileSource = Codify.GoogleMaps.Controls.TileSource;
 
 namespace Travlexer.WindowsPhone.Views
 {
@@ -65,12 +67,12 @@ namespace Travlexer.WindowsPhone.Views
 		private readonly DispatcherTimer _zoomTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200D) };
 		private readonly Queue<KeyValuePair<QuadKey, Stream>> _tileImageCache = new Queue<KeyValuePair<QuadKey, Stream>>(50);
 
-		private readonly ObservableValue<ExpansionStates> _toolbarState = Infrastructure.ApplicationContext.ToolbarState;
-		private readonly ObservableValue<bool> _isOnline = Infrastructure.ApplicationContext.IsOnline;
+		private readonly ObservableValue<ExpansionStates> _toolbarState = ApplicationContext.ToolbarState;
+		private readonly ObservableValue<bool> _isOnline = ApplicationContext.IsOnline;
 		private readonly ObservableValue<GeoCoordinate> _mapCenter = Infrastructure.DataContext.MapCenter;
-		private readonly ObservableValue<GoogleMapsLayer> _mapBase = Infrastructure.DataContext.MapBaseLayer;
+		private readonly ObservableValue<Layer> _mapBase = Infrastructure.DataContext.MapBaseLayer;
 		private readonly ObservableValue<double> _mapZoomLevel = Infrastructure.DataContext.MapZoomLevel;
-		private readonly ObservableCollection<GoogleMapsLayer> _mapOverlays = Infrastructure.DataContext.MapOverlays;
+		private readonly ObservableCollection<Layer> _mapOverlays = Infrastructure.DataContext.MapOverlays;
 
 		private bool _isZooming;
 		private double _tileScale;
@@ -104,6 +106,7 @@ namespace Travlexer.WindowsPhone.Views
 				return;
 			}
 			_context.SearchSucceeded += OnSearchSucceeded;
+			_context.RouteSucceeded += OnContextRouteSucceeded;
 			_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
 			_context.VisualState.ValueChanged += (old, @new) => GoToVisualState(@new);
 			_toolbarState.ValueChanged += (old, @new) => GoToToolbarState(@new);
@@ -123,46 +126,10 @@ namespace Travlexer.WindowsPhone.Views
 					InitializeOfflineLayer(ref _baseTileMatrix, OfflineBaseLayer, _mapBase.Value);
 					if (OfflineBaseLayer.Visibility == Visibility.Visible)
 					{
-						InitializeOfflineLayer(ref _transitTileMatrix, OfflineTransitLayer, GoogleMapsLayer.TransitOverlay);
+						InitializeOfflineLayer(ref _transitTileMatrix, OfflineTransitLayer, Layer.TransitOverlay);
 					}
 					RegisterOfflineModeEventListeners();
 				};
-			}
-		}
-
-		private void OnIsOnlineValueChanged(bool old, bool @new)
-		{
-			if (@new)
-			{
-				UnregisterOfflineModeEventListeners();
-			}
-			else
-			{
-				// Check base layer.
-				if (OfflineBaseLayer.Tag == null)
-				{
-					InitializeOfflineLayer(ref _baseTileMatrix, OfflineBaseLayer, _mapBase.Value);
-				}
-				else
-				{
-					RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value);
-				}
-
-				// Check transit layer.
-				if (OfflineBaseLayer.Visibility == Visibility.Visible)
-				{
-					if (OfflineTransitLayer.Tag == null)
-					{
-						InitializeOfflineLayer(ref _transitTileMatrix, OfflineTransitLayer, GoogleMapsLayer.TransitOverlay);
-					}
-					else
-					{
-						RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay);
-					}
-				}
-
-				// Register necessary event listeners.
-				RegisterOfflineModeEventListeners();
 			}
 		}
 
@@ -366,7 +333,7 @@ namespace Travlexer.WindowsPhone.Views
 			RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value);
 			if (OfflineTransitLayer.Visibility == Visibility.Visible)
 			{
-				RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay);
+				RefreshOfflineTiles(_transitTileMatrix, Layer.TransitOverlay);
 			}
 		}
 
@@ -401,9 +368,77 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Called when the value of <see cref="Infrastructure.DataContext.MapBaseLayer"/> has changed.
 		/// </summary>
-		private void OnMapBaseLayerValueChanged(GoogleMapsLayer old, GoogleMapsLayer @new)
+		private void OnMapBaseLayerValueChanged(Layer old, Layer @new)
 		{
 			RefreshOfflineTiles(_baseTileMatrix, @new);
+		}
+
+		/// <summary>
+		/// Called when the value of <see cref="ApplicationContext.IsOnline"/> is changed.
+		/// </summary>
+		/// <param name="old">if set to <c>true</c> [old].</param>
+		/// <param name="new">if set to <c>true</c> [@new].</param>
+		private void OnIsOnlineValueChanged(bool old, bool @new)
+		{
+			if (@new)
+			{
+				UnregisterOfflineModeEventListeners();
+			}
+			else
+			{
+				// Check base layer.
+				if (OfflineBaseLayer.Tag == null)
+				{
+					InitializeOfflineLayer(ref _baseTileMatrix, OfflineBaseLayer, _mapBase.Value);
+				}
+				else
+				{
+					RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value);
+				}
+
+				// Check transit layer.
+				if (OfflineBaseLayer.Visibility == Visibility.Visible)
+				{
+					if (OfflineTransitLayer.Tag == null)
+					{
+						InitializeOfflineLayer(ref _transitTileMatrix, OfflineTransitLayer, Layer.TransitOverlay);
+					}
+					else
+					{
+						RefreshOfflineTiles(_transitTileMatrix, Layer.TransitOverlay);
+					}
+				}
+
+				// Register necessary event listeners.
+				RegisterOfflineModeEventListeners();
+			}
+		}
+
+		/// <summary>
+		/// Called when <see cref="MapViewModel.RouteSucceeded"/> event is raised.
+		/// Sets the map's view port to display the route.
+		/// </summary>
+		private void OnContextRouteSucceeded(Route route)
+		{
+			var locations = route.Points;
+			if (!locations.Any())
+			{
+				return;
+			}
+			if (locations.Count == 1)
+			{
+				var location = locations[0];
+				Map.SetView(location, 15D);
+			}
+			else
+			{
+				var coordinates = locations.Select(l => (GeoCoordinate)l).ToArray();
+				if (!coordinates.Any())
+				{
+					return;
+				}
+				Map.SetView(LocationRect.CreateLocationRect(coordinates));
+			}
 		}
 
 		#endregion
@@ -462,7 +497,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Performs all necessary initialization for offline mapping. Happens only once.
 		/// </summary>
-		private void InitializeOfflineLayer(ref Pushpin[,] matrix, Panel mapLayer, GoogleMapsLayer layer)
+		private void InitializeOfflineLayer(ref Pushpin[,] matrix, Panel mapLayer, Layer layer)
 		{
 			// Check if this layer has already been initialised.
 			if (mapLayer.Tag != null)
@@ -565,13 +600,13 @@ namespace Travlexer.WindowsPhone.Views
 
 		/// <summary>
 		/// Called when items in <see cref="Infrastructure.DataContext.MapOverlays"/> has changed.
-		/// This handler specifically checks if <see cref="GoogleMapsLayer.TransitOverlay"/> is added to the collection, and refershes the offline transit layer if the map is in offline mode.
+		/// This handler specifically checks if <see cref="Layer.TransitOverlay"/> is added to the collection, and refershes the offline transit layer if the map is in offline mode.
 		/// </summary>
 		private void OnMapOverlaysCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			if (OfflineTransitLayer.Visibility == Visibility.Visible)
 			{
-				RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay);
+				RefreshOfflineTiles(_transitTileMatrix, Layer.TransitOverlay);
 			}
 		}
 
@@ -591,7 +626,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Calculates a new quad key based on the location, zoom level, and layer.
 		/// </summary>
-		private QuadKey GetQuadKey(GeoCoordinate location, int zoomLevel, GoogleMapsLayer layer)
+		private QuadKey GetQuadKey(GeoCoordinate location, int zoomLevel, Layer layer)
 		{
 			var tileDimension = AbsoluteTileDimension * _tileScale;
 
@@ -706,7 +741,7 @@ namespace Travlexer.WindowsPhone.Views
 			// Download and store the image.
 			try
 			{
-				var uri = GoogleMapsTileSource.GetUri(key);
+				var uri = TileSource.GetUri(key);
 				var request = WebRequest.Create(uri);
 				request.BeginGetResponse(result =>
 				{
@@ -1081,7 +1116,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Rearranges all offline tiles and updates their image according to the current location, zoom level and layer.
 		/// </summary>
-		private void RefreshOfflineTiles(Pushpin[,] matrix, GoogleMapsLayer layer)
+		private void RefreshOfflineTiles(Pushpin[,] matrix, Layer layer)
 		{
 			if (_isZooming)
 			{

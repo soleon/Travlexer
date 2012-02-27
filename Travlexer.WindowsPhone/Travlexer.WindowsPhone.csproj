@@ -76,6 +76,7 @@
     <Compile Include="Controls\Icons\Slash.cs" />
     <Compile Include="Controls\PushpinContent.cs" />
     <Compile Include="Converters\LocationGeoCoordinateConverter.cs" />
+    <Compile Include="Converters\LocationListToLocationCollectionConverter.cs" />
     <Compile Include="Converters\PlaceColorHexConverter.cs" />
     <Compile Include="Converters\PlaceIconToControlConverter.cs" />
     <Compile Include="Converters\RouteMethodKeyValueIconConverter.cs" />
@@ -145,9 +146,9 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Codify.Controls.Maps\Codify.Controls.Maps.csproj">
-      <Project>{E8BAB17A-A62D-400B-B138-245A933F61C6}</Project>
-      <Name>Codify.Controls.Maps</Name>
+    <ProjectReference Include="..\Codify.GoogleMaps\Codify.GoogleMaps.csproj">
+      <Project>{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}</Project>
+      <Name>Codify.GoogleMaps</Name>
     </ProjectReference>
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>

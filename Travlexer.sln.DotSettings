@@ -185,6 +185,7 @@ private void On$NAME$Changed($TYPE$ oldValue, $TYPE$ newValue)&#xD;
 	
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=name/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=Name/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=name/Expression/@EntryValue">decapitalize(Name)</s:String>
 	
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=name/Order/@EntryValue">2</s:Int64>
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=FC9A7BFEAFAC4B4EBA5E7DEDA5148E1B/Field/=Name/Order/@EntryValue">1</s:Int64>

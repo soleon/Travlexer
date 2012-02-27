@@ -34,10 +34,38 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 			{
 				return null;
 			}
-			return new Services.GoogleMaps.ViewPort
+			return new Codify.GoogleMaps.Entities.ViewPort
 			{
 				Northeast = rect.Northeast,
 				Southwest = rect.Southwest
+			};
+		}
+
+		
+
+		public static implicit operator ViewPort(Codify.GoogleMaps.Entities.ViewPort viewPort)
+		{
+			if (viewPort == null)
+			{
+				return null;
+			}
+			return new Models.ViewPort
+			{
+				Northeast = viewPort.Northeast,
+				Southwest = viewPort.Southwest
+			};
+		}
+
+		public static implicit operator Codify.GoogleMaps.Entities.ViewPort(ViewPort model)
+		{
+			if (model == null)
+			{
+				return null;
+			}
+			return new ViewPort
+			{
+				Northeast = model.Northeast,
+				Southwest = model.Southwest
 			};
 		}
 

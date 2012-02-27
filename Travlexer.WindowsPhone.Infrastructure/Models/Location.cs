@@ -1,5 +1,6 @@
 using System.Device.Location;
 using System.Globalization;
+using Codify.GoogleMaps.Entities;
 
 namespace Travlexer.WindowsPhone.Infrastructure.Models
 {
@@ -35,6 +36,33 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 			return (Latitude.ToString(FormatString, CultureInfo.InvariantCulture) + Delimiter + Longitude.ToString(FormatString, CultureInfo.InvariantCulture));
 		}
 
+		public bool Equals(Location other)
+		{
+			if (ReferenceEquals(null, other))
+			{
+				return false;
+			}
+			if (ReferenceEquals(this, other))
+			{
+				return true;
+			}
+			return other.Latitude.Equals(Latitude) && other.Longitude.Equals(Longitude);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Location)
+			{
+				return Equals(obj as Location);
+			}
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return (Latitude.GetHashCode() ^ Longitude.GetHashCode());
+		}
+
 		#endregion
 
 
@@ -48,6 +76,26 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		public static implicit operator GeoCoordinate(Location location)
 		{
 			return location == null ? null : new GeoCoordinate(location.Latitude, location.Longitude);
+		}
+
+		public static implicit operator Location(LatLng latLng)
+		{
+			return latLng == null ? null : new Location { Latitude = latLng.Lat, Longitude = latLng.Lng };
+		}
+
+		public static implicit operator LatLng(Location location)
+		{
+			return location == null ? null : new LatLng { Lat = location.Latitude, Lng = location.Longitude };
+		}
+
+		public static bool operator ==(Location left, Location right)
+		{
+			return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.Equals(right);
+		}
+
+		public static bool operator !=(Location left, Location right)
+		{
+			return !(left == right);
 		}
 
 		#endregion
