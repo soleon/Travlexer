@@ -696,7 +696,7 @@
 							  StrokeThickness="2"
 							  VerticalAlignment="Bottom"
 							  Margin="0,0,0,2" />
-						<Icons:Search Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-5,-5,0" Background="{TemplateBinding Background}" Foreground="{StaticResource PhoneBorderBrush}"/>
+						<Icons:Search Visibility="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}}" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-5,-5,0" Background="{TemplateBinding Background}" Foreground="{StaticResource PhoneBorderBrush}"/>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

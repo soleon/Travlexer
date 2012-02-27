@@ -75,7 +75,6 @@ namespace Travlexer.WindowsPhone.Views
 		private bool _isZooming;
 		private double _tileScale;
 		private int _zoomFloor, _tileMatrixLengthX, _tileMatrixLengthY;
-		private GoogleMapsLayer _currentLayer;
 		private Pushpin[,] _baseTileMatrix, _transitTileMatrix;
 
 		#endregion
@@ -146,7 +145,7 @@ namespace Travlexer.WindowsPhone.Views
 				}
 				else
 				{
-					RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value, false);
+					RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value);
 				}
 
 				// Check transit layer.
@@ -158,7 +157,7 @@ namespace Travlexer.WindowsPhone.Views
 					}
 					else
 					{
-						RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay, false);
+						RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay);
 					}
 				}
 
@@ -363,6 +362,7 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			_zoomTimer.Stop();
 			_isZooming = false;
+			_debugText.Text = "false";
 			RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value);
 			if (OfflineTransitLayer.Visibility == Visibility.Visible)
 			{
@@ -376,6 +376,7 @@ namespace Travlexer.WindowsPhone.Views
 		private void OnZoomLevelChanged(double old, double @new)
 		{
 			_isZooming = true;
+			_debugText.Text = "true";
 			UpdateTileScale();
 			_zoomTimer.Start();
 		}
@@ -402,7 +403,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void OnMapBaseLayerValueChanged(GoogleMapsLayer old, GoogleMapsLayer @new)
 		{
-			RefreshOfflineTiles(_baseTileMatrix, @new, false);
+			RefreshOfflineTiles(_baseTileMatrix, @new);
 		}
 
 		#endregion
@@ -471,8 +472,6 @@ namespace Travlexer.WindowsPhone.Views
 
 			// Get the zoom level floor from the current map zoom level.
 			_zoomFloor = (int)Map.ZoomLevel;
-
-			_currentLayer = _mapBase.Value;
 
 			// Update the tile scaling ratio according to the current map zoom level.
 			UpdateTileScale();
@@ -572,7 +571,7 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			if (OfflineTransitLayer.Visibility == Visibility.Visible)
 			{
-				RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay, false);
+				RefreshOfflineTiles(_transitTileMatrix, GoogleMapsLayer.TransitOverlay);
 			}
 		}
 
@@ -1082,24 +1081,14 @@ namespace Travlexer.WindowsPhone.Views
 		/// <summary>
 		/// Rearranges all offline tiles and updates their image according to the current location, zoom level and layer.
 		/// </summary>
-		private void RefreshOfflineTiles(Pushpin[,] matrix, GoogleMapsLayer layer, bool similarityCheck = true)
+		private void RefreshOfflineTiles(Pushpin[,] matrix, GoogleMapsLayer layer)
 		{
 			if (_isZooming)
 			{
 				return;
 			}
 
-			var oldZoomFloor = _zoomFloor;
 			_zoomFloor = (int)Map.ZoomLevel;
-
-			var oldLayer = _currentLayer;
-			_currentLayer = layer;
-
-			if (similarityCheck && oldZoomFloor == _zoomFloor && oldLayer == _currentLayer)
-			{
-				return;
-			}
-
 			UpdateTileScale();
 
 			// Update all tiles if the zoom level has reached a new floor.
