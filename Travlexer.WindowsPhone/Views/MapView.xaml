@@ -18,6 +18,7 @@
 							xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
 							xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
+							xmlns:CodifyControls="clr-namespace:Codify.Controls;assembly=Codify"
 							Style="{StaticResource PageDefault}"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -51,7 +52,7 @@
 					<ControlTemplate TargetType="Maps:Pushpin">
 						<Rectangle Height="256"
 								   Width="256"
-								   Fill="{TemplateBinding Background}" />
+								   Fill="{TemplateBinding Background}"/>
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>
@@ -536,15 +537,17 @@
 						   Visibility="{Binding IsOnline.Value, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
 				<Maps:MapLayer x:Name="OfflineBaseLayer" />
 				<Maps:MapLayer x:Name="OfflineTransitLayer"
-							   Visibility="{Binding IsTransitLayerVisible, Mode=OneWay}"/>
+							   Visibility="{Binding IsTransitLayerVisible, Mode=OneWay}" />
 			</Maps:MapLayer>
-			<Maps:MapItemsControl ItemsSource="{Binding Routes, Mode=OneTime}">
-				<Maps:MapItemsControl.ItemTemplate>
+			<Maps:MapLayer CodifyControls:PanelExtension.ItemsSource="{Binding Routes}">
+				<CodifyControls:PanelExtension.ItemTemplate>
 					<DataTemplate>
-						<Maps:MapPolyline Locations="{Binding Points, Converter={StaticResource LocationListToLocationCollectionConverter}, Mode=OneTime}" Stroke="{StaticResource PhoneAccentBrush}" StrokeThickness="{StaticResource PhoneStrokeThickness}"/>
+						<Maps:MapPolyline Locations="{Binding Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
+										  Stroke="{StaticResource PhoneAccentBrush}"
+										  StrokeThickness="{StaticResource PhoneStrokeThickness}" />
 					</DataTemplate>
-				</Maps:MapItemsControl.ItemTemplate>
-			</Maps:MapItemsControl>
+				</CodifyControls:PanelExtension.ItemTemplate>
+			</Maps:MapLayer>
 			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
 						  Location="{Binding CurrentLocation}"
 						  PositionOrigin="Center"

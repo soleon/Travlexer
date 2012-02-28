@@ -797,7 +797,8 @@ namespace Travlexer.WindowsPhone.Views
 			var tile = matrix[0, 0];
 			var key = (QuadKey)tile.Tag;
 			var y = key.Y;
-			if (IsInView(tile))
+			var tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (IsTopEdgeInView(tilePosition) && IsLeftEdgeInView(tilePosition))
 			{
 				RearrangeMatrixRightToLeft(matrix, updateLastTileImage: y == 0);
 				if (y > 0)
@@ -811,7 +812,8 @@ namespace Travlexer.WindowsPhone.Views
 			tile = matrix[maxIndexX, 0];
 			key = (QuadKey)tile.Tag;
 			y = key.Y;
-			if (IsInView(_baseTileMatrix[maxIndexX, 0]))
+			tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (IsTopEdgeInView(tilePosition) && IsRightEdgeInView(tilePosition))
 			{
 				RearrangeMatrixLeftToRight(matrix, updateLastTileImage: y == 0);
 				if (y > 0)
@@ -825,7 +827,8 @@ namespace Travlexer.WindowsPhone.Views
 			tile = matrix[0, maxIndexY];
 			key = (QuadKey)tile.Tag;
 			y = key.Y;
-			if (IsInView(tile))
+			tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (IsBottomEdgeInView(tilePosition) && IsLeftEdgeInView(tilePosition))
 			{
 				if (y < maxTileIndex)
 				{
@@ -839,7 +842,8 @@ namespace Travlexer.WindowsPhone.Views
 			tile = matrix[maxIndexX, maxIndexY];
 			key = (QuadKey)tile.Tag;
 			y = key.Y;
-			if (IsInView(tile))
+			tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (IsBottomEdgeInView(tilePosition) && IsRightEdgeInView(tilePosition))
 			{
 				if (y < maxTileIndex)
 				{
@@ -853,7 +857,8 @@ namespace Travlexer.WindowsPhone.Views
 			tile = matrix[maxIndexX / 2 + maxIndexX % 2, 0];
 			key = (QuadKey)tile.Tag;
 			y = key.Y;
-			if (y > 0 && IsVerticalInView(tile))
+			tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (y > 0 && IsTopEdgeInView(tilePosition))
 			{
 				RearrangeMatrixBottomToTop(matrix);
 				return;
@@ -863,7 +868,8 @@ namespace Travlexer.WindowsPhone.Views
 			tile = matrix[maxIndexX / 2 + maxIndexX % 2, maxIndexY];
 			key = (QuadKey)tile.Tag;
 			y = key.Y;
-			if (y < maxTileIndex && IsVerticalInView(tile))
+			tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (y < maxTileIndex && IsBottomEdgeInView(tilePosition))
 			{
 				RearrangeMatrixTopToBottom(matrix);
 				return;
@@ -871,7 +877,8 @@ namespace Travlexer.WindowsPhone.Views
 
 			// Left:
 			tile = matrix[0, maxIndexY / 2 + maxIndexY % 2];
-			if (IsHorizontalInView(tile))
+			tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (IsLeftEdgeInView(tilePosition))
 			{
 				RearrangeMatrixRightToLeft(matrix);
 				return;
@@ -879,7 +886,8 @@ namespace Travlexer.WindowsPhone.Views
 
 			// Right:
 			tile = matrix[maxIndexX, maxIndexY / 2 + maxIndexY % 2];
-			if (IsHorizontalInView(tile))
+			tilePosition = Map.LocationToViewportPoint(tile.Location);
+			if (IsRightEdgeInView(tilePosition))
 			{
 				RearrangeMatrixLeftToRight(matrix);
 			}
@@ -1019,50 +1027,35 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// Determines whether the specified pushpin is completely inside the map's view port.
+		/// Determines whether the top edge of the tile at the specified position is inside the map's view port.
 		/// </summary>
-		private bool IsInView(Pushpin tile)
+		private bool IsTopEdgeInView(Point tilePosition)
 		{
-			var point = Map.LocationToViewportPoint(tile.Location);
-			return IsVerticalInView(point) && IsHorizontalInView(point);
+			return tilePosition.Y > 0;
 		}
 
 		/// <summary>
-		/// Determines whether the top and bottom edges of the specified pushpin are inside the map's view port.
+		/// Determines whether the bottom edge of the tile at the specified position is inside the map's view port.
 		/// </summary>
-		private bool IsVerticalInView(Pushpin tile)
+		private bool IsBottomEdgeInView(Point tilePosition)
 		{
-			var point = Map.LocationToViewportPoint(tile.Location);
-			return IsVerticalInView(point);
+			return tilePosition.Y + AbsoluteTileDimension * _tileScale < Map.ActualHeight;
 		}
 
 		/// <summary>
-		/// Determines whether the top and bottom edges of the tile at the specified position are inside the map's view port.
+		/// Determines whether the left edge of the tile at the specified position is inside the map's view port.
 		/// </summary>
-		private bool IsVerticalInView(Point tilePosition)
+		private bool IsLeftEdgeInView(Point tilePosition)
 		{
-			var top = tilePosition.Y;
-			var bottom = top + AbsoluteTileDimension * _tileScale;
-			return top >= 0 && bottom <= Map.ActualHeight;
+			return tilePosition.X > 0;
 		}
 
 		/// <summary>
-		/// Determines whether the left and right edges of the specified pushpin are inside the map's view port.
+		/// Determines whether the right edge of the tile at the specified position are inside the map's view port.
 		/// </summary>
-		private bool IsHorizontalInView(Pushpin tile)
+		private bool IsRightEdgeInView(Point tilePosition)
 		{
-			var point = Map.LocationToViewportPoint(tile.Location);
-			return IsHorizontalInView(point);
-		}
-
-		/// <summary>
-		/// Determines whether the left and right edges of the tile at the specified position are inside the map's view port.
-		/// </summary>
-		private bool IsHorizontalInView(Point tilePosition)
-		{
-			var left = tilePosition.X;
-			var right = tilePosition.X + AbsoluteTileDimension * _tileScale;
-			return left >= 0 && right <= Map.ActualWidth;
+			return tilePosition.X + AbsoluteTileDimension * _tileScale < Map.ActualWidth;
 		}
 
 		/// <summary>

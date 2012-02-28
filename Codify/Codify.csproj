@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DelayCollection.cs" />
+    <Compile Include="Controls\PanelExtension.cs" />
     <Compile Include="DependencyShell\ApplicationBarIconButton.cs" />
     <Compile Include="DependencyShell\ApplicationBarMenuItem.cs" />
     <Compile Include="DependencyShell\ApplicationBar.cs" />
