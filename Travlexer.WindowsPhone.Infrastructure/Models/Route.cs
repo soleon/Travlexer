@@ -25,6 +25,15 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 
 		public TravelMode Mode { get; set; }
 
+		public ElementColor Color
+		{
+			get { return _color; } 
+			set { SetProperty(ref _color, value, ColorProperty); }
+		}
+
+		private ElementColor _color;
+		private const string ColorProperty = "Color";
+
 		#endregion
 
 
@@ -42,12 +51,12 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 			}
 			int pointCount;
 			return other.Method == Method
-				   && other.Mode == Mode
-				   && other.Points != null
-				   && Points != null
-				   && other.Points.Count == (pointCount = Points.Count)
-				   && other.Points[0] == Points[0]
-				   && other.Points[--pointCount] == Points[pointCount];
+			       && other.Mode == Mode
+			       && other.Points != null
+			       && Points != null
+			       && other.Points.Count == (pointCount = Points.Count)
+			       && other.Points[0] == Points[0]
+			       && other.Points[--pointCount] == Points[pointCount];
 		}
 
 		public override bool Equals(object obj)
@@ -105,6 +114,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		}
 
 		#endregion
+
 
 		#region Private Methods
 

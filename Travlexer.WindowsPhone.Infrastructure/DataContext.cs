@@ -38,8 +38,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			SearchInput = new ObservableValue<string>();
 			RouteMethod = new ObservableValue<RouteMethod>();
 			TravelMode = new ObservableValue<TravelMode>();
-			DepartLocation = new ObservableValue<string>();
-			ArriveLocation = new ObservableValue<string>();
+			DepartLocation = new ObservableValue<RouteLocation>(new RouteLocation());
+			ArriveLocation = new ObservableValue<RouteLocation>(new RouteLocation());
 			Unit = new ObservableValue<Unit>();
 
 			Places = new ReadOnlyObservableCollection<Place>(_places);
@@ -98,14 +98,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Gets the depart location.
 		/// </summary>
-		public static ObservableValue<string> DepartLocation { get; private set; }
+		public static ObservableValue<RouteLocation> DepartLocation { get; private set; }
 
 		private const string DepartLocationProperty = "DepartLocation";
 
 		/// <summary>
 		/// Gets the arrive location.
 		/// </summary>
-		public static ObservableValue<string> ArriveLocation { get; private set; }
+		public static ObservableValue<RouteLocation> ArriveLocation { get; private set; }
 
 		private const string ArriveLocationProperty = "ArriveLocation";
 
@@ -412,30 +412,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				(c, r) => c.GetDirections(depart, arrive, mode, method, Unit.Value, r),
 				response =>
 				{
-					Route route = response.Result.FirstOrDefault();
-					if (route != null && _routes.All(r => r != route))
+					var route = (Route)response.Result.FirstOrDefault();
+					if (route != null && route.Points.Count > 1 && _routes.All(r => r != route))
 					{
 						_routes.Add(route);
-						var points = route.Points;
-						var count = points.Count;
-
-						// Add the depart and arrive location if they are not already in the place list.
-						if (count > 0)
-						{
-							var location = points[0];
-							if (_places.All(p => p.Location != location))
-							{
-								AddNewPlace(location);
-							}
-							if (count > 1)
-							{
-								location = points[count - 1];
-								if (_places.All(p => p.Location != location))
-								{
-									AddNewPlace(location);
-								}
-							}
-						}
 					}
 					return route;
 				},
@@ -484,12 +464,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
 			// Save travel mode.
 			StorageProvider.SaveSetting(TravelModeProperty, TravelMode.Value);
-
-			// Save depart location.
-			StorageProvider.SaveSetting(DepartLocationProperty, DepartLocation.Value);
-
-			// Save arrive location.
-			StorageProvider.SaveSetting(ArriveLocationProperty, ArriveLocation.Value);
 		}
 
 		/// <summary>
@@ -563,14 +537,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			}
 
 			// Load depart location.
-			string departLocation;
+			RouteLocation departLocation;
 			if (StorageProvider.TryGetSetting(DepartLocationProperty, out departLocation))
 			{
 				DepartLocation.Value = departLocation;
 			}
 
 			// Load arrive location.
-			string arriveLocation;
+			RouteLocation arriveLocation;
 			if (StorageProvider.TryGetSetting(ArriveLocationProperty, out arriveLocation))
 			{
 				ArriveLocation.Value = arriveLocation;

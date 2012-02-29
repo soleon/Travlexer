@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Device.Location;
 using Codify.GoogleMaps;
+using Microsoft.Phone.Controls.Maps;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
@@ -44,6 +46,26 @@ namespace Travlexer.WindowsPhone
 		}
 
 		private MapViewModel _mapViewModel;
+
+		public LocationCollection SampleLocations
+		{
+			get
+			{
+				return new LocationCollection
+				{
+					new GeoCoordinate(0,0),
+					new GeoCoordinate(0, 60),
+					new GeoCoordinate(60,-30),
+					new GeoCoordinate(60,0)
+				};
+			}
+		}
+
+		public ElementColor SampleColor
+		{
+			get;
+			set;
+		}
 #endif
 	}
 }

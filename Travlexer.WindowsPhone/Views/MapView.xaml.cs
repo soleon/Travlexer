@@ -50,6 +50,7 @@ namespace Travlexer.WindowsPhone.Views
 			MapTileScaleName = "TileScale";
 
 		private const int AbsoluteTileDimension = 256;
+		private const double MinimumOfflineZoomLevel = 4D;
 
 		#endregion
 
@@ -106,7 +107,7 @@ namespace Travlexer.WindowsPhone.Views
 				return;
 			}
 			_context.SearchSucceeded += OnSearchSucceeded;
-			_context.RouteSucceeded += OnContextRouteSucceeded;
+			_context.RouteSucceeded += SetViewForRoute;
 			_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
 			_context.VisualState.ValueChanged += (old, @new) => GoToVisualState(@new);
 			_toolbarState.ValueChanged += (old, @new) => GoToToolbarState(@new);
@@ -307,7 +308,7 @@ namespace Travlexer.WindowsPhone.Views
 		private void OnPushpinHold(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
 		{
 			var pushpin = (Pushpin)sender;
-			var data = (DataViewModel<Place>)pushpin.DataContext;
+			var data = (PlaceViewModel)pushpin.DataContext;
 			if (data.Data.IsSearchResult)
 			{
 				return;
@@ -329,7 +330,6 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			_zoomTimer.Stop();
 			_isZooming = false;
-			_debugText.Text = "false";
 			RefreshOfflineTiles(_baseTileMatrix, _mapBase.Value);
 			if (OfflineTransitLayer.Visibility == Visibility.Visible)
 			{
@@ -343,7 +343,6 @@ namespace Travlexer.WindowsPhone.Views
 		private void OnZoomLevelChanged(double old, double @new)
 		{
 			_isZooming = true;
-			_debugText.Text = "true";
 			UpdateTileScale();
 			_zoomTimer.Start();
 		}
@@ -414,33 +413,6 @@ namespace Travlexer.WindowsPhone.Views
 			}
 		}
 
-		/// <summary>
-		/// Called when <see cref="MapViewModel.RouteSucceeded"/> event is raised.
-		/// Sets the map's view port to display the route.
-		/// </summary>
-		private void OnContextRouteSucceeded(Route route)
-		{
-			var locations = route.Points;
-			if (!locations.Any())
-			{
-				return;
-			}
-			if (locations.Count == 1)
-			{
-				var location = locations[0];
-				Map.SetView(location, 15D);
-			}
-			else
-			{
-				var coordinates = locations.Select(l => (GeoCoordinate)l).ToArray();
-				if (!coordinates.Any())
-				{
-					return;
-				}
-				Map.SetView(LocationRect.CreateLocationRect(coordinates));
-			}
-		}
-
 		#endregion
 
 
@@ -463,6 +435,10 @@ namespace Travlexer.WindowsPhone.Views
 					break;
 				case MapViewModel.VisualStates.PushpinSelected:
 					_appBar.IsVisible = false;
+					break;
+				case MapViewModel.VisualStates.RouteSelected:
+					_appBar.IsVisible = false;
+					SetViewForRoute(_context.SelectedRoute.Data);
 					break;
 				case MapViewModel.VisualStates.Drag:
 					_appBar.IsVisible = false;
@@ -1111,7 +1087,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void RefreshOfflineTiles(Pushpin[,] matrix, Layer layer)
 		{
-			if (_isZooming)
+			if (_isZooming || !IsAtValidOfflineZoomLevel())
 			{
 				return;
 			}
@@ -1154,6 +1130,35 @@ namespace Travlexer.WindowsPhone.Views
 		private void OnTextBoxGotFocus(object sender, RoutedEventArgs e)
 		{
 			((TextBox)sender).SelectAll();
+		}
+
+		/// <summary>
+		/// Determines whether the map is at a valid zoom level for offline mapping.
+		/// </summary>
+		private bool IsAtValidOfflineZoomLevel()
+		{
+			if (Map.ZoomLevel < MinimumOfflineZoomLevel)
+			{
+				OfflineBaseLayer.Visibility = OfflineTransitLayer.Visibility = Visibility.Collapsed;
+				return false;
+			}
+			OfflineBaseLayer.Visibility = OfflineTransitLayer.Visibility = Visibility.Visible;
+			return true;
+		}
+
+		/// <summary>
+		/// Sets the map view to the optimal position for the specified route.
+		/// </summary>
+		/// <param name="route">The route.</param>
+		private void SetViewForRoute(Route route)
+		{
+			var locations = route.Points;
+			var coordinates = locations.Select(l => (GeoCoordinate)l).ToArray();
+			if (!coordinates.Any())
+			{
+				return;
+			}
+			Map.SetView(LocationRect.CreateLocationRect(coordinates));
 		}
 
 		#endregion

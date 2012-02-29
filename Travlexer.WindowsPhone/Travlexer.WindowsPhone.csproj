@@ -74,10 +74,11 @@
     <Compile Include="Controls\Icons\IconBase.cs" />
     <Compile Include="Controls\Icons\Search.cs" />
     <Compile Include="Controls\Icons\Slash.cs" />
+    <Compile Include="Controls\MapPolyline.cs" />
     <Compile Include="Controls\PushpinContent.cs" />
     <Compile Include="Converters\LocationGeoCoordinateConverter.cs" />
     <Compile Include="Converters\LocationListToLocationCollectionConverter.cs" />
-    <Compile Include="Converters\PlaceColorHexConverter.cs" />
+    <Compile Include="Converters\ElementColorToHexConverter.cs" />
     <Compile Include="Converters\PlaceIconToControlConverter.cs" />
     <Compile Include="Converters\RouteMethodKeyValueIconConverter.cs" />
     <Compile Include="Converters\RouteModeKeyValueIconConverter.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\KeyValueIcon.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
+    <Compile Include="ViewModels\PlaceViewModel.cs" />
+    <Compile Include="ViewModels\RouteViewModel.cs" />
     <Compile Include="Views\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>

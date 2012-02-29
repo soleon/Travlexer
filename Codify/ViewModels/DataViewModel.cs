@@ -3,16 +3,16 @@ using Codify.Models;
 
 namespace Codify.ViewModels
 {
-	public class DataViewModel<T> : ViewModelBase where T : IModel
+	public class DataViewModel<TData, TParent> : ViewModelBase<TParent> where TData : IModel where TParent : class, IViewModel
 	{
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DataViewModel{T}"/> class.
+		/// Initializes a new instance of the <see cref="DataViewModel{TData, TParent}"/> class.
 		/// </summary>
 		/// <param name="data">The data.</param>
 		/// <param name="parent">The logical parent view model that owns this view model.</param>
-		public DataViewModel(T data, IViewModel parent = null)
+		public DataViewModel(TData data, TParent parent = null)
 			: base(parent)
 		{
 			if (data.Equals(null))
@@ -28,9 +28,9 @@ namespace Codify.ViewModels
 		#region Public Properties
 
 		/// <summary>
-		/// Gets the <see cref="IModel"/> object that contains essential data of this <see cref="IViewModel"/>.
+		/// Gets the <see cref="IModel"/> object that contains essential data of this <see cref="IViewModel{TParent}"/>.
 		/// </summary>
-		public T Data { get; private set; }
+		public TData Data { get; private set; }
 
 		#endregion
 
@@ -40,7 +40,7 @@ namespace Codify.ViewModels
 		protected override void OnDispose()
 		{
 			var data = Data;
-			Data = default(T);
+			Data = default(TData);
 			data.Dispose();
 			base.OnDispose();
 		}

@@ -7,9 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using Codify.Extensions;
 
-namespace Codify.Collections
+namespace Codify.Controls
 {
-	public class DelayCollection
+	public class ItemsControlExtension
 	{
 		#region Private Members
 
@@ -43,7 +43,7 @@ namespace Codify.Collections
 
 		#region Constructors
 
-		public DelayCollection()
+		public ItemsControlExtension()
 		{
 			_delayItemsQueue = new ObservableCollection<object>();
 			_delayItemsQueue.CollectionChanged += OnDelayItemsQueueCollectionChanged;
@@ -52,7 +52,7 @@ namespace Codify.Collections
 		#endregion
 
 
-		#region Public Properties
+		#region Attached Properties
 
 
 		#region ItemsSource
@@ -70,7 +70,7 @@ namespace Codify.Collections
 		public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.RegisterAttached(
 			"ItemsSource",
 			typeof(INotifyCollectionChanged),
-			typeof(DelayCollection),
+			typeof(ItemsControlExtension),
 			new PropertyMetadata(null, OnItemsSourceChanged));
 
 		#endregion
@@ -78,21 +78,21 @@ namespace Codify.Collections
 
 		#region DelayCollection
 
-		private static DelayCollection GetDelayCollection(DependencyObject obj)
+		private static ItemsControlExtension GetDelayCollection(DependencyObject obj)
 		{
-			return (DelayCollection)obj.GetValue(_delayCollectionProperty);
+			return (ItemsControlExtension)obj.GetValue(_delayCollectionProperty);
 		}
 
-		private static void SetDelayCollection(DependencyObject obj, DelayCollection value)
+		private static void SetDelayCollection(DependencyObject obj, ItemsControlExtension value)
 		{
 			obj.SetValue(_delayCollectionProperty, value);
 		}
 
 		private static readonly DependencyProperty _delayCollectionProperty = DependencyProperty.RegisterAttached(
 			"DelayCollection",
-			typeof(DelayCollection),
-			typeof(DelayCollection),
-			new PropertyMetadata(default(DelayCollection), OnDelayCollectionChanged));
+			typeof(ItemsControlExtension),
+			typeof(ItemsControlExtension),
+			new PropertyMetadata(default(ItemsControlExtension), OnDelayCollectionChanged));
 
 		#endregion
 
@@ -112,7 +112,7 @@ namespace Codify.Collections
 		public static readonly DependencyProperty DelayProperty = DependencyProperty.RegisterAttached(
 			"Delay",
 			typeof(TimeSpan),
-			typeof(DelayCollection),
+			typeof(ItemsControlExtension),
 			new PropertyMetadata(default(TimeSpan), OnDelayChanged));
 
 		#endregion
@@ -125,13 +125,13 @@ namespace Codify.Collections
 
 		private static void OnDelayCollectionChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
 		{
-			var oldDelayCollection = e.OldValue as DelayCollection;
+			var oldDelayCollection = e.OldValue as ItemsControlExtension;
 			if (oldDelayCollection != null)
 			{
 				oldDelayCollection.Detach();
 			}
 
-			var newDelayCollection = e.NewValue as DelayCollection;
+			var newDelayCollection = e.NewValue as ItemsControlExtension;
 			if (newDelayCollection != null)
 			{
 				newDelayCollection.Attach(sender as ItemsControl);
@@ -143,14 +143,13 @@ namespace Codify.Collections
 			var control = sender as ItemsControl;
 			if (control == null)
 			{
-				return;
+				throw new InvalidOperationException("Codify.Controls.ItemsControlExtension.ItemsSource property can only be attached to a System.Windows.Controls.ItemsControl.");
 			}
 
 			var delayCollection = GetDelayCollection(control);
 			if (delayCollection == null)
 			{
-				delayCollection = new DelayCollection();
-				SetDelayCollection(control, delayCollection);
+				SetDelayCollection(control, delayCollection = new ItemsControlExtension());
 			}
 			delayCollection.Refersh();
 		}
@@ -160,7 +159,6 @@ namespace Codify.Collections
 			switch (e.Action)
 			{
 				case NotifyCollectionChangedAction.Add:
-					var items = e.NewItems;
 					_delayItemsQueue.AddRange(e.NewItems);
 					break;
 				case NotifyCollectionChangedAction.Remove:
@@ -179,9 +177,8 @@ namespace Codify.Collections
 					}
 					break;
 				case NotifyCollectionChangedAction.Reset:
-					var itemsSource = GetItemsSource(_control) as IEnumerable;
 					_delayItemsQueue.Clear();
-					_delayItemsQueue.AddRange(itemsSource);
+					_controlItemsSource.Clear();
 					break;
 			}
 		}

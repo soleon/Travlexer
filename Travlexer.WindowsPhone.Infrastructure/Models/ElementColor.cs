@@ -3,7 +3,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 	/// <summary>
 	/// Defines the available colors for a <see cref="Place"/>.
 	/// </summary>
-	public enum PlaceColor : byte
+	public enum ElementColor : byte
 	{
 		Blue = 0,
 		Magenta,

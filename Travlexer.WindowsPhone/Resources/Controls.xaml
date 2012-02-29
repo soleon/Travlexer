@@ -11,6 +11,7 @@
 					xmlns:Codify="clr-namespace:Codify;assembly=Codify"
 					xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
 					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
+					xmlns:System="clr-namespace:System;assembly=mscorlib"
 					mc:Ignorable="d">
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="Brushes.xaml" />
@@ -19,7 +20,8 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Controls:CircleButton">
-					<StackPanel Width="48">
+					<StackPanel x:Name="RootPanel"
+								Width="48">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="CommonStates">
 								<VisualState x:Name="Pressed">
@@ -43,21 +45,11 @@
 								</VisualState>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentContainer"
-																	   Storyboard.TargetProperty="Foreground">
-											<DiscreteObjectKeyFrame KeyTime="0"
-																	Value="{StaticResource PhoneDisabledBrush}" />
-										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
-																	   Storyboard.TargetProperty="BorderBrush">
-											<DiscreteObjectKeyFrame KeyTime="0"
-																	Value="{StaticResource PhoneDisabledBrush}" />
-										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
-																	   Storyboard.TargetProperty="Background">
-											<DiscreteObjectKeyFrame KeyTime="0"
-																	Value="Transparent" />
-										</ObjectAnimationUsingKeyFrames>
+										<DoubleAnimation Duration="0"
+														 To="0.5"
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Storyboard.TargetName="RootPanel"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Normal" />
@@ -85,7 +77,8 @@
 						</Border>
 						<TextBlock FontSize="13"
 								   HorizontalAlignment="Center"
-								   Text="{TemplateBinding Caption}" FontFamily="{StaticResource PhoneFontFamilySemiBold}" />
+								   Text="{TemplateBinding Caption}"
+								   FontFamily="{StaticResource PhoneFontFamilySemiBold}" />
 					</StackPanel>
 				</ControlTemplate>
 			</Setter.Value>
@@ -100,48 +93,55 @@
 				Value="#40000000" />
 		<Setter Property="Foreground"
 				Value="{StaticResource PhoneForegroundBrush}" />
-		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-		<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment"
+				Value="Stretch" />
+		<Setter Property="VerticalContentAlignment"
+				Value="Stretch" />
 	</Style>
 	<Style TargetType="Controls:CircleToggleButton">
 		<Setter Property="Padding"
-			Value="8" />
+				Value="8" />
 		<Setter Property="BorderBrush"
-			Value="{StaticResource PhoneForegroundBrush}" />
+				Value="{StaticResource PhoneForegroundBrush}" />
 		<Setter Property="BorderThickness"
-			Value="{StaticResource PhoneBorderThickness}" />
+				Value="{StaticResource PhoneBorderThickness}" />
 		<Setter Property="Background"
-			Value="#40000000" />
+				Value="#40000000" />
 		<Setter Property="Foreground"
-			Value="{StaticResource PhoneForegroundBrush}" />
+				Value="{StaticResource PhoneForegroundBrush}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Controls:CircleToggleButton">
-					<StackPanel x:Name="RootPanel" Width="48">
+					<StackPanel x:Name="RootPanel"
+								Width="48">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="CommonStates">
 								<VisualState x:Name="Pressed">
 									<Storyboard>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentContainer"
-											Storyboard.TargetProperty="Foreground">
+																	   Storyboard.TargetProperty="Foreground">
 											<DiscreteObjectKeyFrame KeyTime="0"
-												Value="{StaticResource PhoneBackgroundBrush}" />
+																	Value="{StaticResource PhoneBackgroundBrush}" />
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
-											Storyboard.TargetProperty="Background">
+																	   Storyboard.TargetProperty="Background">
 											<DiscreteObjectKeyFrame KeyTime="0"
-												Value="{StaticResource PhoneForegroundBrush}" />
+																	Value="{StaticResource PhoneForegroundBrush}" />
 										</ObjectAnimationUsingKeyFrames>
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonBackground"
-											Storyboard.TargetProperty="BorderBrush">
+																	   Storyboard.TargetProperty="BorderBrush">
 											<DiscreteObjectKeyFrame KeyTime="0"
-												Value="{StaticResource PhoneForegroundBrush}" />
+																	Value="{StaticResource PhoneForegroundBrush}" />
 										</ObjectAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
-										<DoubleAnimation Duration="0" To="0.4" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="RootPanel" d:IsOptimized="True"/>
+										<DoubleAnimation Duration="0"
+														 To="0.5"
+														 Storyboard.TargetProperty="(UIElement.Opacity)"
+														 Storyboard.TargetName="RootPanel"
+														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Normal" />
@@ -154,7 +154,8 @@
 							<VisualStateGroup x:Name="CheckStates">
 								<VisualState x:Name="Checked">
 									<Storyboard>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="UncheckedMark">
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+																	   Storyboard.TargetName="UncheckedMark">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Collapsed</Visibility>
@@ -163,38 +164,43 @@
 										</ObjectAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
-								<VisualState x:Name="Unchecked"/>
-								<VisualState x:Name="Indeterminate"/>
+								<VisualState x:Name="Unchecked" />
+								<VisualState x:Name="Indeterminate" />
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<Border x:Name="ButtonBackground"
-							Height="48"
-							Width="48"
-							Background="{TemplateBinding Background}"
-							BorderBrush="{TemplateBinding BorderBrush}"
-							BorderThickness="{TemplateBinding BorderThickness}"
-							CornerRadius="24">
+								Height="48"
+								Width="48"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								CornerRadius="24">
 							<Grid>
 								<ContentControl x:Name="ContentContainer"
-									Padding="{TemplateBinding Padding}"
-									Content="{TemplateBinding Content}"
-									ContentTemplate="{TemplateBinding ContentTemplate}"
-									Foreground="{TemplateBinding Foreground}"
-									HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-									VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-								<Icons:Slash x:Name="UncheckedMark" Foreground="{StaticResource PhoneForegroundBrush}" Width="35" Height="35"/>
+												Padding="{TemplateBinding Padding}"
+												Content="{TemplateBinding Content}"
+												ContentTemplate="{TemplateBinding ContentTemplate}"
+												Foreground="{TemplateBinding Foreground}"
+												HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+												VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+								<Icons:Slash x:Name="UncheckedMark"
+											 Foreground="{StaticResource PhoneForegroundBrush}"
+											 Width="35"
+											 Height="35" />
 							</Grid>
 						</Border>
 						<TextBlock FontSize="13"
-							HorizontalAlignment="Center"
-							Text="{TemplateBinding Caption}"
-							FontFamily="{StaticResource PhoneFontFamilySemiBold}" />
+								   HorizontalAlignment="Center"
+								   Text="{TemplateBinding Caption}"
+								   FontFamily="{StaticResource PhoneFontFamilySemiBold}" />
 					</StackPanel>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-		<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment"
+				Value="Stretch" />
+		<Setter Property="VerticalContentAlignment"
+				Value="Stretch" />
 	</Style>
 	<Style x:Key="EmptyButton"
 		   TargetType="Button">
@@ -481,7 +487,26 @@
 								</VisualState>
 							</VisualStateGroup>
 							<VisualStateGroup x:Name="WorkingStates">
-								<VisualState x:Name="Finished" />
+								<VisualState x:Name="Finished">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.IsEnabled)"
+																	   Storyboard.TargetName="ButtonDepart">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<System:Boolean>True</System:Boolean>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.IsEnabled)"
+																	   Storyboard.TargetName="ButtonArrive">
+											<DiscreteObjectKeyFrame KeyTime="0">
+												<DiscreteObjectKeyFrame.Value>
+													<System:Boolean>True</System:Boolean>
+												</DiscreteObjectKeyFrame.Value>
+											</DiscreteObjectKeyFrame>
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
 								<VisualState x:Name="Busy">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
@@ -518,11 +543,11 @@
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
-						<ContentPresenter Height="32"
-										  Width="32"
-										  Content="{Binding Icon, Converter={StaticResource PlaceIconToControlConverter}, RelativeSource={RelativeSource TemplatedParent}}"
-										  HorizontalAlignment="Left"
-										  VerticalAlignment="Top" />
+						<Rectangle Height="32"
+								   Width="32"
+								   Fill="{Binding Icon, Converter={StaticResource PlaceIconToBrushConverter}, RelativeSource={RelativeSource TemplatedParent}}"
+								   HorizontalAlignment="Left"
+								   VerticalAlignment="Top" />
 						<TextBlock x:Name="Title"
 								   Height="32"
 								   Margin="40,0,0,0"
@@ -589,19 +614,23 @@
 							<Controls:CircleButton Caption="details"
 												   Command="{Binding CommandViewDetails, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandViewDetailsParameter, RelativeSource={RelativeSource TemplatedParent}}">
-								<Rectangle Fill="{StaticResource BrushIconInfo}"/>
+								<Rectangle Fill="{StaticResource BrushIconInfo}" />
 							</Controls:CircleButton>
-							<Controls:CircleButton Caption="depart"
+							<Controls:CircleButton x:Name="ButtonDepart"
+												   Caption="depart"
 												   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandDepartParameter, RelativeSource={RelativeSource TemplatedParent}}"
-												   Margin="13,0,0,0">
-								<Rectangle Fill="{StaticResource BrushIconFrom}"/>
+												   Margin="13,0,0,0"
+												   IsEnabled="False">
+								<Rectangle Fill="{StaticResource BrushIconFrom}" />
 							</Controls:CircleButton>
-							<Controls:CircleButton Caption="arrive"
+							<Controls:CircleButton x:Name="ButtonArrive"
+												   Caption="arrive"
 												   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
 												   CommandParameter="{Binding CommandArriveParameter, RelativeSource={RelativeSource TemplatedParent}}"
-												   Margin="13,0,12,0">
-								<Rectangle Fill="{StaticResource BrushIconTo}"/>
+												   Margin="13,0,12,0"
+												   IsEnabled="False">
+								<Rectangle Fill="{StaticResource BrushIconTo}" />
 							</Controls:CircleButton>
 							<Controls:CircleButton x:Name="ButtonDelete"
 												   Caption="delete"
@@ -610,7 +639,7 @@
 								<Controls:CircleButton.Projection>
 									<PlaneProjection />
 								</Controls:CircleButton.Projection>
-								<Rectangle Fill="{StaticResource BrushIconDelete}"/>
+								<Rectangle Fill="{StaticResource BrushIconDelete}" />
 							</Controls:CircleButton>
 							<Controls:CircleButton x:Name="ButtonPin"
 												   Caption="keep"
@@ -621,7 +650,7 @@
 								<Controls:CircleButton.Projection>
 									<PlaneProjection />
 								</Controls:CircleButton.Projection>
-								<Rectangle Fill="{StaticResource BrushIconPin}"/>
+								<Rectangle Fill="{StaticResource BrushIconPin}" />
 							</Controls:CircleButton>
 						</StackPanel>
 					</Grid>
@@ -696,7 +725,14 @@
 							  StrokeThickness="2"
 							  VerticalAlignment="Bottom"
 							  Margin="0,0,0,2" />
-						<Icons:Search Visibility="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}}" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-5,-5,0" Background="{TemplateBinding Background}" Foreground="{StaticResource PhoneBorderBrush}"/>
+						<Icons:Search Visibility="{Binding Tag, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}"
+									  Width="20"
+									  Height="20"
+									  HorizontalAlignment="Right"
+									  VerticalAlignment="Top"
+									  Margin="0,-5,-5,0"
+									  Background="{TemplateBinding Background}"
+									  Foreground="{StaticResource PhoneBorderBrush}" />
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>
@@ -851,7 +887,13 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	<ControlTemplate x:Key="PhoneDisabledTextBoxTemplate" TargetType="TextBox">
-		<ContentControl x:Name="ContentElement" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
+	<ControlTemplate x:Key="PhoneDisabledTextBoxTemplate"
+					 TargetType="TextBox">
+		<ContentControl x:Name="ContentElement"
+						BorderThickness="0"
+						HorizontalContentAlignment="Stretch"
+						Margin="{StaticResource PhoneTextBoxInnerMargin}"
+						Padding="{TemplateBinding Padding}"
+						VerticalContentAlignment="Stretch" />
 	</ControlTemplate>
 </ResourceDictionary>

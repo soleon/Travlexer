@@ -2,8 +2,8 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:Converters="clr-namespace:Travlexer.WindowsPhone.Converters"
 					xmlns:CoreConverters="clr-namespace:Codify.Converters;assembly=Codify">
-	<Converters:PlaceColorToHexConverter x:Key="PlaceColorToHexConverter" />
-	<Converters:PlaceIconToControlConverter x:Key="PlaceIconToControlConverter" />
+	<Converters:ElementColorToBrushConverter x:Key="ElementColorToBrushConverter" />
+	<Converters:PlaceIconToBrushConverter x:Key="PlaceIconToBrushConverter" />
 	<Converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
 	<CoreConverters:BooleanConverter x:Key="BooleanConverter" />
 	<CoreConverters:VisibilityConverter x:Key="VisibilityConverter" />

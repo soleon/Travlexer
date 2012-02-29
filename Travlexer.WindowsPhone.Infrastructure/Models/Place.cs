@@ -84,13 +84,13 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		private PlaceDetails _detail;
 		private const string DetailProperty = "Detail";
 
-		public PlaceColor Color
+		public ElementColor Color
 		{
 			get { return _color; }
 			set { SetProperty(ref _color, value, ColorProperty); }
 		}
 
-		private PlaceColor _color;
+		private ElementColor _color;
 		private const string ColorProperty = "Color";
 
 		public PlaceIcon Icon
