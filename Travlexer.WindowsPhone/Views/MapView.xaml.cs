@@ -126,7 +126,7 @@ namespace Travlexer.WindowsPhone.Views
 				Map.Loaded += (s, e) =>
 				{
 					InitializeOfflineLayer(ref _baseTileMatrix, OfflineBaseLayer, _mapBase.Value);
-					if (OfflineBaseLayer.Visibility == Visibility.Visible)
+					if (OfflineTransitLayer.Visibility == Visibility.Visible)
 					{
 						InitializeOfflineLayer(ref _transitTileMatrix, OfflineTransitLayer, Layer.TransitOverlay);
 					}
@@ -556,6 +556,9 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void RegisterOfflineModeEventListeners()
 		{
+			// Update necessary visuals according to the current zoom level.
+			ValidateOfflineZoomLevel();
+
 			// Unregister event listeners to prevent duplicate event listening.
 			UnregisterOfflineModeEventListeners();
 
@@ -1088,7 +1091,7 @@ namespace Travlexer.WindowsPhone.Views
 		/// </summary>
 		private void RefreshOfflineTiles(Pushpin[,] matrix, Layer layer)
 		{
-			if (_isZooming || !IsAtValidOfflineZoomLevel())
+			if (_isZooming || !ValidateOfflineZoomLevel())
 			{
 				return;
 			}
@@ -1134,9 +1137,9 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// Determines whether the map is at a valid zoom level for offline mapping.
+		/// Determines whether the map is at a valid zoom level for offline mapping and updates necessary visuals accordingly.
 		/// </summary>
-		private bool IsAtValidOfflineZoomLevel()
+		private bool ValidateOfflineZoomLevel()
 		{
 			if (Map.ZoomLevel < MinimumOfflineZoomLevel)
 			{

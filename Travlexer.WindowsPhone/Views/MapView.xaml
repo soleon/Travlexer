@@ -56,8 +56,8 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		<Color x:Key="ColorGridLineSolid">#FFAAAAAA</Color>
-		<Color x:Key="ColorGridLineTransparent">#00AAAAAA</Color>
+		<Color x:Key="ColorGridLine">#FFAAAAAA</Color>
+		<Color x:Key="ColorTransparent">#00AAAAAA</Color>
 		<Style x:Key="ListPickerStyle"
 			   TargetType="toolkit:ListPicker">
 			<Setter Property="Foreground">
@@ -457,13 +457,13 @@
 									 SpreadMethod="Repeat">
 					<LinearGradientBrush.GradientStops>
 						<GradientStopCollection>
-							<GradientStop Color="{StaticResource ColorGridLineTransparent}"
+							<GradientStop Color="{StaticResource ColorTransparent}"
 										  Offset="0.49" />
-							<GradientStop Color="{StaticResource ColorGridLineSolid}"
+							<GradientStop Color="{StaticResource ColorGridLine}"
 										  Offset="0.49" />
-							<GradientStop Color="{StaticResource ColorGridLineSolid}"
+							<GradientStop Color="{StaticResource ColorGridLine}"
 										  Offset="0.50" />
-							<GradientStop Color="{StaticResource ColorGridLineTransparent}"
+							<GradientStop Color="{StaticResource ColorTransparent}"
 										  Offset="0.50" />
 						</GradientStopCollection>
 					</LinearGradientBrush.GradientStops>
@@ -477,13 +477,13 @@
 									 SpreadMethod="Repeat">
 					<LinearGradientBrush.GradientStops>
 						<GradientStopCollection>
-							<GradientStop Color="{StaticResource ColorGridLineTransparent}"
+							<GradientStop Color="{StaticResource ColorTransparent}"
 										  Offset="0.49" />
-							<GradientStop Color="{StaticResource ColorGridLineSolid}"
+							<GradientStop Color="{StaticResource ColorGridLine}"
 										  Offset="0.49" />
-							<GradientStop Color="{StaticResource ColorGridLineSolid}"
+							<GradientStop Color="{StaticResource ColorGridLine}"
 										  Offset="0.50" />
-							<GradientStop Color="{StaticResource ColorGridLineTransparent}"
+							<GradientStop Color="{StaticResource ColorTransparent}"
 										  Offset="0.50" />
 						</GradientStopCollection>
 					</LinearGradientBrush.GradientStops>
@@ -544,7 +544,7 @@
 					<Maps:MapLayer x:Name="OfflineTransitLayer"
 								   Visibility="{Binding IsTransitLayerVisible}" />
 				</Maps:MapLayer>
-				<TextBlock x:Name="OfflineInvalidLayer" VerticalAlignment="Center" TextAlignment="Center" Foreground="#FF3B3B3B" FontSize="{StaticResource PhoneFontSizeMedium}">
+				<TextBlock x:Name="OfflineInvalidLayer" VerticalAlignment="Center" TextAlignment="Center" Foreground="#FF3B3B3B" FontSize="{StaticResource PhoneFontSizeMedium}" IsHitTestVisible="False" Visibility="Collapsed">
 					<Run Text="Offline mode not available"/><LineBreak/>
 					<Run Text="at this zoom level"/>
 				</TextBlock>
