@@ -2,12 +2,10 @@
 							xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 							xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
-							xmlns:Collections="clr-namespace:Codify.Collections;assembly=Codify"
 							xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
 							xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-							xmlns:DependencyShell="clr-namespace:Codify.DependencyShell;assembly=Codify"
-							xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+                            xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 							xmlns:GoogleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
 							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
@@ -19,8 +17,8 @@
 							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
 							xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
 							xmlns:CodifyControls="clr-namespace:Codify.Controls;assembly=Codify"
-							xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
-							Style="{StaticResource PageDefault}"
+                            xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
+                            Style="{StaticResource PageDefault}"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
 							Foreground="{StaticResource PhoneForegroundBrush}"
@@ -227,7 +225,7 @@
 						</Storyboard>
 					</VisualTransition>
 				</VisualStateGroup.Transitions>
-				<VisualState x:Name="Default" />
+				<VisualState x:Name="Default"/>
 				<VisualState x:Name="Search">
 					<Storyboard>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
@@ -390,7 +388,7 @@
 											 Storyboard.TargetProperty="(FrameworkElement.Height)"
 											 Duration="0:0:0.3"
 											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="570" />
+											 To="580" />
 							<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
 														   Storyboard.TargetProperty="(UIElement.Visibility)">
 								<DiscreteObjectKeyFrame KeyTime="0">
@@ -433,7 +431,7 @@
 						<DoubleAnimation Storyboard.TargetName="Toolbar"
 										 Storyboard.TargetProperty="(FrameworkElement.Height)"
 										 Duration="0"
-										 To="570"
+										 To="580"
 										 d:IsOptimized="True" />
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
 													   Storyboard.TargetProperty="(UIElement.Visibility)">
@@ -541,9 +539,15 @@
 				</Maps:MapTileLayer>
 			</Maps:MapLayer>
 			<Maps:MapLayer Visibility="{Binding IsOnline.Value, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
-				<Maps:MapLayer x:Name="OfflineBaseLayer" />
-				<Maps:MapLayer x:Name="OfflineTransitLayer"
-							   Visibility="{Binding IsTransitLayerVisible, Mode=OneWay}" />
+				<Maps:MapLayer x:Name="OfflineValidLayer">
+					<Maps:MapLayer x:Name="OfflineBaseLayer" />
+					<Maps:MapLayer x:Name="OfflineTransitLayer"
+								   Visibility="{Binding IsTransitLayerVisible}" />
+				</Maps:MapLayer>
+				<TextBlock x:Name="OfflineInvalidLayer" VerticalAlignment="Center" TextAlignment="Center" Foreground="#FF3B3B3B" FontSize="{StaticResource PhoneFontSizeMedium}">
+					<Run Text="Offline mode not available"/><LineBreak/>
+					<Run Text="at this zoom level"/>
+				</TextBlock>
 			</Maps:MapLayer>
 			<Maps:MapLayer x:Name="RoutesLayer"
 						   CodifyControls:PanelExtension.ItemsSource="{Binding Routes}"
@@ -1000,26 +1004,26 @@
 			</Grid>
 		</Grid>
 	</Grid>
-	<i:Interaction.Behaviors>
-		<DependencyShell:ApplicationBar Opacity="{StaticResource ShellOpacity}">
-			<DependencyShell:ApplicationBar.Buttons>
-				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
+	<ShellExtension:ApplicationBar.ApplicationBar>
+		<ShellExtension:ApplicationBar Opacity="{StaticResource ShellOpacity}">
+			<ShellExtension:ApplicationBar.Buttons>
+				<ShellExtension:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
 														  IconUri="/Assets/CurrentLocation.png"
 														  IsEnabled="{Binding IsTrackingCurrentLocation.Value, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
 														  Text="track" />
-				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"
+				<ShellExtension:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"
 														  IconUri="/Assets/Search.png"
 														  Text="search" />
-				<DependencyShell:ApplicationBarIconButton Command="{Binding CommandGoToRouteState,Mode=OneTime}"
+				<ShellExtension:ApplicationBarIconButton Command="{Binding CommandGoToRouteState,Mode=OneTime}"
 														  IconUri="/Assets/Route.png"
 														  Text="route" />
-			</DependencyShell:ApplicationBar.Buttons>
-			<DependencyShell:ApplicationBar.MenuItems>
-				<DependencyShell:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"
+				</ShellExtension:ApplicationBar.Buttons>
+			<ShellExtension:ApplicationBar.MenuItems>
+				<ShellExtension:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"
 														Text="clear search" />
-				<DependencyShell:ApplicationBarMenuItem Command="{Binding CommandClearRoutes, Mode=OneTime}"
+				<ShellExtension:ApplicationBarMenuItem Command="{Binding CommandClearRoutes, Mode=OneTime}"
 														Text="clear routes" />
-			</DependencyShell:ApplicationBar.MenuItems>
-		</DependencyShell:ApplicationBar>
-	</i:Interaction.Behaviors>
+			</ShellExtension:ApplicationBar.MenuItems>
+		</ShellExtension:ApplicationBar>
+	</ShellExtension:ApplicationBar.ApplicationBar>
 </phone:PhoneApplicationPage>

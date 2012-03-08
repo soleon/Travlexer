@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -6,15 +6,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Interactivity;
 using System.Windows.Media;
 using Codify.Extensions;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-namespace Codify.DependencyShell
+namespace Codify.WindowsPhone.ShellExtension
 {
-	public class ApplicationBar : Behavior<PhoneApplicationPage>
+	public class ApplicationBar : DependencyObject
 	{
 		#region Private Members
 
@@ -142,27 +141,47 @@ namespace Codify.DependencyShell
 		#endregion
 
 
+		#region Attached Properties
+
+		public static ApplicationBar GetApplicationBar(DependencyObject obj)
+		{
+			return (ApplicationBar)obj.GetValue(ApplicationBarProperty);
+		}
+
+		public static void SetApplicationBar(DependencyObject obj, ApplicationBar value)
+		{
+			obj.SetValue(ApplicationBarProperty, value);
+		}
+
+		public static readonly DependencyProperty ApplicationBarProperty = DependencyProperty.RegisterAttached(
+			"ApplicationBar",
+			typeof(ApplicationBar),
+			typeof(ApplicationBar),
+			new PropertyMetadata(default(ApplicationBar), OnApplicationBarChanged));
+
+		private static void OnApplicationBarChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+		{
+			var page = sender as PhoneApplicationPage;
+			if (page == null)
+			{
+				throw new InvalidOperationException("Codify.WindowsPhone.Shell.ApplicationBar.ApplicationBar property can only be attached to a Microsoft.Phone.Controls.PhoneApplicationPage.");
+			}
+			var oldAppBar = (ApplicationBar)e.OldValue;
+			if (oldAppBar != null)
+			{
+				oldAppBar.Detach();
+			}
+			var newAppBar = (ApplicationBar)e.NewValue;
+			if (newAppBar != null)
+			{
+				newAppBar.Attach(page);
+			}
+		}
+
+		#endregion
+
+
 		#region Event Handling
-
-		/// <summary>
-		/// Called after the behavior is attached to an AssociatedObject.
-		/// </summary>
-		protected override void OnAttached()
-		{
-			// Binds the data context of the associated object to this behavior, so that the data context can be passed onto the buttons and menu items.
-			BindingOperations.SetBinding(this, _dataContextProperty, new Binding(DataContextPropertyName) { Source = AssociatedObject });
-			AssociatedObject.ApplicationBar = _applicationBar;
-			base.OnAttached();
-		}
-
-		/// <summary>
-		/// Called when the behavior is being detached from its AssociatedObject, but before it has actually occurred.
-		/// </summary>
-		protected override void OnDetaching()
-		{
-			_applicationBar = null;
-			base.OnDetaching();
-		}
 
 		/// <summary>
 		/// Called when items in the <see cref="Buttons"/> collection have changed.
@@ -226,6 +245,23 @@ namespace Codify.DependencyShell
 					items.Clear();
 					break;
 			}
+		}
+
+		#endregion
+
+
+		#region Private Methods
+
+		private void Attach(PhoneApplicationPage page)
+		{
+			// Binds the data context of the page to this application bar, so that the data context can be passed onto the buttons and menu items.
+			BindingOperations.SetBinding(this, _dataContextProperty, new Binding(DataContextPropertyName) { Source = page });
+			page.ApplicationBar = _applicationBar;
+		}
+
+		private void Detach()
+		{
+			_applicationBar = null;
 		}
 
 		#endregion

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travlexer.WindowsPhone.Infr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codify.GoogleMaps", "Codify.GoogleMaps\Codify.GoogleMaps.csproj", "{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codify.WindowsPhone", "Codify.WindowsPhone\Codify.WindowsPhone.csproj", "{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 using Microsoft.Phone.Shell;
 
-namespace Codify.DependencyShell
+namespace Codify.WindowsPhone.ShellExtension
 {
 	public class ApplicationBarMenuItem : ApplicationBarItemBase<IApplicationBarMenuItem>
 	{

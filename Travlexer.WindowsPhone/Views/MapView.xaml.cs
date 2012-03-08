@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Codify;
@@ -1139,10 +1140,12 @@ namespace Travlexer.WindowsPhone.Views
 		{
 			if (Map.ZoomLevel < MinimumOfflineZoomLevel)
 			{
-				OfflineBaseLayer.Visibility = OfflineTransitLayer.Visibility = Visibility.Collapsed;
+				OfflineValidLayer.Visibility = Visibility.Collapsed;
+				OfflineInvalidLayer.Visibility = Visibility.Visible;
 				return false;
 			}
-			OfflineBaseLayer.Visibility = OfflineTransitLayer.Visibility = Visibility.Visible;
+			OfflineValidLayer.Visibility = Visibility.Visible;
+			OfflineInvalidLayer.Visibility = Visibility.Collapsed;
 			return true;
 		}
 

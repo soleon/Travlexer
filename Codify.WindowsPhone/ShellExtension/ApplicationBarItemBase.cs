@@ -5,7 +5,7 @@ using System.Windows.Input;
 using Codify.Extensions;
 using Microsoft.Phone.Shell;
 
-namespace Codify.DependencyShell
+namespace Codify.WindowsPhone.ShellExtension
 {
 	public abstract class ApplicationBarItemBase<T> : FrameworkElement where T: class, IApplicationBarMenuItem
 	{

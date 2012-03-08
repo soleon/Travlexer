@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using Microsoft.Phone.Shell;
 
-namespace Codify.DependencyShell
+namespace Codify.WindowsPhone.ShellExtension
 {
 	public class ApplicationBarIconButton : ApplicationBarItemBase<IApplicationBarIconButton>
 	{

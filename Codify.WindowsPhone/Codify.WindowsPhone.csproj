@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D410E698-3733-4558-9844-761EAAC04BAF}</ProjectGuid>
+    <ProjectGuid>{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Codify</RootNamespace>
-    <AssemblyName>Codify</AssemblyName>
+    <RootNamespace>Codify.WindowsPhone</RootNamespace>
+    <AssemblyName>Codify.WindowsPhone</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
@@ -29,8 +29,6 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,40 +46,22 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=3.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\ItemsControlExtension.cs" />
-    <Compile Include="Controls\PanelExtension.cs" />
-    <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
-    <Compile Include="Converters\VisibilityConverter.cs" />
-    <Compile Include="DesignTime.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Imaging\UIBitmap.cs" />
-    <Compile Include="Models\IModel.cs" />
-    <Compile Include="Models\NotifyBase.cs" />
-    <Compile Include="Models\ObservableValue.cs" />
-    <Compile Include="ExpansionStates.cs" />
-    <Compile Include="Models\Unit.cs" />
-    <Compile Include="Serialization\ISerializer.cs" />
-    <Compile Include="Services\CallbackStatus.cs" />
-    <Compile Include="Storage\IsolatedStorage.cs" />
-    <Compile Include="Threading\Task.cs" />
-    <Compile Include="Threading\UIThread.cs" />
-    <Compile Include="Collections\AdaptedObservableCollection.cs" />
-    <Compile Include="Commands\DelegateCommand.cs" />
-    <Compile Include="Converters\BooleanConverter.cs" />
-    <Compile Include="Extensions\DelegateExtensions.cs" />
-    <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="ShellExtension\ApplicationBar.cs" />
+    <Compile Include="ShellExtension\ApplicationBarIconButton.cs" />
+    <Compile Include="ShellExtension\ApplicationBarItemBase.cs" />
+    <Compile Include="ShellExtension\ApplicationBarMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CallbackEventArgs.cs" />
-    <Compile Include="TriggerActions\FocusAction.cs" />
-    <Compile Include="Triggers\EventTrigger.cs" />
-    <Compile Include="Triggers\KeyPressTrigger.cs" />
-    <Compile Include="Triggers\RootTouchTrigger.cs" />
-    <Compile Include="ViewModels\DataViewModel.cs" />
-    <Compile Include="ViewModels\IViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="DataStates.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Codify\Codify.csproj">
+      <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
+      <Name>Codify</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

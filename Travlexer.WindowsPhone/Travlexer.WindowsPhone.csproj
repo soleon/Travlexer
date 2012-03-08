@@ -153,6 +153,10 @@
       <Project>{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}</Project>
       <Name>Codify.GoogleMaps</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Codify.WindowsPhone\Codify.WindowsPhone.csproj">
+      <Project>{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}</Project>
+      <Name>Codify.WindowsPhone</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
       <Name>Codify</Name>
