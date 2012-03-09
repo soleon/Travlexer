@@ -428,24 +428,14 @@ namespace Travlexer.WindowsPhone.Views
 			{
 				case MapViewModel.VisualStates.Default:
 					Map.Focus();
-					_appBar.IsVisible = true;
 					break;
 				case MapViewModel.VisualStates.Search:
 					SearchBox.Focus();
-					_appBar.IsVisible = false;
-					break;
-				case MapViewModel.VisualStates.PushpinSelected:
-					_appBar.IsVisible = false;
 					break;
 				case MapViewModel.VisualStates.RouteSelected:
-					_appBar.IsVisible = false;
 					SetViewForRoute(_context.SelectedRoute.Data);
 					break;
-				case MapViewModel.VisualStates.Drag:
-					_appBar.IsVisible = false;
-					break;
 				case MapViewModel.VisualStates.Route:
-					_appBar.IsVisible = false;
 					if (FromTextBox.Text.Length == 0)
 					{
 						FromTextBox.Focus();
@@ -453,10 +443,6 @@ namespace Travlexer.WindowsPhone.Views
 					else if (ToTextBox.Text.Length == 0)
 					{
 						ToTextBox.Focus();
-					}
-					else
-					{
-						FromTextBox.Focus();
 					}
 					break;
 			}

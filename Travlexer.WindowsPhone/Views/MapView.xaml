@@ -647,7 +647,7 @@
 							   DataContext="{Binding SelectedRoute, Mode=OneWay}">
 					<i:Interaction.Triggers>
 						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedRouteLayer}">
-							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectRoute, Mode=OneTime}"
+							<i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
 						</Triggers:RootTouchTrigger>
 					</i:Interaction.Triggers>
@@ -682,11 +682,11 @@
 							  Visibility="{Binding Converter={StaticResource VisibilityConverter}}">
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="Tap">
-							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
+							<i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
 						</i:EventTrigger>
 						<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedPushpinLayer}">
-							<i:InvokeCommandAction Command="{Binding Parent.CommandDeselectPushpin, Mode=OneTime}"
+							<i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
 												   CommandParameter="{Binding}" />
 						</Triggers:RootTouchTrigger>
 						<i:EventTrigger>
@@ -697,21 +697,13 @@
 					</i:Interaction.Triggers>
 					<Controls:PushpinContent x:Name="SelectedPushpinContent"
 											 Address="{Binding Data.FormattedAddress}"
-											 CommandDelete="{Binding Parent.CommandDeletePlace, Mode=OneTime}"
-											 CommandDeleteParameter="{Binding}"
-											 CommandPinSearchResult="{Binding Parent.CommandPinSearchResult, Mode=OneTime}"
-											 CommandPinSearchResultParameter="{Binding}"
 											 CommandRefresh="{Binding Parent.CommandUpdatePlace, Mode=OneTime}"
 											 CommandRefreshParameter="{Binding}"
 											 Icon="{Binding Data.Icon}"
 											 IsSearchResult="{Binding Data.IsSearchResult, Mode=TwoWay}"
 											 Title="{Binding Data.Name}"
 											 VisualState="Collapsed"
-											 WorkingState="{Binding Data.DataState}"
-											 CommandDepart="{Binding Parent.CommandSetDepartLocation, Mode=OneTime}"
-											 CommandDepartParameter="{Binding Mode=OneWay}"
-											 CommandArrive="{Binding Parent.CommandSetArriveLocation, Mode=OneTime}"
-											 CommandArriveParameter="{Binding Mode=OneWay}" />
+											 WorkingState="{Binding Data.DataState}"/>
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 			<Maps:Pushpin x:Name="DragPushpin"
@@ -1005,19 +997,13 @@
 		</Grid>
 	</Grid>
 	<ShellExtension:ApplicationBar.ApplicationBar>
-		<ShellExtension:ApplicationBar Opacity="{StaticResource ShellOpacity}">
-			<ShellExtension:ApplicationBar.Buttons>
-				<ShellExtension:ApplicationBarIconButton Command="{Binding CommandStartTrackingCurrentLocation,Mode=OneTime}"
-														  IconUri="/Assets/CurrentLocation.png"
-														  IsEnabled="{Binding IsTrackingCurrentLocation.Value, Converter={StaticResource BooleanConverter}, ConverterParameter=reverse}"
-														  Text="track" />
-				<ShellExtension:ApplicationBarIconButton Command="{Binding CommandGoToSearchState,Mode=OneTime}"
-														  IconUri="/Assets/Search.png"
-														  Text="search" />
-				<ShellExtension:ApplicationBarIconButton Command="{Binding CommandGoToRouteState,Mode=OneTime}"
-														  IconUri="/Assets/Route.png"
-														  Text="route" />
-				</ShellExtension:ApplicationBar.Buttons>
+		<ShellExtension:ApplicationBar Opacity="{StaticResource ShellOpacity}"
+									   ButtonItemsSource="{Binding SelectedAppBarButtonItemsSource}"
+									   ButtonIconUriMemberPath="IconUri"
+									   ButtonIsEnabledMemberPath="IsEnabled"
+									   ButtonTextMemberPath="Text"
+									   ButtonCommandMemberPath="Command"
+									   IsVisible="{Binding IsAppBarVisible}">
 			<ShellExtension:ApplicationBar.MenuItems>
 				<ShellExtension:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"
 														Text="clear search" />

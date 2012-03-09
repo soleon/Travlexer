@@ -376,14 +376,6 @@
 													</DiscreteObjectKeyFrame.Value>
 												</DiscreteObjectKeyFrame>
 											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
-												<DiscreteObjectKeyFrame KeyTime="0">
-													<DiscreteObjectKeyFrame.Value>
-														<Visibility>Visible</Visibility>
-													</DiscreteObjectKeyFrame.Value>
-												</DiscreteObjectKeyFrame>
-											</ObjectAnimationUsingKeyFrames>
 										</Storyboard>
 									</VisualTransition>
 								</VisualStateGroup.Transitions>
@@ -405,14 +397,6 @@
 												</DiscreteObjectKeyFrame.Value>
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPanel"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
-											<DiscreteObjectKeyFrame KeyTime="0">
-												<DiscreteObjectKeyFrame.Value>
-													<Visibility>Visible</Visibility>
-												</DiscreteObjectKeyFrame.Value>
-											</DiscreteObjectKeyFrame>
-										</ObjectAnimationUsingKeyFrames>
 										<DoubleAnimation Storyboard.TargetName="Content"
 														 Storyboard.TargetProperty="(FrameworkElement.Width)"
 														 Duration="0"
@@ -427,86 +411,8 @@
 								</VisualState>
 								<VisualState x:Name="Collapsed" />
 							</VisualStateGroup>
-							<VisualStateGroup x:Name="PinTypeStates">
-								<VisualStateGroup.Transitions>
-									<VisualTransition From="SearchResult"
-													  GeneratedDuration="0"
-													  To="UserPin">
-										<Storyboard>
-											<DoubleAnimation Storyboard.TargetName="ButtonPin"
-															 Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
-															 Duration="0:0:0.1"
-															 To="-90"
-															 d:IsOptimized="True" />
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPin"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
-												<DiscreteObjectKeyFrame KeyTime="0:0:0.1">
-													<DiscreteObjectKeyFrame.Value>
-														<Visibility>Collapsed</Visibility>
-													</DiscreteObjectKeyFrame.Value>
-												</DiscreteObjectKeyFrame>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonDelete"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
-												<DiscreteObjectKeyFrame KeyTime="0:0:0.1">
-													<DiscreteObjectKeyFrame.Value>
-														<Visibility>Visible</Visibility>
-													</DiscreteObjectKeyFrame.Value>
-												</DiscreteObjectKeyFrame>
-											</ObjectAnimationUsingKeyFrames>
-											<DoubleAnimationUsingKeyFrames Storyboard.TargetName="ButtonDelete"
-																		   Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)">
-												<EasingDoubleKeyFrame KeyTime="0:0:0.1"
-																	  Value="-90" />
-												<EasingDoubleKeyFrame KeyTime="0:0:0.2"
-																	  Value="0" />
-											</DoubleAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualTransition>
-								</VisualStateGroup.Transitions>
-								<VisualState x:Name="UserPin" />
-								<VisualState x:Name="SearchResult">
-									<Storyboard>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonDelete"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
-											<DiscreteObjectKeyFrame KeyTime="0">
-												<DiscreteObjectKeyFrame.Value>
-													<Visibility>Collapsed</Visibility>
-												</DiscreteObjectKeyFrame.Value>
-											</DiscreteObjectKeyFrame>
-										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ButtonPin"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
-											<DiscreteObjectKeyFrame KeyTime="0">
-												<DiscreteObjectKeyFrame.Value>
-													<Visibility>Visible</Visibility>
-												</DiscreteObjectKeyFrame.Value>
-											</DiscreteObjectKeyFrame>
-										</ObjectAnimationUsingKeyFrames>
-									</Storyboard>
-								</VisualState>
-							</VisualStateGroup>
 							<VisualStateGroup x:Name="WorkingStates">
-								<VisualState x:Name="Finished">
-									<Storyboard>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.IsEnabled)"
-																	   Storyboard.TargetName="ButtonDepart">
-											<DiscreteObjectKeyFrame KeyTime="0">
-												<DiscreteObjectKeyFrame.Value>
-													<System:Boolean>True</System:Boolean>
-												</DiscreteObjectKeyFrame.Value>
-											</DiscreteObjectKeyFrame>
-										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.IsEnabled)"
-																	   Storyboard.TargetName="ButtonArrive">
-											<DiscreteObjectKeyFrame KeyTime="0">
-												<DiscreteObjectKeyFrame.Value>
-													<System:Boolean>True</System:Boolean>
-												</DiscreteObjectKeyFrame.Value>
-											</DiscreteObjectKeyFrame>
-										</ObjectAnimationUsingKeyFrames>
-									</Storyboard>
-								</VisualState>
+								<VisualState x:Name="Finished"/>
 								<VisualState x:Name="Busy">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
@@ -600,59 +506,6 @@
 								   Text="Looking up this place..."
 								   VerticalAlignment="Top"
 								   Visibility="Collapsed" />
-						<StackPanel x:Name="ButtonPanel"
-									Height="65"
-									Margin="0,70,0,0"
-									VerticalAlignment="Top"
-									Visibility="Collapsed"
-									Width="230"
-									HorizontalAlignment="Left"
-									Orientation="Horizontal">
-							<i:Interaction.Behaviors>
-								<Behaviors:CancelGestureEventBehavior />
-							</i:Interaction.Behaviors>
-							<Controls:CircleButton Caption="details"
-												   Command="{Binding CommandViewDetails, RelativeSource={RelativeSource TemplatedParent}}"
-												   CommandParameter="{Binding CommandViewDetailsParameter, RelativeSource={RelativeSource TemplatedParent}}">
-								<Rectangle Fill="{StaticResource BrushIconInfo}" />
-							</Controls:CircleButton>
-							<Controls:CircleButton x:Name="ButtonDepart"
-												   Caption="depart"
-												   Command="{Binding CommandDepart, RelativeSource={RelativeSource TemplatedParent}}"
-												   CommandParameter="{Binding CommandDepartParameter, RelativeSource={RelativeSource TemplatedParent}}"
-												   Margin="13,0,0,0"
-												   IsEnabled="False">
-								<Rectangle Fill="{StaticResource BrushIconFrom}" />
-							</Controls:CircleButton>
-							<Controls:CircleButton x:Name="ButtonArrive"
-												   Caption="arrive"
-												   Command="{Binding CommandArrive, RelativeSource={RelativeSource TemplatedParent}}"
-												   CommandParameter="{Binding CommandArriveParameter, RelativeSource={RelativeSource TemplatedParent}}"
-												   Margin="13,0,12,0"
-												   IsEnabled="False">
-								<Rectangle Fill="{StaticResource BrushIconTo}" />
-							</Controls:CircleButton>
-							<Controls:CircleButton x:Name="ButtonDelete"
-												   Caption="delete"
-												   Command="{Binding CommandDelete, RelativeSource={RelativeSource TemplatedParent}}"
-												   CommandParameter="{Binding CommandDeleteParameter, RelativeSource={RelativeSource TemplatedParent}}">
-								<Controls:CircleButton.Projection>
-									<PlaneProjection />
-								</Controls:CircleButton.Projection>
-								<Rectangle Fill="{StaticResource BrushIconDelete}" />
-							</Controls:CircleButton>
-							<Controls:CircleButton x:Name="ButtonPin"
-												   Caption="keep"
-												   Command="{Binding CommandPinSearchResult, RelativeSource={RelativeSource TemplatedParent}}"
-												   CommandParameter="{Binding CommandPinSearchResultParameter, RelativeSource={RelativeSource TemplatedParent}}"
-												   RenderTransformOrigin="0.5,0.5"
-												   Visibility="Collapsed">
-								<Controls:CircleButton.Projection>
-									<PlaneProjection />
-								</Controls:CircleButton.Projection>
-								<Rectangle Fill="{StaticResource BrushIconPin}" />
-							</Controls:CircleButton>
-						</StackPanel>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

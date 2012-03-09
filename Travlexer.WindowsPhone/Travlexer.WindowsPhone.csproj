@@ -88,6 +88,7 @@
       <DependentUpon>Page1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AppBarButtonViewModel.cs" />
     <Compile Include="ViewModels\KeyValueIcon.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="ViewModels\PlaceViewModel.cs" />
@@ -135,7 +136,12 @@
     <None Include="Properties\WMAppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Arrive.png" />
+    <Content Include="Assets\Delete.png" />
     <Content Include="Assets\CurrentLocation.png" />
+    <Content Include="Assets\Depart.png" />
+    <Content Include="Assets\Information.png" />
+    <Content Include="Assets\Pin.png" />
     <Content Include="Assets\Route.png" />
     <Content Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />

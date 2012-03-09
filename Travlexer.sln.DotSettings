@@ -122,7 +122,9 @@ public static readonly DependencyProperty $PropertyName$Property = DependencyPro
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Shortcut/@EntryValue">propd</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Text/@EntryValue">public $TYPE$ $NAME$&#xD;
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8789B4A331F43C4A9B6BCB96E4DB0BE5/Text/@EntryValue">#region $NAME$&#xD;
+&#xD;
+public $TYPE$ $NAME$&#xD;
 {&#xD;
 	get { return ($TYPE$)GetValue($NAME$Property); }&#xD;
 	set { SetValue($NAME$Property, value); }&#xD;
@@ -132,7 +134,9 @@ public static readonly DependencyProperty $NAME$Property = DependencyProperty.Re
 	"$NAME$",&#xD;
 	typeof($TYPE$),&#xD;
 	typeof($CURRENT_CLASS$),&#xD;
-	null);</s:String>
+	null);&#xD;
+&#xD;
+#endregion</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B73F5D8B8FE09143B7FB8B9A24693714/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B73F5D8B8FE09143B7FB8B9A24693714/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=B73F5D8B8FE09143B7FB8B9A24693714/Description/@EntryValue">Full dependency property with event handling.</s:String>
@@ -165,7 +169,7 @@ public static readonly DependencyProperty $NAME$Property = DependencyProperty.Re
 	"$NAME$",&#xD;
 	typeof($TYPE$),&#xD;
 	typeof($CURRENT_CLASS$),&#xD;
-	new PropertyMetadata(default($TYPE$), (s, t) =&gt; (($CURRENT_CLASS$)s).On$NAME$Changed(($TYPE$)t.OldValue, ($TYPE$)t.NewValue))&#xD;
+	new PropertyMetadata(default($TYPE$), , (s, e) =&gt; (($CURRENT_CLASS$)s).On$NAME$Changed(($TYPE$)e.OldValue, ($TYPE$)e.NewValue))&#xD;
 );&#xD;
 &#xD;
 /// &lt;summary&gt;&#xD;

@@ -199,6 +199,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		/// <summary>
+		/// Removes the specified route.
+		/// </summary>
+		public static void RemoveRoute(Route route)
+		{
+			_routes.Remove(route);
+		}
+
+		/// <summary>
 		/// Removes all places.
 		/// </summary>
 		public static void ClearPlaces()
