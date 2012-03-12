@@ -40,14 +40,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 		#region Private Members
 
 		private readonly GeoCoordinateWatcher _geoWatcher;
-		private readonly AppBarButtonViewModel
+		private AppBarButtonViewModel
 			_trackButton,
 			_keepSearchResultButton,
 			_deletePlaceButton;
-		private readonly ObservableCollection<AppBarButtonViewModel>
+		private ObservableCollection<AppBarButtonViewModel>
 			_defaultButtonItemsSource,
 			_routeSelectedButtonItemsSource,
 			_pushpinSelectedButtonItemsSource;
+		private ObservableCollection<AppBarMenuItemViewModel>
+			_appBarMenuItemsSource;
 
 		#endregion
 
@@ -110,7 +112,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandUpdatePlace = new DelegateCommand<PlaceViewModel>(OnUpdatePlace);
 			CommandStopTrackingCurrentLocation = new DelegateCommand(OnStopTrackingCurrentLocation);
 			CommandGoToDefaultState = new DelegateCommand(OnGoToDefaultState);
-			CommandClearSearchResults = new DelegateCommand(OnClearSearchResults);
 			CommandStartGeoWatcher = new DelegateCommand(() => _geoWatcher.Start());
 			CommandStopGeoWatcher = new DelegateCommand(() => _geoWatcher.Stop());
 			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
@@ -135,88 +136,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartLocation.Value.Address = CurrentLocationString);
 			CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArriveLocation.Value.Address = CurrentLocationString);
 			CommandRoute = new DelegateCommand(OnRoute, () => !DepartLocation.Value.Address.IsNullOrEmpty() && !ArriveLocation.Value.Address.IsNullOrEmpty());
-			CommandClearRoutes = new DelegateCommand(OnClearRoutes);
 
 			// Initialise geo-coordinate watcher.
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
 			_geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
 
 
-			// Initialise application bar button items sources.
-			_trackButton = new AppBarButtonViewModel
-			{
-				IconUri = new Uri("/Assets/CurrentLocation.png", UriKind.Relative),
-				Text = "track",
-				IsEnabled = !IsTrackingCurrentLocation.Value,
-				Command = new DelegateCommand(OnStartTrackingCurrentLocation)
-			};
-			_deletePlaceButton = new AppBarButtonViewModel
-			{
-				IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
-				Text = "delete",
-				Command = new DelegateCommand(OnDeleteSelectedPlace)
-			};
-			_keepSearchResultButton = new AppBarButtonViewModel
-			{
-				IconUri = new Uri("/Assets/Pin.png", UriKind.Relative),
-				Text = "keep",
-				Command = new DelegateCommand(OnKeepSelectedSearchResult)
-			};
-			AppBarButtonItemsSources = new[]
-			{
-				_defaultButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
-				{
-					_trackButton,
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Search.png", UriKind.Relative),
-						Text = "search",
-						Command = new DelegateCommand(() => VisualState.Value = VisualStates.Search)
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Route.png", UriKind.Relative),
-						Text = "route",
-						Command = new DelegateCommand(() => VisualState.Value = VisualStates.Route)
-					}
-				},
-				_routeSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
-				{
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
-						Text = "details"
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
-						Text = "remove",
-						Command = new DelegateCommand(OnRemoveSelectedRoute)
-					}
-				},
-				_pushpinSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
-				{
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
-						Text = "details"
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Depart.png", UriKind.Relative),
-						Text = "depart",
-						Command = new DelegateCommand(OnSetSelectedPlaceAsDepartLocation)
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Arrive.png", UriKind.Relative),
-						Text = "arrive",
-						Command = new DelegateCommand(OnSetSelectedPlaceAsArriveLocation)
-					},
-					_deletePlaceButton
-				}
-			};
-			SelectedAppBarButtonItemsSource = AppBarButtonItemsSources[0];
+			// Initialise application bar button and menu items sources.
+			InitializeAppBarButtonSources();
+			InitializeAppBarMenuItemsSource();
 
 			// Handle necessary events.
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
@@ -550,6 +478,15 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private ObservableCollection<AppBarButtonViewModel> _selectedAppBarButtonItemsSource;
 		private const string SelectedAppBarButtonItemsSourceProperty = "SelectedAppBarButtonItemsSource";
 
+		public ObservableCollection<AppBarMenuItemViewModel> SelectedAppBarMenuItemsSource
+		{
+			get { return _selectedAppBarMenuItemsSource; }
+			private set { SetProperty(ref _selectedAppBarMenuItemsSource, value, SelectedAppBarMenuItemsSourceProperty); }
+		}
+
+		private ObservableCollection<AppBarMenuItemViewModel> _selectedAppBarMenuItemsSource;
+		private const string SelectedAppBarMenuItemsSourceProperty = "SelectedAppBarMenuItemsSource";
+
 		/// <summary>
 		/// Gets a value indicating whether this the application bar is visible.
 		/// </summary>
@@ -606,11 +543,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the command that sets the <see cref="VisualState"/> to <see cref="VisualStates.Default"/>.
 		/// </summary>
 		public DelegateCommand CommandGoToDefaultState { get; private set; }
-
-		/// <summary>
-		/// Gets the command that clears search results.
-		/// </summary>
-		public DelegateCommand CommandClearSearchResults { get; private set; }
 
 		/// <summary>
 		/// Gets the command that updates the information of a given place.
@@ -676,11 +608,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// Gets the command that finds a route.
 		/// </summary>
 		public DelegateCommand CommandRoute { get; private set; }
-
-		/// <summary>
-		/// Gets the command that clears all routes.
-		/// </summary>
-		public DelegateCommand CommandClearRoutes { get; private set; }
 
 		#endregion
 
@@ -871,14 +798,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 		}
 
 		/// <summary>
-		/// Called when <see cref="CommandClearSearchResults"/> is executed.
-		/// </summary>
-		private void OnClearSearchResults()
-		{
-			DataContext.ClearSearchResults();
-		}
-
-		/// <summary>
 		/// Called when <see cref="CommandUpdatePlace"/> is executed.
 		/// </summary>
 		/// <param name="pushpin">The pushpin view model.</param>
@@ -906,14 +825,17 @@ namespace Travlexer.WindowsPhone.ViewModels
 				case VisualStates.Default:
 					IsAppBarVisible = true;
 					SelectedAppBarButtonItemsSource = _defaultButtonItemsSource;
+					SelectedAppBarMenuItemsSource = _appBarMenuItemsSource;
 					break;
 				case VisualStates.PushpinSelected:
 					IsAppBarVisible = true;
 					SelectedAppBarButtonItemsSource = _pushpinSelectedButtonItemsSource;
+					SelectedAppBarMenuItemsSource = null;
 					break;
 				case VisualStates.RouteSelected:
 					IsAppBarVisible = true;
 					SelectedAppBarButtonItemsSource = _routeSelectedButtonItemsSource;
+					SelectedAppBarMenuItemsSource = null;
 					break;
 				case VisualStates.Route:
 					IsAppBarVisible = false;
@@ -1007,7 +929,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		}
 
 		/// <summary>
-		/// Called when <see cref="CommandClearRoutes"/> is executed.
+		/// Called when "clear routes" menu item is pressed in the application bar.
 		/// </summary>
 		private void OnClearRoutes()
 		{
@@ -1065,6 +987,101 @@ namespace Travlexer.WindowsPhone.ViewModels
 		{
 			SelectedSuggestion = null;
 			_suggestions.Clear();
+		}
+
+		private void InitializeAppBarButtonSources()
+		{
+			_trackButton = new AppBarButtonViewModel
+			{
+				IconUri = new Uri("/Assets/CurrentLocation.png", UriKind.Relative),
+				Text = "track",
+				IsEnabled = !IsTrackingCurrentLocation.Value,
+				Command = new DelegateCommand(OnStartTrackingCurrentLocation)
+			};
+			_deletePlaceButton = new AppBarButtonViewModel
+			{
+				IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
+				Text = "delete",
+				Command = new DelegateCommand(OnDeleteSelectedPlace)
+			};
+			_keepSearchResultButton = new AppBarButtonViewModel
+			{
+				IconUri = new Uri("/Assets/Pin.png", UriKind.Relative),
+				Text = "keep",
+				Command = new DelegateCommand(OnKeepSelectedSearchResult)
+			};
+			AppBarButtonItemsSources = new[]
+			{
+				_defaultButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
+				{
+					_trackButton,
+					new AppBarButtonViewModel
+					{
+						IconUri = new Uri("/Assets/Search.png", UriKind.Relative),
+						Text = "search",
+						Command = new DelegateCommand(() => VisualState.Value = VisualStates.Search)
+					},
+					new AppBarButtonViewModel
+					{
+						IconUri = new Uri("/Assets/Route.png", UriKind.Relative),
+						Text = "route",
+						Command = new DelegateCommand(() => VisualState.Value = VisualStates.Route)
+					}
+				},
+				_routeSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
+				{
+					new AppBarButtonViewModel
+					{
+						IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
+						Text = "details"
+					},
+					new AppBarButtonViewModel
+					{
+						IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
+						Text = "remove",
+						Command = new DelegateCommand(OnRemoveSelectedRoute)
+					}
+				},
+				_pushpinSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
+				{
+					new AppBarButtonViewModel
+					{
+						IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
+						Text = "details"
+					},
+					new AppBarButtonViewModel
+					{
+						IconUri = new Uri("/Assets/Depart.png", UriKind.Relative),
+						Text = "depart",
+						Command = new DelegateCommand(OnSetSelectedPlaceAsDepartLocation)
+					},
+					new AppBarButtonViewModel
+					{
+						IconUri = new Uri("/Assets/Arrive.png", UriKind.Relative),
+						Text = "arrive",
+						Command = new DelegateCommand(OnSetSelectedPlaceAsArriveLocation)
+					},
+					_deletePlaceButton
+				}
+			};
+			SelectedAppBarButtonItemsSource = AppBarButtonItemsSources[0];
+		}
+
+		private void InitializeAppBarMenuItemsSource()
+		{
+			SelectedAppBarMenuItemsSource = _appBarMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
+			{
+				new AppBarMenuItemViewModel
+				{
+					Text = "clear search",
+					Command = new DelegateCommand(DataContext.ClearSearchResults)
+				},
+				new AppBarMenuItemViewModel
+				{
+					Text = "clear routes",
+					Command = new DelegateCommand(OnClearRoutes)
+				}
+			};
 		}
 
 		#endregion

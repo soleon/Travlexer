@@ -169,8 +169,7 @@ public static readonly DependencyProperty $NAME$Property = DependencyProperty.Re
 	"$NAME$",&#xD;
 	typeof($TYPE$),&#xD;
 	typeof($CURRENT_CLASS$),&#xD;
-	new PropertyMetadata(default($TYPE$), , (s, e) =&gt; (($CURRENT_CLASS$)s).On$NAME$Changed(($TYPE$)e.OldValue, ($TYPE$)e.NewValue))&#xD;
-);&#xD;
+	new PropertyMetadata(default($TYPE$), (s, e) =&gt; (($CURRENT_CLASS$)s).On$NAME$Changed(($TYPE$)e.OldValue, ($TYPE$)e.NewValue)));&#xD;
 &#xD;
 /// &lt;summary&gt;&#xD;
 /// Called when &lt;see cref="$NAME$"/&gt; changes.&#xD;

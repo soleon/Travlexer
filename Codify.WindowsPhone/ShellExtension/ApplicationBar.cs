@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using Codify.Extensions;
 using Microsoft.Phone.Controls;
@@ -13,6 +14,9 @@ using Microsoft.Phone.Shell;
 
 namespace Codify.WindowsPhone.ShellExtension
 {
+	/// <summary>
+	/// A dependency wrapper to Microsoft.Phone.Shell.ApplicationBar, enabling several dependency object behaviors to the application bar.
+	/// </summary>
 	public class ApplicationBar : DependencyObject
 	{
 		#region Private Members
@@ -252,6 +256,94 @@ namespace Codify.WindowsPhone.ShellExtension
 		#endregion
 
 
+		#region MenuItemIsEnabledMemberPath
+
+		public string MenuItemIsEnabledMemberPath
+		{
+			get { return (string)GetValue(MenuItemIsEnabledMemberPathProperty); }
+			set { SetValue(MenuItemIsEnabledMemberPathProperty, value); }
+		}
+
+		public static readonly DependencyProperty MenuItemIsEnabledMemberPathProperty = DependencyProperty.Register(
+			"MenuItemIsEnabledMemberPath",
+			typeof(string),
+			typeof (ApplicationBar),
+			null);
+
+		#endregion
+
+
+		#region MenuItemTextMemberPath
+
+		public string MenuItemTextMemberPath
+		{
+			get { return (string) GetValue(MenuItemTextMemberPathProperty); }
+			set { SetValue(MenuItemTextMemberPathProperty, value); }
+		}
+
+		public static readonly DependencyProperty MenuItemTextMemberPathProperty = DependencyProperty.Register(
+			"MenuItemTextMemberPath",
+			typeof (string),
+			typeof (ApplicationBar),
+			null);
+
+		#endregion
+
+
+		#region MenuItemCommandMemberPath
+
+		public string MenuItemCommandMemberPath
+		{
+			get { return (string)GetValue(MenuItemCommandMemberPathProperty); }
+			set { SetValue(MenuItemCommandMemberPathProperty, value); }
+		}
+
+		public static readonly DependencyProperty MenuItemCommandMemberPathProperty = DependencyProperty.Register(
+			"MenuItemCommandMemberPath",
+			typeof(string),
+			typeof (ApplicationBar),
+			null);
+
+		#endregion
+
+
+		#region MenuItemCommandParameterMemberPath
+
+		public string MenuItemCommandParameterMemberPath
+		{
+			get { return (string)GetValue(MenuItemCommandParameterMemberPathProperty); }
+			set { SetValue(MenuItemCommandParameterMemberPathProperty, value); }
+		}
+
+		public static readonly DependencyProperty MenuItemCommandParameterMemberPathProperty = DependencyProperty.Register(
+			"MenuItemCommandParameterMemberPath",
+			typeof(string),
+			typeof (ApplicationBar),
+			null);
+
+		#endregion
+
+
+		#region MenuItemsSource
+
+		public IEnumerable MenuItemsSource
+		{
+			get { return (IEnumerable) GetValue(MenuItemsSourceProperty); }
+			set { SetValue(MenuItemsSourceProperty, value); }
+		}
+
+		/// <summary>
+		/// Defines the <see cref="MenuItemsSource"/> dependency property.
+		/// </summary>
+		public static readonly DependencyProperty MenuItemsSourceProperty = DependencyProperty.Register(
+			"MenuItemsSource",
+			typeof (IEnumerable),
+			typeof (ApplicationBar),
+			new PropertyMetadata(default(IEnumerable), (s, e) => ((ApplicationBar) s).OnMenuItemsSourceChanged((IEnumerable) e.OldValue, (IEnumerable) e.NewValue)));
+
+		#endregion
+
+
 		#endregion
 
 
@@ -352,36 +444,6 @@ namespace Codify.WindowsPhone.ShellExtension
 		}
 
 		/// <summary>
-		/// Called when items in the <see cref="MenuItems"/> collection have changed.
-		/// </summary>
-		private void OnMenuItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-#if DEBUG
-			if (DesignerProperties.IsInDesignTool)
-			{
-				return;
-			}
-#endif
-			var items = _applicationBar.MenuItems;
-			switch (e.Action)
-			{
-				case NotifyCollectionChangedAction.Add:
-					items.AddRange(e.NewItems.Cast<ApplicationBarMenuItem>().Select(i =>
-					{
-						BindingOperations.SetBinding(i, FrameworkElement.DataContextProperty, new Binding(DataContextPropertyName) { Source = this });
-						return i.Item;
-					}));
-					break;
-				case NotifyCollectionChangedAction.Remove:
-					items.RemoveRange(e.NewItems.Cast<ApplicationBarMenuItem>().Select(b => b.Item));
-					break;
-				case NotifyCollectionChangedAction.Reset:
-					items.Clear();
-					break;
-			}
-		}
-
-		/// <summary>
 		/// Called when <see cref="ButtonItemsSource"/> changes.
 		/// </summary>
 		private void OnButtonItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
@@ -429,7 +491,7 @@ namespace Codify.WindowsPhone.ShellExtension
 					{
 						var oldItem = oldItems[i];
 						var newItem = newItems[i];
-						foreach (var button in _buttons.Where(button => button.DataContext == oldItem))
+						foreach (var button in _buttons.Where(b => b.DataContext == oldItem))
 						{
 							button.SetBinding(FrameworkElement.DataContextProperty, new Binding { Source = newItem });
 							break;
@@ -438,6 +500,94 @@ namespace Codify.WindowsPhone.ShellExtension
 					break;
 				case NotifyCollectionChangedAction.Reset:
 					_buttons.Clear();
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Called when items in the <see cref="MenuItems"/> collection have changed.
+		/// </summary>
+		private void OnMenuItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			var items = _applicationBar.MenuItems;
+			switch (e.Action)
+			{
+				case NotifyCollectionChangedAction.Add:
+					items.AddRange(e.NewItems.Cast<ApplicationBarMenuItem>().Select(i =>
+					{
+						if (MenuItemsSource == null)
+						{
+							BindingOperations.SetBinding(i, FrameworkElement.DataContextProperty, new Binding(DataContextPropertyName) { Source = this });
+						}
+						return i.Item;
+					}));
+					break;
+				case NotifyCollectionChangedAction.Remove:
+					items.RemoveRange(e.NewItems.Cast<ApplicationBarMenuItem>().Select(b => b.Item));
+					break;
+				case NotifyCollectionChangedAction.Reset:
+					items.Clear();
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Called when <see cref="MenuItemsSource"/> changes.
+		/// </summary>
+		private void OnMenuItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
+		{
+			var source = oldValue as INotifyCollectionChanged;
+			if (source != null)
+			{
+				source.CollectionChanged -= OnMenuItemsSourceCollectionChanged;
+			}
+			source = newValue as INotifyCollectionChanged;
+			if (source != null)
+			{
+				source.CollectionChanged += OnMenuItemsSourceCollectionChanged;
+			}
+			_menuItems.Clear();
+			AddMenuItems(newValue);
+		}
+
+		/// <summary>
+		/// Called when items in the <see cref="MenuItemsSource"/> is changed.
+		/// </summary>
+		private void OnMenuItemsSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			switch (e.Action)
+			{
+				case NotifyCollectionChangedAction.Add:
+					AddMenuItems(e.NewItems);
+					break;
+				case NotifyCollectionChangedAction.Remove:
+					foreach (var item in e.OldItems)
+					{
+						for (var i = _menuItems.Count - 1; i >= 0; i--)
+						{
+							if (_menuItems[i].DataContext == item)
+							{
+								_menuItems.RemoveAt(i);
+							}
+						}
+					}
+					break;
+				case NotifyCollectionChangedAction.Replace:
+					var oldItems = e.OldItems;
+					var newItems = e.NewItems;
+					for (var i = 0; i < oldItems.Count; i++)
+					{
+						var oldItem = oldItems[i];
+						var newItem = newItems[i];
+						foreach (var menuItem in _menuItems.Where(item => item.DataContext == oldItem))
+						{
+							menuItem.SetBinding(FrameworkElement.DataContextProperty, new Binding { Source = newItem });
+							break;
+						}
+					}
+					break;
+				case NotifyCollectionChangedAction.Reset:
+					_menuItems.Clear();
 					break;
 			}
 		}
@@ -493,6 +643,39 @@ namespace Codify.WindowsPhone.ShellExtension
 					button.SetBinding(ApplicationBarIconButton.CommandParameterProperty, new Binding(ButtonCommandParameterMemberPath));
 				}
 				_buttons.Add(button);
+			}
+		}
+
+		/// <summary>
+		/// Adds new application bar menu items from the specified items source.
+		/// </summary>
+		private void AddMenuItems(IEnumerable itemsSource)
+		{
+			if (itemsSource == null)
+			{
+				return;
+			}
+			foreach (var item in itemsSource)
+			{
+				var menuItem = new ApplicationBarMenuItem();
+				menuItem.SetBinding(FrameworkElement.DataContextProperty, new Binding { Source = item });
+				if (MenuItemTextMemberPath != null)
+				{
+					menuItem.SetBinding(ApplicationBarMenuItem.TextProperty, new Binding(MenuItemTextMemberPath));
+				}
+				if (MenuItemIsEnabledMemberPath != null)
+				{
+					menuItem.SetBinding(ApplicationBarMenuItem.IsEnabledProperty, new Binding(MenuItemIsEnabledMemberPath));
+				}
+				if (MenuItemCommandMemberPath != null)
+				{
+					menuItem.SetBinding(ApplicationBarMenuItem.CommandProperty, new Binding(MenuItemCommandMemberPath));
+				}
+				if (MenuItemCommandParameterMemberPath != null)
+				{
+					menuItem.SetBinding(ApplicationBarMenuItem.CommandParameterProperty, new Binding(MenuItemCommandParameterMemberPath));
+				}
+				_menuItems.Add(menuItem);
 			}
 		}
 

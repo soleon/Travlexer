@@ -89,6 +89,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AppBarButtonViewModel.cs" />
+    <Compile Include="ViewModels\AppBarItemViewModel.cs" />
+    <Compile Include="ViewModels\AppBarMenuItemViewModel.cs" />
     <Compile Include="ViewModels\KeyValueIcon.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="ViewModels\PlaceViewModel.cs" />

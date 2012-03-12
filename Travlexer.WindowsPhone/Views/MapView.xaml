@@ -1003,13 +1003,10 @@
 									   ButtonIsEnabledMemberPath="IsEnabled"
 									   ButtonTextMemberPath="Text"
 									   ButtonCommandMemberPath="Command"
-									   IsVisible="{Binding IsAppBarVisible}">
-			<ShellExtension:ApplicationBar.MenuItems>
-				<ShellExtension:ApplicationBarMenuItem Command="{Binding CommandClearSearchResults, Mode=OneTime}"
-														Text="clear search" />
-				<ShellExtension:ApplicationBarMenuItem Command="{Binding CommandClearRoutes, Mode=OneTime}"
-														Text="clear routes" />
-			</ShellExtension:ApplicationBar.MenuItems>
-		</ShellExtension:ApplicationBar>
+									   MenuItemsSource="{Binding SelectedAppBarMenuItemsSource}"
+									   MenuItemIsEnabledMemberPath="IsEnabled"
+									   MenuItemTextMemberPath="Text"
+									   MenuItemCommandMemberPath="Command"
+									   IsVisible="{Binding IsAppBarVisible}"/>
 	</ShellExtension:ApplicationBar.ApplicationBar>
 </phone:PhoneApplicationPage>
