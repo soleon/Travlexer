@@ -360,16 +360,7 @@
 															 Duration="0:0:0.3"
 															 EasingFunction="{StaticResource EasingQuinticOut}"
 															 To="135" />
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
-												<DiscreteObjectKeyFrame KeyTime="0">
-													<DiscreteObjectKeyFrame.Value>
-														<Visibility>Visible</Visibility>
-													</DiscreteObjectKeyFrame.Value>
-												</DiscreteObjectKeyFrame>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
-																		   Storyboard.TargetProperty="(UIElement.Visibility)">
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DetailsGrid">
 												<DiscreteObjectKeyFrame KeyTime="0">
 													<DiscreteObjectKeyFrame.Value>
 														<Visibility>Visible</Visibility>
@@ -381,32 +372,23 @@
 								</VisualStateGroup.Transitions>
 								<VisualState x:Name="Expanded">
 									<Storyboard>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Title"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+										<DoubleAnimation Storyboard.TargetName="Content"
+											Storyboard.TargetProperty="(FrameworkElement.Width)"
+											Duration="0"
+											To="230"
+											d:IsOptimized="True" />
+										<DoubleAnimation Storyboard.TargetName="Content"
+											Storyboard.TargetProperty="(FrameworkElement.Height)"
+											Duration="0"
+											To="135"
+											d:IsOptimized="True" />
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="DetailsGrid">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
 												</DiscreteObjectKeyFrame.Value>
 											</DiscreteObjectKeyFrame>
 										</ObjectAnimationUsingKeyFrames>
-										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Address"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
-											<DiscreteObjectKeyFrame KeyTime="0">
-												<DiscreteObjectKeyFrame.Value>
-													<Visibility>Visible</Visibility>
-												</DiscreteObjectKeyFrame.Value>
-											</DiscreteObjectKeyFrame>
-										</ObjectAnimationUsingKeyFrames>
-										<DoubleAnimation Storyboard.TargetName="Content"
-														 Storyboard.TargetProperty="(FrameworkElement.Width)"
-														 Duration="0"
-														 To="230"
-														 d:IsOptimized="True" />
-										<DoubleAnimation Storyboard.TargetName="Content"
-														 Storyboard.TargetProperty="(FrameworkElement.Height)"
-														 Duration="0"
-														 To="135"
-														 d:IsOptimized="True" />
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Collapsed" />
@@ -416,12 +398,12 @@
 								<VisualState x:Name="Busy">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-														 Storyboard.TargetProperty="(UIElement.Opacity)"
-														 Duration="0"
-														 To="0"
-														 d:IsOptimized="True" />
+											Storyboard.TargetProperty="(UIElement.Opacity)"
+											Duration="0"
+											To="0"
+											d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="WorkingText"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -433,12 +415,12 @@
 								<VisualState x:Name="Error">
 									<Storyboard>
 										<DoubleAnimation Storyboard.TargetName="Address"
-														 Storyboard.TargetProperty="(UIElement.Opacity)"
-														 Duration="0"
-														 To="0"
-														 d:IsOptimized="True" />
+											Storyboard.TargetProperty="(UIElement.Opacity)"
+											Duration="0"
+											To="0"
+											d:IsOptimized="True" />
 										<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorText"
-																	   Storyboard.TargetProperty="(UIElement.Visibility)">
+											Storyboard.TargetProperty="(UIElement.Visibility)">
 											<DiscreteObjectKeyFrame KeyTime="0">
 												<DiscreteObjectKeyFrame.Value>
 													<Visibility>Visible</Visibility>
@@ -449,63 +431,67 @@
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
+						<i:Interaction.Behaviors>
+							<Behaviors:CancelGestureEventBehavior />
+						</i:Interaction.Behaviors>
 						<Rectangle Height="32"
 								   Width="32"
 								   Fill="{Binding Icon, Converter={StaticResource PlaceIconToBrushConverter}, RelativeSource={RelativeSource TemplatedParent}}"
 								   HorizontalAlignment="Left"
 								   VerticalAlignment="Top" />
-						<TextBlock x:Name="Title"
-								   Height="32"
-								   Margin="40,0,0,0"
-								   Width="190"
-								   FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-								   FontSize="24"
-								   HorizontalAlignment="Left"
-								   Text="{Binding Title, RelativeSource={RelativeSource TemplatedParent}}"
-								   VerticalAlignment="Top"
-								   Visibility="Collapsed" />
-						<TextBlock x:Name="Address"
-								   Height="25"
-								   Margin="0,35,0,0"
-								   Width="230"
-								   FontSize="18"
-								   HorizontalAlignment="Left"
-								   Text="{Binding Address, RelativeSource={RelativeSource TemplatedParent}}"
-								   VerticalAlignment="Top"
-								   Visibility="Collapsed" />
-						<ContentPresenter HorizontalAlignment="Left"
-										  VerticalAlignment="Top"
-										  Visibility="Collapsed"
-										  x:Name="ErrorText"
-										  Height="60"
-										  Width="230">
-							<Button Style="{StaticResource EmptyButton}"
+						<Grid x:Name="DetailsGrid" Visibility="Collapsed">
+							<TextBlock x:Name="Title"
+								Height="32"
+								Margin="40,0,0,0"
+								Width="190"
+								FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+								FontSize="{StaticResource PhoneFontSizeMediumLarge}"
+								HorizontalAlignment="Left"
+								Text="{Binding Title, RelativeSource={RelativeSource TemplatedParent}}"
+								VerticalAlignment="Top" />
+							<TextBlock x:Name="Address"
+								Height="25"
+								Margin="0,35,0,0"
+								Width="230"
+								FontSize="{StaticResource PhoneFontSizeSmall}"
+								HorizontalAlignment="Left"
+								Text="{Binding Address, RelativeSource={RelativeSource TemplatedParent}}"
+								VerticalAlignment="Top" />
+							<ContentPresenter HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Visibility="Collapsed"
+								x:Name="ErrorText"
+								Height="60"
+								Width="230">
+								<Button Style="{StaticResource EmptyButton}"
 									HorizontalContentAlignment="Left"
 									VerticalContentAlignment="Bottom"
 									Command="{Binding CommandRefresh, RelativeSource={RelativeSource TemplatedParent}}"
 									CommandParameter="{Binding CommandRefreshParameter, RelativeSource={RelativeSource TemplatedParent}}">
-								<i:Interaction.Behaviors>
-									<Behaviors:CancelGestureEventBehavior />
-								</i:Interaction.Behaviors>
-								<StackPanel Orientation="Horizontal">
-									<Rectangle Width="17"
-											   Height="17"
-											   Fill="{StaticResource BrushIconAttention}" />
-									<TextBlock Margin="10,0,0,3"
-											   Text="No info, tap to refresh"
-											   TextDecorations="Underline" />
-								</StackPanel>
-							</Button>
-						</ContentPresenter>
-						<TextBlock x:Name="WorkingText"
-								   Height="25"
-								   Margin="0,35,0,0"
-								   Width="230"
-								   FontSize="18"
-								   HorizontalAlignment="Left"
-								   Text="Looking up this place..."
-								   VerticalAlignment="Top"
-								   Visibility="Collapsed" />
+									<StackPanel Orientation="Horizontal">
+										<Rectangle Width="17"
+											Height="17"
+											Fill="{StaticResource BrushIconAttention}" />
+										<TextBlock Margin="10,0,0,3"
+											Text="No info, tap to refresh"
+											TextDecorations="Underline" />
+									</StackPanel>
+								</Button>
+							</ContentPresenter>
+							<TextBlock x:Name="WorkingText"
+								Height="25"
+								Margin="0,35,0,0"
+								Width="230"
+								FontSize="18"
+								HorizontalAlignment="Left"
+								Text="Looking up this place..."
+								VerticalAlignment="Top"
+								Visibility="Collapsed" />
+							<HyperlinkButton x:Name="ContactNumber" Content="{Binding ContactNumber, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource PhoneFontSizeSmall}" Visibility="{Binding ContactNumber, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,70,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+							<TextBlock Visibility="{Binding ContactNumber, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Text="Contact Number: N/A" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,70,0,0" FontSize="{StaticResource PhoneFontSizeSmall}" FontStyle="Italic" Opacity="0.5"/>
+							<HyperlinkButton x:Name="WebSite" Content="{Binding WebSite, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource PhoneFontSizeSmall}" Visibility="{Binding WebSite, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,100,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+							<TextBlock Visibility="{Binding WebSite, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Text="Web Site: N/A" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeSmall}" Margin="0,100,0,0" FontStyle="Italic" Opacity="0.5"/>
+						</Grid>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

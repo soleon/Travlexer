@@ -79,15 +79,15 @@ namespace Codify.GoogleMaps
 		#region Public Methods
 
 		/// <summary>
-		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
+		/// Gets a list of <see cref="Place"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
 		/// <param name="location">The geo-location to match for places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		public void GetPlaces(LatLng location, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null)
+		public void GetPlaces(LatLng location, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
-			ProcessRequest<ListResponse<PlaceDetails>, List<PlaceDetails>>(
+			ProcessRequest<ListResponse<Place>, List<Place>>(
 				new RestRequest(_baseGeocodingUrl + "&latlng=" + location),
-				response => response.Data = _jsonSerializer.Deserialize<ListResponse<PlaceDetails>>(response.Content),
+				response => response.Data = _jsonSerializer.Deserialize<ListResponse<Place>>(response.Content),
 				callback: callback);
 		}
 
@@ -96,11 +96,11 @@ namespace Codify.GoogleMaps
 		/// </summary>
 		/// <param name="address">The address to match for places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		public void GetPlaces(string address, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null)
+		public void GetPlaces(string address, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
-			ProcessRequest<ListResponse<PlaceDetails>, List<PlaceDetails>>(
+			ProcessRequest<ListResponse<Place>, List<Place>>(
 				new RestRequest(_baseGeocodingUrl + "&address=" + address),
-				r => r.Data = _jsonSerializer.Deserialize<ListResponse<PlaceDetails>>(r.Content),
+				r => r.Data = _jsonSerializer.Deserialize<ListResponse<Place>>(r.Content),
 				callback: callback);
 		}
 
@@ -109,11 +109,11 @@ namespace Codify.GoogleMaps
 		/// </summary>
 		/// <param name="reference">The reference key of the place.</param>
 		/// <param name="callback">The callback to be executed after the process is finished.</param>
-		public void GetPlaceDetails(string reference, Action<RestResponse<Response<PlaceDetails>>> callback = null)
+		public void GetPlaceDetails(string reference, Action<RestResponse<Response<Place>>> callback = null)
 		{
-			ProcessRequest<Response<PlaceDetails>, PlaceDetails>(
+			ProcessRequest<Response<Place>, Place>(
 				new RestRequest(_basePlaceDetailsUrl + reference),
-				r => r.Data = _jsonSerializer.Deserialize<Response<PlaceDetails>>(r.Content),
+				r => r.Data = _jsonSerializer.Deserialize<Response<Place>>(r.Content),
 				callback: callback);
 		}
 

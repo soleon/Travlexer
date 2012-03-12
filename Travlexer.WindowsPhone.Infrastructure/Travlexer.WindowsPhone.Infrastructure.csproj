@@ -60,7 +60,6 @@
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Place.cs" />
     <Compile Include="Models\ElementColor.cs" />
-    <Compile Include="Models\PlaceDetails.cs" />
     <Compile Include="Models\PlaceIcon.cs" />
     <Compile Include="Models\Route.cs" />
     <Compile Include="Models\RouteLocation.cs" />

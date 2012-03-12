@@ -18,7 +18,6 @@ using RestSharp;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Infrastructure.Serialization;
 using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
-using PlaceDetails = Travlexer.WindowsPhone.Infrastructure.Models.PlaceDetails;
 using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
 
 namespace Travlexer.WindowsPhone.Infrastructure
@@ -236,21 +235,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null)
 		{
 			place.DataState = DataStates.Busy;
-			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.PlaceDetails>, List<Codify.GoogleMaps.Entities.PlaceDetails>>(
+			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>>(
 				(c, a) => c.GetPlaces(place.Location, a),
-				r =>
-				{
-					var details = r.Result[0];
-					if (place.Details == null)
-					{
-						place.Details = new PlaceDetails { ContactNumber = details.FormattedPhoneNumber };
-					}
-					else
-					{
-						place.Details.ContactNumber = details.FormattedPhoneNumber;
-					}
-					place.FormattedAddress = details.FormattedAddress;
-				},
+				r => place.CopyFrom(r.Result[0]),
 				args =>
 				{
 					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Finished : DataStates.Error;
@@ -265,7 +252,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <param name="callback">The callback to be executed after this process is finished.</param>
 		public static void GetAddress(Location location, Action<CallbackEventArgs<string>> callback = null)
 		{
-			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.PlaceDetails>, List<Codify.GoogleMaps.Entities.PlaceDetails>, string>(
+			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>, string>(
 				(c, a) => c.GetPlaces(location, a),
 				r =>
 				{
@@ -288,20 +275,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				return;
 			}
 			place.DataState = DataStates.Busy;
-			ProcessCall<Response<Codify.GoogleMaps.Entities.PlaceDetails>, Codify.GoogleMaps.Entities.PlaceDetails>(
+			ProcessCall<Response<Codify.GoogleMaps.Entities.Place>, Codify.GoogleMaps.Entities.Place>(
 				(c, r) => c.GetPlaceDetails(place.Reference, r),
-				r =>
-				{
-					var p = r.Result;
-					if (place.Details == null)
-					{
-						place.Details = new PlaceDetails();
-					}
-					place.Details.ContactNumber = p.FormattedPhoneNumber;
-					place.FormattedAddress = p.FormattedAddress;
-					place.Name = p.Name;
-					place.ViewPort = p.Geometry.ViewPort;
-				},
+				r => place.CopyFrom(r.Result),
 				args =>
 				{
 					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Finished : DataStates.Error;
@@ -316,7 +292,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <param name="callback">The callback to be executed when this process is finished.</param>
 		public static void GetPlaceDetails(string reference, Action<CallbackEventArgs<Place>> callback = null)
 		{
-			ProcessCall<Response<Codify.GoogleMaps.Entities.PlaceDetails>, Codify.GoogleMaps.Entities.PlaceDetails, Place>(
+			ProcessCall<Response<Codify.GoogleMaps.Entities.Place>, Codify.GoogleMaps.Entities.Place, Place>(
 				(c, r) => c.GetPlaceDetails(reference, r),
 				r =>
 				{
@@ -365,7 +341,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
 					// If search come back with empty result, try using the input as an address to get the first matching place.
 					const string defaultSearchName = "Search Result";
-					ProcessCall<ListResponse<Codify.GoogleMaps.Entities.PlaceDetails>, List<Codify.GoogleMaps.Entities.PlaceDetails>, List<Place>>(
+					ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>, List<Place>>(
 						(c, r) => c.GetPlaces(input, r),
 						r =>
 						{

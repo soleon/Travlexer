@@ -951,7 +951,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			var place = SelectedPushpin.Data;
 			SelectedPushpin = null;
 			var location = ArriveLocation.Value;
-			location.Address = place.FormattedAddress ?? place.Location.ToString();
+			location.Address = place.Address ?? place.Location.ToString();
 			location.PlaceId = place.Id;
 			VisualState.Value = VisualStates.Route;
 		}
@@ -964,7 +964,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			var place = SelectedPushpin.Data;
 			SelectedPushpin = null;
 			var location = DepartLocation.Value;
-			location.Address = place.FormattedAddress ?? place.Location.ToString();
+			location.Address = place.Address ?? place.Location.ToString();
 			location.PlaceId = place.Id;
 			VisualState.Value = VisualStates.Route;
 		}

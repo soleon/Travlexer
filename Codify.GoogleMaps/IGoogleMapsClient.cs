@@ -8,25 +8,25 @@ namespace Codify.GoogleMaps
 	public interface IGoogleMapsClient
 	{
 		/// <summary>
-		/// Gets a list of <see cref="PlaceDetails"/> that can be found at the specified <see cref="LatLng"/>.
+		/// Gets a list of <see cref="Place"/> that can be found at the specified <see cref="LatLng"/>.
 		/// </summary>
 		/// <param name="location">The geo-location to match for places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void GetPlaces(LatLng location, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null);
+		void GetPlaces(LatLng location, Action<RestResponse<ListResponse<Place>>> callback = null);
 
 		/// <summary>
 		/// Gets the places that match the address.
 		/// </summary>
 		/// <param name="address">The address to match for places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void GetPlaces(string address, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null);
+		void GetPlaces(string address, Action<RestResponse<ListResponse<Place>>> callback = null);
 
 		/// <summary>
 		/// Gets the place details.
 		/// </summary>
 		/// <param name="reference">The reference key of the place.</param>
 		/// <param name="callback">The callback to be executed after the process is finished.</param>
-		void GetPlaceDetails(string reference, Action<RestResponse<Response<PlaceDetails>>> callback = null);
+		void GetPlaceDetails(string reference, Action<RestResponse<Response<Place>>> callback = null);
 
 		/// <summary>
 		/// Gets the suggestions based on the input.

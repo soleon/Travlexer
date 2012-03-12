@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Codify;
+using Microsoft.Phone.Tasks;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 
 namespace Travlexer.WindowsPhone.Controls
@@ -21,9 +23,11 @@ namespace Travlexer.WindowsPhone.Controls
 	[TemplatePart(Name = PART_Address, Type = typeof(TextBlock))]
 	[TemplatePart(Name = PART_GeoCoordinate, Type = typeof(TextBlock))]
 	[TemplatePart(Name = PART_WorkingText, Type = typeof(TextBlock))]
+	[TemplatePart(Name = PART_WebSite, Type = typeof(HyperlinkButton))]
+	[TemplatePart(Name = PART_ContactNumber, Type = typeof(HyperlinkButton))]
 	public class PushpinContent : Control
 	{
-		#region MyRegion
+		#region Constants
 
 		// Visual states and groups name.
 		private const string GROUP_VisualStates = "VisualStates";
@@ -35,15 +39,24 @@ namespace Travlexer.WindowsPhone.Controls
 		private const string STATE_Loaded = "Loaded";
 
 		// Template parts name.
-		private const string PART_Content = "Content";
-		private const string PART_SearchResultIndicator = "SearchResultIndicator";
-		private const string PART_Title = "Title";
-		private const string PART_Address = "Address";
-		private const string PART_GeoCoordinate = "GeoCoordinate";
-		private const string PART_WorkingText = "WorkingText";
+		private const string
+			PART_Content = "Content",
+			PART_SearchResultIndicator = "SearchResultIndicator",
+			PART_Title = "Title",
+			PART_Address = "Address",
+			PART_GeoCoordinate = "GeoCoordinate",
+			PART_WorkingText = "WorkingText",
+			PART_WebSite = "WebSite",
+			PART_ContactNumber = "ContactNumber";
 
 		#endregion
 
+
+		#region Private Members
+
+		HyperlinkButton _webSiteLink, _contactNumberLink;
+
+		#endregion
 
 		#region Constructors
 
@@ -58,10 +71,13 @@ namespace Travlexer.WindowsPhone.Controls
 			{
 				return;
 			}
-			var pin = new DesignTime().UserPin;
-			Title = pin.Name;
-			Address = pin.FormattedAddress;
-			Icon = pin.Icon;
+			Title = "Kfc: Mercer Street";
+			Address = "201 West Mercer Street, Seattle, WA 98119, United States";
+			Address = "201 West Mercer Street, Seattle, WA 98119, United States";
+			ContactNumber = "+1 206-283-7575";
+			Rating = "2.30";
+			WebSite = "http://www.kfc.com/";
+
 			VisualState = ExpansionStates.Expanded;
 #endif
 		}
@@ -100,6 +116,9 @@ namespace Travlexer.WindowsPhone.Controls
 
 		#region Public Properties
 
+
+		#region VisualState
+
 		public ExpansionStates VisualState
 		{
 			get { return (ExpansionStates)GetValue(VisualStateProperty); }
@@ -111,6 +130,11 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof(ExpansionStates),
 			typeof(PushpinContent),
 			new PropertyMetadata(default(ExpansionStates), OnVisualStateChanged));
+
+		#endregion
+
+
+		#region WorkingState
 
 		public DataStates WorkingState
 		{
@@ -124,6 +148,11 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof(PushpinContent),
 			new PropertyMetadata(default(DataStates), OnWorkingStateChanged));
 
+		#endregion
+
+
+		#region Title
+
 		public string Title
 		{
 			get { return (string)GetValue(TitleProperty); }
@@ -135,6 +164,11 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof(string),
 			typeof(PushpinContent),
 			null);
+
+		#endregion
+
+
+		#region Address
 
 		public string Address
 		{
@@ -148,6 +182,11 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof(PushpinContent),
 			null);
 
+		#endregion
+
+
+		#region Icon
+
 		public PlaceIcon Icon
 		{
 			get { return (PlaceIcon)GetValue(IconProperty); }
@@ -159,6 +198,11 @@ namespace Travlexer.WindowsPhone.Controls
 			typeof(PlaceIcon),
 			typeof(PushpinContent),
 			new PropertyMetadata(default(PlaceIcon)));
+
+		#endregion
+
+
+		#region IsSearchResult
 
 		public bool IsSearchResult
 		{
@@ -175,12 +219,90 @@ namespace Travlexer.WindowsPhone.Controls
 		#endregion
 
 
+		#region ContactNumber
+
+		public string ContactNumber
+		{
+			get { return (string)GetValue(ContactNumberProperty); }
+			set { SetValue(ContactNumberProperty, value); }
+		}
+
+		public static readonly DependencyProperty ContactNumberProperty = DependencyProperty.Register(
+			"ContactNumber",
+			typeof(string),
+			typeof(PushpinContent),
+			null);
+
+		#endregion
+
+
+		#region WebSite
+
+		public string WebSite
+		{
+			get { return (string)GetValue(WebSiteProperty); }
+			set { SetValue(WebSiteProperty, value); }
+		}
+
+		public static readonly DependencyProperty WebSiteProperty = DependencyProperty.Register(
+			"WebSite",
+			typeof(string),
+			typeof(PushpinContent),
+			null);
+
+		#endregion
+
+
+		#region Rating
+
+		public string Rating
+		{
+			get { return (string)GetValue(RatingProperty); }
+			set { SetValue(RatingProperty, value); }
+		}
+
+		public static readonly DependencyProperty RatingProperty = DependencyProperty.Register(
+			"Rating",
+			typeof(string),
+			typeof(PushpinContent),
+			null);
+
+		#endregion
+
+
+		#endregion
+
+
 		#region Event Handling
 
 		public override void OnApplyTemplate()
 		{
 			VisualStateManager.GoToState(this, VisualState.ToString(), false);
 			VisualStateManager.GoToState(this, WorkingState.ToString(), false);
+
+			_webSiteLink = GetTemplateChild(PART_WebSite) as HyperlinkButton;
+			if (_webSiteLink != null)
+			{
+				_webSiteLink.Click += (s, e) =>
+				{
+					Uri uri;
+					if (Uri.TryCreate(WebSite, UriKind.RelativeOrAbsolute, out uri))
+					{
+						new WebBrowserTask { Uri = uri }.Show();
+					}
+					else
+					{
+						MessageBox.Show("The web site address doesn't seem valid, we could not navigate to it.", "Incorrect Web Site", MessageBoxButton.OK);
+					}
+				};
+			}
+
+			_contactNumberLink = GetTemplateChild(PART_ContactNumber) as HyperlinkButton;
+			if (_contactNumberLink != null)
+			{
+				_contactNumberLink.Click += (s, e) => new PhoneCallTask { DisplayName = Title, PhoneNumber = ContactNumber }.Show();
+			}
+
 			base.OnApplyTemplate();
 		}
 

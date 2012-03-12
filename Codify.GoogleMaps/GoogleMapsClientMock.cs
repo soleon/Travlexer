@@ -206,22 +206,22 @@ namespace Codify.GoogleMaps
 
 		#region Public Methods
 
-		public void GetPlaces(LatLng location, Action<RestResponse<ListResponse<PlaceDetails>>> callback)
+		public void GetPlaces(LatLng location, Action<RestResponse<ListResponse<Place>>> callback)
 		{
-			var result = new RestResponse<ListResponse<PlaceDetails>>
+			var result = new RestResponse<ListResponse<Place>>
 			{
 				StatusCode = HttpStatusCode.OK,
-				Data = JsonConvert.DeserializeObject<ListResponse<PlaceDetails>>(GeocodeResponse)
+				Data = JsonConvert.DeserializeObject<ListResponse<Place>>(GeocodeResponse)
 			};
 			callback(result);
 		}
 
-		public void GetPlaces(string address, Action<RestResponse<ListResponse<PlaceDetails>>> callback = null)
+		public void GetPlaces(string address, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void GetPlaceDetails(string reference, Action<RestResponse<Response<PlaceDetails>>> callback = null)
+		public void GetPlaceDetails(string reference, Action<RestResponse<Response<Place>>> callback = null)
 		{
 			throw new NotImplementedException();
 		}

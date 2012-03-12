@@ -696,14 +696,17 @@
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 					<Controls:PushpinContent x:Name="SelectedPushpinContent"
-											 Address="{Binding Data.FormattedAddress}"
+											 Address="{Binding Data.Address}"
 											 CommandRefresh="{Binding Parent.CommandUpdatePlace, Mode=OneTime}"
 											 CommandRefreshParameter="{Binding}"
 											 Icon="{Binding Data.Icon}"
 											 IsSearchResult="{Binding Data.IsSearchResult, Mode=TwoWay}"
 											 Title="{Binding Data.Name}"
 											 VisualState="Collapsed"
-											 WorkingState="{Binding Data.DataState}"/>
+											 WorkingState="{Binding Data.DataState}"
+											 WebSite="{Binding Data.WebSite}"
+											 Rating="{Binding Data.Rating}"
+											 ContactNumber="{Binding Data.ContactNumber}"/>
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 			<Maps:Pushpin x:Name="DragPushpin"

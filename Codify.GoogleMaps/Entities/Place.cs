@@ -25,5 +25,29 @@ namespace Codify.GoogleMaps.Entities
 
 		[JsonProperty(PropertyName = "id")]
 		public string Id { get; set; }
+
+		[JsonProperty(PropertyName = "formatted_phone_number")]
+		public string FormattedPhoneNumber { get; set; }
+
+		[JsonProperty(PropertyName = "international_phone_number")]
+		public string InternationalPhoneNumber { get; set; }
+
+		[JsonProperty(PropertyName = "formatted_address")]
+		public string FormattedAddress { get; set; }
+
+		[JsonProperty(PropertyName = "address_components")]
+		public IList<AddressComponent> AddressComponents { get; set; }
+
+		[JsonProperty(PropertyName = "rating")]
+		public string Raiting { get; set; }
+
+		[JsonProperty(PropertyName = "url")]
+		public string Url { get; set; }
+
+		[JsonProperty(PropertyName = "utc_offset")]
+		public int UtcOffset { get; set; }
+
+		[JsonProperty(PropertyName = "website")]
+		public string WebSite { get; set; }
 	}
 }

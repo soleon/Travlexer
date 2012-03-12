@@ -68,7 +68,6 @@
     <Compile Include="Entities\Leg.cs" />
     <Compile Include="Entities\ListResponse.cs" />
     <Compile Include="Entities\Place.cs" />
-    <Compile Include="Entities\PlaceDetails.cs" />
     <Compile Include="Entities\PlaceType.cs" />
     <Compile Include="Entities\Polyline.cs" />
     <Compile Include="Entities\Response.cs" />

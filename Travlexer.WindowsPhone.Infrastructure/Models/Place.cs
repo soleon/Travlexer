@@ -40,8 +40,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		/// This parmeterless constructor is only intended for serialization purpose.
 		/// Do not use this constructor in code.
 		/// </remarks>
-		public Place()
-			: this(new Location(), name: null) {}
+		public Place() {}
 
 		#endregion
 
@@ -66,23 +65,41 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		private Location _location;
 		private const string LocationProperty = "Location";
 
-		public string FormattedAddress
+		public string Address
 		{
-			get { return _formattedAddress; }
-			set { SetProperty(ref _formattedAddress, value, AddressProperty); }
+			get { return _address; }
+			set { SetProperty(ref _address, value, AddressProperty); }
 		}
 
-		private string _formattedAddress;
-		private const string AddressProperty = "FormattedAddress";
+		private string _address;
+		private const string AddressProperty = "Address";
 
-		public PlaceDetails Details
+		public string ContactNumber
 		{
-			get { return _detail; }
-			set { SetProperty(ref _detail, value, DetailProperty); }
+			get { return _contactNumber; }
+			set { SetProperty(ref _contactNumber, value, ContactNumberProperty); }
 		}
 
-		private PlaceDetails _detail;
-		private const string DetailProperty = "Detail";
+		private string _contactNumber;
+		private const string ContactNumberProperty = "ContactNumber";
+
+		public string WebSite
+		{
+			get { return _webSite; }
+			set { SetProperty(ref _webSite, value, WebSiteProperty); }
+		}
+
+		private string _webSite;
+		private const string WebSiteProperty = "WebSite";
+
+		public string Rating
+		{
+			get { return _rating; }
+			set { SetProperty(ref _rating, value, RatingProperty); }
+		}
+
+		private string _rating;
+		private const string RatingProperty = "Rating";
 
 		public ElementColor Color
 		{
@@ -156,7 +173,6 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		private DataStates _dataState;
 		private const string DataStateProperty = "DataState";
 
-
 		#endregion
 
 
@@ -166,14 +182,13 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		{
 			Name = null;
 			Location = null;
-			FormattedAddress = null;
+			Address = null;
 			Note = null;
-			if (Details != null)
-			{
-				var details = Details;
-				Details = null;
-				details.Dispose();
-			}
+			ContactNumber = null;
+			WebSite = null;
+			Rating = null;
+			ViewPort = null;
+			Reference = null;
 			base.OnDispose();
 		}
 
@@ -184,26 +199,34 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 
 		public static implicit operator Place(Codify.GoogleMaps.Entities.Place place)
 		{
-			if (place == null)
-			{
-				return null;
-			}
-			return new Place(place.Geometry.Location, name: place.Name)
-			{
-				ViewPort = place.Geometry.ViewPort,
-				Reference = place.Reference
-			};
+			return new Place().CopyFrom(place);
 		}
 
-		public static implicit operator Place(Codify.GoogleMaps.Entities.PlaceDetails details)
+		#endregion
+
+
+		#region Public Methods
+
+		/// <summary>
+		/// Copies information from a <see cref="T:Codify.GoogleMaps.Entities.Place"/> to this instance.
+		/// </summary>
+		/// <param name="place">The place.</param>
+		public Place CopyFrom(Codify.GoogleMaps.Entities.Place place)
 		{
-			return new Place(details.Geometry.Location, name: details.Name)
+			Location = place.Geometry.Location;
+			ContactNumber = place.InternationalPhoneNumber ?? place.FormattedPhoneNumber;
+			Address = place.FormattedAddress;
+			ViewPort = place.Geometry.ViewPort;
+			Reference = place.Reference;
+			WebSite = place.WebSite;
+			Rating = place.Raiting;
+
+			if (!string.IsNullOrEmpty(place.Name))
 			{
-				Details = new PlaceDetails { ContactNumber = details.FormattedPhoneNumber },
-				FormattedAddress = details.FormattedAddress,
-				ViewPort = details.Geometry.ViewPort,
-				Reference = details.Reference
-			};
+				Name = place.Name;
+			}
+
+			return this;
 		}
 
 		#endregion
