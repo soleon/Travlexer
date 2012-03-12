@@ -40,12 +40,14 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		/// This parmeterless constructor is only intended for serialization purpose.
 		/// Do not use this constructor in code.
 		/// </remarks>
-		public Place() {}
+		public Place() { }
 
 		#endregion
 
 
 		#region Public Properties
+
+		public Guid Id { get; set; }
 
 		public string Name
 		{
@@ -128,15 +130,6 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		private bool _isSearchResult;
 		private const string IsSearchResultProperty = "IsSearchResult";
 
-		public Guid Id
-		{
-			get { return _id; }
-			set { SetProperty(ref _id, value, IdProperty); }
-		}
-
-		private Guid _id;
-		private const string IdProperty = "Id";
-
 		public string Note
 		{
 			get { return _note; }
@@ -199,7 +192,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 
 		public static implicit operator Place(Codify.GoogleMaps.Entities.Place place)
 		{
-			return new Place().CopyFrom(place);
+			return new Place { Id = Guid.NewGuid() }.CopyFrom(place);
 		}
 
 		#endregion

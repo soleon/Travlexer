@@ -37,8 +37,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			SearchInput = new ObservableValue<string>();
 			RouteMethod = new ObservableValue<RouteMethod>();
 			TravelMode = new ObservableValue<TravelMode>();
-			DepartLocation = new ObservableValue<RouteLocation>(new RouteLocation());
-			ArriveLocation = new ObservableValue<RouteLocation>(new RouteLocation());
 			Unit = new ObservableValue<Unit>();
 
 			Places = new ReadOnlyObservableCollection<Place>(_places);
@@ -93,20 +91,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static ObservableValue<TravelMode> TravelMode { get; private set; }
 
 		private const string TravelModeProperty = "TravelMode";
-
-		/// <summary>
-		/// Gets the depart location.
-		/// </summary>
-		public static ObservableValue<RouteLocation> DepartLocation { get; private set; }
-
-		private const string DepartLocationProperty = "DepartLocation";
-
-		/// <summary>
-		/// Gets the arrive location.
-		/// </summary>
-		public static ObservableValue<RouteLocation> ArriveLocation { get; private set; }
-
-		private const string ArriveLocationProperty = "ArriveLocation";
 
 		/// <summary>
 		/// Gets or sets the map base layer.
@@ -385,15 +369,15 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Finds the route between the depart location and arrive location.
 		/// </summary>
-		/// <param name="depart">The depart location.</param>
-		/// <param name="arrive">The arrive location.</param>
+		/// <param name="departure">The depart location.</param>
+		/// <param name="arrival">The arrive location.</param>
 		/// <param name="mode">The travel mode for the route.</param>
 		/// <param name="method">The routing method for the route.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		public static void GetRoute(string depart, string arrive, TravelMode mode, RouteMethod method, Action<CallbackEventArgs<Route>> callback = null)
+		public static void GetRoute(string departure, string arrival, TravelMode mode, RouteMethod method, Action<CallbackEventArgs<Route>> callback = null)
 		{
 			ProcessCall<RoutesResponse, List<Codify.GoogleMaps.Entities.Route>, Route>(
-				(c, r) => c.GetDirections(depart, arrive, mode, method, Unit.Value, r),
+				(c, r) => c.GetDirections(departure, arrival, mode, method, Unit.Value, r),
 				response =>
 				{
 					var route = (Route)response.Result.FirstOrDefault();
@@ -518,20 +502,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			if (StorageProvider.TryGetSetting(RouteMethodProperty, out mode))
 			{
 				TravelMode.Value = mode;
-			}
-
-			// Load depart location.
-			RouteLocation departLocation;
-			if (StorageProvider.TryGetSetting(DepartLocationProperty, out departLocation))
-			{
-				DepartLocation.Value = departLocation;
-			}
-
-			// Load arrive location.
-			RouteLocation arriveLocation;
-			if (StorageProvider.TryGetSetting(ArriveLocationProperty, out arriveLocation))
-			{
-				ArriveLocation.Value = arriveLocation;
 			}
 		}
 

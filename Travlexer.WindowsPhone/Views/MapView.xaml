@@ -549,6 +549,28 @@
 					<Run Text="at this zoom level"/>
 				</TextBlock>
 			</Maps:MapLayer>
+			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
+						  Location="{Binding CurrentLocation}"
+						  PositionOrigin="Center"
+						  Template="{x:Null}"
+						  Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
+				<i:Interaction.Triggers>
+					<Triggers:EventTrigger EventName="Tap"
+						IsHandled="True">
+						<i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}" />
+					</Triggers:EventTrigger>
+				</i:Interaction.Triggers>
+				<Grid>
+					<Ellipse Height="40"
+						Width="40"
+						Fill="Transparent" />
+					<Rectangle Height="30"
+						Width="30"
+						Fill="{StaticResource BrushIconCurrentLocationBlack}"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center" />
+				</Grid>
+			</Maps:Pushpin>
 			<Maps:MapLayer x:Name="RoutesLayer"
 						   CodifyControls:PanelExtension.ItemsSource="{Binding Routes}"
 						   Opacity="0.695">
@@ -575,28 +597,6 @@
 					</DataTemplate>
 				</CodifyControls:PanelExtension.ItemTemplate>
 			</Maps:MapLayer>
-			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
-						  Location="{Binding CurrentLocation}"
-						  PositionOrigin="Center"
-						  Template="{x:Null}"
-						  Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
-				<i:Interaction.Triggers>
-					<Triggers:EventTrigger EventName="Tap"
-										   IsHandled="True">
-						<i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}" />
-					</Triggers:EventTrigger>
-				</i:Interaction.Triggers>
-				<Grid>
-					<Ellipse Height="40"
-							 Width="40"
-							 Fill="Transparent" />
-					<Rectangle Height="30"
-							   Width="30"
-							   Fill="{StaticResource BrushIconCurrentLocationBlack}"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center" />
-				</Grid>
-			</Maps:Pushpin>
 			<Maps:MapLayer x:Name="PushpinsLayer"
 						   CodifyControls:PanelExtension.ItemsSource="{Binding Pushpins}"
 						   CodifyControls:PanelExtension.Delay="0:0:0.1">
@@ -923,7 +923,7 @@
 				<TextBox x:Name="FromTextBox"
 						 Grid.Column="1"
 						 GotFocus="OnTextBoxGotFocus"
-						 Text="{Binding DepartLocation.Value.Address, Mode=TwoWay}"
+						 Text="{Binding DepartureLocation.Address, Mode=TwoWay}"
 						 VerticalAlignment="Center">
 					<TextBox.InputScope>
 						<InputScope>
@@ -945,7 +945,7 @@
 						 Grid.Column="1"
 						 Grid.Row="1"
 						 GotFocus="OnTextBoxGotFocus"
-						 Text="{Binding ArriveLocation.Value.Address, Mode=TwoWay}"
+						 Text="{Binding ArrivalLocation.Address, Mode=TwoWay}"
 						 VerticalAlignment="Center">
 					<TextBox.InputScope>
 						<InputScope>
@@ -970,12 +970,10 @@
 						<ColumnDefinition />
 						<ColumnDefinition />
 					</Grid.ColumnDefinitions>
-					<toolkit:ListPicker Style="{StaticResource ListPickerStyle}"
-										ItemsSource="{Binding TravelModes}"
+					<toolkit:ListPicker ItemsSource="{Binding TravelModes}"
 										ItemTemplate="{StaticResource DataTemplateKeyValueIcon}"
 										SelectedItem="{Binding SelectedTravelMode.Value, Converter={StaticResource RouteModeKeyValueIconConverter}, Mode=TwoWay}" />
-					<toolkit:ListPicker Style="{StaticResource ListPickerStyle}"
-										Grid.Column="1"
+					<toolkit:ListPicker Grid.Column="1"
 										ItemsSource="{Binding RouteMethods, Mode=OneTime}"
 										ItemTemplate="{StaticResource DataTemplateKeyValueIcon}"
 										SelectedItem="{Binding SelectedRouteMethod.Value, Converter={StaticResource RouteMethodKeyValueIconConverter}, Mode=TwoWay}" />

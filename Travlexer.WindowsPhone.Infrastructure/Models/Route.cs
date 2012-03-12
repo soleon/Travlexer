@@ -8,9 +8,32 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 {
 	public class Route : ModelBase
 	{
+		#region Constructors
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Route"/> class.
+		/// </summary>
+		public Route()
+		{
+			Id = Guid.NewGuid();
+		}
+
+		#endregion
+
+
 		#region Public Properties
 
 		public List<Location> Points { get; set; }
+
+		public RouteMethod Method { get; set; }
+
+		public TravelMode Mode { get; set; }
+
+		public Guid DeparturePlaceId { get; set; }
+
+		public Guid ArrivalPlaceId { get; set; }
+
+		public Guid Id { get; set; }
 
 		public string Name
 		{
@@ -20,10 +43,6 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 
 		private string _name;
 		private const string NameProperty = "Name";
-
-		public RouteMethod Method { get; set; }
-
-		public TravelMode Mode { get; set; }
 
 		public ElementColor Color
 		{

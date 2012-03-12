@@ -8,19 +8,6 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 	/// </summary>
 	public class RouteLocation : ModelBase
 	{
-		#region Constructor
-
-		public RouteLocation(Guid placeId, string address)
-		{
-			PlaceId = placeId;
-			_address = address;
-		}
-
-		public RouteLocation() {}
-
-		#endregion
-
-
 		#region Public Properties
 
 		public Guid PlaceId { get; set; }

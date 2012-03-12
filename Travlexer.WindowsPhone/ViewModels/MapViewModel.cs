@@ -40,14 +40,17 @@ namespace Travlexer.WindowsPhone.ViewModels
 		#region Private Members
 
 		private readonly GeoCoordinateWatcher _geoWatcher;
+
 		private AppBarButtonViewModel
 			_trackButton,
 			_keepSearchResultButton,
 			_deletePlaceButton;
+
 		private ObservableCollection<AppBarButtonViewModel>
 			_defaultButtonItemsSource,
 			_routeSelectedButtonItemsSource,
 			_pushpinSelectedButtonItemsSource;
+
 		private ObservableCollection<AppBarMenuItemViewModel>
 			_appBarMenuItemsSource;
 
@@ -101,6 +104,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
 			Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), DataContext.Places);
 			Routes = new AdaptedObservableCollection<Route, RouteViewModel>(r => new RouteViewModel(r, this), DataContext.Routes);
+			DepartureLocation = new RouteLocation();
+			ArrivalLocation = new RouteLocation();
 
 			// Initialise commands.
 			CommandGetSuggestions = new DelegateCommand(OnGetSuggestions);
@@ -133,9 +138,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = Layer.SatelliteHybrid);
 			CommandToggleMapOverlay = new DelegateCommand<Layer>(DataContext.ToggleMapOverlay);
 			CommandToggleToolbar = new DelegateCommand(ApplicationContext.ToggleToolbarState);
-			CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartLocation.Value.Address = CurrentLocationString);
-			CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArriveLocation.Value.Address = CurrentLocationString);
-			CommandRoute = new DelegateCommand(OnRoute, () => !DepartLocation.Value.Address.IsNullOrEmpty() && !ArriveLocation.Value.Address.IsNullOrEmpty());
+			CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartureLocation.Address = CurrentLocationString);
+			CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArrivalLocation.Address = CurrentLocationString);
+			CommandRoute = new DelegateCommand(OnRoute);
 
 			// Initialise geo-coordinate watcher.
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
@@ -152,8 +157,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 			DataContext.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
 			VisualState.ValueChanged += OnVisualStateChanged;
 			IsTrackingCurrentLocation.ValueChanged += OnIsTrackingCurrentLocationValueChanged;
-			DepartLocation.Value.PropertyChanged += (s, e) => CommandRoute.NotifyCanExecuteChanged();
-			ArriveLocation.Value.PropertyChanged += (s, e) => CommandRoute.NotifyCanExecuteChanged();
 
 			// Automatically track current position at first run.
 			if (ApplicationContext.IsFirstRun)
@@ -446,20 +449,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 		}
 
 		/// <summary>
-		/// Gets the depart location.
+		/// Gets the departure location.
 		/// </summary>
-		public ObservableValue<RouteLocation> DepartLocation
-		{
-			get { return DataContext.DepartLocation; }
-		}
+		public RouteLocation DepartureLocation { get; private set; }
 
 		/// <summary>
-		/// Gets the arrive location.
+		/// Gets the arrival location.
 		/// </summary>
-		public ObservableValue<RouteLocation> ArriveLocation
-		{
-			get { return DataContext.ArriveLocation; }
-		}
+		public RouteLocation ArrivalLocation { get; private set; }
 
 		/// <summary>
 		/// Gets the application bar button items sources.
@@ -868,10 +865,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnRoute()
 		{
-			var departLocation = DepartLocation.Value;
-			var arriveLocation = ArriveLocation.Value;
-			var departAddress = departLocation.Address;
-			var arriveAddress = arriveLocation.Address;
+			if (DepartureLocation.Address.IsNullOrEmpty() || ArrivalLocation.Address.IsNullOrEmpty())
+			{
+				return;
+			}
+			var departureLocation = DepartureLocation;
+			var arrivalLocation = ArrivalLocation;
+			var departAddress = departureLocation.Address;
+			var arriveAddress = arrivalLocation.Address;
 			if (departAddress == arriveAddress)
 			{
 				MessageBox.Show("We don't think finding routes between the same location is necessary.", "Same Location", MessageBoxButton.OK);
@@ -912,18 +913,29 @@ namespace Travlexer.WindowsPhone.ViewModels
 					MessageBox.Show("It looks like the specified locations are too close to plan a route.", "Locations Too Close", MessageBoxButton.OK);
 					return;
 				}
+
 				IsTrackingCurrentLocation.Value = false;
-				if (count > 0)
+
+				if (DataContext.Places.All(p => p.Id != departureLocation.PlaceId))
 				{
-					if (DataContext.Places.All(p => p.Id != departLocation.PlaceId))
-					{
-						DataContext.AddNewPlace(points[0]);
-					}
-					if (count > 1 && DataContext.Places.All(p => p.Id != arriveLocation.PlaceId))
-					{
-						DataContext.AddNewPlace(points[count - 1]);
-					}
+					var place = DataContext.AddNewPlace(points[0]);
+					route.DeparturePlaceId = place.Id;
 				}
+				else
+				{
+					route.DeparturePlaceId = departureLocation.PlaceId;
+				}
+
+				if (count > 1 && DataContext.Places.All(p => p.Id != arrivalLocation.PlaceId))
+				{
+					var place = DataContext.AddNewPlace(points[count - 1]);
+					route.ArrivalPlaceId = place.Id;
+				}
+				else
+				{
+					route.ArrivalPlaceId = arrivalLocation.PlaceId;
+				}
+
 				RouteSucceeded.ExecuteIfNotNull(route);
 			});
 		}
@@ -950,7 +962,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		{
 			var place = SelectedPushpin.Data;
 			SelectedPushpin = null;
-			var location = ArriveLocation.Value;
+			var location = ArrivalLocation;
 			location.Address = place.Address ?? place.Location.ToString();
 			location.PlaceId = place.Id;
 			VisualState.Value = VisualStates.Route;
@@ -963,7 +975,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		{
 			var place = SelectedPushpin.Data;
 			SelectedPushpin = null;
-			var location = DepartLocation.Value;
+			var location = DepartureLocation;
 			location.Address = place.Address ?? place.Location.ToString();
 			location.PlaceId = place.Id;
 			VisualState.Value = VisualStates.Route;
@@ -972,9 +984,30 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <summary>
 		/// Called when the "remove" application bar button is pressed when a route is selected.
 		/// </summary>
-		private void OnRemoveSelectedRoute()
+		private void OnDeleteSelectedRoute()
 		{
-			DataContext.RemoveRoute(SelectedRoute.Data);
+			var route = SelectedRoute.Data;
+			if (MessageBox.Show("Do you want to remove the departure and arrival locations too?", "Remove Locations", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+			{
+				var count = 0;
+				var places = DataContext.Places;
+				for (var i = places.Count - 1; i >= 0; i--)
+				{
+					var place = places[i];
+					var id = place.Id;
+					if (id != route.DeparturePlaceId && id != route.ArrivalPlaceId)
+					{
+						continue;
+					}
+					DataContext.RemovePlace(place);
+					if (count == 1)
+					{
+						break;
+					}
+					count++;
+				}
+			}
+			DataContext.RemoveRoute(route);
 			SelectedRoute = null;
 		}
 
@@ -1039,7 +1072,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					{
 						IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
 						Text = "remove",
-						Command = new DelegateCommand(OnRemoveSelectedRoute)
+						Command = new DelegateCommand(OnDeleteSelectedRoute)
 					}
 				},
 				_pushpinSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
