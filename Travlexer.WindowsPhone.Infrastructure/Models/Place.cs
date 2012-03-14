@@ -192,34 +192,15 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 
 		public static implicit operator Place(Codify.GoogleMaps.Entities.Place place)
 		{
-			return new Place { Id = Guid.NewGuid() }.CopyFrom(place);
-		}
-
-		#endregion
-
-
-		#region Public Methods
-
-		/// <summary>
-		/// Copies information from a <see cref="T:Codify.GoogleMaps.Entities.Place"/> to this instance.
-		/// </summary>
-		/// <param name="place">The place.</param>
-		public Place CopyFrom(Codify.GoogleMaps.Entities.Place place)
-		{
-			Location = place.Geometry.Location;
-			ContactNumber = place.InternationalPhoneNumber ?? place.FormattedPhoneNumber;
-			Address = place.FormattedAddress;
-			ViewPort = place.Geometry.ViewPort;
-			Reference = place.Reference;
-			WebSite = place.WebSite;
-			Rating = place.Raiting;
-
-			if (!string.IsNullOrEmpty(place.Name))
+			return new Place(place.Geometry.Location, name: place.Name)
 			{
-				Name = place.Name;
-			}
-
-			return this;
+				ContactNumber = place.InternationalPhoneNumber ?? place.FormattedPhoneNumber,
+				Address = place.FormattedAddress,
+				ViewPort = place.Geometry.ViewPort,
+				Reference = place.Reference,
+				WebSite = place.WebSite,
+				Rating = place.Raiting
+			};
 		}
 
 		#endregion

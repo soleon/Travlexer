@@ -869,41 +869,63 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				return;
 			}
+
 			var departureLocation = DepartureLocation;
 			var arrivalLocation = ArrivalLocation;
-			var departAddress = departureLocation.Address;
-			var arriveAddress = arrivalLocation.Address;
-			if (departAddress == arriveAddress)
+			
+			string departureAddress;
+			if (departureLocation.PlaceId != Guid.Empty)
+			{
+				var departurePlace = DataContext.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
+				departureAddress = departurePlace == null ? departureLocation.Address : departurePlace.Location.ToString();
+			}
+			else
+			{
+				departureAddress = departureLocation.Address;
+			}
+			
+			string arrivalAddress;
+			if (arrivalLocation.PlaceId != Guid.Empty)
+			{
+				var arrivalPlace = DataContext.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
+				arrivalAddress = arrivalPlace == null ? arrivalLocation.Address : arrivalPlace.Location.ToString();
+			}
+			else
+			{
+				arrivalAddress = arrivalLocation.Address;
+			}
+
+			if (departureAddress == arrivalAddress)
 			{
 				MessageBox.Show("We don't think finding routes between the same location is necessary.", "Same Location", MessageBoxButton.OK);
 				return;
 			}
-			if (departAddress == CurrentLocationString || arriveAddress == CurrentLocationString)
+			if (departureAddress == CurrentLocationString || arrivalAddress == CurrentLocationString)
 			{
 				if (CurrentLocation == null || CurrentLocation.IsUnknown)
 				{
 					MessageBox.Show("Your current location is unavailable at the moment.", "No Current Location", MessageBoxButton.OK);
 					return;
 				}
-				if (departAddress == CurrentLocationString)
+				if (departureAddress == CurrentLocationString)
 				{
-					departAddress = CurrentLocation.ToString();
+					departureAddress = CurrentLocation.ToString();
 				}
 				else
 				{
-					arriveAddress = CurrentLocation.ToString();
+					arrivalAddress = CurrentLocation.ToString();
 				}
 			}
 
 			IsBusy.Value = true;
 			VisualState.Value = VisualStates.Default;
-			DataContext.GetRoute(departAddress, arriveAddress, SelectedTravelMode.Value, SelectedRouteMethod.Value, callback =>
+			DataContext.GetRoute(departureAddress, arrivalAddress, SelectedTravelMode.Value, SelectedRouteMethod.Value, callback =>
 			{
 				IsBusy.Value = false;
-				var route = callback.Result;
-				var points = route.Points;
-				var count = points.Count;
-				if (callback.Status != CallbackStatus.Successful || count == 0)
+				Route route;
+				List<Location> points;
+				int count;
+				if (callback.Status != CallbackStatus.Successful || (count = (points = (route = callback.Result).Points).Count) == 0)
 				{
 					MessageBox.Show("We couldn't find a route between the specified locations.", "No Routes Found", MessageBoxButton.OK);
 					return;

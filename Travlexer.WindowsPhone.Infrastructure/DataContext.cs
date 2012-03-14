@@ -221,7 +221,21 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			place.DataState = DataStates.Busy;
 			ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>>(
 				(c, a) => c.GetPlaces(place.Location, a),
-				r => place.CopyFrom(r.Result[0]),
+				r =>
+				{
+					var result = r.Result[0];
+					place.ContactNumber = result.InternationalPhoneNumber ?? result.FormattedPhoneNumber;
+					place.Address = result.FormattedAddress;
+					place.ViewPort = result.Geometry.ViewPort;
+					place.Reference = result.Reference;
+					place.WebSite = result.WebSite;
+					place.Rating = result.Raiting;
+
+					if (!string.IsNullOrEmpty(result.Name))
+					{
+						place.Name = result.Name;
+					}
+				},
 				args =>
 				{
 					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Finished : DataStates.Error;
@@ -281,7 +295,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				r =>
 				{
 					ClearSearchResults();
-					var place = (Place) r.Result;
+					var place = (Place)r.Result;
 					place.IsSearchResult = true;
 					_places.Add(place);
 					return place;
@@ -302,7 +316,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				r =>
 				{
 					ClearSearchResults();
-					var places = r.Result.Count > 10 ? r.Result.Take(10).Select(p => (Place) p).ToList() : r.Result.Select(p => (Place) p).ToList();
+					var places = r.Result.Count > 10 ? r.Result.Take(10).Select(p => (Place)p).ToList() : r.Result.Select(p => (Place)p).ToList();
 					foreach (var p in places)
 					{
 						p.IsSearchResult = true;
@@ -330,7 +344,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 						r =>
 						{
 							ClearSearchResults();
-							var place = (Place) r.Result[0];
+							var place = (Place)r.Result[0];
 							if (string.IsNullOrEmpty(place.Name))
 							{
 								place.Name = defaultSearchName;
@@ -354,7 +368,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		{
 			ProcessCall<AutoCompleteResponse, List<Suggestion>, List<SearchSuggestion>>(
 				(c, r) => c.GetSuggestions(location, input, r),
-				r => new List<SearchSuggestion>(r.Result.Select(s => (SearchSuggestion) s).ToList()),
+				r => new List<SearchSuggestion>(r.Result.Select(s => (SearchSuggestion)s).ToList()),
 				callback);
 		}
 
@@ -404,7 +418,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public static void SaveContext()
 		{
 			// Save map center.
-			StorageProvider.SaveSetting(MapCenterProperty, (Location) MapCenter.Value);
+			StorageProvider.SaveSetting(MapCenterProperty, (Location)MapCenter.Value);
 
 			// Save map zoom level.
 			StorageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel.Value);
@@ -539,10 +553,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				TResponse data = null;
 				TResult result;
 				if (r.StatusCode != HttpStatusCode.OK ||
-				    (data = r.Data) == null ||
-				    data.Status != StatusCodes.OK ||
-				    (result = data.Result) == null ||
-				    (result is IList && ((IList) result).Count == 0))
+					(data = r.Data) == null ||
+					data.Status != StatusCodes.OK ||
+					(result = data.Result) == null ||
+					(result is IList && ((IList)result).Count == 0))
 				{
 					var exception = r.ErrorException;
 					if (exception != null)
@@ -578,10 +592,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				TResponse data = null;
 				TResult result;
 				if (r.StatusCode != HttpStatusCode.OK ||
-				    (data = r.Data) == null ||
-				    data.Status != StatusCodes.OK ||
-				    (result = data.Result) == null ||
-				    (result is IList && ((IList) result).Count == 0))
+					(data = r.Data) == null ||
+					data.Status != StatusCodes.OK ||
+					(result = data.Result) == null ||
+					(result is IList && ((IList)result).Count == 0))
 				{
 					var exception = r.ErrorException;
 					if (exception != null)

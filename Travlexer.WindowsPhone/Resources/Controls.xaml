@@ -11,8 +11,7 @@
 					xmlns:Codify="clr-namespace:Codify;assembly=Codify"
 					xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
 					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
-					xmlns:System="clr-namespace:System;assembly=mscorlib"
-					mc:Ignorable="d">
+                    mc:Ignorable="d">
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="Brushes.xaml" />
 	</ResourceDictionary.MergedDictionaries>
@@ -336,6 +335,42 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+	<Style TargetType="HyperlinkButton">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="HyperlinkButton">
+					<Border Background="Transparent">
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal"/>
+								<VisualState x:Name="MouseOver"/>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="TextElement"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="TextElement">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+							<VisualStateGroup x:Name="FocusStates">
+								<VisualState x:Name="Unfocused"/>
+								<VisualState x:Name="Focused"/>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+							<TextBlock x:Name="TextElement" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Text="{TemplateBinding Content}" TextDecorations="Underline" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						</Border>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+	</Style>
 	<Style TargetType="Controls:PushpinContent">
 		<Setter Property="Template">
 			<Setter.Value>
@@ -450,8 +485,7 @@
 								Text="{Binding Title, RelativeSource={RelativeSource TemplatedParent}}"
 								VerticalAlignment="Top" />
 							<TextBlock x:Name="Address"
-								Height="25"
-								Margin="0,35,0,0"
+								Margin="0,40,0,0"
 								Width="230"
 								FontSize="{StaticResource PhoneFontSizeSmall}"
 								HorizontalAlignment="Left"
@@ -461,7 +495,7 @@
 								VerticalAlignment="Top"
 								Visibility="Collapsed"
 								x:Name="ErrorText"
-								Height="60"
+								Height="65"
 								Width="230">
 								<Button Style="{StaticResource EmptyButton}"
 									HorizontalContentAlignment="Left"
@@ -480,7 +514,7 @@
 							</ContentPresenter>
 							<TextBlock x:Name="WorkingText"
 								Height="25"
-								Margin="0,35,0,0"
+								Margin="0,40,0,0"
 								Width="230"
 								FontSize="18"
 								HorizontalAlignment="Left"
@@ -488,9 +522,9 @@
 								VerticalAlignment="Top"
 								Visibility="Collapsed" />
 							<HyperlinkButton x:Name="ContactNumber" Content="{Binding ContactNumber, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource PhoneFontSizeSmall}" Visibility="{Binding ContactNumber, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,70,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-							<TextBlock Visibility="{Binding ContactNumber, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Text="Contact Number: N/A" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,70,0,0" FontSize="{StaticResource PhoneFontSizeSmall}" FontStyle="Italic" Opacity="0.5"/>
+							<TextBlock Visibility="{Binding ContactNumber, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Text="No contact number found" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,70,0,0" FontSize="{StaticResource PhoneFontSizeSmall}" FontStyle="Italic" Opacity="0.5"/>
 							<HyperlinkButton x:Name="WebSite" Content="{Binding WebSite, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource PhoneFontSizeSmall}" Visibility="{Binding WebSite, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,100,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-							<TextBlock Visibility="{Binding WebSite, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Text="Web Site: N/A" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeSmall}" Margin="0,100,0,0" FontStyle="Italic" Opacity="0.5"/>
+							<TextBlock Visibility="{Binding WebSite, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}" Text="No web site found" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeSmall}" Margin="0,100,0,0" FontStyle="Italic" Opacity="0.5"/>
 						</Grid>
 					</Grid>
 				</ControlTemplate>
