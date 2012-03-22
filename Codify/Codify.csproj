@@ -56,6 +56,7 @@
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DesignTime.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Imaging\UIBitmap.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\NotifyBase.cs" />

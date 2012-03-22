@@ -24,7 +24,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		static ApplicationContext()
 		{
 			ToolbarState = new ObservableValue<ExpansionStates>();
-			IsBusy = new ObservableValue<bool> { Value = false };
+			IsBusy = new ObservableValue<bool>(false, true);
 			IsTrackingCurrentLocation = new ObservableValue<bool>();
 			IsOnline = new ObservableValue<bool>(true);
 			IsBusy.ValueChanging += OnIsLoadingChanging;

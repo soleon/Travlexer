@@ -27,9 +27,11 @@ namespace Codify.GoogleMaps
 		private readonly string _baseAutoCompleteUrl;
 		private readonly string _baseStaticMapUrl;
 
-		// Rest request handles for aborting overlapping requests.
-		private RestRequestAsyncHandle _getSuggestionsAsyncHandle;
-		private RestRequestAsyncHandle _searchAsyncHandle;
+		// Global REST request handles for aborting the requests when needed.
+		private RestRequestAsyncHandle
+			_getSuggestionsAsyncHandle,
+			_searchAsyncHandle,
+			_getDirectionsAsyncHandle;
 
 		// Static mapping dictionaries.
 		private static readonly Dictionary<TravelMode, string> _routeModes = new Dictionary<TravelMode, string>
@@ -125,8 +127,8 @@ namespace Codify.GoogleMaps
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		public void GetSuggestions(LatLng center, string input, Action<RestResponse<AutoCompleteResponse>> callback = null)
 		{
-			// Ensure single request response.
-			_getSuggestionsAsyncHandle.ExecuteIfNotNull(handle => handle.Abort());
+			// Ensure single effective request.
+			CancelGetSuggestions();
 
 			_getSuggestionsAsyncHandle = ProcessRequest<AutoCompleteResponse, List<Suggestion>>(
 				new RestRequest(_baseAutoCompleteUrl + "&location=" + center + "&input=" + input),
@@ -146,8 +148,8 @@ namespace Codify.GoogleMaps
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		public void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null)
 		{
-			// Ensure single request response.
-			_searchAsyncHandle.ExecuteIfNotNull(handle => handle.Abort());
+			// Ensure single effective request.
+			_searchAsyncHandle.UseIfNotNull(handle => handle.Abort());
 
 			_searchAsyncHandle = ProcessRequest<ListResponse<Place>, List<Place>>(
 				new RestRequest(_basePlacesSearchUrl + "&location=" + center + "&keyword=" + HttpUtility.UrlEncode(input)),
@@ -164,11 +166,7 @@ namespace Codify.GoogleMaps
 		/// </summary>
 		public void CancelGetSuggestions()
 		{
-			if (_getSuggestionsAsyncHandle == null)
-			{
-				return;
-			}
-			_getSuggestionsAsyncHandle.Abort();
+			_getSuggestionsAsyncHandle.UseIfNotNull(h=>h.Abort());
 		}
 
 		/// <summary>
@@ -182,13 +180,20 @@ namespace Codify.GoogleMaps
 		/// <param name="callback">The callback to execute after the process is finished.</param>
 		public void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Unit unit, Action<RestResponse<RoutesResponse>> callback)
 		{
+			// Ensure single effective request.
+			_getDirectionsAsyncHandle.UseIfNotNull(h => h.Abort());
+
 			var routeMode = _routeModes[mode];
 			var routeMethod = _routeMethods[method];
 			var routeUnit = _units[unit];
-			ProcessRequest<RoutesResponse, List<Route>>(
+			_getDirectionsAsyncHandle = ProcessRequest<RoutesResponse, List<Route>>(
 				new RestRequest(_baseDirectionsUrl + "&origin=" + origin + "&destination=" + destination + "&mode=" + routeMode + (routeMethod == null ? null : "&avoid=" + routeMethod) + "&units=" + routeUnit),
 				r => r.Data = _jsonSerializer.Deserialize<RoutesResponse>(r.Content),
-				callback:callback);
+				callback: r =>
+				{
+					_getDirectionsAsyncHandle = null;
+					callback.ExecuteIfNotNull(r);
+				});
 		}
 
 

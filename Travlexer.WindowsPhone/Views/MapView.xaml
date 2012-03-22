@@ -209,8 +209,7 @@
 							<DoubleAnimation Storyboard.TargetName="RouteContentPanel"
 											 Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
 											 Duration="0:0:0.3"
-											 EasingFunction="{StaticResource EasingQuinticOut}"
-											 To="-213" />
+											 EasingFunction="{StaticResource EasingQuinticOut}" />
 							<DoubleAnimation Storyboard.TargetName="RouteBackground"
 											 Storyboard.TargetProperty="(UIElement.Opacity)"
 											 Duration="0:0:0.3" />
@@ -897,14 +896,18 @@
 			<Grid x:Name="RouteContentPanel"
 				  Background="{StaticResource PhoneChromeBrush}"
 				  RenderTransformOrigin="0.5,0.5"
-				  VerticalAlignment="Top">
+				  VerticalAlignment="Top"
+				  Height="300">
 				<i:Interaction.Triggers>
 					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}">
 						<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
 					</Triggers:RootTouchTrigger>
+					<Triggers:KeyPressTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}" Key="Enter">
+						<i:InvokeCommandAction Command="{Binding CommandRoute, Mode=OneTime}"/>
+					</Triggers:KeyPressTrigger>
 				</i:Interaction.Triggers>
 				<Grid.RenderTransform>
-					<CompositeTransform TranslateY="-213" />
+					<CompositeTransform TranslateY="-300" />
 				</Grid.RenderTransform>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />

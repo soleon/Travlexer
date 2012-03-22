@@ -16,10 +16,14 @@ namespace Codify.Models
 		/// Initializes a new instance of the <see cref="ObservableValue{T}"/> class.
 		/// </summary>
 		/// <param name="defaultValue">The default value for <see cref="Value"/> property.</param>
-		/// <remarks>Supplying the default value does not raise the <see cref="ValueChanged"/> event.</remarks>
-		public ObservableValue(T defaultValue)
+		/// <param name="ignoreValueEqualityCheck">if set to <c>true</c> ignores value equality check and always notify value change.</param>
+		/// <remarks>
+		/// Supplying the default value does not raise the <see cref="ValueChanged"/> event.
+		/// </remarks>
+		public ObservableValue(T defaultValue, bool ignoreValueEqualityCheck = false)
 		{
 			_value = defaultValue;
+			IgnoreValueEqualityCheck = ignoreValueEqualityCheck;
 		}
 
 		#endregion
@@ -55,7 +59,7 @@ namespace Codify.Models
 			get { return _value; }
 			set
 			{
-				if (Equals(_value, value))
+				if (!IgnoreValueEqualityCheck && Equals(_value, value))
 				{
 					return;
 				}
@@ -73,6 +77,11 @@ namespace Codify.Models
 
 		private T _value;
 		private const string ValueProperty = "Value";
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance raises value change related events even if the value is set to the same.
+		/// </summary>
+		public bool IgnoreValueEqualityCheck { get; set; }
 
 		#endregion
 	}

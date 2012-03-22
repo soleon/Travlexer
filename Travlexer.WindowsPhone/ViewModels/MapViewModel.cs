@@ -689,7 +689,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				ApplicationContext.IsBusy.Value = false;
 				if (callback.Status != CallbackStatus.Successful)
 				{
-					MessageBox.Show("We didn't find anything in the search.", "Nothing Found", MessageBoxButton.OK);
+					MessageBox.Show("Sorry, we couldn't find anything for you.", "Nothing Was Found", MessageBoxButton.OK);
 					return;
 				}
 				IsTrackingCurrentLocation.Value = false;
@@ -739,10 +739,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				ApplicationContext.IsBusy.Value = false;
 				if (args.Status != CallbackStatus.Successful)
 				{
-					const string
-						messageBoxText = "There was a problem getting information for your selected place, please try again later.",
-						caption = "Unable to find place";
-					MessageBox.Show(messageBoxText, caption, MessageBoxButton.OK);
+					MessageBox.Show("Sorry, we couldn't get any information for your selected place.", "No Information Found", MessageBoxButton.OK);
 					return;
 				}
 				IsTrackingCurrentLocation.Value = false;
@@ -927,7 +924,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				int count;
 				if (callback.Status != CallbackStatus.Successful || (count = (points = (route = callback.Result).Points).Count) <= 0)
 				{
-					MessageBox.Show("We couldn't find a route between the specified locations.", "No Routes Found", MessageBoxButton.OK);
+					MessageBox.Show("Sorry, we couldn't find a route between the specified locations.", "No Routes Found", MessageBoxButton.OK);
 					return;
 				}
 				if (count <= 1)
@@ -1023,7 +1020,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private void OnDeleteSelectedRoute()
 		{
 			var route = SelectedRoute.Data;
-			if (MessageBox.Show("Do you want to remove the departure and arrival locations too?", "Remove Locations", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+			if (MessageBox.Show("Do you want to remove the departure and arrival pins too?", "Also Remove Pins", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
 			{
 				var count = 0;
 				var places = DataContext.Places;
