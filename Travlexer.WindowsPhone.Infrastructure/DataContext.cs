@@ -275,7 +275,21 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			place.DataState = DataStates.Busy;
 			ProcessCall<Response<Codify.GoogleMaps.Entities.Place>, Codify.GoogleMaps.Entities.Place>(
 				(c, r) => c.GetPlaceDetails(place.Reference, r),
-				r => place.CopyFrom(r.Result),
+				r =>
+				{
+					var result = r.Result;
+					place.ContactNumber = result.InternationalPhoneNumber ?? result.FormattedPhoneNumber;
+					place.Address = result.FormattedAddress;
+					place.ViewPort = result.Geometry.ViewPort;
+					place.Reference = result.Reference;
+					place.WebSite = result.WebSite;
+					place.Rating = result.Raiting;
+
+					if (!string.IsNullOrEmpty(result.Name))
+					{
+						place.Name = result.Name;
+					}
+				},
 				args =>
 				{
 					place.DataState = args.Status == CallbackStatus.Successful ? DataStates.Finished : DataStates.Error;
@@ -395,11 +409,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 				response =>
 				{
 					var route = (Route)response.Result.FirstOrDefault();
-					if (route != null && route.Points.Count > 1 && _routes.All(r => r != route))
+					Route existingRoute = null;
+					if (route != null && route.Points.Count > 1 && (existingRoute = _routes.FirstOrDefault(r => r == route)) == null)
 					{
 						_routes.Add(route);
+						return route;
 					}
-					return route;
+					return existingRoute;
 				},
 				callback);
 		}

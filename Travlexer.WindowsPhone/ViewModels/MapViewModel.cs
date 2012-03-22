@@ -872,7 +872,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 			var departureLocation = DepartureLocation;
 			var arrivalLocation = ArrivalLocation;
-			
+
 			string departureAddress;
 			if (departureLocation.PlaceId != Guid.Empty)
 			{
@@ -883,7 +883,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				departureAddress = departureLocation.Address;
 			}
-			
+
 			string arrivalAddress;
 			if (arrivalLocation.PlaceId != Guid.Empty)
 			{
@@ -925,12 +925,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 				Route route;
 				List<Location> points;
 				int count;
-				if (callback.Status != CallbackStatus.Successful || (count = (points = (route = callback.Result).Points).Count) == 0)
+				if (callback.Status != CallbackStatus.Successful || (count = (points = (route = callback.Result).Points).Count) <= 0)
 				{
 					MessageBox.Show("We couldn't find a route between the specified locations.", "No Routes Found", MessageBoxButton.OK);
 					return;
 				}
-				if (count == 1)
+				if (count <= 1)
 				{
 					MessageBox.Show("It looks like the specified locations are too close to plan a route.", "Locations Too Close", MessageBoxButton.OK);
 					return;
@@ -938,9 +938,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 				IsTrackingCurrentLocation.Value = false;
 
-				if (DataContext.Places.All(p => p.Id != departureLocation.PlaceId))
+				// Check if there's already a departure place.
+				var place = DataContext.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
+				if (place == null)
 				{
-					var place = DataContext.AddNewPlace(points[0]);
+					var point = points[0];
+					place = DataContext.Places.FirstOrDefault(p => p.Location == point);
+					if (place == null)
+					{
+						place = DataContext.AddNewPlace(point);
+					}
 					route.DeparturePlaceId = place.Id;
 				}
 				else
@@ -948,9 +955,16 @@ namespace Travlexer.WindowsPhone.ViewModels
 					route.DeparturePlaceId = departureLocation.PlaceId;
 				}
 
-				if (count > 1 && DataContext.Places.All(p => p.Id != arrivalLocation.PlaceId))
+				// Check if there's already an arrival place.
+				place = DataContext.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
+				if (place == null)
 				{
-					var place = DataContext.AddNewPlace(points[count - 1]);
+					var point = points[count - 1];
+					place = DataContext.Places.FirstOrDefault(p => p.Location == point);
+					if (place == null)
+					{
+						place = DataContext.AddNewPlace(point);
+					}
 					route.ArrivalPlaceId = place.Id;
 				}
 				else
