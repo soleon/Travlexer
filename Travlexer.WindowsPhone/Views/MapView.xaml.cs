@@ -23,7 +23,6 @@ using Codify.Threading;
 using Codify.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
-using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework.Media;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
@@ -59,7 +58,6 @@ namespace Travlexer.WindowsPhone.Views
 		#region Private Members
 
 		private readonly MapViewModel _context;
-		private readonly IApplicationBar _appBar;
 		private readonly Dictionary<int, List<QuadKey>> _cachedTileImageKeys = new Dictionary<int, List<QuadKey>>();
 		private readonly Style _tilePushpinStyle;
 		private readonly ScaleTransform _tileScaleTransform;
@@ -101,7 +99,6 @@ namespace Travlexer.WindowsPhone.Views
 #endif
 
 			_context = DataContext as MapViewModel;
-			_appBar = ApplicationBar;
 
 			if (_context == null)
 			{

@@ -50,6 +50,7 @@
     <Reference Include="System.Windows.Interactivity, Version=3.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\RealTimeBindingBehavior.cs" />
     <Compile Include="Controls\ItemsControlExtension.cs" />
     <Compile Include="Controls\PanelExtension.cs" />
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />

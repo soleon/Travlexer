@@ -587,11 +587,11 @@
 												  StrokeThickness="8"
 												  StrokeStartLineCap="Round"
 												  StrokeEndLineCap="Round" />
-							<Maps:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
+							<!--<Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
 											  Stroke="{StaticResource PhoneForegroundBrush}"
 											  StrokeThickness="4"
 											  StrokeStartLineCap="Round"
-											  StrokeEndLineCap="Round" />
+											  StrokeEndLineCap="Round" />-->
 						</Maps:MapLayer>
 					</DataTemplate>
 				</CodifyControls:PanelExtension.ItemTemplate>
@@ -655,11 +655,11 @@
 										  StrokeThickness="8"
 										  StrokeStartLineCap="Round"
 										  StrokeEndLineCap="Round" />
-					<Maps:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
+					<!--<Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
 									  Stroke="{StaticResource PhoneForegroundBrush}"
 									  StrokeThickness="4"
 									  StrokeStartLineCap="Round"
-									  StrokeEndLineCap="Round" />
+									  StrokeEndLineCap="Round" />-->
 				</Maps:MapLayer>
 			</Maps:MapLayer>
 			<Maps:MapLayer x:Name="SelectedPushpinLayer"
@@ -928,6 +928,9 @@
 						 GotFocus="OnTextBoxGotFocus"
 						 Text="{Binding DepartureLocation.Address, Mode=TwoWay}"
 						 VerticalAlignment="Center">
+					<i:Interaction.Behaviors>
+						<Behaviors:RealTimeBindingBehavior/>
+					</i:Interaction.Behaviors>
 					<TextBox.InputScope>
 						<InputScope>
 							<InputScopeName NameValue="Search" />
@@ -950,6 +953,9 @@
 						 GotFocus="OnTextBoxGotFocus"
 						 Text="{Binding ArrivalLocation.Address, Mode=TwoWay}"
 						 VerticalAlignment="Center">
+					<i:Interaction.Behaviors>
+						<Behaviors:RealTimeBindingBehavior/>
+					</i:Interaction.Behaviors>
 					<TextBox.InputScope>
 						<InputScope>
 							<InputScopeName NameValue="Search" />
@@ -980,7 +986,7 @@
 										ItemsSource="{Binding RouteMethods, Mode=OneTime}"
 										ItemTemplate="{StaticResource DataTemplateKeyValueIcon}"
 										SelectedItem="{Binding SelectedRouteMethod.Value, Converter={StaticResource RouteMethodKeyValueIconConverter}, Mode=TwoWay}" />
-					<Button Grid.Column="1"
+					<Button x:Name="FindRoutesButton" Grid.Column="1"
 							Grid.Row="1"
 							Height="69"
 							HorizontalContentAlignment="Left"
