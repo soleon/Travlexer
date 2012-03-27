@@ -2,10 +2,11 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
-using Codify.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Travlexer.WindowsPhone.Infrastructure;
+using Travlexer.WindowsPhone.ViewModels;
+using NavigationService = Codify.WindowsPhone.NavigationService;
 
 namespace Travlexer.WindowsPhone
 {
@@ -128,7 +129,6 @@ namespace Travlexer.WindowsPhone
 		// Avoid double-initialization
 		private bool _phoneApplicationInitialized;
 
-		// Do not add any additional code to this method
 		private void InitializePhoneApplication()
 		{
 			if (_phoneApplicationInitialized)
@@ -148,14 +148,17 @@ namespace Travlexer.WindowsPhone
 			_phoneApplicationInitialized = true;
 		}
 
-		// Do not add any additional code to this method
+		//// Do not add any additional code to this method
 		private void OnCompleteInitializePhoneApplication(object sender, NavigationEventArgs e)
 		{
+			// Remove this handler since it is no longer needed
+			RootFrame.Navigated -= OnCompleteInitializePhoneApplication;
+
 			// Set the root visual to allow the application to render
 			RootVisual = RootFrame;
 
-			// Remove this handler since it is no longer needed
-			RootFrame.Navigated -= OnCompleteInitializePhoneApplication;
+			// Map views to view models.
+			NavigationService.Register(typeof(PlaceDetailsViewModel), new Uri("/Views/PlaceDetailsView.xaml", UriKind.Relative));
 		}
 
 		#endregion

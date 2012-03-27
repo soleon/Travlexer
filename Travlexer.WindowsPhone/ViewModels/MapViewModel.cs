@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
 using System.Windows;
@@ -16,6 +17,7 @@ using Codify.Models;
 using Codify.Services;
 using Codify.Threading;
 using Codify.ViewModels;
+using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.Converters;
 using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
@@ -141,6 +143,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartureLocation.Address = CurrentLocationString);
 			CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArrivalLocation.Address = CurrentLocationString);
 			CommandRoute = new DelegateCommand(OnRoute);
+			CommandActivate = new DelegateCommand(OnActivate);
+			CommandDeactivate = new DelegateCommand(OnDeactivate);
 
 			// Initialise geo-coordinate watcher.
 			_geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
@@ -606,6 +610,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public DelegateCommand CommandRoute { get; private set; }
 
+		public DelegateCommand CommandActivate { get; private set; }
+
+		public DelegateCommand CommandDeactivate { get; private set; }
+
 		#endregion
 
 
@@ -940,11 +948,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				if (place == null)
 				{
 					var point = points[0];
-					place = DataContext.Places.FirstOrDefault(p => p.Location == point);
-					if (place == null)
-					{
-						place = DataContext.AddNewPlace(point);
-					}
+					place = DataContext.Places.FirstOrDefault(p => p.Location == point) ?? DataContext.AddNewPlace(point);
 					route.DeparturePlaceId = place.Id;
 				}
 				else
@@ -957,11 +961,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				if (place == null)
 				{
 					var point = points[count - 1];
-					place = DataContext.Places.FirstOrDefault(p => p.Location == point);
-					if (place == null)
-					{
-						place = DataContext.AddNewPlace(point);
-					}
+					place = DataContext.Places.FirstOrDefault(p => p.Location == point) ?? DataContext.AddNewPlace(point);
 					route.ArrivalPlaceId = place.Id;
 				}
 				else
@@ -1044,6 +1044,43 @@ namespace Travlexer.WindowsPhone.ViewModels
 			SelectedRoute = null;
 		}
 
+		/// <summary>
+		/// Called when <see cref="Codify.WindowsPhone.NavigationService.BackKeyPress"/> event is fired.
+		/// </summary>
+		private void OnBackKeyPress(object sender, CancelEventArgs e)
+		{
+			if (VisualState.Value == VisualStates.Default)
+			{
+				return;
+			}
+			e.Cancel = true;
+			VisualState.Value = VisualStates.Default;
+		}
+
+		/// <summary>
+		/// Called when the "details" application bar button is pressed when a pushpin is selected.
+		/// </summary>
+		private void OnViewSelectedPlaceDetails()
+		{
+			NavigationService.Navigate(typeof(PlaceDetailsViewModel));
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandDeactivate"/> is executed.
+		/// </summary>
+		private void OnDeactivate()
+		{
+			NavigationService.BackKeyPress -= OnBackKeyPress;
+		}
+
+		/// <summary>
+		/// Called when <see cref="CommandActivate"/> is executed.
+		/// </summary>
+		private void OnActivate()
+		{
+			NavigationService.BackKeyPress += OnBackKeyPress;
+		}
+
 		#endregion
 
 
@@ -1113,7 +1150,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 					new AppBarButtonViewModel
 					{
 						IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
-						Text = "details"
+						Text = "details",
+						Command = new DelegateCommand(OnViewSelectedPlaceDetails)
 					},
 					new AppBarButtonViewModel
 					{

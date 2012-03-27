@@ -84,8 +84,11 @@
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
 	<i:Interaction.Triggers>
-		<i:EventTrigger EventName="BackKeyPress">
-			<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
+		<i:EventTrigger>
+			<i:InvokeCommandAction Command="{Binding CommandActivate, Mode=OneTime}"/>
+		</i:EventTrigger>
+		<i:EventTrigger EventName="Unloaded">
+			<i:InvokeCommandAction Command="{Binding CommandDeactivate, Mode=OneTime}"/>
 		</i:EventTrigger>
 	</i:Interaction.Triggers>
 	<shell:SystemTray.ProgressIndicator>

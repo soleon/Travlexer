@@ -52,6 +52,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone" />
+    <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Interop" />
@@ -93,10 +94,14 @@
     <Compile Include="ViewModels\AppBarMenuItemViewModel.cs" />
     <Compile Include="ViewModels\KeyValueIcon.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
+    <Compile Include="ViewModels\PlaceDetailsViewModel.cs" />
     <Compile Include="ViewModels\PlaceViewModel.cs" />
     <Compile Include="ViewModels\RouteViewModel.cs" />
     <Compile Include="Views\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceDetailsView.xaml.cs">
+      <DependentUpon>PlaceDetailsView.xaml</DependentUpon>
     </Compile>
     <Page Include="Page1.xaml">
       <SubType>Designer</SubType>
@@ -125,6 +130,10 @@
     <Page Include="Views\MapView.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PlaceDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

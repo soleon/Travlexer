@@ -51,6 +51,7 @@
     <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NavigationService.cs" />
     <Compile Include="ShellExtension\ApplicationBar.cs" />
     <Compile Include="ShellExtension\ApplicationBarIconButton.cs" />
     <Compile Include="ShellExtension\ApplicationBarItemBase.cs" />

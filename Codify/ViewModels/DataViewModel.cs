@@ -3,7 +3,9 @@ using Codify.Models;
 
 namespace Codify.ViewModels
 {
-	public class DataViewModel<TData, TParent> : ViewModelBase<TParent> where TData : IModel where TParent : class, IViewModel
+	public class DataViewModel<TData, TParent> : ViewModelBase<TParent>
+		where TData : class, IModel
+		where TParent : class, IViewModel
 	{
 		#region Constructors
 
@@ -15,7 +17,7 @@ namespace Codify.ViewModels
 		public DataViewModel(TData data, TParent parent = null)
 			: base(parent)
 		{
-			if (data.Equals(null))
+			if (data == null)
 			{
 				throw new ArgumentNullException("data", "The data model object is required to create a data view model.");
 			}
@@ -44,6 +46,18 @@ namespace Codify.ViewModels
 			data.Dispose();
 			base.OnDispose();
 		}
+
+		#endregion
+	}
+
+	public class DataViewModel<T> : ViewModelBase where T : IModel
+	{
+		#region Public Properties
+
+		/// <summary>
+		/// Gets the <see cref="IModel"/> object that contains essential data of this <see cref="IViewModel{TParent}"/>.
+		/// </summary>
+		public T Data { get; set; }
 
 		#endregion
 	}

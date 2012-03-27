@@ -186,18 +186,6 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// This method is called when the hardware Back button is pressed.
-		/// Cancel the back key press if the view is not in default visual state.
-		/// </summary>
-		protected override void OnBackKeyPress(CancelEventArgs e)
-		{
-			if (_context.VisualState.Value != MapViewModel.VisualStates.Default)
-			{
-				e.Cancel = true;
-			}
-		}
-
-		/// <summary>
 		/// Called when <see cref="MapViewModel.SuggestionsRetrieved"/> event is raised from the data context of this view.
 		/// </summary>
 		private void OnSuggestionsRetrieved()
