@@ -42,14 +42,14 @@ namespace Codify.WindowsPhone
 
 		#region Public Methods
 
-		public static void Register(Type viewModelType, Uri viewUrl)
+		public static void Register<T>(Uri viewUrl)
 		{
-			_viewMap[viewModelType] = viewUrl;
+			_viewMap[typeof(T)] = viewUrl;
 		}
 
-		public static bool Navigate(Type viewModelType)
+		public static bool Navigate<T>()
 		{
-			var uri = _viewMap[viewModelType];
+			var uri = _viewMap[typeof(T)];
 			return _phoneApplicationFrame.Navigate(uri);
 		}
 

@@ -158,7 +158,7 @@ namespace Travlexer.WindowsPhone
 			RootVisual = RootFrame;
 
 			// Map views to view models.
-			NavigationService.Register(typeof(PlaceDetailsViewModel), new Uri("/Views/PlaceDetailsView.xaml", UriKind.Relative));
+            NavigationService.Register<PlaceDetailsViewModel>(new Uri("/Views/PlaceDetailsView.xaml", UriKind.Relative));
 		}
 
 		#endregion

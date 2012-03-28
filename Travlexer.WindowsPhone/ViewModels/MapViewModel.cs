@@ -1063,7 +1063,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnViewSelectedPlaceDetails()
 		{
-			NavigationService.Navigate(typeof(PlaceDetailsViewModel));
+            NavigationService.Navigate<PlaceDetailsViewModel>();
 		}
 
 		/// <summary>
