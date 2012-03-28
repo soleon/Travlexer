@@ -899,8 +899,7 @@
 			<Grid x:Name="RouteContentPanel"
 				  Background="{StaticResource PhoneChromeBrush}"
 				  RenderTransformOrigin="0.5,0.5"
-				  VerticalAlignment="Top"
-				  Height="300">
+				  VerticalAlignment="Top">
 				<i:Interaction.Triggers>
 					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}">
 						<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
