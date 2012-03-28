@@ -65,6 +65,9 @@ namespace Codify.GoogleMaps
 			   }
 			}
 		 },
+		 'international_phone_number' : '+61404490341',
+		 'rating' : '3.5',
+		 'website' : 'http://www.google.com',
 		 'types' : [ 'route' ]
 	  },
 	  {

@@ -27,26 +27,25 @@
 		<ShellExtension:ApplicationBar Opacity="{StaticResource ShellOpacity}" />
 	</ShellExtension:ApplicationBar.ApplicationBar>
 	<controls:Pivot>
-		<controls:PivotItem Header="place details">
+		<controls:PivotItem Header="information">
 			<ScrollViewer>
-				<Grid DataContext="{Binding Data}">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-					</Grid.RowDefinitions>
-					<TextBox TextWrapping="Wrap" d:LayoutOverrides="Height" Text="{Binding Name, Mode=TwoWay}"/>
-					<TextBox TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="1" Text="{Binding Address, Mode=TwoWay}"/>
-					<TextBox TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="2" Text="{Binding Location, Mode=TwoWay}"/>
-					<toolkit:ListPicker d:LayoutOverrides="Height" Grid.Row="3"/>
-					<toolkit:ListPicker d:LayoutOverrides="Height" Grid.Row="4"/>
-					<TextBox x:Name="NotesTextBox" TextWrapping="Wrap" Grid.Row="5" AcceptsReturn="True" Height="220" Text="{Binding Notes, Mode=TwoWay}" InputScope="Text"/>
-					<TextBlock Text="Notes..." Grid.Row="5" Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}" FontStyle="Italic" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="17,23,0,0" IsHitTestVisible="False" Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay, ElementName=NotesTextBox}"/>
-				</Grid>
+				<StackPanel DataContext="{Binding Data}">
+					<TextBox TextWrapping="Wrap" Text="{Binding Address, Mode=TwoWay}" Width="456"/>
+					<TextBox TextWrapping="Wrap" Text="{Binding Location, Mode=TwoWay}" Width="456"/>
+					<HyperlinkButton Content="{Binding WebSite, TargetNullValue=No website found}" Margin="{StaticResource PhoneMargin}" IsEnabled="{Binding WebSite, Converter={StaticResource BooleanConverter}}"/>
+					<HyperlinkButton Content="{Binding ContactNumber, TargetNullValue=No contact number found}" Margin="{StaticResource PhoneMargin}" IsEnabled="{Binding ContactNumber, Converter={StaticResource BooleanConverter}}"/>
+					<TextBox Text="{Binding Rating, StringFormat=Rating: \{0\}, TargetNullValue=No rating found}" IsEnabled="{Binding Rating, Converter={StaticResource BooleanConverter}}"/>
+				</StackPanel>
 			</ScrollViewer>
+		</controls:PivotItem>
+		<controls:PivotItem Header="personalize">
+			<StackPanel DataContext="{Binding Data}">
+				<TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}"/>
+				<toolkit:ListPicker Height="60" Margin="12,0"/>
+				<toolkit:ListPicker Height="60" Margin="12,0"/>
+				<TextBox x:Name="NotesTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="220" Text="{Binding Notes, Mode=TwoWay}" InputScope="Text" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
+				<TextBlock Text="Notes..." Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}" FontStyle="Italic" HorizontalAlignment="Left" IsHitTestVisible="False" Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox, Mode=OneWay}"/>
+			</StackPanel>
 		</controls:PivotItem>
 		<controls:PivotItem Header="nearby"/>
 	</controls:Pivot>
