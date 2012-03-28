@@ -58,6 +58,11 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		private const string PlacesProperty = "Places";
 
 		/// <summary>
+		/// Gets or sets the selected place.
+		/// </summary>
+		public static Place SelectedPlace { get; set; }
+
+		/// <summary>
 		/// Gets or sets the map center geo-location.
 		/// </summary>
 		public static ObservableValue<GeoCoordinate> MapCenter { get; private set; }

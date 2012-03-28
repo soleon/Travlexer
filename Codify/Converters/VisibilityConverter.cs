@@ -7,12 +7,10 @@ namespace Codify.Converters
 {
 	public class VisibilityConverter : IValueConverter
 	{
-		private readonly BooleanConverter _booleanConverter = new BooleanConverter();
-
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var boolValue = _booleanConverter.Convert(value, targetType, parameter, culture) as bool?;
-			return boolValue.HasValue && boolValue.Value ? Visibility.Visible : Visibility.Collapsed;
+			var boolValue = BooleanConverter.ToBoolean(value, targetType, parameter, culture);
+			return boolValue ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

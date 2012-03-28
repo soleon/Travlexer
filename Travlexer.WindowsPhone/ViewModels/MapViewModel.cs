@@ -224,6 +224,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					}
 					VisualState.Value = VisualStates.PushpinSelected;
 				}
+				DataContext.SelectedPlace = value == null ? null : value.Data;
 			}
 		}
 

@@ -130,14 +130,14 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		private bool _isSearchResult;
 		private const string IsSearchResultProperty = "IsSearchResult";
 
-		public string Note
+		public string Notes
 		{
-			get { return _note; }
-			set { SetProperty(ref _note, value, NoteProperty); }
+			get { return _notes; }
+			set { SetProperty(ref _notes, value, NotesProperty); }
 		}
 
-		private string _note;
-		private const string NoteProperty = "Note";
+		private string _notes;
+		private const string NotesProperty = "Notes";
 
 		public ViewPort ViewPort
 		{
@@ -176,7 +176,7 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 			Name = null;
 			Location = null;
 			Address = null;
-			Note = null;
+			Notes = null;
 			ContactNumber = null;
 			WebSite = null;
 			Rating = null;

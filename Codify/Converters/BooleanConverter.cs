@@ -11,6 +11,16 @@ namespace Codify.Converters
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			return ToBoolean(value, targetType, parameter, culture);
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotSupportedException();
+		}
+
+		public static bool ToBoolean(object value, Type targetType, object parameter, CultureInfo culture)
+		{
 			bool result;
 
 			if (value is string)
@@ -36,11 +46,6 @@ namespace Codify.Converters
 			}
 
 			return result;
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotSupportedException();
 		}
 
 		private static bool Convert(string value)

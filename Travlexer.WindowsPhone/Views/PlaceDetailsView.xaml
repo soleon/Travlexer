@@ -8,7 +8,6 @@
                             xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
                             xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                             xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
-                            xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:Codify_Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
                             x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -44,12 +43,8 @@
 					<TextBox TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="2" Text="{Binding Location, Mode=TwoWay}"/>
 					<toolkit:ListPicker d:LayoutOverrides="Height" Grid.Row="3"/>
 					<toolkit:ListPicker d:LayoutOverrides="Height" Grid.Row="4"/>
-					<TextBox TextWrapping="Wrap" Grid.Row="5" AcceptsReturn="True" Height="220" Text="{Binding Note, Mode=TwoWay}" InputScope="Text">
-						<i:Interaction.Behaviors>
-							<Codify_Behaviors:RealTimeBindingBehavior/>
-						</i:Interaction.Behaviors>
-					</TextBox>
-					<TextBlock TextWrapping="Wrap" Text="Notes..." Grid.Row="5" Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}" FontStyle="Italic" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="17,23,0,0" Visibility="{Binding Note, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}" IsHitTestVisible="False"/>
+					<TextBox x:Name="NotesTextBox" TextWrapping="Wrap" Grid.Row="5" AcceptsReturn="True" Height="220" Text="{Binding Notes, Mode=TwoWay}" InputScope="Text"/>
+					<TextBlock Text="Notes..." Grid.Row="5" Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}" FontStyle="Italic" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="17,23,0,0" IsHitTestVisible="False" Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, Mode=OneWay, ElementName=NotesTextBox}"/>
 				</Grid>
 			</ScrollViewer>
 		</controls:PivotItem>
