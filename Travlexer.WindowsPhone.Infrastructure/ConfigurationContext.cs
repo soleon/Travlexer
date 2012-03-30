@@ -4,14 +4,14 @@ using Codify.Storage;
 
 namespace Travlexer.WindowsPhone.Infrastructure
 {
-	public static class ApplicationContext
+	public class ConfigurationContext : IConfigurationContext
 	{
 		#region Private Members
 
 		/// <summary>
 		/// Stores the number of busy requests.
 		/// </summary>
-		private static ushort _busyRequestCount;
+		private ushort _busyRequestCount;
 
 		#endregion
 
@@ -19,9 +19,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		#region Constructors
 
 		/// <summary>
-		/// Initializes the <see cref="ApplicationContext"/> class.
+		/// Initializes the <see cref="ConfigurationContext"/> class.
 		/// </summary>
-		static ApplicationContext()
+		public ConfigurationContext()
 		{
 			ToolbarState = new ObservableValue<ExpansionStates>();
 			IsBusy = new ObservableValue<bool>(false, true);
@@ -39,23 +39,23 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Gets or sets the storage provider for saving and loading data.
 		/// </summary>
-		public static IStorage StorageProvider
+		public IStorage StorageProvider
 		{
 			get { return _storageProvider ?? (_storageProvider = new IsolatedStorage()); }
 			set { _storageProvider = value; }
 		}
 
-		private static IStorage _storageProvider;
+		private IStorage _storageProvider;
 
 		/// <summary>
 		/// Gets the observable value that indicates whether this data context is doing any loading.
 		/// </summary>
-		public static ObservableValue<bool> IsBusy { get; private set; }
+		public ObservableValue<bool> IsBusy { get; private set; }
 
 		/// <summary>
 		/// Gets the state of the toolbar.
 		/// </summary>
-		public static ObservableValue<ExpansionStates> ToolbarState { get; private set; }
+		public ObservableValue<ExpansionStates> ToolbarState { get; private set; }
 
 		private const string ToolbarStateProperty = "ToolbarState";
 
@@ -63,21 +63,21 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Gets a value indicating whether this instance is the first run.
 		/// </summary>
-		public static bool IsFirstRun { get; private set; }
+		public bool IsFirstRun { get; private set; }
 
 		private const string IsFirstRunProperty = "IsFirstRun";
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is tracking current location.
 		/// </summary>
-		public static ObservableValue<bool> IsTrackingCurrentLocation { get; set; }
+		public ObservableValue<bool> IsTrackingCurrentLocation { get; set; }
 
 		private const string IsTrackingCurrentLocationProperty = "IsTrackingCurrentLocation";
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is offline.
 		/// </summary>
-		public static ObservableValue<bool> IsOnline { get; private set; }
+		public ObservableValue<bool> IsOnline { get; private set; }
 
 		private const string IsOnlineProperty = "IsOnline";
 
@@ -89,7 +89,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Toggles the state of the toolbar.
 		/// </summary>
-		public static void ToggleToolbarState()
+		public void ToggleToolbarState()
 		{
 			ToolbarState.Value = ToolbarState.Value == ExpansionStates.Collapsed ? ExpansionStates.Expanded : ExpansionStates.Collapsed;
 		}
@@ -97,7 +97,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Saves the data context to the storage provided by <see cref="StorageProvider"/>.
 		/// </summary>
-		public static void SaveContext()
+		public void SaveContext()
 		{
 			// Save toolbar state.
 			StorageProvider.SaveSetting(ToolbarStateProperty, ToolbarState.Value);
@@ -116,7 +116,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Loads the data context from the storage provided by <see cref="StorageProvider"/>.
 		/// </summary>
-		public static void LoadContext()
+		public void LoadContext()
 		{
 			// Load first run flag.
 			bool isFirstRun;
@@ -157,7 +157,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <param name="oldValue">The existing value of <see cref="IsBusy"/>.</param>
 		/// <param name="newValue">The desired new value.</param>
 		/// <returns>The value to be set.</returns>
-		private static bool OnIsLoadingChanging(bool oldValue, bool newValue)
+		private bool OnIsLoadingChanging(bool oldValue, bool newValue)
 		{
 			if (newValue)
 			{

@@ -4,9 +4,6 @@ using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Travlexer.WindowsPhone.Infrastructure;
-using Travlexer.WindowsPhone.ViewModels;
-using NavigationService = Codify.WindowsPhone.NavigationService;
 
 namespace Travlexer.WindowsPhone
 {
@@ -67,29 +64,24 @@ namespace Travlexer.WindowsPhone
 
 		private void OnApplicationLaunching(object sender, LaunchingEventArgs e)
 		{
-			DataContext.LoadContext();
 			ApplicationContext.LoadContext();
 		}
 
 		private void OnApplicationActivated(object sender, ActivatedEventArgs e)
 		{
-			if (e.IsApplicationInstancePreserved)
+			if (!e.IsApplicationInstancePreserved)
 			{
-				return;
+				ApplicationContext.LoadContext();
 			}
-			DataContext.LoadContext();
-			ApplicationContext.LoadContext();
 		}
 
 		private void OnApplicationDeactivated(object sender, DeactivatedEventArgs e)
 		{
-			DataContext.SaveContext();
 			ApplicationContext.SaveContext();
 		}
 
 		private void OnApplicationClosing(object sender, ClosingEventArgs e)
 		{
-			DataContext.SaveContext();
 			ApplicationContext.SaveContext();
 		}
 
@@ -136,6 +128,7 @@ namespace Travlexer.WindowsPhone
 				return;
 			}
 
+
 			// Create the frame but don't set it as RootVisual yet; this allows the splash
 			// screen to remain active until the application is ready to render.
 			RootFrame = new TransitionFrame();
@@ -146,6 +139,12 @@ namespace Travlexer.WindowsPhone
 
 			// Ensure we don't initialize again
 			_phoneApplicationInitialized = true;
+
+			// Set the root visual to allow the application to render
+			RootVisual = RootFrame;
+
+			// Initialize application context.
+			ApplicationContext.Initialize(RootFrame);
 		}
 
 		//// Do not add any additional code to this method
@@ -153,12 +152,6 @@ namespace Travlexer.WindowsPhone
 		{
 			// Remove this handler since it is no longer needed
 			RootFrame.Navigated -= OnCompleteInitializePhoneApplication;
-
-			// Set the root visual to allow the application to render
-			RootVisual = RootFrame;
-
-			// Map views to view models.
-            NavigationService.Register<PlaceDetailsViewModel>(new Uri("/Views/PlaceDetailsView.xaml", UriKind.Relative));
 		}
 
 		#endregion

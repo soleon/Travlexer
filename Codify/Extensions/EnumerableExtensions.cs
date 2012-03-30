@@ -16,14 +16,16 @@ namespace Codify.Extensions
 		}
 
 		/// <summary>
-		/// Performs the specified action on each element of the <see cref="array"/>.
+		/// Performs the specified action on each element of the <see cref="enumerable"/>.
 		/// </summary>
-		/// <param name="action">The <see cref="Action{T}"/> delegate to perform on each element of the <see cref="array"/>.</param>
-		public static void ForEach<T>(this T[] array, Action<T> action)
+		/// <typeparam name="T">Type of the elements in the enumerable.</typeparam>
+		/// <param name="enumerable">The enuerable to perform the action on.</param>
+		/// <param name="action">The <see cref="Action{T}"/> delegate to perform on each element of the <see cref="enumerable"/>.</param>
+		public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
 		{
-			foreach (var t in array)
+			foreach (var i in enumerable)
 			{
-				action(t);
+				action(i);
 			}
 		}
 

@@ -17,9 +17,7 @@ using Codify.Models;
 using Codify.Services;
 using Codify.Threading;
 using Codify.ViewModels;
-using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.Converters;
-using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.Views;
 using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
@@ -104,8 +102,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 			// Initialise local properties.
 			VisualState = new ObservableValue<VisualStates>();
 			Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
-			Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), DataContext.Places);
-			Routes = new AdaptedObservableCollection<Route, RouteViewModel>(r => new RouteViewModel(r, this), DataContext.Routes);
+			Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), ApplicationContext.Data.Places);
+			Routes = new AdaptedObservableCollection<Route, RouteViewModel>(r => new RouteViewModel(r, this), ApplicationContext.Data.Routes);
 			DepartureLocation = new RouteLocation();
 			ArrivalLocation = new RouteLocation();
 
@@ -136,10 +134,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 					ZoomLevel.Value = Math.Max(ZoomLevel.Value -= 1D, 1D);
 				}
 			});
-			CommandShowStreetLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = Layer.Street);
-			CommandShowSatelliteHybridLayer = new DelegateCommand(() => DataContext.MapBaseLayer.Value = Layer.SatelliteHybrid);
-			CommandToggleMapOverlay = new DelegateCommand<Layer>(DataContext.ToggleMapOverlay);
-			CommandToggleToolbar = new DelegateCommand(ApplicationContext.ToggleToolbarState);
+			CommandShowStreetLayer = new DelegateCommand(() => ApplicationContext.Data.MapBaseLayer.Value = Layer.Street);
+			CommandShowSatelliteHybridLayer = new DelegateCommand(() => ApplicationContext.Data.MapBaseLayer.Value = Layer.SatelliteHybrid);
+			CommandToggleMapOverlay = new DelegateCommand<Layer>(ApplicationContext.Data.ToggleMapOverlay);
+			CommandToggleToolbar = new DelegateCommand(ApplicationContext.Configuration.ToggleToolbarState);
 			CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartureLocation.Address = CurrentLocationString);
 			CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArrivalLocation.Address = CurrentLocationString);
 			CommandRoute = new DelegateCommand(OnRoute);
@@ -157,13 +155,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 			// Handle necessary events.
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
-			DataContext.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
-			DataContext.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
+			ApplicationContext.Data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
+			ApplicationContext.Data.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
 			VisualState.ValueChanged += OnVisualStateChanged;
 			IsTrackingCurrentLocation.ValueChanged += OnIsTrackingCurrentLocationValueChanged;
 
 			// Automatically track current position at first run.
-			if (ApplicationContext.IsFirstRun)
+			if (ApplicationContext.Configuration.IsFirstRun)
 			{
 				IsTrackingCurrentLocation.Value = true;
 			}
@@ -224,7 +222,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					}
 					VisualState.Value = VisualStates.PushpinSelected;
 				}
-				DataContext.SelectedPlace = value == null ? null : value.Data;
+				ApplicationContext.Data.SelectedPlace = value == null ? null : value.Data;
 			}
 		}
 
@@ -297,7 +295,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<GeoCoordinate> Center
 		{
-			get { return DataContext.MapCenter; }
+			get { return ApplicationContext.Data.MapCenter; }
 		}
 
 		/// <summary>
@@ -305,7 +303,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<double> ZoomLevel
 		{
-			get { return DataContext.MapZoomLevel; }
+			get { return ApplicationContext.Data.MapZoomLevel; }
 		}
 
 		/// <summary>
@@ -338,7 +336,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<string> SearchInput
 		{
-			get { return DataContext.SearchInput; }
+			get { return ApplicationContext.Data.SearchInput; }
 		}
 
 		/// <summary>
@@ -351,7 +349,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<bool> IsTrackingCurrentLocation
 		{
-			get { return ApplicationContext.IsTrackingCurrentLocation; }
+			get { return ApplicationContext.Configuration.IsTrackingCurrentLocation; }
 		}
 
 		/// <summary>
@@ -362,7 +360,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </value>
 		public ObservableValue<bool> IsBusy
 		{
-			get { return ApplicationContext.IsBusy; }
+			get { return ApplicationContext.Configuration.IsBusy; }
 		}
 
 		/// <summary>
@@ -370,7 +368,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsStreetLayerVisible
 		{
-			get { return DataContext.MapBaseLayer.Value == Layer.Street ? Visibility.Visible : Visibility.Collapsed; }
+			get { return ApplicationContext.Data.MapBaseLayer.Value == Layer.Street ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
@@ -380,7 +378,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsSatelliteHybridLayerVisible
 		{
-			get { return DataContext.MapBaseLayer.Value == Layer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
+			get { return ApplicationContext.Data.MapBaseLayer.Value == Layer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
@@ -390,7 +388,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsTrafficLayerVisible
 		{
-			get { return DataContext.MapOverlays.Contains(Layer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return ApplicationContext.Data.MapOverlays.Contains(Layer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
@@ -400,7 +398,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public Visibility IsTransitLayerVisible
 		{
-			get { return DataContext.MapOverlays.Contains(Layer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return ApplicationContext.Data.MapOverlays.Contains(Layer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
@@ -410,7 +408,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<ExpansionStates> ToolbarState
 		{
-			get { return ApplicationContext.ToolbarState; }
+			get { return ApplicationContext.Configuration.ToolbarState; }
 		}
 
 		/// <summary>
@@ -418,7 +416,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<bool> IsOnline
 		{
-			get { return ApplicationContext.IsOnline; }
+			get { return ApplicationContext.Configuration.IsOnline; }
 		}
 
 		/// <summary>
@@ -434,7 +432,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<TravelMode> SelectedTravelMode
 		{
-			get { return DataContext.TravelMode; }
+			get { return ApplicationContext.Data.TravelMode; }
 		}
 
 		/// <summary>
@@ -450,7 +448,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		public ObservableValue<RouteMethod> SelectedRouteMethod
 		{
-			get { return DataContext.RouteMethod; }
+			get { return ApplicationContext.Data.RouteMethod; }
 		}
 
 		/// <summary>
@@ -625,7 +623,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnGoToDefaultState()
 		{
-			DataContext.CancelGetSuggestions();
+			ApplicationContext.Data.CancelGetSuggestions();
 			VisualState.Value = VisualStates.Default;
 		}
 
@@ -634,7 +632,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnAddPlace(Location location)
 		{
-			DataContext.AddNewPlace(location);
+			ApplicationContext.Data.AddNewPlace(location);
 		}
 
 		/// <summary>
@@ -642,7 +640,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnDeletePlace(PlaceViewModel vm)
 		{
-			DataContext.RemovePlace(vm.Data);
+			ApplicationContext.Data.RemovePlace(vm.Data);
 		}
 
 		/// <summary>
@@ -650,7 +648,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnDeleteSelectedPlace()
 		{
-			DataContext.RemovePlace(SelectedPushpin.Data);
+			ApplicationContext.Data.RemovePlace(SelectedPushpin.Data);
 			SelectedPushpin = null;
 		}
 
@@ -690,12 +688,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnSearch()
 		{
-			ApplicationContext.IsBusy.Value = true;
+			ApplicationContext.Configuration.IsBusy.Value = true;
 			VisualState.Value = VisualStates.Default;
-			DataContext.CancelGetSuggestions();
-			DataContext.Search(Center.Value, SearchInput.Value, callback =>
+			ApplicationContext.Data.CancelGetSuggestions();
+			ApplicationContext.Data.Search(Center.Value, SearchInput.Value, callback =>
 			{
-				ApplicationContext.IsBusy.Value = false;
+				ApplicationContext.Configuration.IsBusy.Value = false;
 				if (callback.Status != CallbackStatus.Successful)
 				{
 					MessageBox.Show("Sorry, we couldn't find anything for you.", "Nothing Was Found", MessageBoxButton.OK);
@@ -718,10 +716,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 				return;
 			}
 
-			ApplicationContext.IsBusy.Value = true;
-			DataContext.GetSuggestions(Center.Value, SearchInput.Value, args =>
+			ApplicationContext.Configuration.IsBusy.Value = true;
+			ApplicationContext.Data.GetSuggestions(Center.Value, SearchInput.Value, args =>
 			{
-				ApplicationContext.IsBusy.Value = false;
+				ApplicationContext.Configuration.IsBusy.Value = false;
 				SelectedSuggestion = null;
 				_suggestions.Clear();
 				if (args.Status != CallbackStatus.Successful)
@@ -742,10 +740,10 @@ namespace Travlexer.WindowsPhone.ViewModels
 			// Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
 			UIThread.InvokeBack(() => VisualState.Value = VisualStates.Default);
 
-			ApplicationContext.IsBusy.Value = true;
-			DataContext.GetPlaceDetails(SelectedSuggestion.Reference, args =>
+			ApplicationContext.Configuration.IsBusy.Value = true;
+			ApplicationContext.Data.GetPlaceDetails(SelectedSuggestion.Reference, args =>
 			{
-				ApplicationContext.IsBusy.Value = false;
+				ApplicationContext.Configuration.IsBusy.Value = false;
 				if (args.Status != CallbackStatus.Successful)
 				{
 					MessageBox.Show("Sorry, we couldn't get any information for your selected place.", "No Information Found", MessageBoxButton.OK);
@@ -806,7 +804,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// <param name="pushpin">The pushpin view model.</param>
 		private void OnUpdatePlace(PlaceViewModel pushpin)
 		{
-			DataContext.GetPlaceDetails(pushpin.Data);
+			ApplicationContext.Data.GetPlaceDetails(pushpin.Data);
 		}
 
 		/// <summary>
@@ -882,7 +880,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			string departureAddress;
 			if (departureLocation.PlaceId != Guid.Empty)
 			{
-				var departurePlace = DataContext.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
+				var departurePlace = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
 				departureAddress = departurePlace == null ? departureLocation.Address : departurePlace.Location.ToString();
 			}
 			else
@@ -893,7 +891,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			string arrivalAddress;
 			if (arrivalLocation.PlaceId != Guid.Empty)
 			{
-				var arrivalPlace = DataContext.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
+				var arrivalPlace = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
 				arrivalAddress = arrivalPlace == null ? arrivalLocation.Address : arrivalPlace.Location.ToString();
 			}
 			else
@@ -925,7 +923,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 			IsBusy.Value = true;
 			VisualState.Value = VisualStates.Default;
-			DataContext.GetRoute(departureAddress, arrivalAddress, SelectedTravelMode.Value, SelectedRouteMethod.Value, callback =>
+			ApplicationContext.Data.GetRoute(departureAddress, arrivalAddress, SelectedTravelMode.Value, SelectedRouteMethod.Value, callback =>
 			{
 				IsBusy.Value = false;
 				Route route;
@@ -945,11 +943,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 				IsTrackingCurrentLocation.Value = false;
 
 				// Check if there's already a departure place.
-				var place = DataContext.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
+				var place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
 				if (place == null)
 				{
 					var point = points[0];
-					place = DataContext.Places.FirstOrDefault(p => p.Location == point) ?? DataContext.AddNewPlace(point);
+					place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Location == point) ?? ApplicationContext.Data.AddNewPlace(point);
 					route.DeparturePlaceId = place.Id;
 				}
 				else
@@ -958,11 +956,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 				}
 
 				// Check if there's already an arrival place.
-				place = DataContext.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
+				place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
 				if (place == null)
 				{
 					var point = points[count - 1];
-					place = DataContext.Places.FirstOrDefault(p => p.Location == point) ?? DataContext.AddNewPlace(point);
+					place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Location == point) ?? ApplicationContext.Data.AddNewPlace(point);
 					route.ArrivalPlaceId = place.Id;
 				}
 				else
@@ -979,13 +977,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnClearRoutes()
 		{
-			if (DataContext.Routes.Count == 0)
+			if (ApplicationContext.Data.Routes.Count == 0)
 			{
 				return;
 			}
 			if (MessageBox.Show("This will clear all routes on the map. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
 			{
-				DataContext.ClearRoutes();
+				ApplicationContext.Data.ClearRoutes();
 			}
 		}
 
@@ -1024,7 +1022,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			if (MessageBox.Show("Do you want to remove the departure and arrival pins too?", "Also Remove Pins", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
 			{
 				var count = 0;
-				var places = DataContext.Places;
+				var places = ApplicationContext.Data.Places;
 				for (var i = places.Count - 1; i >= 0; i--)
 				{
 					var place = places[i];
@@ -1033,7 +1031,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					{
 						continue;
 					}
-					DataContext.RemovePlace(place);
+					ApplicationContext.Data.RemovePlace(place);
 					if (count == 1)
 					{
 						break;
@@ -1041,7 +1039,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					count++;
 				}
 			}
-			DataContext.RemoveRoute(route);
+			ApplicationContext.Data.RemoveRoute(route);
 			SelectedRoute = null;
 		}
 
@@ -1063,7 +1061,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnViewSelectedPlaceDetails()
 		{
-            NavigationService.Navigate<PlaceDetailsViewModel>();
+			ApplicationContext.NavigationService.Navigate<PlaceDetailsViewModel>();
 		}
 
 		/// <summary>
@@ -1071,7 +1069,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnDeactivate()
 		{
-			NavigationService.BackKeyPress -= OnBackKeyPress;
+			ApplicationContext.NavigationService.BackKeyPress -= OnBackKeyPress;
 		}
 
 		/// <summary>
@@ -1079,7 +1077,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		/// </summary>
 		private void OnActivate()
 		{
-			NavigationService.BackKeyPress += OnBackKeyPress;
+			ApplicationContext.NavigationService.BackKeyPress += OnBackKeyPress;
 		}
 
 		#endregion
@@ -1179,7 +1177,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				new AppBarMenuItemViewModel
 				{
 					Text = "clear search",
-					Command = new DelegateCommand(DataContext.ClearSearchResults)
+					Command = new DelegateCommand(ApplicationContext.Data.ClearSearchResults)
 				},
 				new AppBarMenuItemViewModel
 				{

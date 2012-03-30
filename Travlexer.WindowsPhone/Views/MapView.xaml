@@ -1,34 +1,34 @@
-﻿<phone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.MapView"
-							xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-							xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
-							xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
-							xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
-							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                            xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
-							xmlns:GoogleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
-							xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-							xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
-							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
-							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-							xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
-							xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
-							xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
-							xmlns:CodifyControls="clr-namespace:Codify.Controls;assembly=Codify"
-                            xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
-                            Style="{StaticResource PageDefault}"
-							FontFamily="{StaticResource PhoneFontFamilyNormal}"
-							FontSize="{StaticResource PhoneFontSizeNormal}"
-							Foreground="{StaticResource PhoneForegroundBrush}"
-							Orientation="Portrait"
-							mc:Ignorable="d"
-							d:DesignWidth="480"
-							d:DesignHeight="768"
-							shell:SystemTray.IsVisible="True"
-							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
-							d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
+﻿<CodifyPhone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.MapView"
+								  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+								  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+								  xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
+								  xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
+								  xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
+								  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+								  xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+								  xmlns:GoogleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
+								  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+								  xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+								  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+								  xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+								  xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+								  xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+								  xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
+								  xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
+								  xmlns:CodifyControls="clr-namespace:Codify.Controls;assembly=Codify"
+								  xmlns:CodifyPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
+								  xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
+								  Style="{StaticResource PageDefault}"
+								  FontFamily="{StaticResource PhoneFontFamilyNormal}"
+								  FontSize="{StaticResource PhoneFontSizeNormal}"
+								  Foreground="{StaticResource PhoneForegroundBrush}"
+								  Orientation="Portrait"
+								  mc:Ignorable="d"
+								  d:DesignWidth="480"
+								  d:DesignHeight="768"
+								  shell:SystemTray.IsVisible="True"
+								  shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
+								  d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
 	<phone:PhoneApplicationPage.Resources>
 		<ScaleTransform x:Key="TileScale" />
 		<!--This style is used in code behind, do not remove-->
@@ -85,19 +85,16 @@
 	</phone:PhoneApplicationPage.Resources>
 	<i:Interaction.Triggers>
 		<i:EventTrigger>
-			<i:InvokeCommandAction Command="{Binding CommandActivate, Mode=OneTime}"/>
+			<i:InvokeCommandAction Command="{Binding CommandActivate, Mode=OneTime}" />
 		</i:EventTrigger>
 		<i:EventTrigger EventName="Unloaded">
-			<i:InvokeCommandAction Command="{Binding CommandDeactivate, Mode=OneTime}"/>
+			<i:InvokeCommandAction Command="{Binding CommandDeactivate, Mode=OneTime}" />
 		</i:EventTrigger>
 	</i:Interaction.Triggers>
 	<shell:SystemTray.ProgressIndicator>
 		<shell:ProgressIndicator IsIndeterminate="{Binding IsBusy.Value}"
 								 IsVisible="True" />
 	</shell:SystemTray.ProgressIndicator>
-	<phone:PhoneApplicationPage.DataContext>
-		<ViewModels:MapViewModel />
-	</phone:PhoneApplicationPage.DataContext>
 	<Grid Background="#FFDDDDDD">
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="VisualStates">
@@ -227,7 +224,7 @@
 						</Storyboard>
 					</VisualTransition>
 				</VisualStateGroup.Transitions>
-				<VisualState x:Name="Default"/>
+				<VisualState x:Name="Default" />
 				<VisualState x:Name="Search">
 					<Storyboard>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
@@ -546,10 +543,15 @@
 					<Maps:MapLayer x:Name="OfflineTransitLayer"
 								   Visibility="{Binding IsTransitLayerVisible}" />
 				</Maps:MapLayer>
-				<TextBlock x:Name="OfflineInvalidLayer" VerticalAlignment="Center" TextAlignment="Center" Foreground="#FF3B3B3B" FontSize="{StaticResource PhoneFontSizeMedium}" IsHitTestVisible="False" Visibility="Collapsed">
-					<Run Text="Offline mode not available"/><LineBreak/>
-					<Run Text="at this zoom level"/>
-				</TextBlock>
+				<TextBlock x:Name="OfflineInvalidLayer"
+						   VerticalAlignment="Center"
+						   TextAlignment="Center"
+						   Foreground="#FF3B3B3B"
+						   FontSize="{StaticResource PhoneFontSizeMedium}"
+						   IsHitTestVisible="False"
+						   Visibility="Collapsed">
+					<Run Text="Offline mode not available" /><LineBreak />
+					<Run Text="at this zoom level" /></TextBlock>
 			</Maps:MapLayer>
 			<Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
 						  Location="{Binding CurrentLocation}"
@@ -558,19 +560,19 @@
 						  Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
 				<i:Interaction.Triggers>
 					<Triggers:EventTrigger EventName="Tap"
-						IsHandled="True">
+										   IsHandled="True">
 						<i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}" />
 					</Triggers:EventTrigger>
 				</i:Interaction.Triggers>
 				<Grid>
 					<Ellipse Height="40"
-						Width="40"
-						Fill="Transparent" />
+							 Width="40"
+							 Fill="Transparent" />
 					<Rectangle Height="30"
-						Width="30"
-						Fill="{StaticResource BrushIconCurrentLocationBlack}"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center" />
+							   Width="30"
+							   Fill="{StaticResource BrushIconCurrentLocationBlack}"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center" />
 				</Grid>
 			</Maps:Pushpin>
 			<Maps:MapLayer x:Name="RoutesLayer"
@@ -708,7 +710,7 @@
 											 WorkingState="{Binding Data.DataState}"
 											 WebSite="{Binding Data.WebSite}"
 											 Rating="{Binding Data.Rating}"
-											 ContactNumber="{Binding Data.ContactNumber}"/>
+											 ContactNumber="{Binding Data.ContactNumber}" />
 				</Maps:Pushpin>
 			</Maps:MapLayer>
 			<Maps:Pushpin x:Name="DragPushpin"
@@ -904,8 +906,9 @@
 					<Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}">
 						<i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
 					</Triggers:RootTouchTrigger>
-					<Triggers:KeyPressTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}" Key="Enter">
-						<i:InvokeCommandAction Command="{Binding CommandRoute, Mode=OneTime}"/>
+					<Triggers:KeyPressTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}"
+											  Key="Enter">
+						<i:InvokeCommandAction Command="{Binding CommandRoute, Mode=OneTime}" />
 					</Triggers:KeyPressTrigger>
 				</i:Interaction.Triggers>
 				<Grid.RenderTransform>
@@ -931,7 +934,7 @@
 						 Text="{Binding DepartureLocation.Address, Mode=TwoWay}"
 						 VerticalAlignment="Center">
 					<i:Interaction.Behaviors>
-						<Behaviors:RealTimeBindingBehavior/>
+						<Behaviors:RealTimeBindingBehavior />
 					</i:Interaction.Behaviors>
 					<TextBox.InputScope>
 						<InputScope>
@@ -956,7 +959,7 @@
 						 Text="{Binding ArrivalLocation.Address, Mode=TwoWay}"
 						 VerticalAlignment="Center">
 					<i:Interaction.Behaviors>
-						<Behaviors:RealTimeBindingBehavior/>
+						<Behaviors:RealTimeBindingBehavior />
 					</i:Interaction.Behaviors>
 					<TextBox.InputScope>
 						<InputScope>
@@ -988,7 +991,8 @@
 										ItemsSource="{Binding RouteMethods, Mode=OneTime}"
 										ItemTemplate="{StaticResource DataTemplateKeyValueIcon}"
 										SelectedItem="{Binding SelectedRouteMethod.Value, Converter={StaticResource RouteMethodKeyValueIconConverter}, Mode=TwoWay}" />
-					<Button x:Name="FindRoutesButton" Grid.Column="1"
+					<Button x:Name="FindRoutesButton"
+							Grid.Column="1"
 							Grid.Row="1"
 							Height="69"
 							HorizontalContentAlignment="Left"
@@ -1019,6 +1023,6 @@
 									   MenuItemIsEnabledMemberPath="IsEnabled"
 									   MenuItemTextMemberPath="Text"
 									   MenuItemCommandMemberPath="Command"
-									   IsVisible="{Binding IsAppBarVisible}"/>
+									   IsVisible="{Binding IsAppBarVisible}" />
 	</ShellExtension:ApplicationBar.ApplicationBar>
-</phone:PhoneApplicationPage>
+</CodifyPhone:PhoneApplicationPage>

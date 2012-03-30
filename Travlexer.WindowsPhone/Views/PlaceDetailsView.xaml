@@ -7,7 +7,6 @@
 							xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
                             xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
                             xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-                            xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
                             x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -20,9 +19,6 @@
 							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
 							shell:SystemTray.IsVisible="True"
 							d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
-	<phone:PhoneApplicationPage.DataContext>
-		<ViewModels:PlaceDetailsViewModel />
-	</phone:PhoneApplicationPage.DataContext>
 	<ShellExtension:ApplicationBar.ApplicationBar>
 		<ShellExtension:ApplicationBar Opacity="{StaticResource ShellOpacity}" />
 	</ShellExtension:ApplicationBar.ApplicationBar>

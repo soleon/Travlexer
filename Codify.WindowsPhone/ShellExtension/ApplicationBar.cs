@@ -2,14 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media;
 using Codify.Extensions;
-using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
 namespace Codify.WindowsPhone.ShellExtension
@@ -53,15 +50,15 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public bool IsVisible
 		{
-			get { return (bool)GetValue(IsVisibleProperty); }
+			get { return (bool) GetValue(IsVisibleProperty); }
 			set { SetValue(IsVisibleProperty, value); }
 		}
 
 		public static readonly DependencyProperty IsVisibleProperty = DependencyProperty.Register(
 			"IsVisible",
-			typeof(bool),
-			typeof(ApplicationBar),
-			new PropertyMetadata(true, (s, e) => ((ApplicationBar)s)._applicationBar.IsVisible = (bool)e.NewValue));
+			typeof (bool),
+			typeof (ApplicationBar),
+			new PropertyMetadata(true, (s, e) => ((ApplicationBar) s)._applicationBar.IsVisible = (bool) e.NewValue));
 
 		#endregion
 
@@ -70,15 +67,15 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public double Opacity
 		{
-			get { return (double)GetValue(OpacityProperty); }
+			get { return (double) GetValue(OpacityProperty); }
 			set { SetValue(OpacityProperty, value); }
 		}
 
-		public new static readonly DependencyProperty OpacityProperty = DependencyProperty.Register(
+		public static readonly DependencyProperty OpacityProperty = DependencyProperty.Register(
 			"Opacity",
-			typeof(double),
-			typeof(ApplicationBar),
-			new PropertyMetadata(1D, (s, e) => ((ApplicationBar)s)._applicationBar.Opacity = (double)e.NewValue));
+			typeof (double),
+			typeof (ApplicationBar),
+			new PropertyMetadata(1D, (s, e) => ((ApplicationBar) s)._applicationBar.Opacity = (double) e.NewValue));
 
 		#endregion
 
@@ -87,15 +84,15 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public bool IsMenuEnabled
 		{
-			get { return (bool)GetValue(IsMenuEnabledProperty); }
+			get { return (bool) GetValue(IsMenuEnabledProperty); }
 			set { SetValue(IsMenuEnabledProperty, value); }
 		}
 
 		public static readonly DependencyProperty IsMenuEnabledProperty = DependencyProperty.Register(
 			"IsMenuEnabled",
-			typeof(bool),
-			typeof(ApplicationBar),
-			new PropertyMetadata(true, (s, e) => ((ApplicationBar)s)._applicationBar.IsMenuEnabled = (bool)e.NewValue));
+			typeof (bool),
+			typeof (ApplicationBar),
+			new PropertyMetadata(true, (s, e) => ((ApplicationBar) s)._applicationBar.IsMenuEnabled = (bool) e.NewValue));
 
 		#endregion
 
@@ -104,15 +101,15 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public Color BackgroundColor
 		{
-			get { return (Color)GetValue(BackgroundColorProperty); }
+			get { return (Color) GetValue(BackgroundColorProperty); }
 			set { SetValue(BackgroundColorProperty, value); }
 		}
 
 		public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register(
 			"BackgroundColor",
-			typeof(Color),
-			typeof(ApplicationBar),
-			new PropertyMetadata(default(Color), (s, e) => ((ApplicationBar)s)._applicationBar.BackgroundColor = (Color)e.NewValue));
+			typeof (Color),
+			typeof (ApplicationBar),
+			new PropertyMetadata(default(Color), (s, e) => ((ApplicationBar) s)._applicationBar.BackgroundColor = (Color) e.NewValue));
 
 		#endregion
 
@@ -121,15 +118,15 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public Color ForegroundColor
 		{
-			get { return (Color)GetValue(ForegroundColorProperty); }
+			get { return (Color) GetValue(ForegroundColorProperty); }
 			set { SetValue(ForegroundColorProperty, value); }
 		}
 
 		public static readonly DependencyProperty ForegroundColorProperty = DependencyProperty.Register(
 			"ForegroundColor",
-			typeof(Color),
-			typeof(ApplicationBar),
-			new PropertyMetadata(default(Color), (s, e) => ((ApplicationBar)s)._applicationBar.ForegroundColor = (Color)e.NewValue));
+			typeof (Color),
+			typeof (ApplicationBar),
+			new PropertyMetadata(default(Color), (s, e) => ((ApplicationBar) s)._applicationBar.ForegroundColor = (Color) e.NewValue));
 
 		#endregion
 
@@ -138,15 +135,15 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public ApplicationBarMode Mode
 		{
-			get { return (ApplicationBarMode)GetValue(ModeProperty); }
+			get { return (ApplicationBarMode) GetValue(ModeProperty); }
 			set { SetValue(ModeProperty, value); }
 		}
 
 		public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
 			"Mode",
-			typeof(ApplicationBarMode),
-			typeof(ApplicationBar),
-			new PropertyMetadata(default(ApplicationBarMode), (s, e) => ((ApplicationBar)s)._applicationBar.Mode = (ApplicationBarMode)e.NewValue));
+			typeof (ApplicationBarMode),
+			typeof (ApplicationBar),
+			new PropertyMetadata(default(ApplicationBarMode), (s, e) => ((ApplicationBar) s)._applicationBar.Mode = (ApplicationBarMode) e.NewValue));
 
 		#endregion
 
@@ -155,7 +152,7 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public IEnumerable ButtonItemsSource
 		{
-			get { return (IEnumerable)GetValue(ButtonItemsSourceProperty); }
+			get { return (IEnumerable) GetValue(ButtonItemsSourceProperty); }
 			set { SetValue(ButtonItemsSourceProperty, value); }
 		}
 
@@ -164,9 +161,9 @@ namespace Codify.WindowsPhone.ShellExtension
 		/// </summary>
 		public static readonly DependencyProperty ButtonItemsSourceProperty = DependencyProperty.Register(
 			"ButtonItemsSource",
-			typeof(IEnumerable),
-			typeof(ApplicationBar),
-			new PropertyMetadata(default(IEnumerable), (s, e) => ((ApplicationBar)s).OnButtonItemsSourceChanged((IEnumerable)e.OldValue, (IEnumerable)e.NewValue)));
+			typeof (IEnumerable),
+			typeof (ApplicationBar),
+			new PropertyMetadata(default(IEnumerable), (s, e) => ((ApplicationBar) s).OnButtonItemsSourceChanged((IEnumerable) e.OldValue, (IEnumerable) e.NewValue)));
 
 		#endregion
 
@@ -175,14 +172,14 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string ButtonIconUriMemberPath
 		{
-			get { return (string)GetValue(ButtonIconUriMemberPathProperty); }
+			get { return (string) GetValue(ButtonIconUriMemberPathProperty); }
 			set { SetValue(ButtonIconUriMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty ButtonIconUriMemberPathProperty = DependencyProperty.Register(
 			"ButtonIconUriMemberPath",
-			typeof(string),
-			typeof(ApplicationBar),
+			typeof (string),
+			typeof (ApplicationBar),
 			null);
 
 		#endregion
@@ -192,14 +189,14 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string ButtonIsEnabledMemberPath
 		{
-			get { return (string)GetValue(ButtonIsEnabledMemberPathProperty); }
+			get { return (string) GetValue(ButtonIsEnabledMemberPathProperty); }
 			set { SetValue(ButtonIsEnabledMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty ButtonIsEnabledMemberPathProperty = DependencyProperty.Register(
 			"ButtonIsEnabledMemberPath",
-			typeof(string),
-			typeof(ApplicationBar),
+			typeof (string),
+			typeof (ApplicationBar),
 			null);
 
 		#endregion
@@ -209,14 +206,14 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string ButtonTextMemberPath
 		{
-			get { return (string)GetValue(ButtonTextMemberPathProperty); }
+			get { return (string) GetValue(ButtonTextMemberPathProperty); }
 			set { SetValue(ButtonTextMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty ButtonTextMemberPathProperty = DependencyProperty.Register(
 			"ButtonTextMemberPath",
-			typeof(string),
-			typeof(ApplicationBar),
+			typeof (string),
+			typeof (ApplicationBar),
 			null);
 
 		#endregion
@@ -226,14 +223,14 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string ButtonCommandMemberPath
 		{
-			get { return (string)GetValue(ButtonCommandMemberPathProperty); }
+			get { return (string) GetValue(ButtonCommandMemberPathProperty); }
 			set { SetValue(ButtonCommandMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty ButtonCommandMemberPathProperty = DependencyProperty.Register(
 			"ButtonCommandMemberPath",
-			typeof(string),
-			typeof(ApplicationBar),
+			typeof (string),
+			typeof (ApplicationBar),
 			null);
 
 		#endregion
@@ -243,14 +240,14 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string ButtonCommandParameterMemberPath
 		{
-			get { return (string)GetValue(ButtonCommandParameterMemberPathProperty); }
+			get { return (string) GetValue(ButtonCommandParameterMemberPathProperty); }
 			set { SetValue(ButtonCommandParameterMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty ButtonCommandParameterMemberPathProperty = DependencyProperty.Register(
 			"ButtonCommandParameterMemberPath",
-			typeof(string),
-			typeof(ApplicationBar),
+			typeof (string),
+			typeof (ApplicationBar),
 			null);
 
 		#endregion
@@ -260,13 +257,13 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string MenuItemIsEnabledMemberPath
 		{
-			get { return (string)GetValue(MenuItemIsEnabledMemberPathProperty); }
+			get { return (string) GetValue(MenuItemIsEnabledMemberPathProperty); }
 			set { SetValue(MenuItemIsEnabledMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty MenuItemIsEnabledMemberPathProperty = DependencyProperty.Register(
 			"MenuItemIsEnabledMemberPath",
-			typeof(string),
+			typeof (string),
 			typeof (ApplicationBar),
 			null);
 
@@ -294,13 +291,13 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string MenuItemCommandMemberPath
 		{
-			get { return (string)GetValue(MenuItemCommandMemberPathProperty); }
+			get { return (string) GetValue(MenuItemCommandMemberPathProperty); }
 			set { SetValue(MenuItemCommandMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty MenuItemCommandMemberPathProperty = DependencyProperty.Register(
 			"MenuItemCommandMemberPath",
-			typeof(string),
+			typeof (string),
 			typeof (ApplicationBar),
 			null);
 
@@ -311,13 +308,13 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public string MenuItemCommandParameterMemberPath
 		{
-			get { return (string)GetValue(MenuItemCommandParameterMemberPathProperty); }
+			get { return (string) GetValue(MenuItemCommandParameterMemberPathProperty); }
 			set { SetValue(MenuItemCommandParameterMemberPathProperty, value); }
 		}
 
 		public static readonly DependencyProperty MenuItemCommandParameterMemberPathProperty = DependencyProperty.Register(
 			"MenuItemCommandParameterMemberPath",
-			typeof(string),
+			typeof (string),
 			typeof (ApplicationBar),
 			null);
 
@@ -365,8 +362,8 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		private static readonly DependencyProperty _dataContextProperty = DependencyProperty.Register(
 			DataContextPropertyName,
-			typeof(object),
-			typeof(ApplicationBar),
+			typeof (object),
+			typeof (ApplicationBar),
 			null);
 
 		private const string DataContextPropertyName = "DataContext";
@@ -378,7 +375,7 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public static ApplicationBar GetApplicationBar(DependencyObject obj)
 		{
-			return (ApplicationBar)obj.GetValue(ApplicationBarProperty);
+			return (ApplicationBar) obj.GetValue(ApplicationBarProperty);
 		}
 
 		public static void SetApplicationBar(DependencyObject obj, ApplicationBar value)
@@ -388,23 +385,23 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		public static readonly DependencyProperty ApplicationBarProperty = DependencyProperty.RegisterAttached(
 			"ApplicationBar",
-			typeof(ApplicationBar),
-			typeof(ApplicationBar),
+			typeof (ApplicationBar),
+			typeof (ApplicationBar),
 			new PropertyMetadata(default(ApplicationBar), OnApplicationBarChanged));
 
 		private static void OnApplicationBarChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
 		{
-			var page = sender as PhoneApplicationPage;
+			var page = sender as Microsoft.Phone.Controls.PhoneApplicationPage;
 			if (page == null)
 			{
 				throw new InvalidOperationException("Codify.WindowsPhone.Shell.ApplicationBar.ApplicationBar property can only be attached to a Microsoft.Phone.Controls.PhoneApplicationPage.");
 			}
-			var oldAppBar = (ApplicationBar)e.OldValue;
+			var oldAppBar = (ApplicationBar) e.OldValue;
 			if (oldAppBar != null)
 			{
 				oldAppBar.Detach();
 			}
-			var newAppBar = (ApplicationBar)e.NewValue;
+			var newAppBar = (ApplicationBar) e.NewValue;
 			if (newAppBar != null)
 			{
 				newAppBar.Attach(page);
@@ -597,7 +594,7 @@ namespace Codify.WindowsPhone.ShellExtension
 
 		#region Private Methods
 
-		private void Attach(PhoneApplicationPage page)
+		private void Attach(Microsoft.Phone.Controls.PhoneApplicationPage page)
 		{
 			// Binds the data context of the page to this application bar, so that the data context can be passed onto the buttons and menu items.
 			BindingOperations.SetBinding(this, _dataContextProperty, new Binding(DataContextPropertyName) { Source = page });

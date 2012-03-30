@@ -10,7 +10,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		public PlaceDetailsViewModel()
 		{
-			Data = DataContext.SelectedPlace;
+			Data = ApplicationContext.Data.SelectedPlace;
 		}
 
 		#endregion

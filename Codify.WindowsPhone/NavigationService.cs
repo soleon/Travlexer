@@ -1,40 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Navigation;
+using Codify.Attributes;
+using Codify.ViewModels;
 using Microsoft.Phone.Controls;
 
 namespace Codify.WindowsPhone
 {
-	public static class NavigationService
+	public class NavigationService : INavigationService
 	{
 		#region Private Members
 
-		private static readonly Dictionary<Type, Uri> _viewMap = new Dictionary<Type, Uri>();
-		private static readonly PhoneApplicationFrame _phoneApplicationFrame;
+		private readonly Dictionary<Type, Uri> _viewMap = new Dictionary<Type, Uri>();
+		private readonly PhoneApplicationFrame _phoneApplicationFrame;
+		private readonly Func<Type, IViewModel> _viewModelFactory;
 
 		#endregion
 
 
 		#region Constructors
 
-		static NavigationService()
+		public NavigationService(PhoneApplicationFrame phoneApplicationFrame, Func<Type, IViewModel> viewModelFactory)
 		{
-			_phoneApplicationFrame = Application.Current.RootVisual as PhoneApplicationFrame;
-			if (_phoneApplicationFrame != null)
-			{
-				return;
-			}
-#if DEBUG
-			if (DesignerProperties.IsInDesignTool)
-			{
-				// Create dummy frame for the designer as the root visual will not be available in designer environment.
-				_phoneApplicationFrame = new PhoneApplicationFrame();
-				return;
-			}
-#endif
-			throw new InvalidOperationException("The root visual of the current application is either not available or is not a Microsoft.Phone.Controls.PhoneApplicationFrame. NavigationService cannot be used at this time.");
+			_viewModelFactory = viewModelFactory;
+			_phoneApplicationFrame = phoneApplicationFrame;
+			_phoneApplicationFrame.Navigated += OnPhoneApplicationFrameNavigated;
 		}
 
 		#endregion
@@ -42,23 +36,45 @@ namespace Codify.WindowsPhone
 
 		#region Public Methods
 
-		public static void Register<T>(Uri viewUrl)
+		public void Register(Type viewModelType, Uri viewUrl)
 		{
-			_viewMap[typeof(T)] = viewUrl;
+			_viewMap[viewModelType] = viewUrl;
 		}
 
-		public static bool Navigate<T>()
+		public bool Navigate<T>()
 		{
-			var uri = _viewMap[typeof(T)];
+			var viewModelType = typeof (T);
+			Uri uri;
+			if (!_viewMap.ContainsKey(viewModelType))
+			{
+				var assembly = Assembly.GetCallingAssembly();
+				var assemblyName = assembly.FullName;
+				assemblyName = assemblyName.Substring(0, assemblyName.IndexOf(",", StringComparison.Ordinal));
+				var viewType = assembly.GetTypes()
+					.FirstOrDefault(t =>
+					{
+						var attr = Attribute.GetCustomAttribute(t, typeof (ViewModelTypeAttribute)) as ViewModelTypeAttribute;
+						return attr != null && attr.Type == viewModelType;
+					});
+				if (viewType == null || viewType.FullName == null)
+				{
+					throw new InvalidOperationException("Navigation failed. There is no view decorated with ViewModelTypeAttribute that maps to " + viewModelType + ".");
+				}
+				Register(viewModelType, uri = new Uri(viewType.FullName.Replace(assemblyName, null).Replace(".", "/") + ".xaml", UriKind.Relative));
+			}
+			else
+			{
+				uri = _viewMap[viewModelType];
+			}
 			return _phoneApplicationFrame.Navigate(uri);
 		}
 
-		public static void GoBack()
+		public void GoBack()
 		{
 			_phoneApplicationFrame.GoBack();
 		}
 
-		public static JournalEntry RemoveBackEntry()
+		public JournalEntry RemoveBackEntry()
 		{
 			return _phoneApplicationFrame.RemoveBackEntry();
 		}
@@ -68,13 +84,12 @@ namespace Codify.WindowsPhone
 
 		#region Public Properties
 
-		public static bool CanGoBack
+		public bool CanGoBack
 		{
 			get { return _phoneApplicationFrame.CanGoBack; }
 		}
 
-
-		public static Uri CurrentSource
+		public Uri CurrentSource
 		{
 			get { return _phoneApplicationFrame.CurrentSource; }
 		}
@@ -87,7 +102,7 @@ namespace Codify.WindowsPhone
 		/// <summary>
 		/// This event is raised when the hardware Back button is pressed.
 		/// </summary>
-		public static event EventHandler<CancelEventArgs> BackKeyPress
+		public event EventHandler<CancelEventArgs> BackKeyPress
 		{
 			add { _phoneApplicationFrame.BackKeyPress += value; }
 			remove { _phoneApplicationFrame.BackKeyPress -= value; }
@@ -96,7 +111,7 @@ namespace Codify.WindowsPhone
 		/// <summary>
 		/// This event is raised during a Microsoft.Phone.Controls.PhoneApplicationFrame.RemoveBackEntry operation or during a normal back navigation after the System.Windows.Navigation.NavigationService.Navigated event has been raised.
 		/// </summary>
-		public static event EventHandler<JournalEntryRemovedEventArgs> JournalEntryRemoved
+		public event EventHandler<JournalEntryRemovedEventArgs> JournalEntryRemoved
 		{
 			add { _phoneApplicationFrame.JournalEntryRemoved += value; }
 			remove { _phoneApplicationFrame.JournalEntryRemoved -= value; }
@@ -105,7 +120,7 @@ namespace Codify.WindowsPhone
 		/// <summary>
 		/// This event is raised when the shell chrome is covering the frame.
 		/// </summary>
-		public static event EventHandler<ObscuredEventArgs> Obscured
+		public event EventHandler<ObscuredEventArgs> Obscured
 		{
 			add { _phoneApplicationFrame.Obscured += value; }
 			remove { _phoneApplicationFrame.Obscured -= value; }
@@ -114,7 +129,7 @@ namespace Codify.WindowsPhone
 		/// <summary>
 		/// Raised when the Orientation property has changed.
 		/// </summary>
-		public static event EventHandler<OrientationChangedEventArgs> OrientationChanged
+		public event EventHandler<OrientationChangedEventArgs> OrientationChanged
 		{
 			add { _phoneApplicationFrame.OrientationChanged += value; }
 			remove { _phoneApplicationFrame.OrientationChanged -= value; }
@@ -123,10 +138,46 @@ namespace Codify.WindowsPhone
 		/// <summary>
 		/// This event is raised when the shell chrome is no longer covering the frame.
 		/// </summary>
-		public static event EventHandler Unobscured
+		public event EventHandler Unobscured
 		{
 			add { _phoneApplicationFrame.Unobscured += value; }
 			remove { _phoneApplicationFrame.Unobscured -= value; }
+		}
+
+		#endregion
+
+
+		#region Event Handling
+
+		private void OnPhoneApplicationFrameNavigated(object sender, NavigationEventArgs e)
+		{
+			var content = e.Content;
+			if (content == null)
+			{
+				return;
+			}
+			var element = e.Content as FrameworkElement;
+			if (element == null)
+			{
+				throw new NotSupportedException("NavigationService only supports navigating to a Windows.Controls.FrameworkElement.");
+			}
+			if (element.DataContext != null)
+			{
+				return;
+			}
+			var attribute = Attribute.GetCustomAttribute(element.GetType(), typeof (ViewModelTypeAttribute)) as ViewModelTypeAttribute;
+			if (attribute == null)
+			{
+				throw new InvalidOperationException("The target view must supply the Codify.Attributes.ViewModelDependencyAttribute.");
+			}
+			if (element is PhoneApplicationPage)
+			{
+				((PhoneApplicationPage) element).DataContext = _viewModelFactory(attribute.Type);
+			}
+			else
+			{
+				element.DataContext = _viewModelFactory(attribute.Type);
+			}
 		}
 
 		#endregion

@@ -2,7 +2,6 @@
 using System.Device.Location;
 using Codify.GoogleMaps;
 using Microsoft.Phone.Controls.Maps;
-using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
 
@@ -32,19 +31,15 @@ namespace Travlexer.WindowsPhone
 			{
 				return new LocationCollection
 				{
-					new GeoCoordinate(0,0),
+					new GeoCoordinate(0, 0),
 					new GeoCoordinate(0, 60),
-					new GeoCoordinate(60,-30),
-					new GeoCoordinate(60,0)
+					new GeoCoordinate(60, -30),
+					new GeoCoordinate(60, 0)
 				};
 			}
 		}
 
-		public ElementColor SampleColor
-		{
-			get;
-			set;
-		}
+		public ElementColor SampleColor { get; set; }
 
 		public PlaceDetailsViewModel PlaceDetailsViewModel
 		{
@@ -55,7 +50,7 @@ namespace Travlexer.WindowsPhone
 					return null;
 				}
 				Initialize();
-				var vm = new PlaceDetailsViewModel { Data = DataContext.Places[0] };
+				var vm = new PlaceDetailsViewModel { Data = ApplicationContext.Data.Places[0] };
 				vm.Data.Notes = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 				return vm;
 			}
@@ -63,9 +58,12 @@ namespace Travlexer.WindowsPhone
 
 		private void Initialize()
 		{
-			if (_initialized) return;
-			DataContext.GoogleMapsClient = new GoogleMapsClientMock();
-			DataContext.AddNewPlace(new Location { Latitude = 9.1540930, Longitude = -1.39166990 });
+			if (_initialized)
+			{
+				return;
+			}
+			ApplicationContext.Data.GoogleMapsClient = new GoogleMapsClientMock();
+			ApplicationContext.Data.AddNewPlace(new Location { Latitude = 9.1540930, Longitude = -1.39166990 });
 			_initialized = true;
 		}
 #endif

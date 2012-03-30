@@ -57,6 +57,9 @@
     <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Microsoft.Xna.Framework" />
+    <Reference Include="Ninject">
+      <HintPath>..\Libraries\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System.Device" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -84,7 +87,7 @@
     <Compile Include="Converters\RouteMethodKeyValueIconConverter.cs" />
     <Compile Include="Converters\RouteModeKeyValueIconConverter.cs" />
     <Compile Include="DesignTime.cs" />
-    <Compile Include="Globals.cs" />
+    <Compile Include="ApplicationContext.cs" />
     <Compile Include="Page1.xaml.cs">
       <DependentUpon>Page1.xaml</DependentUpon>
     </Compile>

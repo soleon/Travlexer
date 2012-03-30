@@ -12,19 +12,17 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Codify;
+using Codify.Attributes;
 using Codify.Extensions;
 using Codify.GoogleMaps.Controls;
 using Codify.Models;
 using Codify.Threading;
-using Codify.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Xna.Framework.Media;
-using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
@@ -33,6 +31,7 @@ using TileSource = Codify.GoogleMaps.Controls.TileSource;
 
 namespace Travlexer.WindowsPhone.Views
 {
+	[ViewModelType(typeof(MapViewModel))]
 	public partial class MapView
 	{
 #if	DEBUG
@@ -57,7 +56,7 @@ namespace Travlexer.WindowsPhone.Views
 
 		#region Private Members
 
-		private readonly MapViewModel _context;
+		private MapViewModel _context;
 		private readonly Dictionary<int, List<QuadKey>> _cachedTileImageKeys = new Dictionary<int, List<QuadKey>>();
 		private readonly Style _tilePushpinStyle;
 		private readonly ScaleTransform _tileScaleTransform;
@@ -67,12 +66,12 @@ namespace Travlexer.WindowsPhone.Views
 		private readonly DispatcherTimer _zoomTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(200D) };
 		private readonly Queue<KeyValuePair<QuadKey, Stream>> _tileImageCache = new Queue<KeyValuePair<QuadKey, Stream>>(50);
 
-		private readonly ObservableValue<ExpansionStates> _toolbarState = ApplicationContext.ToolbarState;
-		private readonly ObservableValue<bool> _isOnline = ApplicationContext.IsOnline;
-		private readonly ObservableValue<GeoCoordinate> _mapCenter = Infrastructure.DataContext.MapCenter;
-		private readonly ObservableValue<Layer> _mapBase = Infrastructure.DataContext.MapBaseLayer;
-		private readonly ObservableValue<double> _mapZoomLevel = Infrastructure.DataContext.MapZoomLevel;
-		private readonly ObservableCollection<Layer> _mapOverlays = Infrastructure.DataContext.MapOverlays;
+		private readonly ObservableValue<ExpansionStates> _toolbarState = ApplicationContext.Configuration.ToolbarState;
+		private readonly ObservableValue<bool> _isOnline = ApplicationContext.Configuration.IsOnline;
+		private readonly ObservableValue<GeoCoordinate> _mapCenter = ApplicationContext.Data.MapCenter;
+		private readonly ObservableValue<Layer> _mapBase = ApplicationContext.Data.MapBaseLayer;
+		private readonly ObservableValue<double> _mapZoomLevel = ApplicationContext.Data.MapZoomLevel;
+		private readonly ObservableCollection<Layer> _mapOverlays = ApplicationContext.Data.MapOverlays;
 
 		private bool _isZooming;
 		private double _tileScale;
@@ -97,23 +96,10 @@ namespace Travlexer.WindowsPhone.Views
 			}
 			((Grid)Content).Children.Add(_debugText = new TextBlock { IsHitTestVisible = false, RenderTransform = new TranslateTransform { Y = 30 }, Foreground = new SolidColorBrush(Colors.Red), Text = "debug" });
 #endif
-
-			_context = DataContext as MapViewModel;
-
-			if (_context == null)
-			{
-				return;
-			}
-			_context.SearchSucceeded += OnSearchSucceeded;
-			_context.RouteSucceeded += SetViewForRoute;
-			_context.SuggestionsRetrieved += OnSuggestionsRetrieved;
-			_context.VisualState.ValueChanged += (old, @new) => GoToVisualState(@new);
 			_toolbarState.ValueChanged += (old, @new) => GoToToolbarState(@new);
-			_isOnline.ValueChanged += OnIsOnlineValueChanged;
-
-			GoToVisualState(_context.VisualState.Value, false);
 			GoToToolbarState(_toolbarState.Value, false);
 
+			_isOnline.ValueChanged += OnIsOnlineValueChanged;
 			_tilePushpinStyle = (Style)Resources[MapTilePushpinStyleName];
 			_tileScaleTransform = (ScaleTransform)Resources[MapTileScaleName];
 			_tileScale = 1D;
@@ -136,6 +122,42 @@ namespace Travlexer.WindowsPhone.Views
 
 
 		#region Event Handling
+
+		/// <summary>
+		/// Called when <see cref="PhoneApplicationPage.DataContext"/> changes.
+		/// </summary>
+		protected override void OnDataContextChanged(object oldValue, object newValue)
+		{
+			var old = oldValue as MapViewModel;
+			if (old != null)
+			{
+				old.SearchSucceeded -= OnSearchSucceeded;
+				old.RouteSucceeded -= SetViewForRoute;
+				old.SuggestionsRetrieved -= OnSuggestionsRetrieved;
+				old.VisualState.ValueChanged -= OnVisualStateChanged;
+			}
+
+			var @new = _context = newValue as MapViewModel;
+			if (@new != null)
+			{
+				@new.SearchSucceeded += OnSearchSucceeded;
+				@new.RouteSucceeded += SetViewForRoute;
+				@new.SuggestionsRetrieved += OnSuggestionsRetrieved;
+				@new.VisualState.ValueChanged += OnVisualStateChanged;
+				GoToVisualState(@new.VisualState.Value, false);
+			}
+
+
+			base.OnDataContextChanged(oldValue, newValue);
+		}
+
+		/// <summary>
+		/// Called when <see cref="MapViewModel.VisualState"/> property changes in current data context.
+		/// </summary>
+		private void OnVisualStateChanged(MapViewModel.VisualStates old, MapViewModel.VisualStates @new)
+		{
+			GoToVisualState(@new);
+		}
 
 		/// <summary>
 		/// Called before the <see cref="E:System.Windows.UIElement.Hold"/> event occurs.
@@ -351,7 +373,7 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// Called when the value of <see cref="Infrastructure.DataContext.MapBaseLayer"/> has changed.
+		/// Called when the value of <see cref="Infrastructure.ApplicationContext.Data.MapBaseLayer"/> has changed.
 		/// </summary>
 		private void OnMapBaseLayerValueChanged(Layer old, Layer @new)
 		{
@@ -359,7 +381,7 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// Called when the value of <see cref="ApplicationContext.IsOnline"/> is changed.
+		/// Called when the value of <see cref="ApplicationContext.Configuration.IsOnline"/> is changed.
 		/// </summary>
 		/// <param name="old">if set to <c>true</c> [old].</param>
 		/// <param name="new">if set to <c>true</c> [@new].</param>
@@ -550,7 +572,7 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// Called when items in <see cref="Infrastructure.DataContext.MapOverlays"/> has changed.
+		/// Called when items in <see cref="Infrastructure.ApplicationContext.Data.MapOverlays"/> has changed.
 		/// This handler specifically checks if <see cref="Layer.TransitOverlay"/> is added to the collection, and refershes the offline transit layer if the map is in offline mode.
 		/// </summary>
 		private void OnMapOverlaysCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
