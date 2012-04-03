@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Device.Location;
 using Codify.GoogleMaps;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Travlexer.WindowsPhone.ViewModels;
@@ -62,6 +63,7 @@ namespace Travlexer.WindowsPhone
 			{
 				return;
 			}
+			ApplicationContext.Initialize(new PhoneApplicationFrame());
 			ApplicationContext.Data.GoogleMapsClient = new GoogleMapsClientMock();
 			ApplicationContext.Data.AddNewPlace(new Location { Latitude = 9.1540930, Longitude = -1.39166990 });
 			_initialized = true;

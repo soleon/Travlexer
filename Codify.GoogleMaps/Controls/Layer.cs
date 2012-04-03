@@ -10,6 +10,7 @@ namespace Codify.GoogleMaps.Controls
 		Terrain,
 		TrafficOverlay,
 		TransitOverlay,
-		WaterOverlay
+		WaterOverlay,
+		EightBit
 	}
 }

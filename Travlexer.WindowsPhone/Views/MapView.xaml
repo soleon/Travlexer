@@ -27,7 +27,6 @@
 								  d:DesignWidth="480"
 								  d:DesignHeight="768"
 								  shell:SystemTray.IsVisible="True"
-								  shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
 								  d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
 	<phone:PhoneApplicationPage.Resources>
 		<ScaleTransform x:Key="TileScale" />
@@ -83,6 +82,9 @@
 			</StackPanel>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
+	<shell:SystemTray.Opacity>
+		<StaticResource ResourceKey="OpacityShell"/>
+	</shell:SystemTray.Opacity>
 	<i:Interaction.Triggers>
 		<i:EventTrigger>
 			<i:InvokeCommandAction Command="{Binding CommandActivate, Mode=OneTime}" />
@@ -523,7 +525,7 @@
 				</Maps:MapTileLayer>
 				<Maps:MapTileLayer Visibility="{Binding IsSatelliteHybridLayerVisible}">
 					<Maps:MapTileLayer.TileSources>
-						<GoogleMapsControls:TileSource Layer="SatelliteHybrid" />
+						<GoogleMapsControls:TileSource Layer="EightBit" />
 					</Maps:MapTileLayer.TileSources>
 				</Maps:MapTileLayer>
 				<Maps:MapTileLayer Visibility="{Binding IsTrafficLayerVisible}">
@@ -743,7 +745,7 @@
 				Background="{StaticResource PhoneChromeBrush}"
 				CornerRadius="34"
 				HorizontalAlignment="Left"
-				Opacity="{StaticResource ShellOpacity}"
+				Opacity="{StaticResource OpacityShell}"
 				VerticalAlignment="Center">
 			<i:Interaction.Behaviors>
 				<Behaviors:CancelGestureEventBehavior />
@@ -1013,7 +1015,7 @@
 		</Grid>
 	</Grid>
 	<ShellExtension:ApplicationBar.ApplicationBar>
-		<ShellExtension:ApplicationBar Opacity="{StaticResource ShellOpacity}"
+		<ShellExtension:ApplicationBar Opacity="{StaticResource OpacityShell}"
 									   ButtonItemsSource="{Binding SelectedAppBarButtonItemsSource}"
 									   ButtonIconUriMemberPath="IconUri"
 									   ButtonIsEnabledMemberPath="IsEnabled"

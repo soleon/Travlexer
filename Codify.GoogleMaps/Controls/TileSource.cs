@@ -21,7 +21,8 @@ namespace Codify.GoogleMaps.Controls
 			{ Layer.Terrain, "t" },
 			{ Layer.TrafficOverlay, "traffic" },
 			{ Layer.TransitOverlay, "transit" },
-			{ Layer.WaterOverlay, "r" }
+			{ Layer.WaterOverlay, "r" },
+			{ Layer.EightBit, "8bit,m" }
 		};
 
 		#endregion

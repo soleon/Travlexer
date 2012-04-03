@@ -5,9 +5,9 @@
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 							xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
-                            xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
-                            xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-                            x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
+							xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+							x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
 							Foreground="{StaticResource PhoneForegroundBrush}"
@@ -16,33 +16,79 @@
 							mc:Ignorable="d"
 							d:DesignHeight="768"
 							d:DesignWidth="480"
-							shell:SystemTray.Opacity="{StaticResource ShellOpacity}"
+							shell:SystemTray.Opacity="{StaticResource OpacityShell}"
 							shell:SystemTray.IsVisible="True"
 							d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
 	<ShellExtension:ApplicationBar.ApplicationBar>
-		<ShellExtension:ApplicationBar Opacity="{StaticResource ShellOpacity}" />
+		<ShellExtension:ApplicationBar Opacity="{StaticResource OpacityShell}" />
 	</ShellExtension:ApplicationBar.ApplicationBar>
 	<controls:Pivot>
 		<controls:PivotItem Header="information">
-			<ScrollViewer>
-				<StackPanel DataContext="{Binding Data}">
-					<TextBox TextWrapping="Wrap" Text="{Binding Address, Mode=TwoWay}" Width="456"/>
-					<TextBox TextWrapping="Wrap" Text="{Binding Location, Mode=TwoWay}" Width="456"/>
-					<HyperlinkButton Content="{Binding WebSite, TargetNullValue=No website found}" Margin="{StaticResource PhoneMargin}" IsEnabled="{Binding WebSite, Converter={StaticResource BooleanConverter}}"/>
-					<HyperlinkButton Content="{Binding ContactNumber, TargetNullValue=No contact number found}" Margin="{StaticResource PhoneMargin}" IsEnabled="{Binding ContactNumber, Converter={StaticResource BooleanConverter}}"/>
-					<TextBox Text="{Binding Rating, StringFormat=Rating: \{0\}, TargetNullValue=No rating found}" IsEnabled="{Binding Rating, Converter={StaticResource BooleanConverter}}"/>
-				</StackPanel>
-			</ScrollViewer>
+			<Grid DataContext="{Binding Data}" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="0.532*"/>
+				</Grid.RowDefinitions>
+				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconHome}" VerticalAlignment="Center"/>
+				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconPin}" VerticalAlignment="Center" Grid.Row="1"/>
+				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconGlobe}" VerticalAlignment="Center" Grid.Row="2"/>
+				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconPhone}" VerticalAlignment="Center" Grid.Row="3"/>
+				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconStar}" VerticalAlignment="Center" Grid.Row="4"/>
+				<TextBox TextWrapping="Wrap"
+					Text="{Binding Address, Mode=TwoWay}"
+					Style="{StaticResource TextBoxStyle}"
+					IsReadOnly="True"
+					GotFocus="SelectAllOnTextBoxGotFocus" d:LayoutOverrides="Height" Grid.Column="1" />
+				<TextBox TextWrapping="Wrap"
+					Text="{Binding Location, Mode=TwoWay}"
+					IsReadOnly="True"
+					Style="{StaticResource TextBoxStyle}"
+					GotFocus="SelectAllOnTextBoxGotFocus" Grid.Row="1" d:LayoutOverrides="Height" Grid.Column="1" />
+				<HyperlinkButton Content="{Binding WebSite, TargetNullValue=No website found}"
+					IsEnabled="{Binding WebSite, Converter={StaticResource BooleanConverter}}" Grid.Row="2" d:LayoutOverrides="Height" Grid.Column="1" Margin="{StaticResource PhoneMargin}" />
+				<HyperlinkButton Content="{Binding ContactNumber, TargetNullValue=No contact number found}"
+					IsEnabled="{Binding ContactNumber, Converter={StaticResource BooleanConverter}}" Grid.Row="3" d:LayoutOverrides="Height" Grid.Column="1" Margin="{StaticResource PhoneMargin}" />
+				<TextBox Text="{Binding Rating, StringFormat=Rating: \{0\}, TargetNullValue=No rating found}"
+					IsEnabled="{Binding Rating, Converter={StaticResource BooleanConverter}}"
+					IsReadOnly="True"
+					IsHitTestVisible="False"
+					Style="{StaticResource TextBoxStyle}" Grid.Row="4" d:LayoutOverrides="Height" Grid.Column="1" />
+			</Grid>
 		</controls:PivotItem>
 		<controls:PivotItem Header="personalize">
 			<StackPanel DataContext="{Binding Data}">
-				<TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}"/>
-				<toolkit:ListPicker Height="60" Margin="12,0"/>
-				<toolkit:ListPicker Height="60" Margin="12,0"/>
-				<TextBox x:Name="NotesTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="220" Text="{Binding Notes, Mode=TwoWay}" InputScope="Text" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
-				<TextBlock Text="Notes..." Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}" FontStyle="Italic" HorizontalAlignment="Left" IsHitTestVisible="False" Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox, Mode=OneWay}"/>
+				<TextBox TextWrapping="Wrap"
+						 Text="{Binding Name, Mode=TwoWay}"
+						 GotFocus="SelectAllOnTextBoxGotFocus"/>
+				<toolkit:ListPicker Height="60"
+									Margin="12,0" />
+				<toolkit:ListPicker Height="60"
+									Margin="12,0" />
+				<TextBlock Text="Notes..."
+							Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}"
+							FontStyle="Italic"
+							HorizontalAlignment="Left"
+							IsHitTestVisible="False" Canvas.ZIndex="1" Margin="16,22,0,-49"
+						    Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox}"/>
+				<TextBox x:Name="NotesTextBox"
+						 TextWrapping="Wrap"
+						 AcceptsReturn="True"
+						 Height="220"
+						 Text="{Binding Notes, Mode=TwoWay}"
+						 InputScope="Text"
+						 VerticalAlignment="Top"
+						 d:LayoutOverrides="Height"
+						 GotFocus="SelectAllOnTextBoxGotFocus"/>
 			</StackPanel>
 		</controls:PivotItem>
-		<controls:PivotItem Header="nearby"/>
+		<controls:PivotItem Header="nearby" />
 	</controls:Pivot>
 </phone:PhoneApplicationPage>
