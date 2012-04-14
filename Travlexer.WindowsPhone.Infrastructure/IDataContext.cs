@@ -16,6 +16,7 @@ using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
 namespace Travlexer.WindowsPhone.Infrastructure
 {
 	public interface IDataContext {
+
 		/// <summary>
 		/// Gets the collection that contains all user pins.
 		/// </summary>
@@ -70,21 +71,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// Gets the unit system that is currently in use.
 		/// </summary>
 		ObservableValue<Unit> Unit { get; }
-
-		/// <summary>
-		/// Gets or sets the google maps client.
-		/// </summary>
-		IGoogleMapsClient GoogleMapsClient { get; set; }
-
-		/// <summary>
-		/// Gets or sets the storage provider for saving and loading data.
-		/// </summary>
-		IStorage StorageProvider { get; set; }
-
-		/// <summary>
-		/// Gets or sets the serializer for saving and loading data.
-		/// </summary>
-		ISerializer<byte[]> Serializer { get; set; }
 
 		/// <summary>
 		/// Adds a new place.

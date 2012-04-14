@@ -1,7 +1,6 @@
-﻿using Codify.Serialization;
-using Serialization;
+﻿using Serialization;
 
-namespace Travlexer.WindowsPhone.Infrastructure.Serialization
+namespace Codify.Serialization
 {
 	public class BinarySerializer : ISerializer<byte[]>
 	{

@@ -44,6 +44,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone" />
+    <Reference Include="Serialization">
+      <HintPath>..\Libraries\Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -65,9 +68,11 @@
     <Compile Include="Models\ObservableValue.cs" />
     <Compile Include="ExpansionStates.cs" />
     <Compile Include="Models\Unit.cs" />
+    <Compile Include="Serialization\BinarySerializer.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Services\CallbackStatus.cs" />
     <Compile Include="Storage\IsolatedStorage.cs" />
+    <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Threading\Task.cs" />
     <Compile Include="Threading\UIThread.cs" />
     <Compile Include="Collections\AdaptedObservableCollection.cs" />

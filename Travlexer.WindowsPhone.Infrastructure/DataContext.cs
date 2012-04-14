@@ -14,10 +14,8 @@ using Codify.Models;
 using Codify.Serialization;
 using Codify.Services;
 using Codify.Storage;
-using Ninject;
 using RestSharp;
 using Travlexer.WindowsPhone.Infrastructure.Models;
-using Travlexer.WindowsPhone.Infrastructure.Serialization;
 using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
 using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
 
@@ -25,13 +23,25 @@ namespace Travlexer.WindowsPhone.Infrastructure
 {
 	public class DataContext : IDataContext
 	{
+        #region Private Members
+
+        private readonly IStorage _storageProvider;
+        private readonly ISerializer<byte[]> _binarySerializer;
+        private readonly IGoogleMapsClient _googleMapsClient;
+
+        #endregion
+
 		#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataContext"/> class.
 		/// </summary>
-		public DataContext()
+		public DataContext(IStorage storageProvider, ISerializer<byte[]> binerySerializer, IGoogleMapsClient googleMapsClient)
 		{
+            _storageProvider = storageProvider;
+            _binarySerializer = binerySerializer;
+            _googleMapsClient = googleMapsClient;
+
 			MapCenter = new ObservableValue<GeoCoordinate>(new Location());
 			MapZoomLevel = new ObservableValue<double>(1D);
 			MapBaseLayer = new ObservableValue<Layer>();
@@ -124,39 +134,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// Gets the unit system that is currently in use.
 		/// </summary>
 		public ObservableValue<Unit> Unit { get; private set; }
-
-		/// <summary>
-		/// Gets or sets the google maps client.
-		/// </summary>
-		public IGoogleMapsClient GoogleMapsClient
-		{
-			get { return _googleMapsClient ?? (_googleMapsClient = new GoogleMapsClient()); }
-			set { _googleMapsClient = value; }
-		}
-
-		private IGoogleMapsClient _googleMapsClient;
-
-		/// <summary>
-		/// Gets or sets the storage provider for saving and loading data.
-		/// </summary>
-		public IStorage StorageProvider
-		{
-			get { return _storageProvider ?? (_storageProvider = new IsolatedStorage()); }
-			set { _storageProvider = value; }
-		}
-
-		private IStorage _storageProvider;
-
-		/// <summary>
-		/// Gets or sets the serializer for saving and loading data.
-		/// </summary>
-		public ISerializer<byte[]> Serializer
-		{
-			get { return _serializer ?? (_serializer = new BinarySerializer()); }
-			set { _serializer = value; }
-		}
-
-		private ISerializer<byte[]> _serializer;
 
 		#endregion
 
@@ -397,7 +374,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		public void CancelGetSuggestions()
 		{
-			GoogleMapsClient.CancelGetSuggestions();
+			_googleMapsClient.CancelGetSuggestions();
 		}
 
 		/// <summary>
@@ -435,77 +412,77 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		/// <summary>
-		/// Saves the data context to the storage provided by <see cref="StorageProvider"/>.
+		/// Saves the data context to the storage provided by <see cref="_storageProvider"/>.
 		/// </summary>
 		public void SaveContext()
 		{
 			// Save map center.
-			StorageProvider.SaveSetting(MapCenterProperty, (Location)MapCenter.Value);
+			_storageProvider.SaveSetting(MapCenterProperty, (Location)MapCenter.Value);
 
 			// Save map zoom level.
-			StorageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel.Value);
+			_storageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel.Value);
 
 			// Save search input.
-			StorageProvider.SaveSetting(SearchInputProperty, SearchInput.Value);
+			_storageProvider.SaveSetting(SearchInputProperty, SearchInput.Value);
 
 			// Save map base layer.
-			StorageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
+			_storageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
 
 			// Save map overlays.
 			var overlays = MapOverlays.ToArray();
-			StorageProvider.SaveSetting(MapOverlayProperty, overlays);
+			_storageProvider.SaveSetting(MapOverlayProperty, overlays);
 
 			// Save places.
-			var placeBytes = Serializer.Serialize(_places.ToArray());
-			StorageProvider.SaveSetting(PlacesProperty, placeBytes);
+			var placeBytes = _binarySerializer.Serialize(_places.ToArray());
+			_storageProvider.SaveSetting(PlacesProperty, placeBytes);
 
 			// Save routes.
-			var routeBytes = Serializer.Serialize(_routes.ToArray());
-			StorageProvider.SaveSetting(RoutesProperty, routeBytes);
+			var routeBytes = _binarySerializer.Serialize(_routes.ToArray());
+			_storageProvider.SaveSetting(RoutesProperty, routeBytes);
 
 			// Save route method.
-			StorageProvider.SaveSetting(RouteMethodProperty, RouteMethod.Value);
+			_storageProvider.SaveSetting(RouteMethodProperty, RouteMethod.Value);
 
 			// Save travel mode.
-			StorageProvider.SaveSetting(TravelModeProperty, TravelMode.Value);
+			_storageProvider.SaveSetting(TravelModeProperty, TravelMode.Value);
 		}
 
 		/// <summary>
-		/// Loads the data context from the storage provided by <see cref="StorageProvider"/>.
+		/// Loads the data context from the storage provided by <see cref="_storageProvider"/>.
 		/// </summary>
 		public void LoadContext()
 		{
 			// Load map center.
 			Location mapCenter;
-			if (StorageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
+			if (_storageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
 			{
 				MapCenter.Value = mapCenter;
 			}
 
 			// Load map zoom level.
 			double mapZoomLevel;
-			if (StorageProvider.TryGetSetting(MapZoomLevelProperty, out mapZoomLevel))
+			if (_storageProvider.TryGetSetting(MapZoomLevelProperty, out mapZoomLevel))
 			{
 				MapZoomLevel.Value = mapZoomLevel;
 			}
 
 			// Load search input.
 			string searchInput;
-			if (StorageProvider.TryGetSetting(SearchInputProperty, out searchInput))
+			if (_storageProvider.TryGetSetting(SearchInputProperty, out searchInput))
 			{
 				SearchInput.Value = searchInput;
 			}
 
 			// Load map base layer.
 			Layer mapBaseLayer;
-			if (StorageProvider.TryGetSetting(MapBaseLayerProperty, out mapBaseLayer))
+			if (_storageProvider.TryGetSetting(MapBaseLayerProperty, out mapBaseLayer))
 			{
 				MapBaseLayer.Value = mapBaseLayer;
 			}
 
 			// Load map overlays.
 			Layer[] overlays;
-			if (StorageProvider.TryGetSetting(MapOverlayProperty, out overlays))
+			if (_storageProvider.TryGetSetting(MapOverlayProperty, out overlays))
 			{
 				overlays.ForEach(MapOverlays.Add);
 			}
@@ -513,7 +490,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Load places.
 			byte[] placeBytes;
 			Place[] places;
-			if (StorageProvider.TryGetSetting(PlacesProperty, out placeBytes) && Serializer.TryDeserialize(placeBytes, out places))
+			if (_storageProvider.TryGetSetting(PlacesProperty, out placeBytes) && _binarySerializer.TryDeserialize(placeBytes, out places))
 			{
 				_places.AddRange(places);
 			}
@@ -521,21 +498,21 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			// Load routes.
 			byte[] routeBytes;
 			Route[] routes;
-			if (StorageProvider.TryGetSetting(RoutesProperty, out routeBytes) && Serializer.TryDeserialize(routeBytes, out routes))
+			if (_storageProvider.TryGetSetting(RoutesProperty, out routeBytes) && _binarySerializer.TryDeserialize(routeBytes, out routes))
 			{
 				_routes.AddRange(routes);
 			}
 
 			// Load route method.
 			RouteMethod method;
-			if (StorageProvider.TryGetSetting(RouteMethodProperty, out method))
+			if (_storageProvider.TryGetSetting(RouteMethodProperty, out method))
 			{
 				RouteMethod.Value = method;
 			}
 
 			// Load travel mode.
 			TravelMode mode;
-			if (StorageProvider.TryGetSetting(RouteMethodProperty, out mode))
+			if (_storageProvider.TryGetSetting(RouteMethodProperty, out mode))
 			{
 				TravelMode.Value = mode;
 			}
@@ -565,7 +542,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			where TResponse : class, IResponse<TResult>
 			where TResult : class
 		{
-			callAction(GoogleMapsClient, r =>
+			callAction(_googleMapsClient, r =>
 			{
 				if (r.ResponseStatus == ResponseStatus.Aborted)
 				{
@@ -604,7 +581,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 			where TResponse : class, IResponse<TResult>
 			where TResult : class
 		{
-			callAction(GoogleMapsClient, r =>
+			callAction(_googleMapsClient, r =>
 			{
 				if (r.ResponseStatus == ResponseStatus.Aborted)
 				{

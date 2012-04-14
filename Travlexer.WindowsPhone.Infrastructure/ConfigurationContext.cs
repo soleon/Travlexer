@@ -13,6 +13,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		private ushort _busyRequestCount;
 
+        private readonly IStorage _storageProvider;
+
 		#endregion
 
 
@@ -21,8 +23,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// <summary>
 		/// Initializes the <see cref="ConfigurationContext"/> class.
 		/// </summary>
-		public ConfigurationContext()
+		public ConfigurationContext(IStorage storageProvider)
 		{
+            _storageProvider = storageProvider;
+
 			ToolbarState = new ObservableValue<ExpansionStates>();
 			IsBusy = new ObservableValue<bool>(false, true);
 			IsTrackingCurrentLocation = new ObservableValue<bool>();
@@ -35,17 +39,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
 
 		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets the storage provider for saving and loading data.
-		/// </summary>
-		public IStorage StorageProvider
-		{
-			get { return _storageProvider ?? (_storageProvider = new IsolatedStorage()); }
-			set { _storageProvider = value; }
-		}
-
-		private IStorage _storageProvider;
 
 		/// <summary>
 		/// Gets the observable value that indicates whether this data context is doing any loading.
@@ -100,17 +93,17 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		public void SaveContext()
 		{
 			// Save toolbar state.
-			StorageProvider.SaveSetting(ToolbarStateProperty, ToolbarState.Value);
+			_storageProvider.SaveSetting(ToolbarStateProperty, ToolbarState.Value);
 
 			// Save first run flag.
 			// Always save false, otherwise it's not called the "first run" flag isn't it.
-			StorageProvider.SaveSetting(IsFirstRunProperty, false);
+            _storageProvider.SaveSetting(IsFirstRunProperty, false);
 
 			// Save current location tracking flag.
-			StorageProvider.SaveSetting(IsTrackingCurrentLocationProperty, IsTrackingCurrentLocation.Value);
+            _storageProvider.SaveSetting(IsTrackingCurrentLocationProperty, IsTrackingCurrentLocation.Value);
 
 			// Save offline flag.
-			StorageProvider.SaveSetting(IsOnlineProperty, IsOnline.Value);
+            _storageProvider.SaveSetting(IsOnlineProperty, IsOnline.Value);
 		}
 
 		/// <summary>
@@ -120,27 +113,27 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		{
 			// Load first run flag.
 			bool isFirstRun;
-			if (StorageProvider.TryGetSetting(IsFirstRunProperty, out isFirstRun))
+            if (_storageProvider.TryGetSetting(IsFirstRunProperty, out isFirstRun))
 			{
 				IsFirstRun = isFirstRun;
 			}
 			// Load toolbar state.
 			ExpansionStates toolbarState;
-			if (StorageProvider.TryGetSetting(ToolbarStateProperty, out toolbarState))
+            if (_storageProvider.TryGetSetting(ToolbarStateProperty, out toolbarState))
 			{
 				ToolbarState.Value = toolbarState;
 			}
 
 			// Load current location tracking flag.
 			bool isTrackingCurrnetLocation;
-			if (StorageProvider.TryGetSetting(IsTrackingCurrentLocationProperty, out isTrackingCurrnetLocation))
+            if (_storageProvider.TryGetSetting(IsTrackingCurrentLocationProperty, out isTrackingCurrnetLocation))
 			{
 				IsTrackingCurrentLocation.Value = isTrackingCurrnetLocation;
 			}
 
 			// Load offline flag.
 			bool isOffline;
-			if (StorageProvider.TryGetSetting(IsOnlineProperty, out isOffline))
+            if (_storageProvider.TryGetSetting(IsOnlineProperty, out isOffline))
 			{
 				IsOnline.Value = isOffline;
 			}

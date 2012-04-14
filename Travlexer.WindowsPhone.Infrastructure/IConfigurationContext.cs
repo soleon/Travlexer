@@ -5,12 +5,8 @@ using Codify.Storage;
 namespace Travlexer.WindowsPhone.Infrastructure
 {
 	public interface IConfigurationContext {
-		/// <summary>
-		/// Gets or sets the storage provider for saving and loading data.
-		/// </summary>
-		IStorage StorageProvider { get; set; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets the observable value that indicates whether this data context is doing any loading.
 		/// </summary>
 		ObservableValue<bool> IsBusy { get; }
