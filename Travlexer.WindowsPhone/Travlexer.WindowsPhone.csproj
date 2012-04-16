@@ -83,7 +83,8 @@
     <Compile Include="Converters\LocationGeoCoordinateConverter.cs" />
     <Compile Include="Converters\LocationListToLocationCollectionConverter.cs" />
     <Compile Include="Converters\ElementColorToHexConverter.cs" />
-    <Compile Include="Converters\PlaceIconToControlConverter.cs" />
+    <Compile Include="Converters\PlaceIconToBrushConverter.cs" />
+    <Compile Include="Converters\PlaceIconKeyValueConverter.cs" />
     <Compile Include="Converters\RouteMethodKeyValueIconConverter.cs" />
     <Compile Include="Converters\RouteModeKeyValueIconConverter.cs" />
     <Compile Include="DesignTime.cs" />

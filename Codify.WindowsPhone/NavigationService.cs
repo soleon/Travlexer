@@ -168,7 +168,8 @@ namespace Codify.WindowsPhone
 			var attribute = Attribute.GetCustomAttribute(element.GetType(), typeof (ViewModelTypeAttribute)) as ViewModelTypeAttribute;
 			if (attribute == null)
 			{
-				throw new InvalidOperationException("The target view must supply the Codify.Attributes.ViewModelDependencyAttribute.");
+                // Do not attempt to apply view model if it is not specified.
+			    return;
 			}
 			if (element is PhoneApplicationPage)
 			{

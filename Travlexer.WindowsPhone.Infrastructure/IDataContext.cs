@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Device.Location;
-using Codify.GoogleMaps;
 using Codify.GoogleMaps.Controls;
 using Codify.GoogleMaps.Entities;
 using Codify.Models;
-using Codify.Serialization;
 using Codify.Services;
-using Codify.Storage;
 using Travlexer.WindowsPhone.Infrastructure.Models;
 using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
 using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
@@ -72,7 +69,17 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		/// </summary>
 		ObservableValue<Unit> Unit { get; }
 
-		/// <summary>
+        /// <summary>
+        /// Gets a list of available place icons.
+        /// </summary>
+	    Dictionary<PlaceIcon, string> PlaceIconMap { get; }
+
+        /// <summary>
+        /// Gets a list of available element colors.
+        /// </summary>
+	    Dictionary<ElementColor, string> ElementColorMap { get; }
+
+	    /// <summary>
 		/// Adds a new place.
 		/// </summary>
 		/// <param name="location">The location of the place.</param>

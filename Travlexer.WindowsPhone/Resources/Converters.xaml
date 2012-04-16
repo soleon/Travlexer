@@ -10,4 +10,5 @@
 	<Converters:RouteMethodKeyValueIconConverter x:Key="RouteMethodKeyValueIconConverter" />
 	<Converters:RouteModeKeyValueIconConverter x:Key="RouteModeKeyValueIconConverter" />
 	<Converters:LocationListToLocationCollectionConverter x:Key="LocationListToLocationCollectionConverter" />
+    <Converters:PlaceIconKeyValueConverter x:Key="PlaceIconKeyValueConverter" />
 </ResourceDictionary>
