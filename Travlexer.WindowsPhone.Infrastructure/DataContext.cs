@@ -33,18 +33,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private const string MapBaseLayerProperty = "MapBaseLayer";
         private const string MapOverlayProperty = "MapOverlay";
         private const string RoutesProperty = "Routes";
-        private readonly ISerializer<byte[]> _binarySerializer;
-        private readonly IGoogleMapsClient _googleMapsClient;
-        private readonly ObservableCollection<Place> _places = new ObservableCollection<Place>();
-        private readonly ObservableCollection<Route> _routes;
-        private readonly IStorage _storageProvider;
+        private static readonly Dictionary<PlaceIcon, string> _placeIconMap;
+        private static readonly Dictionary<ElementColor, string> _elementColorMap;
 
-        #region Static Members
-
-        private static readonly Dictionary<PlaceIcon, string> PlaceIconMapMap;
-        private static readonly Dictionary<ElementColor, string> ElementColorMapMap;
-
-        #endregion
 
         #region Public Properties
 
@@ -104,6 +95,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public ObservableValue<Unit> Unit { get; private set; }
 
         #endregion
+
 
         #region Public Methods
 
@@ -500,11 +492,18 @@ namespace Travlexer.WindowsPhone.Infrastructure
             }
         }
 
-        public Dictionary<PlaceIcon, string> PlaceIconMap { get { return PlaceIconMapMap; } }
+        public Dictionary<PlaceIcon, string> PlaceIconMap
+        {
+            get { return _placeIconMap; }
+        }
 
-        public Dictionary<ElementColor, string> ElementColorMap { get { return ElementColorMapMap; } }
+        public Dictionary<ElementColor, string> ElementColorMap
+        {
+            get { return _elementColorMap; }
+        }
 
         #endregion
+
 
         #region Private Methods
 
@@ -588,22 +587,27 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
         #endregion
 
+
         #region Constructors
 
         static DataContext()
         {
-            PlaceIconMapMap = new Dictionary<PlaceIcon, string>
+            _placeIconMap = new Dictionary<PlaceIcon, string>
+                            {
+                                {PlaceIcon.General, "General"},
+                                {PlaceIcon.Recreation, "Recreation"},
+                                {PlaceIcon.Drink, "Bar and Pub"},
+                                {PlaceIcon.Fuel, "Fuel and Service Station"},
+                                {PlaceIcon.Vehicle, "Aotomotive"},
+                                {PlaceIcon.Shop, "Shop"},
+                                {PlaceIcon.Property, "Property and House"},
+                                {PlaceIcon.Restaurant, "Restaurant"}
+                            };
+            _elementColorMap = new Dictionary<ElementColor, string>();
+            foreach (var field in typeof(ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
             {
-                {PlaceIcon.General, "General"},
-                {PlaceIcon.Recreation, "Recreation"},
-                {PlaceIcon.Drink, "Bar and Pub"},
-                {PlaceIcon.Fuel, "Fuel and Service Station"},
-                {PlaceIcon.Vehicle, "Aotomotive"},
-                {PlaceIcon.Shop, "Shop"},
-                {PlaceIcon.Property, "Property and House"},
-                {PlaceIcon.Restaurant, "Restaurant"}
-            };
-
+                _elementColorMap.Add((ElementColor)field.GetValue(null), field.Name);
+            }
         }
 
         /// <summary>
@@ -629,5 +633,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         #endregion
+
+
+        private readonly ISerializer<byte[]> _binarySerializer;
+        private readonly IGoogleMapsClient _googleMapsClient;
+        private readonly ObservableCollection<Place> _places = new ObservableCollection<Place>();
+        private readonly ObservableCollection<Route> _routes;
+        private readonly IStorage _storageProvider;
     }
 }

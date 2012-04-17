@@ -7,6 +7,7 @@
 							xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
 							xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
 							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+							x:Name="Page"
 							x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
 							FontFamily="{StaticResource PhoneFontFamilyNormal}"
 							FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -21,12 +22,11 @@
 							d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
 	<phone:PhoneApplicationPage.Resources>
 		<DataTemplate x:Key="PlaceIconFullModeItemTemplate">
-			<Grid Margin="{StaticResource PhoneVerticalMargin}">
+			<Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<Rectangle Width="48" Height="48" Fill="Blue" VerticalAlignment="Center"/>
 				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}" VerticalAlignment="Center"/>
 				<TextBlock Text="{Binding Value}" Grid.Column="1" VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" FontFamily="{StaticResource PhoneFontFamilyLight}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
 			</Grid>
@@ -37,16 +37,38 @@
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<Rectangle Width="48" Height="48" Fill="Blue" VerticalAlignment="Center"/>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}" VerticalAlignment="Center"/>
-				<TextBlock Text="{Binding Value}" Grid.Column="1" VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}"/>
+                <Rectangle Width="32"
+                           Height="32"
+                           Fill="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}"/>
+				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}"/>
+				<TextBlock Text="{Binding Value}" Grid.Column="1" Margin="{StaticResource PhoneHorizontalMargin}"/>
+			</Grid>
+		</DataTemplate>
+		<DataTemplate x:Key="PlaceColorItemTemplate">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="0.859*"/>
+				</Grid.ColumnDefinitions>
+				<Rectangle Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}, Mode=OneWay}" Height="32" Width="32" d:LayoutOverrides="Width, Height"/>
+				<TextBlock TextWrapping="Wrap" Text="{Binding Value, Mode=OneWay}" d:LayoutOverrides="Width" Grid.Column="1" Margin="{StaticResource PhoneHorizontalMargin}"/>
+			</Grid>
+		</DataTemplate>
+		<DataTemplate x:Key="PlaceColorFullModeItemTemplate">
+			<Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Rectangle Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}}" Width="48" Height="48"/>
+				<TextBlock Margin="{StaticResource PhoneHorizontalMargin}" TextWrapping="Wrap" Text="{Binding Value}" d:LayoutOverrides="Width, Height" Grid.Column="1" VerticalAlignment="Center" FontFamily="{StaticResource PhoneFontFamilyLight}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
 			</Grid>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
 	<ShellExtension:ApplicationBar.ApplicationBar>
 		<ShellExtension:ApplicationBar Opacity="{StaticResource OpacityShell}" />
 	</ShellExtension:ApplicationBar.ApplicationBar>
-	<controls:Pivot>
+	<controls:Pivot Title="{Binding Data.Name}">
 		<controls:PivotItem Header="information">
 			<Grid DataContext="{Binding Data}" >
 				<Grid.ColumnDefinitions>
@@ -98,10 +120,8 @@
 				<TextBox TextWrapping="Wrap"
 					Text="{Binding Data.Name, Mode=TwoWay}"
 					GotFocus="SelectAllOnTextBoxGotFocus" d:LayoutOverrides="Height"/>
-				<toolkit:ListPicker
-					Margin="12,2,12,5" Grid.Row="1" ItemsSource="{Binding PlaceIcons}" SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}" ItemTemplate="{StaticResource PlaceIconItemTemplate}"/>
-				<toolkit:ListPicker
-					Margin="12,-5,12,6" Grid.Row="2" />
+				<toolkit:ListPicker Grid.Row="1" ItemsSource="{Binding PlaceIcons}" SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}" ItemTemplate="{StaticResource PlaceIconItemTemplate}" FullModeHeader="change place icon"/>
+				<toolkit:ListPicker Grid.Row="2" FullModeHeader="change place color" ItemsSource="{Binding PlaceColors}" SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" ItemTemplate="{StaticResource PlaceColorItemTemplate}" FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}" />
 				<TextBox x:Name="NotesTextBox"
 					TextWrapping="Wrap"
 					AcceptsReturn="True"

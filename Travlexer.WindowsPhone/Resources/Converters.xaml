@@ -11,4 +11,5 @@
 	<Converters:RouteModeKeyValueIconConverter x:Key="RouteModeKeyValueIconConverter" />
 	<Converters:LocationListToLocationCollectionConverter x:Key="LocationListToLocationCollectionConverter" />
     <Converters:PlaceIconKeyValueConverter x:Key="PlaceIconKeyValueConverter" />
+    <Converters:ElementColorKeyValueConverter x:Key="ElementColorKeyValueConverter" />
 </ResourceDictionary>
