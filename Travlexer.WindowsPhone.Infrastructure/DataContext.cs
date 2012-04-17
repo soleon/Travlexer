@@ -594,19 +594,19 @@ namespace Travlexer.WindowsPhone.Infrastructure
         {
             _placeIconMap = new Dictionary<PlaceIcon, string>
                             {
-                                {PlaceIcon.General, "General"},
-                                {PlaceIcon.Recreation, "Recreation"},
-                                {PlaceIcon.Drink, "Bar and Pub"},
-                                {PlaceIcon.Fuel, "Fuel and Service Station"},
-                                {PlaceIcon.Vehicle, "Aotomotive"},
-                                {PlaceIcon.Shop, "Shop"},
-                                {PlaceIcon.Property, "Property and House"},
-                                {PlaceIcon.Restaurant, "Restaurant"}
+                                {PlaceIcon.General, "general"},
+                                {PlaceIcon.Recreation, "recreation"},
+                                {PlaceIcon.Drink, "bar and pub"},
+                                {PlaceIcon.Fuel, "fuel and service station"},
+                                {PlaceIcon.Vehicle, "aotomotive"},
+                                {PlaceIcon.Shop, "shop"},
+                                {PlaceIcon.Property, "property and house"},
+                                {PlaceIcon.Restaurant, "restaurant"}
                             };
             _elementColorMap = new Dictionary<ElementColor, string>();
             foreach (var field in typeof(ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
             {
-                _elementColorMap.Add((ElementColor)field.GetValue(null), field.Name);
+                _elementColorMap.Add((ElementColor)field.GetValue(null), field.Name.ToLower());
             }
         }
 

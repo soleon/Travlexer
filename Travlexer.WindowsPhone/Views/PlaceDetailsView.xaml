@@ -28,7 +28,7 @@
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}" VerticalAlignment="Center"/>
-				<TextBlock Text="{Binding Value}" Grid.Column="1" VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" FontFamily="{StaticResource PhoneFontFamilyLight}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
+				<TextBlock Text="{Binding Value}" Grid.Column="1" VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" FontSize="{StaticResource PhoneFontSizeLarge}" FontFamily="{StaticResource PhoneFontFamilyLight}"/>
 			</Grid>
 		</DataTemplate>
 		<DataTemplate x:Key="PlaceIconItemTemplate">
@@ -61,7 +61,7 @@
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<Rectangle Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}}" Width="48" Height="48"/>
-				<TextBlock Margin="{StaticResource PhoneHorizontalMargin}" TextWrapping="Wrap" Text="{Binding Value}" d:LayoutOverrides="Width, Height" Grid.Column="1" VerticalAlignment="Center" FontFamily="{StaticResource PhoneFontFamilyLight}" FontSize="{StaticResource PhoneFontSizeLarge}"/>
+				<TextBlock Margin="{StaticResource PhoneHorizontalMargin}" TextWrapping="Wrap" Text="{Binding Value}" d:LayoutOverrides="Width, Height" Grid.Column="1" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeExtraLarge}" FontFamily="{StaticResource PhoneFontFamilySemiLight}"/>
 			</Grid>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
