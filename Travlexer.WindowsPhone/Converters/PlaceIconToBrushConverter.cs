@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -10,15 +11,7 @@ namespace Travlexer.WindowsPhone.Converters
     public class PlaceIconToBrushConverter : IValueConverter
     {
         private static ResourceDictionary _resources;
-        private static ImageBrush
-            _brushIconLocation,
-            _brushIconRecreation,
-            _brushIconVehicle,
-            _brushIconDring,
-            _brushIconFuel,
-            _brushIconProperty,
-            _brushIconRestaurant,
-            _brushIconShop;
+        private static Dictionary<PlaceIcon, Brush> _iconBrushMap = new Dictionary<PlaceIcon, Brush>();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -30,24 +23,39 @@ namespace Travlexer.WindowsPhone.Converters
             {
                 _resources = Application.Current.Resources;
             }
-            switch ((PlaceIcon)value)
+            var icon = (PlaceIcon)value;
+            switch (icon)
             {
                 case PlaceIcon.Recreation:
-                    return _brushIconRecreation ?? (_brushIconRecreation = (ImageBrush)_resources["BrushIconLocation"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconGolf"]);
                 case PlaceIcon.Vehicle:
-                    return _brushIconVehicle ?? (_brushIconVehicle = (ImageBrush)_resources["BrushIconLocation"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconCar"]);
                 case PlaceIcon.Drink:
-                    return _brushIconDring ?? (_brushIconDring = (ImageBrush)_resources["BrushIconLocation"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconDrink"]);
                 case PlaceIcon.Fuel:
-                    return _brushIconFuel ?? (_brushIconFuel = (ImageBrush)_resources["BrushIconLocation"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconFuel"]);
                 case PlaceIcon.Property:
-                    return _brushIconProperty ?? (_brushIconProperty = (ImageBrush)_resources["BrushIconHome"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconHome"]);
                 case PlaceIcon.Restaurant:
-                    return _brushIconRestaurant ?? (_brushIconRestaurant = (ImageBrush)_resources["BrushIconLocation"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconRestaurant"]);
                 case PlaceIcon.Shop:
-                    return _brushIconShop ?? (_brushIconShop = (ImageBrush)_resources["BrushIconLocation"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconShoppingCart"]);
+                case PlaceIcon.Airport:
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconAirplane"]);
+                case PlaceIcon.PublicTransport:
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconTrain"]);
+                case PlaceIcon.Information:
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconInformation"]);
+                case PlaceIcon.MoneyExchange:
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconMoney"]);
+                case PlaceIcon.Internet:
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconWifi"]);
+                case PlaceIcon.Ferry:
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconAnchor"]);
+                case PlaceIcon.Casino:
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconDice"]);
                 default:
-                    return _brushIconLocation ?? (_brushIconLocation = (ImageBrush)_resources["BrushIconLocation"]);
+                    return _iconBrushMap.ContainsKey(icon) ? _iconBrushMap[icon] : (_iconBrushMap[icon] = (ImageBrush)_resources["BrushIconLocation"]);
             }
         }
 

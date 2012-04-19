@@ -14,7 +14,6 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		Pink,
 		Orange,
 		Red,
-		Green,
-		Black
+		Green
 	}
 }

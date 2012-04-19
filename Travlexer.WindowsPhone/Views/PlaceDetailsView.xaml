@@ -17,7 +17,6 @@
 							mc:Ignorable="d"
 							d:DesignHeight="768"
 							d:DesignWidth="480"
-							shell:SystemTray.Opacity="{StaticResource OpacityShell}"
 							shell:SystemTray.IsVisible="True"
 							d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
 	<phone:PhoneApplicationPage.Resources>
@@ -66,7 +65,7 @@
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
 	<ShellExtension:ApplicationBar.ApplicationBar>
-		<ShellExtension:ApplicationBar Opacity="{StaticResource OpacityShell}" />
+		<ShellExtension:ApplicationBar />
 	</ShellExtension:ApplicationBar.ApplicationBar>
 	<controls:Pivot Title="{Binding Data.Name}">
 		<controls:PivotItem Header="information">
@@ -119,7 +118,7 @@
 				</Grid.RowDefinitions>
 				<TextBox TextWrapping="Wrap"
 					Text="{Binding Data.Name, Mode=TwoWay}"
-					GotFocus="SelectAllOnTextBoxGotFocus" d:LayoutOverrides="Height"/>
+					GotFocus="SelectAllOnTextBoxGotFocus" d:LayoutOverrides="Height" InputScope="Text"/>
 				<toolkit:ListPicker Grid.Row="1" ItemsSource="{Binding PlaceIcons}" SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}" ItemTemplate="{StaticResource PlaceIconItemTemplate}" FullModeHeader="change place icon"/>
 				<toolkit:ListPicker Grid.Row="2" FullModeHeader="change place color" ItemsSource="{Binding PlaceColors}" SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" ItemTemplate="{StaticResource PlaceColorItemTemplate}" FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}" />
 				<TextBox x:Name="NotesTextBox"

@@ -12,6 +12,13 @@ namespace Travlexer.WindowsPhone.Infrastructure.Models
 		Fuel,
 		Property,
 		Restaurant,
-		Shop
+		Shop,
+        Airport,
+        PublicTransport,
+        Casino,
+        Ferry,
+        Internet,
+        MoneyExchange,
+        Information
 	}
 }

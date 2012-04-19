@@ -20,8 +20,7 @@ namespace Travlexer.WindowsPhone.Converters
 			{ ElementColor.Pink,	new SolidColorBrush(Color.FromArgb(0xff, 0xe6, 0x71, 0xb8)) },
 			{ ElementColor.Orange,	new SolidColorBrush(Color.FromArgb(0xff, 0xf0, 0x96, 0x09)) },
 			{ ElementColor.Red,		new SolidColorBrush(Color.FromArgb(0xff, 0xe5, 0x14, 0x00)) },
-			{ ElementColor.Green,	new SolidColorBrush(Color.FromArgb(0xff, 0x33, 0x99, 0x33)) },
-			{ ElementColor.Black,	new SolidColorBrush(Color.FromArgb(0xff, 0x00, 0x00, 0x00)) }
+			{ ElementColor.Green,	new SolidColorBrush(Color.FromArgb(0xff, 0x33, 0x99, 0x33)) }
 		};
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

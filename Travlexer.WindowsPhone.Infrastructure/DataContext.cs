@@ -601,13 +601,22 @@ namespace Travlexer.WindowsPhone.Infrastructure
                                 {PlaceIcon.Vehicle, "aotomotive"},
                                 {PlaceIcon.Shop, "shop"},
                                 {PlaceIcon.Property, "property and house"},
-                                {PlaceIcon.Restaurant, "restaurant"}
+                                {PlaceIcon.Restaurant, "restaurant"},
+                                {PlaceIcon.Airport, "airport"},
+                                {PlaceIcon.PublicTransport, "public transport"},
+                                {PlaceIcon.Information, "information"},
+                                {PlaceIcon.Internet, "internet"},
+                                {PlaceIcon.MoneyExchange, "money exchange"},
+                                {PlaceIcon.Ferry, "ferry"},
+                                {PlaceIcon.Casino, "casino"},
                             };
+            _placeIconMap = _placeIconMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
             _elementColorMap = new Dictionary<ElementColor, string>();
             foreach (var field in typeof(ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
             {
                 _elementColorMap.Add((ElementColor)field.GetValue(null), field.Name.ToLower());
             }
+            _elementColorMap = _elementColorMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         /// <summary>

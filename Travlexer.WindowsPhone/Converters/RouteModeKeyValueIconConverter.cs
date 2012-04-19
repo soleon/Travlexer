@@ -27,7 +27,7 @@ namespace Travlexer.WindowsPhone.Converters
 					{
 						Key = TravelMode.Driving,
 						Value = "Driving",
-						Icon = (ImageBrush)_resources["BrushIconCar"]
+						Icon = (ImageBrush)_resources["BrushIconCarForeground"]
 					},
 					new KeyValueIcon<TravelMode, string, ImageBrush>
 					{

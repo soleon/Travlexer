@@ -752,7 +752,7 @@
 			</i:Interaction.Behaviors>
 			<StackPanel>
 				<Controls:CircleButton Click="OnCaptureScreen">
-					<Rectangle Fill="{StaticResource BrushIconCamera}" />
+					<Rectangle Fill="{StaticResource BrushIconCamera}" Style="{StaticResource IconRectangleStyle}" />
 				</Controls:CircleButton>
 				<Button Style="{StaticResource EmptyButton}"
 						x:Name="ExpandButton"
@@ -773,11 +773,11 @@
 							Orientation="Vertical"
 							Visibility="Collapsed">
 					<Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}">
-						<Rectangle Fill="{StaticResource BrushIconPlus}" />
+						<Rectangle Fill="{StaticResource BrushIconPlus}" Style="{StaticResource IconRectangleStyle}" />
 					</Controls:CircleButton>
 					<Controls:CircleButton Margin="0,10,0,0"
 										   Command="{Binding CommandZoomOut, Mode=OneTime}">
-						<Rectangle Fill="{StaticResource BrushIconMinus}" />
+						<Rectangle Fill="{StaticResource BrushIconMinus}" Style="{StaticResource IconRectangleStyle}" />
 					</Controls:CircleButton>
 					<Rectangle Height="35"
 							   Fill="{StaticResource BrushIconEllipsis}" />
@@ -805,7 +805,7 @@
 						<Controls:CircleToggleButton.CommandParameter>
 							<GoogleMapsControls:Layer>TrafficOverlay</GoogleMapsControls:Layer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Rectangle Fill="{StaticResource BrushIconTraffic}" />
+						<Rectangle Fill="{StaticResource BrushIconTraffic}" Style="{StaticResource IconRectangleStyle}" />
 					</Controls:CircleToggleButton>
 					<Controls:CircleToggleButton Margin="0,10,0,0"
 												 Caption="transit"
@@ -814,13 +814,13 @@
 						<Controls:CircleToggleButton.CommandParameter>
 							<GoogleMapsControls:Layer>TransitOverlay</GoogleMapsControls:Layer>
 						</Controls:CircleToggleButton.CommandParameter>
-						<Rectangle Fill="{StaticResource BrushIconTrain}" />
+						<Rectangle Fill="{StaticResource BrushIconTrain}" Style="{StaticResource IconRectangleStyle}" />
 					</Controls:CircleToggleButton>
 					<Rectangle Height="35"
 							   Fill="{StaticResource BrushIconEllipsis}" />
 					<Controls:CircleToggleButton Caption="network"
 												 IsChecked="{Binding IsOnline.Value, Mode=TwoWay}">
-						<Rectangle Fill="{StaticResource BrushIconWifi}" />
+						<Rectangle Fill="{StaticResource BrushIconWifi}" Style="{StaticResource IconRectangleStyle}" />
 					</Controls:CircleToggleButton>
 				</StackPanel>
 			</StackPanel>
