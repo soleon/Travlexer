@@ -7,18 +7,20 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Codify;
+using Codify.Entities;
 using Codify.Extensions;
 using Codify.GoogleMaps;
 using Codify.GoogleMaps.Controls;
 using Codify.GoogleMaps.Entities;
-using Codify.Models;
 using Codify.Serialization;
 using Codify.Services;
 using Codify.Storage;
 using RestSharp;
-using Travlexer.WindowsPhone.Infrastructure.Models;
-using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
-using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
+using Travlexer.Data;
+using Place = Travlexer.Data.Place;
+using Route = Travlexer.Data.Route;
+using RouteMethod = Travlexer.Data.RouteMethod;
+using TravelMode = Travlexer.Data.TravelMode;
 
 namespace Travlexer.WindowsPhone.Infrastructure
 {
@@ -92,7 +94,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// <summary>
         /// Gets the unit system that is currently in use.
         /// </summary>
-        public ObservableValue<Unit> Unit { get; private set; }
+        public ObservableValue<Units> Unit { get; private set; }
 
         #endregion
 
@@ -154,7 +156,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Gets information of the specified <see cref="Place"/>.
+        /// Gets information of the specified <see cref="Travlexer.Data.Place"/>.
         /// </summary>
         /// <param name="place">The place to get the information for.</param>
         /// <param name="callback">The callback to be executed after this process is finished.</param>
@@ -162,13 +164,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
         {
             place.DataState = DataStates.Busy;
             ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>>(
-                (c, a) => c.GetPlaces(place.Location, a),
+                (c, a) => c.GetPlaces(place.Location.ToGoogleLocation(), a),
                 r =>
                 {
-                    Codify.GoogleMaps.Entities.Place result = r.Result[0];
+                    var result = r.Result[0];
                     place.ContactNumber = result.InternationalPhoneNumber ?? result.FormattedPhoneNumber;
                     place.Address = result.FormattedAddress;
-                    place.ViewPort = result.Geometry.ViewPort;
+                    place.ViewPort = result.Geometry.ViewPort.ToLocalViewPort();
                     place.Reference = result.Reference;
                     place.WebSite = result.WebSite;
                     place.Rating = result.Raiting;
@@ -186,17 +188,17 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Gets information of the specified <see cref="Place"/>.
+        /// Gets information of the specified <see cref="Travlexer.Data.Place"/>.
         /// </summary>
         /// <param name="location">The geo-location to get the information for.</param>
         /// <param name="callback">The callback to be executed after this process is finished.</param>
         public void GetAddress(Location location, Action<CallbackEventArgs<string>> callback = null)
         {
             ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>, string>(
-                (c, a) => c.GetPlaces(location, a),
+                (c, a) => c.GetPlaces(location.ToGoogleLocation(), a),
                 r =>
                 {
-                    Codify.GoogleMaps.Entities.Place details = r.Result[0];
+                    var details = r.Result[0];
                     return details.FormattedAddress;
                 },
                 callback);
@@ -219,10 +221,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
                 (c, r) => c.GetPlaceDetails(place.Reference, r),
                 r =>
                 {
-                    Codify.GoogleMaps.Entities.Place result = r.Result;
+                    var result = r.Result;
                     place.ContactNumber = result.InternationalPhoneNumber ?? result.FormattedPhoneNumber;
                     place.Address = result.FormattedAddress;
-                    place.ViewPort = result.Geometry.ViewPort;
+                    place.ViewPort = result.Geometry.ViewPort.ToLocalViewPort();
                     place.Reference = result.Reference;
                     place.WebSite = result.WebSite;
                     place.Rating = result.Raiting;
@@ -251,7 +253,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                 r =>
                 {
                     ClearSearchResults();
-                    var place = (Place)r.Result;
+                    var place = r.Result.ToPlace();
                     place.IsSearchResult = true;
                     _places.Add(place);
                     return place;
@@ -268,12 +270,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public void Search(Location baseLocation, string input, Action<CallbackEventArgs<List<Place>>> callback = null)
         {
             ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>, List<Place>>(
-                (c, r) => c.Search(baseLocation, input, r),
+                (c, r) => c.Search(baseLocation.ToGoogleLocation(), input, r),
                 r =>
                 {
                     ClearSearchResults();
-                    List<Place> places = r.Result.Count > 10 ? r.Result.Take(10).Select(p => (Place)p).ToList() : r.Result.Select(p => (Place)p).ToList();
-                    foreach (Place p in places)
+                    var places = r.Result.Count > 10 ? r.Result.Take(10).Select(p => p.ToPlace()).ToList() : r.Result.Select(p => p.ToPlace()).ToList();
+                    foreach (var p in places)
                     {
                         p.IsSearchResult = true;
                         _places.Add(p);
@@ -300,7 +302,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                         r =>
                         {
                             ClearSearchResults();
-                            var place = (Place)r.Result[0];
+                            var place = r.Result[0].ToPlace();
                             if (string.IsNullOrEmpty(place.Name))
                             {
                                 place.Name = defaultSearchName;
@@ -323,8 +325,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public void GetSuggestions(Location location, string input, Action<CallbackEventArgs<List<SearchSuggestion>>> callback = null)
         {
             ProcessCall<AutoCompleteResponse, List<Suggestion>, List<SearchSuggestion>>(
-                (c, r) => c.GetSuggestions(location, input, r),
-                r => new List<SearchSuggestion>(r.Result.Select(s => (SearchSuggestion)s).ToList()),
+                (c, r) => c.GetSuggestions(location.ToGoogleLocation(), input, r),
+                r => new List<SearchSuggestion>(r.Result.Select(s => s.ToLocalSearchSuggestion()).ToList()),
                 callback);
         }
 
@@ -347,15 +349,20 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public void GetRoute(string departure, string arrival, TravelMode mode, RouteMethod method, Action<CallbackEventArgs<Route>> callback = null)
         {
             ProcessCall<RoutesResponse, List<Codify.GoogleMaps.Entities.Route>, Route>(
-                (c, r) => c.GetDirections(departure, arrival, mode, method, Unit.Value, r),
+                (c, r) => c.GetDirections(departure, arrival, mode.ToGoogleTravelMode(), method.ToGoogleRouteMethod(), Unit.Value.ToGoogleUnits(), r),
                 response =>
                 {
-                    var route = (Route)response.Result.FirstOrDefault();
+                    var googleRoute = response.Result.FirstOrDefault();
                     Route existingRoute = null;
-                    if (route != null && route.Points.Count > 1 && (existingRoute = _routes.FirstOrDefault(r => r == route)) == null)
+                    if (googleRoute != null)
                     {
-                        _routes.Add(route);
-                        return route;
+                        var route = googleRoute.ToLocalRoute();
+                        if (route != null && route.Points.Count > 1 && (existingRoute = _routes.FirstOrDefault(r => r == route)) == null)
+                        {
+                            _routes.Add(route);
+                            return route;
+                        }
+
                     }
                     return existingRoute;
                 },
@@ -376,7 +383,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public void SaveContext()
         {
             // Save map center.
-            _storageProvider.SaveSetting(MapCenterProperty, (Location)MapCenter.Value);
+            _storageProvider.SaveSetting(MapCenterProperty, MapCenter.Value.ToLocalLocation());
 
             // Save map zoom level.
             _storageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel.Value);
@@ -415,7 +422,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             Location mapCenter;
             if (_storageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
             {
-                MapCenter.Value = mapCenter;
+                MapCenter.Value = mapCenter.ToGeoCoordinate();
             }
 
             // Load map zoom level.
@@ -628,13 +635,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
             _binarySerializer = binerySerializer;
             _googleMapsClient = googleMapsClient;
 
-            MapCenter = new ObservableValue<GeoCoordinate>(new Location());
+            MapCenter = new ObservableValue<GeoCoordinate>();
             MapZoomLevel = new ObservableValue<double>(1D);
             MapBaseLayer = new ObservableValue<Layer>();
             SearchInput = new ObservableValue<string>();
             RouteMethod = new ObservableValue<RouteMethod>();
             TravelMode = new ObservableValue<TravelMode>();
-            Unit = new ObservableValue<Unit>();
+            Unit = new ObservableValue<Units>();
 
             Places = new ReadOnlyObservableCollection<Place>(_places);
             MapOverlays = new ObservableCollection<Layer>();

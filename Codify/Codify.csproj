@@ -43,53 +43,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Phone" />
-    <Reference Include="Serialization">
-      <HintPath>..\Libraries\Serialization.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=3.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ViewModelDependencyAttribute.cs" />
     <Compile Include="Behaviors\RealTimeBindingBehavior.cs" />
     <Compile Include="Controls\ItemsControlExtension.cs" />
     <Compile Include="Controls\PanelExtension.cs" />
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DesignTime.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Imaging\UIBitmap.cs" />
-    <Compile Include="Models\IModel.cs" />
-    <Compile Include="Models\NotifyBase.cs" />
-    <Compile Include="Models\ObservableValue.cs" />
-    <Compile Include="ExpansionStates.cs" />
-    <Compile Include="Models\Unit.cs" />
-    <Compile Include="Serialization\BinarySerializer.cs" />
-    <Compile Include="Serialization\ISerializer.cs" />
-    <Compile Include="Services\CallbackStatus.cs" />
-    <Compile Include="Storage\IsolatedStorage.cs" />
-    <Compile Include="Storage\IStorage.cs" />
-    <Compile Include="Threading\Task.cs" />
     <Compile Include="Threading\UIThread.cs" />
     <Compile Include="Collections\AdaptedObservableCollection.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Converters\BooleanConverter.cs" />
     <Compile Include="Extensions\DelegateExtensions.cs" />
-    <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CallbackEventArgs.cs" />
     <Compile Include="TriggerActions\FocusAction.cs" />
     <Compile Include="Triggers\EventTrigger.cs" />
     <Compile Include="Triggers\KeyPressTrigger.cs" />
     <Compile Include="Triggers\RootTouchTrigger.cs" />
-    <Compile Include="ViewModels\DataViewModel.cs" />
-    <Compile Include="ViewModels\IViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="DataStates.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">
+      <Project>{CCE5758D-ABAB-40FF-99D8-2825D5574802}</Project>
+      <Name>Codify.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

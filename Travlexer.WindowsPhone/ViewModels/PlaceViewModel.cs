@@ -1,5 +1,6 @@
+
 using Codify.ViewModels;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {

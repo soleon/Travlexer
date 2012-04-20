@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using Microsoft.Phone.Controls.Maps;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
+using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone.Converters
 {
@@ -19,7 +20,7 @@ namespace Travlexer.WindowsPhone.Converters
 			var collection = new LocationCollection();
 			foreach (var l in list)
 			{
-				collection.Add(l);
+				collection.Add(l.ToGeoCoordinate());
 			}
 			return collection;
 		}

@@ -1,5 +1,5 @@
 using Codify;
-using Codify.Models;
+using Codify.Entities;
 using Codify.Storage;
 
 namespace Travlexer.WindowsPhone.Infrastructure
@@ -88,7 +88,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		/// <summary>
-		/// Saves the data context to the storage provided by <see cref="StorageProvider"/>.
+        /// Saves the data context to the storage provided by storage provider implements <see cref="T:Codify.Storage.IStorage"/>.
 		/// </summary>
 		public void SaveContext()
 		{
@@ -107,7 +107,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 		}
 
 		/// <summary>
-		/// Loads the data context from the storage provided by <see cref="StorageProvider"/>.
+		/// Loads the data context from the storage provided by a storage provider implements <see cref="T:Codify.Storage.IStorage"/>.
 		/// </summary>
 		public void LoadContext()
 		{

@@ -1,6 +1,5 @@
 using System;
 using Codify.GoogleMaps.Entities;
-using Codify.Models;
 using RestSharp;
 
 namespace Codify.GoogleMaps
@@ -58,6 +57,6 @@ namespace Codify.GoogleMaps
 		/// <param name="method">The routing method.</param>
 		/// <param name="unit">The unit to use in displaying the routing information.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Unit unit, Action<RestResponse<RoutesResponse>> callback);
+		void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Units unit, Action<RestResponse<RoutesResponse>> callback);
 	}
 }

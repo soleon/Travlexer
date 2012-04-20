@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using Codify.GoogleMaps.Entities;
-using Codify.Models;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -244,10 +243,10 @@ namespace Codify.GoogleMaps
 
 		}
 
-		public void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Unit unit, Action<RestResponse<RoutesResponse>> callback)
-		{
-			throw new NotImplementedException();
-		}
+	    public void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Units unit, Action<RestResponse<RoutesResponse>> callback)
+	    {
+	        throw new NotImplementedException();
+	    }
 
 		#endregion
 	}

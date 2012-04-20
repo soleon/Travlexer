@@ -3,7 +3,8 @@ using System.Device.Location;
 using System.Globalization;
 using System.Windows.Data;
 using Codify.Extensions;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
+using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone.Converters
 {
@@ -15,7 +16,7 @@ namespace Travlexer.WindowsPhone.Converters
 			{
 				return null;
 			}
-			return (GeoCoordinate)(Location)value;
+			return ((Location)value).ToGeoCoordinate();
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -24,7 +25,7 @@ namespace Travlexer.WindowsPhone.Converters
 			{
 				return null;
 			}
-			return (Location)(GeoCoordinate)value;
+			return ((GeoCoordinate)value).ToLocalLocation();
 		}
 	}
 }

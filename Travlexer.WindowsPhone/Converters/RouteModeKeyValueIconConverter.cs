@@ -5,8 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using Codify.GoogleMaps.Entities;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
 using Travlexer.WindowsPhone.ViewModels;
 
 namespace Travlexer.WindowsPhone.Converters

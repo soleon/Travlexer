@@ -53,20 +53,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationContext.cs" />
+    <Compile Include="ConversionExtensions.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="IConfigurationContext.cs" />
     <Compile Include="IDataContext.cs" />
-    <Compile Include="Models\Location.cs" />
-    <Compile Include="Models\Place.cs" />
-    <Compile Include="Models\ElementColor.cs" />
-    <Compile Include="Models\PlaceIcon.cs" />
-    <Compile Include="Models\Route.cs" />
-    <Compile Include="Models\RouteLocation.cs" />
-    <Compile Include="Models\SearchSuggestion.cs" />
-    <Compile Include="Models\ViewPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Units.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">
+      <Project>{CCE5758D-ABAB-40FF-99D8-2825D5574802}</Project>
+      <Name>Codify.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Codify.GoogleMaps\Codify.GoogleMaps.csproj">
       <Project>{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}</Project>
       <Name>Codify.GoogleMaps</Name>
@@ -74,6 +73,10 @@
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
       <Name>Codify</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Travlexer.Data\Travlexer.Data.csproj">
+      <Project>{E47E5806-0122-4651-A8D0-5D5EB012F9A4}</Project>
+      <Name>Travlexer.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

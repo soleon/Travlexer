@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Codify;
 using Microsoft.Phone.Tasks;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
 
 namespace Travlexer.WindowsPhone.Controls
 {

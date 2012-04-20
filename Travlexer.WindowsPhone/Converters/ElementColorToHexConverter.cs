@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
 
 namespace Travlexer.WindowsPhone.Converters
 {

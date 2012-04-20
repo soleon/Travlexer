@@ -14,11 +14,11 @@
 								  xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
 								  xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
 								  xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
-								  xmlns:WindowsPhone="clr-namespace:Codify;assembly=Codify"
-								  xmlns:CodifyControls="clr-namespace:Codify.Controls;assembly=Codify"
+                                  xmlns:CodifyControls="clr-namespace:Codify.Controls;assembly=Codify"
 								  xmlns:CodifyPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
 								  xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
-								  Style="{StaticResource PageDefault}"
+                                  xmlns:Codify="clr-namespace:Codify;assembly=Codify.Core"
+                                  Style="{StaticResource PageDefault}"
 								  FontFamily="{StaticResource PhoneFontFamilyNormal}"
 								  FontSize="{StaticResource PhoneFontSizeNormal}"
 								  Foreground="{StaticResource PhoneForegroundBrush}"
@@ -256,7 +256,7 @@
 													   Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
-									<WindowsPhone:ExpansionStates>Expanded</WindowsPhone:ExpansionStates>
+									<Codify:ExpansionStates>Expanded</Codify:ExpansionStates>
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>

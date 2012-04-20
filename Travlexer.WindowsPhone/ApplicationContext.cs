@@ -13,6 +13,16 @@ namespace Travlexer.WindowsPhone
 {
     public static class ApplicationContext
     {
+        #region Constructors
+
+        static ApplicationContext()
+        {
+            IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
+            NetworkChange.NetworkAddressChanged += OnNetworkChanged;
+        }
+
+        #endregion
+
         #region Public Properties
 
         /// <summary>
@@ -20,15 +30,11 @@ namespace Travlexer.WindowsPhone
         /// </summary>
         public static bool IsNetworkAvailable { get; private set; }
 
-        public static INavigationService NavigationService
-        {
-            get;
-            private set;
-        }
+        public static INavigationService NavigationService { get; set; }
 
-        public static IDataContext Data { get; private set; }
+        public static IDataContext Data { get; set; }
 
-        public static IConfigurationContext Configuration { get; private set; }
+        public static IConfigurationContext Configuration { get; set; }
 
         #endregion
 

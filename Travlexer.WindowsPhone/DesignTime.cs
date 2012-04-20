@@ -3,7 +3,7 @@ using System.Device.Location;
 using Codify.GoogleMaps;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
 using Travlexer.WindowsPhone.ViewModels;
 using Ninject;
 using System;
@@ -71,7 +71,6 @@ namespace Travlexer.WindowsPhone
 				return;
 			}
             var kernel = new StandardKernel();
-            kernel = new StandardKernel();
             kernel.Bind<Func<Type, IViewModel>>().ToMethod(context => t => context.Kernel.Get(t) as IViewModel);
             kernel.Bind<PhoneApplicationFrame>().ToConstant(new PhoneApplicationFrame());
             kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
@@ -81,7 +80,7 @@ namespace Travlexer.WindowsPhone
             kernel.Bind<IGoogleMapsClient>().To<GoogleMapsClientMock>().InSingletonScope();
             kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
 
-			ApplicationContext.Initialize(new PhoneApplicationFrame());
+            ApplicationContext.Initialize(kernel);
 			ApplicationContext.Data.AddNewPlace(new Location { Latitude = 9.1540930, Longitude = -1.39166990 });
 			_initialized = true;
 		}

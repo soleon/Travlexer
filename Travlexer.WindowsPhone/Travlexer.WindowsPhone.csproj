@@ -55,7 +55,6 @@
     <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Microsoft.Xna.Framework" />
     <Reference Include="Ninject">
       <HintPath>..\Libraries\Ninject.dll</HintPath>
@@ -175,9 +174,21 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">
+      <Project>{CCE5758D-ABAB-40FF-99D8-2825D5574802}</Project>
+      <Name>Codify.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Codify.GoogleMaps\Codify.GoogleMaps.csproj">
       <Project>{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}</Project>
       <Name>Codify.GoogleMaps</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codify.Serialization\Codify.Serialization.csproj">
+      <Project>{D0C9AEE2-51E0-4280-B3A0-DB13D0F033E0}</Project>
+      <Name>Codify.Serialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codify.Storage\Codify.Storage.csproj">
+      <Project>{D7229A58-C894-4D0A-B744-0EBF2433C8F3}</Project>
+      <Name>Codify.Storage</Name>
     </ProjectReference>
     <ProjectReference Include="..\Codify.WindowsPhone\Codify.WindowsPhone.csproj">
       <Project>{B8D26238-C61A-46BA-8BC7-9A6C4AAEDAEC}</Project>
@@ -186,6 +197,10 @@
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
       <Name>Codify</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Travlexer.Data\Travlexer.Data.csproj">
+      <Project>{E47E5806-0122-4651-A8D0-5D5EB012F9A4}</Project>
+      <Name>Travlexer.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Travlexer.WindowsPhone.Infrastructure\Travlexer.WindowsPhone.Infrastructure.csproj">
       <Project>{6E495B32-0B3C-4677-A2E1-53F76E7FFE4C}</Project>

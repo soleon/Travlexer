@@ -16,14 +16,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Codify;
 using Codify.Attributes;
+using Codify.Entities;
 using Codify.Extensions;
 using Codify.GoogleMaps.Controls;
-using Codify.Models;
 using Codify.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Xna.Framework.Media;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.Data;
+using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.ViewModels;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using QuadKey = Codify.GoogleMaps.Controls.QuadKey;
@@ -182,23 +183,23 @@ namespace Travlexer.WindowsPhone.Views
 				var viewPort = place.ViewPort;
 				if (viewPort == null)
 				{
-					Map.SetView(place.Location, 15D);
+					Map.SetView(place.Location.ToGeoCoordinate(), 15D);
 				}
 				else
 				{
 					try
 					{
-						Map.SetView(place.ViewPort);
+						Map.SetView(place.ViewPort.ToLocationRect());
 					}
 					catch (ArgumentOutOfRangeException)
 					{
-						Map.SetView(place.Location, 15D);
+						Map.SetView(place.Location.ToGeoCoordinate(), 15D);
 					}
 				}
 			}
 			else
 			{
-				var coordinates = places.Select(p => (GeoCoordinate)p.Location).ToArray();
+				var coordinates = places.Select(p => p.Location.ToGeoCoordinate()).ToArray();
 				if (coordinates.Length == 0)
 				{
 					return;
@@ -289,7 +290,8 @@ namespace Travlexer.WindowsPhone.Views
 			point.X += DragPushpin.ActualWidth / 2;
 			point.Y += DragPushpin.ActualHeight;
 			var location = Map.ViewportPointToLocation(point);
-			_mapCenter.Value = dragPushpinVm.Data.Location = location;
+			_mapCenter.Value = location;
+		    dragPushpinVm.Data.Location = location.ToLocalLocation();
 
 			// Select the dragged pushpin.
 			_context.SelectedPushpin = dragPushpinVm;
@@ -572,7 +574,7 @@ namespace Travlexer.WindowsPhone.Views
 		}
 
 		/// <summary>
-		/// Called when items in <see cref="Infrastructure.ApplicationContext.Data.MapOverlays"/> has changed.
+		/// Called when items in ApplicationContext.Data.MapOverlays has changed.
 		/// This handler specifically checks if <see cref="Layer.TransitOverlay"/> is added to the collection, and refershes the offline transit layer if the map is in offline mode.
 		/// </summary>
 		private void OnMapOverlaysCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -1152,7 +1154,7 @@ namespace Travlexer.WindowsPhone.Views
 		private void SetViewForRoute(Route route)
 		{
 			var locations = route.Points;
-			var coordinates = locations.Select(l => (GeoCoordinate)l).ToArray();
+			var coordinates = locations.Select(l => l.ToGeoCoordinate()).ToArray();
 			if (!coordinates.Any())
 			{
 				return;

@@ -57,6 +57,10 @@
     <Compile Include="PhoneApplicationPage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">
+      <Project>{CCE5758D-ABAB-40FF-99D8-2825D5574802}</Project>
+      <Name>Codify.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
       <Name>Codify</Name>

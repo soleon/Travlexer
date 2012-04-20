@@ -10,18 +10,16 @@ using System.Windows.Media;
 using Codify;
 using Codify.Collections;
 using Codify.Commands;
+using Codify.Entities;
 using Codify.Extensions;
 using Codify.GoogleMaps.Controls;
-using Codify.GoogleMaps.Entities;
-using Codify.Models;
 using Codify.Services;
 using Codify.Threading;
 using Codify.ViewModels;
+using Travlexer.Data;
 using Travlexer.WindowsPhone.Converters;
-using Travlexer.WindowsPhone.Infrastructure.Models;
+using Travlexer.WindowsPhone.Infrastructure;
 using Travlexer.WindowsPhone.Views;
-using Place = Travlexer.WindowsPhone.Infrastructure.Models.Place;
-using Route = Travlexer.WindowsPhone.Infrastructure.Models.Route;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
@@ -119,7 +117,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			CommandGoToDefaultState = new DelegateCommand(OnGoToDefaultState);
 			CommandStartGeoWatcher = new DelegateCommand(() => _geoWatcher.Start());
 			CommandStopGeoWatcher = new DelegateCommand(() => _geoWatcher.Stop());
-			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
+			CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation.ToLocalLocation()), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
 			CommandZoomIn = new DelegateCommand(() =>
 			{
 				if (ZoomLevel.Value < 20D)
@@ -207,7 +205,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 				{
 					DragPushpin = null;
 					var place = value.Data;
-					Center.Value = place.Location;
+					Center.Value = place.Location.ToGeoCoordinate();
 					if (place.DataState != DataStates.Finished)
 					{
 						OnUpdatePlace(value);
@@ -314,7 +312,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		private readonly ObservableCollection<SearchSuggestion> _suggestions = new ObservableCollection<SearchSuggestion>();
 
 		/// <summary>
-		/// Gets or sets the selected <see cref="SearchSuggestion"/>.
+		/// Gets or sets the selected <see cref="Travlexer.Data.SearchSuggestion"/>.
 		/// </summary>
 		public SearchSuggestion SelectedSuggestion
 		{
@@ -691,7 +689,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			ApplicationContext.Configuration.IsBusy.Value = true;
 			VisualState.Value = VisualStates.Default;
 			ApplicationContext.Data.CancelGetSuggestions();
-			ApplicationContext.Data.Search(Center.Value, SearchInput.Value, callback =>
+			ApplicationContext.Data.Search(Center.Value.ToLocalLocation(), SearchInput.Value, callback =>
 			{
 				ApplicationContext.Configuration.IsBusy.Value = false;
 				if (callback.Status != CallbackStatus.Successful)
@@ -717,7 +715,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 			}
 
 			ApplicationContext.Configuration.IsBusy.Value = true;
-			ApplicationContext.Data.GetSuggestions(Center.Value, SearchInput.Value, args =>
+			ApplicationContext.Data.GetSuggestions(Center.Value.ToLocalLocation(), SearchInput.Value, args =>
 			{
 				ApplicationContext.Configuration.IsBusy.Value = false;
 				SelectedSuggestion = null;

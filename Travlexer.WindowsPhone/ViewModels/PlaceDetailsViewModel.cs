@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Codify.ViewModels;
+using Travlexer.Data;
 using Travlexer.WindowsPhone.Infrastructure;
-using Travlexer.WindowsPhone.Infrastructure.Models;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
