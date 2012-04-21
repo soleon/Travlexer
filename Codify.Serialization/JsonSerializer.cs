@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Codify.Serialization
 {
-    public class JsonSerializer : SerializerBase<string>
+    public class JsonSerializer : ISerializer<string>
     {
         #region Public Methods
 
@@ -14,7 +14,7 @@ namespace Codify.Serialization
         /// <returns>
         /// The deserialized object as <see cref="TTarget"/>.
         /// </returns>
-        public override TTarget Deserialize<TTarget>(string source)
+        public TTarget Deserialize<TTarget>(string source) where TTarget : class
         {
             return JsonConvert.DeserializeObject<TTarget>(source);
         }
@@ -27,11 +27,65 @@ namespace Codify.Serialization
         /// <returns>
         /// The serialized representation of the target as <see cref="string"/>.
         /// </returns>
-        public override string Serialize<TTarget>(TTarget target)
+        public string Serialize<TTarget>(TTarget target) where TTarget : class
         {
             return JsonConvert.SerializeObject(target);
         }
 
+        /// <summary>
+        /// Tries to deserialize the source object to <see cref="TTarget"/>.
+        /// </summary>
+        /// <typeparam name="TTarget">The type of the target.</typeparam>
+        /// <param name="source">The source to deserialize.</param>
+        /// <param name="output">The deserialized object as <see cref="TTarget"/> if deserialization is successful.</param>
+        /// <returns>
+        ///   <c>true</c> if the deserialization process is successful, otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool TryDeserialize<TTarget>(string source, out TTarget output) where TTarget : class
+        {
+            try
+            {
+                output = Deserialize<TTarget>(source);
+                return true;
+            }
+            catch
+            {
+                return Fail(out output);
+            }
+        }
+
+        /// <summary>
+        /// Tries to serialize the target into <see cref="T:System.String"/>.
+        /// </summary>
+        /// <typeparam name="TTarget">The type of the target.</typeparam>
+        /// <param name="target">The target to be serialized.</param>
+        /// <param name="output">The serialized representation of the source as <see cref="T:System.String"/> if serialization is successful.</param>
+        /// <returns>
+        ///   <c>true</c> if the serialization process is successful, otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool TrySerialize<TTarget>(TTarget target, out string output) where TTarget : class
+        {
+            try
+            {
+                output = Serialize(target);
+                return true;
+            }
+            catch
+            {
+                return Fail(out output);
+            }
+        }
+
+        #endregion
+
+
+        #region Private Methods
+
+        private static bool Fail<T>(out T output)
+        {
+            output = default(T);
+            return false;
+        }
 
         #endregion
     }

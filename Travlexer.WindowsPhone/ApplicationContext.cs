@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.NetworkInformation;
+using Codify.Entities;
 using Codify.ViewModels;
 using Codify.WindowsPhone;
 using Microsoft.Phone.Controls;
@@ -22,6 +23,7 @@ namespace Travlexer.WindowsPhone
         }
 
         #endregion
+
 
         #region Public Properties
 
@@ -59,13 +61,13 @@ namespace Travlexer.WindowsPhone
         {
             // Initialize Ioc container.
             var kernel = new StandardKernel();
-            kernel.Bind<Func<Type, IViewModel>>().ToMethod(context => t => context.Kernel.Get(t) as IViewModel);
+            kernel.Bind<Func<Type, NotifyableEntity>>().ToMethod(context => t => context.Kernel.Get(t) as NotifyableEntity);
             kernel.Bind<PhoneApplicationFrame>().ToConstant(frame);
             kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             kernel.Bind<IStorage>().To<IsolatedStorage>().InSingletonScope();
             kernel.Bind<ISerializer<byte[]>>().To<BinarySerializer>().InSingletonScope();
-            kernel.Bind<IDataContext>().To<DataContext>().InSingletonScope();
             kernel.Bind<IGoogleMapsClient>().To<GoogleMapsClient>().InSingletonScope();
+            kernel.Bind<IDataContext>().To<DataContext>().InSingletonScope();
             kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
             Initialize(kernel);
         }
@@ -80,10 +82,6 @@ namespace Travlexer.WindowsPhone
             Data = kernel.Get<IDataContext>();
             Configuration = kernel.Get<IConfigurationContext>();
             NavigationService = kernel.Get<INavigationService>();
-
-            // Initializes the network avalability flag and listens to network changes.
-            IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
-            NetworkChange.NetworkAddressChanged += OnNetworkChanged;
         }
 
         public static void LoadContext()

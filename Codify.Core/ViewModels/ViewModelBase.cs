@@ -1,4 +1,5 @@
-﻿using Codify.Entities;
+﻿using System;
+using Codify.Entities;
 
 namespace Codify.ViewModels
 {
@@ -6,7 +7,7 @@ namespace Codify.ViewModels
     /// Represents a view model that requires a parent view model.
     /// </summary>
     /// <typeparam name="TParent">The type of the parent.</typeparam>
-    public abstract class ViewModelBase<TParent> : ModelBase, IViewModel<TParent> where TParent : class, IViewModel
+    public abstract class ViewModelBase<TParent> : NotifyableEntity, IDisposable where TParent : class
     {
         private const string ParentProperty = "Parent";
         private TParent _parent;
@@ -15,7 +16,7 @@ namespace Codify.ViewModels
         /// Initializes a new instance of the <see cref="ViewModelBase{TParent}"/> class.
         /// </summary>
         /// <param name="parent">The logical parent view model that owns this view model.</param>
-        protected ViewModelBase(TParent parent = null)
+        protected ViewModelBase(TParent parent = default(TParent))
         {
             Parent = parent;
         }
@@ -36,20 +37,7 @@ namespace Codify.ViewModels
 
         protected virtual void OnDispose()
         {
-            Parent = null;
+            Parent = default(TParent);
         }
-    }
-
-    /// <summary>
-    /// Represents a view model that does not require a parent view model.
-    /// </summary>
-    public abstract class ViewModelBase : ModelBase, IViewModel
-    {
-        public void Dispose()
-        {
-            OnDispose();
-        }
-
-        protected virtual void OnDispose() {}
     }
 }

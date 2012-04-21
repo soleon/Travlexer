@@ -25,12 +25,34 @@ namespace Codify.Entities
             RaisePropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void RaisePropertyChange(params string[] propertyNames)
+        protected void RaisePropertyChanged(params string[] propertyNames)
         {
             foreach (var propertyName in propertyNames)
             {
-                RaisePropertyChange(propertyName);
+                RaisePropertyChanged(propertyName);
             }
+        }
+
+        protected bool SetProperty<T>(ref T property, T value, string propertyName)
+        {
+            if (Equals(property, value))
+            {
+                return false;
+            }
+            property = value;
+            RaisePropertyChanged(propertyName);
+            return true;
+        }
+
+        protected bool SetProperty<T>(ref T property, T value, params string[] propertyNames)
+        {
+            if (Equals(property, value))
+            {
+                return false;
+            }
+            property = value;
+            RaisePropertyChanged(propertyNames);
+            return true;
         }
 
         #endregion

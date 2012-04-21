@@ -1,9 +1,9 @@
 using System.Windows.Input;
-using Codify.ViewModels;
+using Codify.Entities;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
-	public class AppBarItemViewModel : ViewModelBase
+	public class AppBarItemViewModel : NotifyableEntity
 	{
 		public string Text
 		{

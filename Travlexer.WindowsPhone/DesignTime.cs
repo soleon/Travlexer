@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Device.Location;
+using Codify.Entities;
 using Codify.GoogleMaps;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
@@ -71,7 +72,7 @@ namespace Travlexer.WindowsPhone
 				return;
 			}
             var kernel = new StandardKernel();
-            kernel.Bind<Func<Type, IViewModel>>().ToMethod(context => t => context.Kernel.Get(t) as IViewModel);
+            kernel.Bind<Func<Type, NotifyableEntity>>().ToMethod(context => t => context.Kernel.Get(t) as NotifyableEntity);
             kernel.Bind<PhoneApplicationFrame>().ToConstant(new PhoneApplicationFrame());
             kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             kernel.Bind<IStorage>().To<IsolatedStorage>().InSingletonScope();

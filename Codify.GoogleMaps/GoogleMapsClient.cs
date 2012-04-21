@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Net;
 using Codify.Extensions;
 using Codify.GoogleMaps.Entities;
-using Codify.GoogleMaps.Serialization;
+using Codify.Serialization;
 using RestSharp;
 
 namespace Codify.GoogleMaps

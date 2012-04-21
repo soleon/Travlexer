@@ -6,7 +6,7 @@ namespace Travlexer.Data
 	/// <summary>
 	/// Represents either the departure or arrival location for a route.
 	/// </summary>
-	public class RouteLocation : ModelBase
+    public class RouteLocation : NotifyableEntity
 	{
 		#region Public Properties
 

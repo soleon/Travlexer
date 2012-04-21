@@ -37,7 +37,6 @@
   <ItemGroup>
     <Compile Include="Attributes\ViewModelDependencyAttribute.cs" />
     <Compile Include="DataStates.cs" />
-    <Compile Include="Entities\ModelBase.cs" />
     <Compile Include="Entities\NotifyableEntity.cs" />
     <Compile Include="Entities\ObservableValue.cs" />
     <Compile Include="ExpansionStates.cs" />
@@ -50,8 +49,8 @@
     <Compile Include="Services\CallbackStatus.cs" />
     <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Threading\Task.cs" />
-    <Compile Include="ViewModels\DataViewModel.cs" />
-    <Compile Include="ViewModels\IViewModel.cs" />
+    <Compile Include="ViewModels\DataViewModel{TData,TParent}.cs" />
+    <Compile Include="ViewModels\DataViewModel{T}.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

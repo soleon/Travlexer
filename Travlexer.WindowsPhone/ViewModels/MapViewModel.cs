@@ -26,7 +26,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 	/// <summary>
 	/// Defines the view model for <see cref="MapView"/>
 	/// </summary>
-	public class MapViewModel : ViewModelBase
+    public class MapViewModel : NotifyableEntity
 	{
 		#region Constants
 
@@ -153,8 +153,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 			// Handle necessary events.
 			Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
-			ApplicationContext.Data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChange(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
-			ApplicationContext.Data.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChange(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
+			ApplicationContext.Data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChanged(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
+			ApplicationContext.Data.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChanged(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
 			VisualState.ValueChanged += OnVisualStateChanged;
 			IsTrackingCurrentLocation.ValueChanged += OnIsTrackingCurrentLocationValueChanged;
 
@@ -1091,7 +1091,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
 		private void InitializeAppBarButtonSources()
 		{
-			_trackButton = new AppBarButtonViewModel
+			_trackButton = new AppBarButtonViewModel()
 			{
 				IconUri = new Uri("/Assets/CurrentLocation.png", UriKind.Relative),
 				Text = "track",

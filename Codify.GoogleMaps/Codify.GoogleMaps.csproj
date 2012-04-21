@@ -85,7 +85,6 @@
     <Compile Include="GoogleMapsClientMock.cs" />
     <Compile Include="IGoogleMapsClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\JsonSerializer.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup />
@@ -93,6 +92,10 @@
     <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">
       <Project>{CCE5758D-ABAB-40FF-99D8-2825D5574802}</Project>
       <Name>Codify.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codify.Serialization\Codify.Serialization.csproj">
+      <Project>{D0C9AEE2-51E0-4280-B3A0-DB13D0F033E0}</Project>
+      <Name>Codify.Serialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Codify\Codify.csproj">
       <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>

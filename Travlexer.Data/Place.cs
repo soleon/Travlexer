@@ -4,7 +4,7 @@ using Codify.Entities;
 
 namespace Travlexer.Data
 {
-	public class Place : ModelBase
+    public class Place : NotifyableEntity
 	{
 		#region Constants
 

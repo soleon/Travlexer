@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Navigation;
 using Codify.Attributes;
+using Codify.Entities;
 using Codify.ViewModels;
 using Microsoft.Phone.Controls;
 
@@ -17,14 +18,14 @@ namespace Codify.WindowsPhone
 
 		private readonly Dictionary<Type, Uri> _viewMap = new Dictionary<Type, Uri>();
 		private readonly PhoneApplicationFrame _phoneApplicationFrame;
-		private readonly Func<Type, IViewModel> _viewModelFactory;
+        private readonly Func<Type, NotifyableEntity> _viewModelFactory;
 
 		#endregion
 
 
 		#region Constructors
 
-		public NavigationService(PhoneApplicationFrame phoneApplicationFrame, Func<Type, IViewModel> viewModelFactory)
+        public NavigationService(PhoneApplicationFrame phoneApplicationFrame, Func<Type, NotifyableEntity> viewModelFactory)
 		{
 			_viewModelFactory = viewModelFactory;
 			_phoneApplicationFrame = phoneApplicationFrame;
