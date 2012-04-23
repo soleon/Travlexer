@@ -357,7 +357,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                     if (googleRoute != null)
                     {
                         var route = googleRoute.ToLocalRoute();
-                        if (route != null && route.Points.Count > 1 && (existingRoute = _routes.FirstOrDefault(r => r == route)) == null)
+                        if (route != null && (existingRoute = _routes.FirstOrDefault(r => r == route)) == null)
                         {
                             _routes.Add(route);
                             return route;

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\RealTimeBindingBehavior.cs" />
+    <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Controls\ItemsControlExtension.cs" />
     <Compile Include="Controls\PanelExtension.cs" />
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
@@ -58,9 +59,8 @@
     <Compile Include="Imaging\UIBitmap.cs" />
     <Compile Include="Threading\UIThread.cs" />
     <Compile Include="Collections\AdaptedObservableCollection.cs" />
-    <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Commands\DelegateCommand{T}.cs" />
     <Compile Include="Converters\BooleanConverter.cs" />
-    <Compile Include="Extensions\DelegateExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TriggerActions\FocusAction.cs" />
     <Compile Include="Triggers\EventTrigger.cs" />
