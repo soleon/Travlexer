@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using Codify;
 using Codify.Commands;
 using Codify.Extensions;
 using Codify.ViewModels;
+using Codify.WindowsPhone;
+using Microsoft.Phone.Tasks;
 using Travlexer.Data;
 
 namespace Travlexer.WindowsPhone.ViewModels
@@ -20,6 +23,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             Data.PropertyChanged += OnDataPropertyChanged;
 
             CommandUpdatePlaceInfo = new DelegateCommand(() => ApplicationContext.Data.GetPlaceDetails(Data));
+            CommandNavigateToUrl = new DelegateCommand<string>(Utilities.OpenUrl);
+            CommandCallNumber = new DelegateCommand<string>(number => Utilities.CallPhoneNumber(Data.Name, number));
 
             IsBusy = Data.DataState == DataStates.Busy;
         }
@@ -30,6 +35,8 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Commands
 
         public DelegateCommand CommandUpdatePlaceInfo { get; private set; }
+        public DelegateCommand<string> CommandNavigateToUrl { get; private set; }
+        public DelegateCommand<string> CommandCallNumber { get; private set; }
 
         #endregion
 

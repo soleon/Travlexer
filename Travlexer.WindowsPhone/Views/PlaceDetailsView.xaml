@@ -184,7 +184,8 @@
                            Foreground="{StaticResource PhoneDisabledBrush}"
                            Text="Looking up this place..."
                            VerticalAlignment="Center"
-                           Visibility="Collapsed" FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
+                           Visibility="Collapsed"
+                           FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
                 <HyperlinkButton x:Name="ErrorButton"
                                  Grid.Column="1"
                                  Margin="{StaticResource PhoneHorizontalMargin}"
@@ -204,13 +205,16 @@
                                  Margin="{StaticResource PhoneMargin}"
                                  Content="{Binding Data.WebSite, TargetNullValue=No website found}"
                                  IsEnabled="{Binding Data.WebSite, Converter={StaticResource BooleanConverter}}"
-                                 d:LayoutOverrides="Height" />
+                                 d:LayoutOverrides="Height"
+                                 Command="{Binding CommandNavigateToUrl}"
+                                 CommandParameter="{Binding Data.WebSite}" />
                 <HyperlinkButton Grid.Column="1"
                                  Grid.Row="3"
                                  Margin="{StaticResource PhoneMargin}"
                                  Content="{Binding Data.ContactNumber, TargetNullValue=No contact number found}"
                                  IsEnabled="{Binding Data.ContactNumber, Converter={StaticResource BooleanConverter}}"
-                                 d:LayoutOverrides="Height" />
+                                 Command="{Binding CommandCallNumber}"
+                                 CommandParameter="{Binding Data.ContactNumber}" />
                 <TextBox Style="{StaticResource TextBoxStyle}"
                          Grid.Column="1"
                          Grid.Row="4"
