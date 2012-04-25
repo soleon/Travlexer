@@ -60,10 +60,10 @@
         <DataTemplate x:Key="DataTemplateKeyValueIcon">
             <StackPanel Height="34"
                         Orientation="Horizontal">
-                <Rectangle Margin="0,0,5,0"
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Margin="0,0,5,0"
                            Fill="{Binding Icon, Mode=OneTime}"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource IconRectangleStyle}"/>
+                           VerticalAlignment="Center" />
                 <TextBlock FontFamily="{StaticResource PhoneFontFamilyNormal}"
                            FontSize="{StaticResource PhoneFontSizeMedium}"
                            Text="{Binding Value, Mode=OneTime}"
@@ -824,9 +824,9 @@
         </Border>
         <Grid x:Name="SearchPanel"
               Visibility="Collapsed">
-        	<i:Interaction.Behaviors>
-        		<Behaviors:CancelGestureEventBehavior/>
-        	</i:Interaction.Behaviors>
+            <i:Interaction.Behaviors>
+                <Behaviors:CancelGestureEventBehavior />
+            </i:Interaction.Behaviors>
             <Rectangle x:Name="SearchBackground"
                        Fill="{StaticResource BrushSemiTransparentBackground}"
                        IsHitTestVisible="False"
@@ -837,7 +837,7 @@
                   VerticalAlignment="Top">
                 <i:Interaction.Triggers>
                     <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SearchPanel}"
-																Element="{Binding ElementName=Map}">
+                                                                Element="{Binding ElementName=Map}">
                         <i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
                     </Triggers:ElementMouseButtonActivityTrigger>
                 </i:Interaction.Triggers>
@@ -897,9 +897,9 @@
         </Grid>
         <Grid x:Name="RoutePanel"
               Visibility="Collapsed">
-        	<i:Interaction.Behaviors>
-        		<Behaviors:CancelGestureEventBehavior/>
-        	</i:Interaction.Behaviors>
+            <i:Interaction.Behaviors>
+                <Behaviors:CancelGestureEventBehavior />
+            </i:Interaction.Behaviors>
             <Rectangle x:Name="RouteBackground"
                        Fill="{StaticResource BrushSemiTransparentBackground}"
                        IsHitTestVisible="False"
@@ -1007,9 +1007,9 @@
                             HorizontalContentAlignment="Left"
                             VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
-                            <Rectangle Margin="0,0,5,0"
-                                       Fill="{StaticResource BrushIconRoute}"
-                                       Style="{StaticResource IconRectangleStyle}"/>
+                            <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                       Margin="0,0,5,0"
+                                       Fill="{StaticResource BrushIconRoute}" />
                             <TextBlock FontFamily="{StaticResource PhoneFontFamilyNormal}"
                                        FontSize="{StaticResource PhoneFontSizeMedium}"
                                        Text="Find Routes" />

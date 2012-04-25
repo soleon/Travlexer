@@ -1,143 +1,272 @@
-﻿<phone:PhoneApplicationPage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
-							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-							xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-							xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
-							xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
-							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-							x:Name="Page"
-							x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
-							FontFamily="{StaticResource PhoneFontFamilyNormal}"
-							FontSize="{StaticResource PhoneFontSizeNormal}"
-							Foreground="{StaticResource PhoneForegroundBrush}"
-							Style="{StaticResource PageDefault}"
-							Orientation="Portrait"
-							mc:Ignorable="d"
-							d:DesignHeight="768"
-							d:DesignWidth="480"
-							shell:SystemTray.IsVisible="True"
-							d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
-	<phone:PhoneApplicationPage.Resources>
-		<DataTemplate x:Key="PlaceIconFullModeItemTemplate">
-			<Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}" VerticalAlignment="Center"/>
-				<TextBlock Text="{Binding Value}" Grid.Column="1" VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" FontSize="{StaticResource PhoneFontSizeLarge}" FontFamily="{StaticResource PhoneFontFamilyLight}"/>
-			</Grid>
-		</DataTemplate>
-		<DataTemplate x:Key="PlaceIconItemTemplate">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-                <Rectangle Width="32"
-                           Height="32"
-                           Fill="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}"/>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}"/>
-				<TextBlock Text="{Binding Value}" Grid.Column="1" Margin="{StaticResource PhoneHorizontalMargin}"/>
-			</Grid>
-		</DataTemplate>
-		<DataTemplate x:Key="PlaceColorItemTemplate">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="0.859*"/>
-				</Grid.ColumnDefinitions>
-				<Rectangle Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}, Mode=OneWay}" Height="32" Width="32" d:LayoutOverrides="Width, Height"/>
-				<TextBlock TextWrapping="Wrap" Text="{Binding Value, Mode=OneWay}" d:LayoutOverrides="Width" Grid.Column="1" Margin="{StaticResource PhoneHorizontalMargin}"/>
-			</Grid>
-		</DataTemplate>
-		<DataTemplate x:Key="PlaceColorFullModeItemTemplate">
-			<Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Rectangle Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}}" Width="48" Height="48"/>
-				<TextBlock Margin="{StaticResource PhoneHorizontalMargin}" TextWrapping="Wrap" Text="{Binding Value}" d:LayoutOverrides="Width, Height" Grid.Column="1" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeExtraLarge}" FontFamily="{StaticResource PhoneFontFamilySemiLight}"/>
-			</Grid>
-		</DataTemplate>
-	</phone:PhoneApplicationPage.Resources>
-	<ShellExtension:ApplicationBar.ApplicationBar>
-		<ShellExtension:ApplicationBar />
-	</ShellExtension:ApplicationBar.ApplicationBar>
-	<controls:Pivot Title="{Binding Data.Name}">
-		<controls:PivotItem Header="information">
-			<Grid DataContext="{Binding Data}" >
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="0.532*"/>
-				</Grid.RowDefinitions>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconHome}" VerticalAlignment="Center"/>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconPin}" VerticalAlignment="Center" Grid.Row="1"/>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconGlobe}" VerticalAlignment="Center" Grid.Row="2"/>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconPhone}" VerticalAlignment="Center" Grid.Row="3"/>
-				<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconStar}" VerticalAlignment="Center" Grid.Row="4"/>
-				<TextBox TextWrapping="Wrap"
-					Text="{Binding Address, Mode=TwoWay}"
-					Style="{StaticResource TextBoxStyle}"
-					IsReadOnly="True"
-					GotFocus="SelectAllOnTextBoxGotFocus" d:LayoutOverrides="Height" Grid.Column="1" />
-				<TextBox TextWrapping="Wrap"
-					Text="{Binding Location, Mode=TwoWay}"
-					IsReadOnly="True"
-					Style="{StaticResource TextBoxStyle}"
-					GotFocus="SelectAllOnTextBoxGotFocus" Grid.Row="1" d:LayoutOverrides="Height" Grid.Column="1" />
-				<HyperlinkButton Content="{Binding WebSite, TargetNullValue=No website found}"
-					IsEnabled="{Binding WebSite, Converter={StaticResource BooleanConverter}}" Grid.Row="2" d:LayoutOverrides="Height" Grid.Column="1" Margin="{StaticResource PhoneMargin}" />
-				<HyperlinkButton Content="{Binding ContactNumber, TargetNullValue=No contact number found}"
-					IsEnabled="{Binding ContactNumber, Converter={StaticResource BooleanConverter}}" Grid.Row="3" d:LayoutOverrides="Height" Grid.Column="1" Margin="{StaticResource PhoneMargin}" />
-				<TextBox Text="{Binding Rating, StringFormat=Rating: \{0\}, TargetNullValue=No rating found}"
-					IsEnabled="{Binding Rating, Converter={StaticResource BooleanConverter}}"
-					IsReadOnly="True"
-					IsHitTestVisible="False"
-					Style="{StaticResource TextBoxStyle}" Grid.Row="4" d:LayoutOverrides="Height" Grid.Column="1" />
-			</Grid>
-		</controls:PivotItem>
-		<controls:PivotItem Header="personalize">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition />
-				</Grid.RowDefinitions>
-				<TextBox TextWrapping="Wrap"
-					Text="{Binding Data.Name, Mode=TwoWay}"
-					GotFocus="SelectAllOnTextBoxGotFocus" d:LayoutOverrides="Height" InputScope="Text"/>
-				<toolkit:ListPicker Grid.Row="1" ItemsSource="{Binding PlaceIcons}" SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}" ItemTemplate="{StaticResource PlaceIconItemTemplate}" FullModeHeader="change place icon"/>
-				<toolkit:ListPicker Grid.Row="2" FullModeHeader="change place color" ItemsSource="{Binding PlaceColors}" SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" ItemTemplate="{StaticResource PlaceColorItemTemplate}" FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}" />
-				<TextBox x:Name="NotesTextBox"
-					TextWrapping="Wrap"
-					AcceptsReturn="True"
-					Height="220"
-					Text="{Binding Data.Notes, Mode=TwoWay}"
-					InputScope="Text"
-					VerticalAlignment="Top"
-					d:LayoutOverrides="Height"
-					GotFocus="SelectAllOnTextBoxGotFocus" Grid.Row="3"/>
-				<TextBlock Text="Notes..."
-					Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}"
-					FontStyle="Italic"
-					HorizontalAlignment="Left"
-					IsHitTestVisible="False" Margin="16,16,0,0"
-					Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox}" VerticalAlignment="Top" Grid.Row="3"/>
-			</Grid>
-		</controls:PivotItem>
-		<controls:PivotItem Header="nearby" />
-	</controls:Pivot>
-</phone:PhoneApplicationPage>
+﻿<CodifyPhone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
+                                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                  xmlns:CodifyPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
+                                  xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+                                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                                  xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                                  xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
+                                  xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+                                  Style="{StaticResource PageDefault}"
+                                  x:Name="Page"
+                                  FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                                  FontSize="{StaticResource PhoneFontSizeNormal}"
+                                  Foreground="{StaticResource PhoneForegroundBrush}"
+                                  Orientation="Portrait"
+                                  mc:Ignorable="d"
+                                  d:DesignHeight="768"
+                                  d:DesignWidth="480"
+                                  shell:SystemTray.IsVisible="True"
+                                  d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
+                                 IsVisible="True" />
+    </shell:SystemTray.ProgressIndicator>
+    <CodifyPhone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="PlaceIconFullModeItemTemplate">
+            <Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}"
+                           VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1"
+                           Margin="{StaticResource PhoneHorizontalMargin}"
+                           FontFamily="{StaticResource PhoneFontFamilyLight}"
+                           FontSize="{StaticResource PhoneFontSizeLarge}"
+                           Text="{Binding Value}"
+                           VerticalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="PlaceIconItemTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Rectangle Height="32"
+                           Width="32"
+                           Fill="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Fill="{Binding Key, Converter={StaticResource PlaceIconToBrushConverter}}" />
+                <TextBlock Grid.Column="1"
+                           Margin="{StaticResource PhoneHorizontalMargin}"
+                           Text="{Binding Value}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="PlaceColorItemTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="0.859*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle Height="32"
+                           Width="32"
+                           Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}, Mode=OneWay}"
+                           d:LayoutOverrides="Width, Height" />
+                <TextBlock Grid.Column="1"
+                           Margin="{StaticResource PhoneHorizontalMargin}"
+                           Text="{Binding Value, Mode=OneWay}"
+                           TextWrapping="Wrap"
+                           d:LayoutOverrides="Width" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="PlaceColorFullModeItemTemplate">
+            <Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Rectangle Height="48"
+                           Width="48"
+                           Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}}" />
+                <TextBlock Grid.Column="1"
+                           Margin="{StaticResource PhoneHorizontalMargin}"
+                           FontFamily="{StaticResource PhoneFontFamilySemiLight}"
+                           FontSize="{StaticResource PhoneFontSizeExtraLarge}"
+                           Text="{Binding Value}"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           d:LayoutOverrides="Width, Height" />
+            </Grid>
+        </DataTemplate>
+    </CodifyPhone:PhoneApplicationPage.Resources>
+    <ShellExtension:ApplicationBar.ApplicationBar>
+        <ShellExtension:ApplicationBar />
+    </ShellExtension:ApplicationBar.ApplicationBar>
+    <controls:Pivot Title="{Binding Data.Name}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="DataStateGroup">
+                <VisualState x:Name="None" />
+                <VisualState x:Name="Busy">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BusyText"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Storyboard.TargetName="Address"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         Duration="0"
+                                         To="0"
+                                         d:IsOptimized="True" />
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Error">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorButton"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Storyboard.TargetName="Address"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         Duration="0"
+                                         To="0"
+                                         d:IsOptimized="True" />
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <controls:PivotItem Header="information">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="0.532*" />
+                </Grid.RowDefinitions>
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Fill="{StaticResource BrushIconHome}"
+                           VerticalAlignment="Center" />
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Grid.Row="1"
+                           Fill="{StaticResource BrushIconPin}"
+                           VerticalAlignment="Center" />
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Grid.Row="2"
+                           Fill="{StaticResource BrushIconGlobe}"
+                           VerticalAlignment="Center" />
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Grid.Row="3"
+                           Fill="{StaticResource BrushIconPhone}"
+                           VerticalAlignment="Center" />
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Grid.Row="4"
+                           Fill="{StaticResource BrushIconStar}"
+                           VerticalAlignment="Center" />
+                <TextBox Style="{StaticResource TextBoxStyle}"
+                         x:Name="Address"
+                         Grid.Column="1"
+                         GotFocus="SelectAllOnTextBoxGotFocus"
+                         IsReadOnly="True"
+                         Text="{Binding Data.Address, Mode=TwoWay}"
+                         TextWrapping="Wrap"
+                         d:LayoutOverrides="Height" />
+                <TextBlock x:Name="BusyText"
+                           Grid.Column="1"
+                           Margin="{StaticResource PhoneHorizontalMargin}"
+                           Foreground="{StaticResource PhoneDisabledBrush}"
+                           Text="Looking up this place..."
+                           VerticalAlignment="Center"
+                           Visibility="Collapsed" FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
+                <HyperlinkButton x:Name="ErrorButton"
+                                 Grid.Column="1"
+                                 Margin="{StaticResource PhoneHorizontalMargin}"
+                                 Command="{Binding CommandUpdatePlaceInfo}"
+                                 Content="No information found, tap to refresh"
+                                 Visibility="Collapsed" />
+                <TextBox Style="{StaticResource TextBoxStyle}"
+                         Grid.Column="1"
+                         Grid.Row="1"
+                         GotFocus="SelectAllOnTextBoxGotFocus"
+                         IsReadOnly="True"
+                         Text="{Binding Data.Location, Mode=TwoWay}"
+                         TextWrapping="Wrap"
+                         d:LayoutOverrides="Height" />
+                <HyperlinkButton Grid.Column="1"
+                                 Grid.Row="2"
+                                 Margin="{StaticResource PhoneMargin}"
+                                 Content="{Binding Data.WebSite, TargetNullValue=No website found}"
+                                 IsEnabled="{Binding Data.WebSite, Converter={StaticResource BooleanConverter}}"
+                                 d:LayoutOverrides="Height" />
+                <HyperlinkButton Grid.Column="1"
+                                 Grid.Row="3"
+                                 Margin="{StaticResource PhoneMargin}"
+                                 Content="{Binding Data.ContactNumber, TargetNullValue=No contact number found}"
+                                 IsEnabled="{Binding Data.ContactNumber, Converter={StaticResource BooleanConverter}}"
+                                 d:LayoutOverrides="Height" />
+                <TextBox Style="{StaticResource TextBoxStyle}"
+                         Grid.Column="1"
+                         Grid.Row="4"
+                         IsEnabled="{Binding Data.Rating, Converter={StaticResource BooleanConverter}}"
+                         IsHitTestVisible="False"
+                         IsReadOnly="True"
+                         Text="{Binding Data.Rating, StringFormat=Rating: \{0\}, TargetNullValue=No rating found}"
+                         d:LayoutOverrides="Height" />
+            </Grid>
+        </controls:PivotItem>
+        <controls:PivotItem Header="personalize">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBox GotFocus="SelectAllOnTextBoxGotFocus"
+                         InputScope="Text"
+                         Text="{Binding Data.Name, Mode=TwoWay}"
+                         TextWrapping="Wrap"
+                         d:LayoutOverrides="Height" />
+                <toolkit:ListPicker Grid.Row="1"
+                                    FullModeHeader="change place icon"
+                                    FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}"
+                                    ItemsSource="{Binding PlaceIcons}"
+                                    ItemTemplate="{StaticResource PlaceIconItemTemplate}"
+                                    SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" />
+                <toolkit:ListPicker Grid.Row="2"
+                                    FullModeHeader="change place color"
+                                    FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}"
+                                    ItemsSource="{Binding PlaceColors}"
+                                    ItemTemplate="{StaticResource PlaceColorItemTemplate}"
+                                    SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" />
+                <TextBox x:Name="NotesTextBox"
+                         Grid.Row="3"
+                         Height="220"
+                         AcceptsReturn="True"
+                         GotFocus="SelectAllOnTextBoxGotFocus"
+                         InputScope="Text"
+                         Text="{Binding Data.Notes, Mode=TwoWay}"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Top"
+                         d:LayoutOverrides="Height" />
+                <TextBlock Grid.Row="3"
+                           Margin="16,16,0,0"
+                           FontStyle="Italic"
+                           Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}"
+                           HorizontalAlignment="Left"
+                           IsHitTestVisible="False"
+                           Text="Notes..."
+                           VerticalAlignment="Top"
+                           Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox}" />
+            </Grid>
+        </controls:PivotItem>
+        <controls:PivotItem Header="nearby" />
+    </controls:Pivot>
+</CodifyPhone:PhoneApplicationPage>
