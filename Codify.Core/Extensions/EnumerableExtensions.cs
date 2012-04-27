@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Codify.Extensions
 {
+    /// <summary>
+    /// Contains extensions for enumerable objects.
+    /// </summary>
 	public static class EnumerationExtensions
 	{
 		/// <summary>

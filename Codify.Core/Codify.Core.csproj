@@ -43,7 +43,7 @@
     <Compile Include="ExpansionStates.cs" />
     <Compile Include="Extensions\DelegateExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\GenericExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Services\CallbackEventArgs.cs" />
