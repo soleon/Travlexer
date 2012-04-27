@@ -60,10 +60,10 @@
         <DataTemplate x:Key="DataTemplateKeyValueIcon">
             <StackPanel Height="34"
                         Orientation="Horizontal">
-                <Rectangle Margin="0,0,5,0"
+                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                           Margin="0,0,5,0"
                            Fill="{Binding Icon, Mode=OneTime}"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource IconRectangleStyle}"/>
+                           VerticalAlignment="Center" />
                 <TextBlock FontFamily="{StaticResource PhoneFontFamilyNormal}"
                            FontSize="{StaticResource PhoneFontSizeMedium}"
                            Text="{Binding Value, Mode=OneTime}"
@@ -641,10 +641,11 @@
                 <Maps:MapLayer x:Name="SelectedRoute"
                                DataContext="{Binding SelectedRoute, Mode=OneWay}">
                     <i:Interaction.Triggers>
-                        <Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedRouteLayer}">
+                        <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedRouteLayer}"
+                                                                    Element="{Binding ElementName=Map}">
                             <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
                                                    CommandParameter="{Binding}" />
-                        </Triggers:RootTouchTrigger>
+                        </Triggers:ElementMouseButtonActivityTrigger>
                     </i:Interaction.Triggers>
                     <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
                                           Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
@@ -680,10 +681,11 @@
                             <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
                                                    CommandParameter="{Binding}" />
                         </i:EventTrigger>
-                        <Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedPushpinLayer}">
+                        <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedPushpinLayer}"
+                                                                    Element="{Binding ElementName=Map}">
                             <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
                                                    CommandParameter="{Binding}" />
-                        </Triggers:RootTouchTrigger>
+                        </Triggers:ElementMouseButtonActivityTrigger>
                         <i:EventTrigger>
                             <ec:GoToStateAction StateName="Drop"
                                                 TargetName="SelectedPushpin"
@@ -822,6 +824,9 @@
         </Border>
         <Grid x:Name="SearchPanel"
               Visibility="Collapsed">
+            <i:Interaction.Behaviors>
+                <Behaviors:CancelGestureEventBehavior />
+            </i:Interaction.Behaviors>
             <Rectangle x:Name="SearchBackground"
                        Fill="{StaticResource BrushSemiTransparentBackground}"
                        IsHitTestVisible="False"
@@ -831,9 +836,10 @@
                   Background="{StaticResource PhoneChromeBrush}"
                   VerticalAlignment="Top">
                 <i:Interaction.Triggers>
-                    <Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SearchPanel}">
+                    <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SearchPanel}"
+                                                                Element="{Binding ElementName=Map}">
                         <i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
-                    </Triggers:RootTouchTrigger>
+                    </Triggers:ElementMouseButtonActivityTrigger>
                 </i:Interaction.Triggers>
                 <Grid.RenderTransform>
                     <CompositeTransform TranslateY="-52" />
@@ -891,6 +897,9 @@
         </Grid>
         <Grid x:Name="RoutePanel"
               Visibility="Collapsed">
+            <i:Interaction.Behaviors>
+                <Behaviors:CancelGestureEventBehavior />
+            </i:Interaction.Behaviors>
             <Rectangle x:Name="RouteBackground"
                        Fill="{StaticResource BrushSemiTransparentBackground}"
                        IsHitTestVisible="False"
@@ -900,9 +909,10 @@
                   RenderTransformOrigin="0.5,0.5"
                   VerticalAlignment="Top">
                 <i:Interaction.Triggers>
-                    <Triggers:RootTouchTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}">
+                    <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}"
+                                                                Element="{Binding ElementName=Map}">
                         <i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
-                    </Triggers:RootTouchTrigger>
+                    </Triggers:ElementMouseButtonActivityTrigger>
                     <Triggers:KeyPressTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}"
                                               Key="Enter">
                         <i:InvokeCommandAction Command="{Binding CommandRoute, Mode=OneTime}" />
@@ -997,9 +1007,9 @@
                             HorizontalContentAlignment="Left"
                             VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
-                            <Rectangle Margin="0,0,5,0"
-                                       Fill="{StaticResource BrushIconRoute}"
-                                       Style="{StaticResource IconRectangleStyle}"/>
+                            <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                       Margin="0,0,5,0"
+                                       Fill="{StaticResource BrushIconRoute}" />
                             <TextBlock FontFamily="{StaticResource PhoneFontFamilyNormal}"
                                        FontSize="{StaticResource PhoneFontSizeMedium}"
                                        Text="Find Routes" />

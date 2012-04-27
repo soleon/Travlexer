@@ -65,7 +65,7 @@
     <Compile Include="TriggerActions\FocusAction.cs" />
     <Compile Include="Triggers\EventTrigger.cs" />
     <Compile Include="Triggers\KeyPressTrigger.cs" />
-    <Compile Include="Triggers\RootTouchTrigger.cs" />
+    <Compile Include="Triggers\ElementMouseButtonActivityTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">

@@ -166,7 +166,7 @@ namespace Travlexer.WindowsPhone.Views
 		protected override void OnHold(GestureEventArgs e)
 		{
 			var coordinate = Map.ViewportPointToLocation(e.GetPosition(Map));
-			_context.CommandAddPlace.Execute(coordinate);
+			_context.CommandAddPlace.ExecuteIfNotNull(coordinate.ToLocalLocation());
 			base.OnHold(e);
 		}
 

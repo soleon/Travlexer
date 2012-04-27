@@ -164,7 +164,7 @@ namespace Travlexer.Data
 		}
 
 		private DataStates _dataState;
-		private const string DataStateProperty = "DataState";
+		public const string DataStateProperty = "DataState";
 
 		#endregion
 	}
