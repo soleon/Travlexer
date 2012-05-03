@@ -5,8 +5,8 @@ using Codify.Extensions;
 namespace Codify.Commands
 {
     /// <summary>
-    /// The DelegateCommand provides an implementation of <see cref="ICommand"/>
-    /// that can delegate <see cref="ICommand.CanExecute"/> and <see cref="ICommand.Execute"/>
+    /// The DelegateCommand provides an implementation of <see cref="System.Windows.Input.ICommand"/>
+    /// that can delegate <see cref="System.Windows.Input.ICommand.CanExecute(object)"/> and <see cref="System.Windows.Input.ICommand.Execute(object)"/>
     /// calls to the listeners.
     /// </summary>
     public class DelegateCommand : ICommand
@@ -14,12 +14,12 @@ namespace Codify.Commands
         #region Public Properties
 
         /// <summary>
-        /// This action will be executed in response to <see cref="ICommand.Execute"/> being invoked.
+        /// This action will be executed in response to <see cref="System.Windows.Input.ICommand.Execute(object)"/> being invoked.
         /// </summary>
         public Action ExecutedAction { get; set; }
 
         /// <summary>
-        /// This function will be called in response to <see cref="ICommand.CanExecute"/> being invoked.
+        /// This function will be called in response to <see cref="System.Windows.Input.ICommand.CanExecute(object)"/> being invoked.
         /// </summary>
         public Func<bool> CanExecuteFunction { get; set; }
 

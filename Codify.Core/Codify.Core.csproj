@@ -37,6 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ViewModelDependencyAttribute.cs" />
+    <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Commands\DelegateCommand{T}.cs" />
     <Compile Include="DataStates.cs" />
     <Compile Include="Entities\NotifyableEntity.cs" />
     <Compile Include="Entities\ObservableValue.cs" />

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Windows.Input;
+using Codify.Commands;
 
 namespace Codify.Extensions
 {
@@ -49,6 +52,21 @@ namespace Codify.Extensions
         public static void ExecuteIfNotNull<T1, T2>(this Action<T1, T2> action, T1 param1, T2 param2)
         {
             action.UseIfNotNull(a => a(param1, param2));
+        }
+
+        public static void ExecuteIfNotNull(this PropertyChangedEventHandler handler, object sender, PropertyChangedEventArgs args)
+        {
+            handler.UseIfNotNull(h => h(sender, args));
+        }
+
+        public static void ExecuteIfNotNull<T>(this DelegateCommand<T> command, T parameter)
+        {
+            command.UseIfNotNull(c => c.Execute(parameter));
+        }
+
+        public static void ExecuteIfNotNull(this ICommand command, object parameter = null)
+        {
+            command.UseIfNotNull(c => c.Execute(parameter));
         }
 
         /// <summary>
