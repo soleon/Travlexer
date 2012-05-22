@@ -31,6 +31,18 @@ namespace Codify.Extensions
         }
 
         /// <summary>
+        /// Executes the event handler if not null.
+        /// </summary>
+        /// <typeparam name="TEventArgs">The type of the event args.</typeparam>
+        /// <param name="handler">The handler to be executed.</param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        public static void ExecuteIfNotNull<TEventArgs>(this EventHandler<TEventArgs> handler, object sender, TEventArgs e) where TEventArgs : EventArgs
+        {
+            handler.UseIfNotNull(h => h(sender, e));
+        }
+
+        /// <summary>
         /// Executes the specified action if not null.
         /// </summary>
         /// <typeparam name="T">Typr of the parameter of the action.</typeparam>
@@ -54,16 +66,33 @@ namespace Codify.Extensions
             action.UseIfNotNull(a => a(param1, param2));
         }
 
+        /// <summary>
+        /// Executes the event handler if not null.
+        /// </summary>
+        /// <param name="handler">The handler to be executed.</param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="args">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
         public static void ExecuteIfNotNull(this PropertyChangedEventHandler handler, object sender, PropertyChangedEventArgs args)
         {
             handler.UseIfNotNull(h => h(sender, args));
         }
 
-        public static void ExecuteIfNotNull<T>(this DelegateCommand<T> command, T parameter)
+        /// <summary>
+        /// Executes the command if not null.
+        /// </summary>
+        /// <typeparam name="TParam">The type of the parameter.</typeparam>
+        /// <param name="command">The command to be executed.</param>
+        /// <param name="parameter">The parameter to be passed to the command.</param>
+        public static void ExecuteIfNotNull<TParam>(this DelegateCommand<TParam> command, TParam parameter)
         {
             command.UseIfNotNull(c => c.Execute(parameter));
         }
 
+        /// <summary>
+        /// Executes the command if not null.
+        /// </summary>
+        /// <param name="command">The command to be executed.</param>
+        /// <param name="parameter">The parameter to be passed to the command.</param>
         public static void ExecuteIfNotNull(this ICommand command, object parameter = null)
         {
             command.UseIfNotNull(c => c.Execute(parameter));
