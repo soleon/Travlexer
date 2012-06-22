@@ -53,7 +53,7 @@ namespace Travlexer.Data
 			{
 				return Equals(obj as Location);
 			}
-			return base.Equals(obj);
+			return Equals(this, obj);
 		}
 
 		public override int GetHashCode()
