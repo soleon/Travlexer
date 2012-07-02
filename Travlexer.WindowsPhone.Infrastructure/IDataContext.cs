@@ -78,6 +78,16 @@ namespace Travlexer.WindowsPhone.Infrastructure
         Dictionary<ElementColor, string> ElementColorMap { get; }
 
         /// <summary>
+        /// Gets the collection of all trips planned by the user.
+        /// </summary>
+        ReadOnlyObservableCollection<Trip> Trips { get; }
+
+        /// <summary>
+        /// Gets the collection of all tours planned by the user.
+        /// </summary>
+        ReadOnlyObservableCollection<Tour> Tours { get; }
+
+        /// <summary>
         /// Adds a new place.
         /// </summary>
         /// <param name="location">The location of the place.</param>

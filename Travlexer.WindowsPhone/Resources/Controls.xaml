@@ -21,7 +21,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="Controls:CircleButton">
 					<StackPanel x:Name="RootPanel"
-								Width="48">
+								Width="{StaticResource IconContainerDimension}">
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="CommonStates">
 								<VisualState x:Name="Pressed">
@@ -165,8 +165,8 @@
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<Border x:Name="ButtonBackground"
-								Height="48"
-								Width="48"
+								Height="{StaticResource IconContainerDimension}"
+								Width="{StaticResource IconContainerDimension}"
 								Background="{TemplateBinding Background}"
 								BorderBrush="{TemplateBinding BorderBrush}"
 								BorderThickness="{TemplateBinding BorderThickness}"
@@ -757,5 +757,8 @@
 		<Setter Property="CaretBrush" Value="{StaticResource BrushCaret}"/>
 		<Setter Property="Margin" Value="{StaticResource PhoneMargin}"/>
 		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+	</Style>
+	<Style x:Key="FullWidthListBoxItemStyle" TargetType="ListBoxItem">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 	</Style>
 </ResourceDictionary>

@@ -15,6 +15,7 @@ using Codify.Extensions;
 using Codify.GoogleMaps.Controls;
 using Codify.Services;
 using Codify.Threading;
+using Codify.WindowsPhone;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Converters;
 using Travlexer.WindowsPhone.Infrastructure;
@@ -1122,7 +1123,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     {
                         IconUri = new Uri("/Assets/List.png", UriKind.Relative),
                         Text = "browse",
-                        Command = new DelegateCommand(()=> { })
+                        Command = new DelegateCommand(()=> ApplicationContext.NavigationService.Navigate<ManageViewModel>())
                     }
 				},
 				_routeSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>

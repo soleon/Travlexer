@@ -1,0 +1,95 @@
+﻿<phone:PhoneApplicationPage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+                            x:Class="Travlexer.WindowsPhone.Views.ManageView"
+                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}"
+                            Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="Portrait"
+                            Orientation="Portrait"
+                            mc:Ignorable="d"
+                            d:DesignHeight="768"
+                            d:DesignWidth="480"
+                            shell:SystemTray.IsVisible="True">
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="CheckListBoxStyle"
+               TargetType="ListBox">
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox VerticalAlignment="Center" />
+                            <Button Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Left"
+                                    Style="{StaticResource EmptyButton}">
+                                <TextBlock TextTrimming="WordEllipsis">
+                                    <Run Text="{Binding Name}"
+                                         FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    <LineBreak />
+                                    <Run Text="{Binding Address}"
+                                         Foreground="{StaticResource PhoneSubtleBrush}"
+                                         FontSize="{StaticResource PhoneFontSizeSmall}" />
+                                </TextBlock>
+                            </Button>
+                            <Button Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Left"
+                                    Style="{StaticResource EmptyButton}"
+                                    FontSize="{StaticResource PhoneFontSizeMedium}">
+                                <Rectangle Fill="{StaticResource BrushIconRightArrow}"
+                                           Width="{StaticResource IconContainerDimension}"
+                                           Height="{StaticResource IconContainerDimension}" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle"
+                    Value="{StaticResource FullWidthListBoxItemStyle}" />
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+    <phone:PhoneApplicationPage.Style>
+        <StaticResource ResourceKey="PageDefault" />
+    </phone:PhoneApplicationPage.Style>
+    <d:DataContext>
+        <Binding Path="ManageViewModel">
+            <Binding.Source>
+                <DesignTime xmlns="clr-namespace:Travlexer.WindowsPhone" />
+            </Binding.Source>
+        </Binding>
+    </d:DataContext>
+
+    <controls:Pivot Title="MANAGE">
+        <controls:PivotItem Header="Tours">
+            <ListBox ItemsSource="{Binding Tours}"
+                     Style="{StaticResource CheckListBoxStyle}" />
+        </controls:PivotItem>
+        <controls:PivotItem Header="Trips">
+            <ListBox ItemsSource="{Binding Trips}"
+                     Style="{StaticResource CheckListBoxStyle}" />
+        </controls:PivotItem>
+        <controls:PivotItem Header="Routs">
+            <ListBox ItemsSource="{Binding Routes}"
+                     Style="{StaticResource CheckListBoxStyle}" />
+        </controls:PivotItem>
+        <controls:PivotItem Header="Personal Pins">
+            <ListBox ItemsSource="{Binding PersonalPlaces}"
+                     Style="{StaticResource CheckListBoxStyle}" />
+        </controls:PivotItem>
+        <controls:PivotItem Header="Search Results">
+            <ListBox ItemsSource="{Binding SearchResults}"
+                     Style="{StaticResource CheckListBoxStyle}" />
+        </controls:PivotItem>
+    </controls:Pivot>
+
+</phone:PhoneApplicationPage>

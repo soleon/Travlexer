@@ -18,7 +18,7 @@ namespace Travlexer.WindowsPhone
     public class DesignTime
     {
 #if DEBUG
-        private bool _initialized;
+        private IKernel _kernel;
 
         public MapViewModel MapViewModel
         {
@@ -60,31 +60,41 @@ namespace Travlexer.WindowsPhone
                 Initialize();
                 var place = ApplicationContext.Data.Places[0];
                 ApplicationContext.Data.SelectedPlace = place;
-                var vm = new PlaceDetailsViewModel {Data = place};
+                var vm = new PlaceDetailsViewModel { Data = place };
                 vm.Data.Notes = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
                 return vm;
             }
         }
 
+        public ManageViewModel ManageViewModel
+        {
+            get
+            {
+                if (!DesignerProperties.IsInDesignTool) return null;
+                Initialize();
+                return _kernel.Get<ManageViewModel>();
+            }
+        }
+
         private void Initialize()
         {
-            if (_initialized)
-            {
-                return;
-            }
-            var kernel = new StandardKernel();
-            kernel.Bind<Func<Type, NotifyableEntity>>().ToMethod(context => t => context.Kernel.Get(t) as NotifyableEntity);
-            kernel.Bind<PhoneApplicationFrame>().ToConstant(new PhoneApplicationFrame());
-            kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
-            kernel.Bind<IStorage>().To<IsolatedStorage>().InSingletonScope();
-            kernel.Bind<ISerializer<byte[]>>().To<BinarySerializer>().InSingletonScope();
-            kernel.Bind<IDataContext>().To<DataContext>().InSingletonScope();
-            kernel.Bind<IGoogleMapsClient>().To<GoogleMapsClientMock>().InSingletonScope();
-            kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
+            if (_kernel != null) return;
+            _kernel = new StandardKernel();
+            _kernel.Bind<Func<Type, NotifyableEntity>>().ToMethod(context => t => context.Kernel.Get(t) as NotifyableEntity);
+            _kernel.Bind<PhoneApplicationFrame>().ToConstant(new PhoneApplicationFrame());
+            _kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
+            _kernel.Bind<IStorage>().To<IsolatedStorage>().InSingletonScope();
+            _kernel.Bind<ISerializer<byte[]>>().To<BinarySerializer>().InSingletonScope();
+            _kernel.Bind<IDataContext>().To<DataContext>().InSingletonScope();
+            _kernel.Bind<IGoogleMapsClient>().To<GoogleMapsClientMock>().InSingletonScope();
+            _kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
 
-            ApplicationContext.Initialize(kernel);
-            ApplicationContext.Data.AddNewPlace(new Location {Latitude = 9.1540930, Longitude = -1.39166990});
-            _initialized = true;
+            ApplicationContext.Initialize(_kernel);
+            ApplicationContext.Data.AddNewPlace(new Location
+            {
+                Latitude = 9.1540930,
+                Longitude = -1.39166990
+            });
         }
 #endif
     }
