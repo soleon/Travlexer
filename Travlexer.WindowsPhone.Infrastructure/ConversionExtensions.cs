@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Device.Location;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using Codify.Extensions;
 using Microsoft.Phone.Controls.Maps;
 using Travlexer.Data;
 
@@ -144,7 +146,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                 var steps = legs[0].Steps;
                 if (steps.Any())
                 {
-                    var points = new List<Location>();
+                    var points = new Collection<Location>();
                     foreach (var step in steps)
                     {
                         points.AddRange(Utilities.DecodePolylinePoints(step.Polyline.Points));

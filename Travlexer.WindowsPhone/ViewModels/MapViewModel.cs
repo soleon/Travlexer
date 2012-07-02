@@ -922,7 +922,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             {
                 IsBusy.Value = false;
                 Route route;
-                List<Location> points;
+                Collection<Location> points;
                 int count;
                 if (callback.Status != CallbackStatus.Successful || (count = (points = (route = callback.Result).Points).Count) <= 0)
                 {
@@ -1089,19 +1089,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private void InitializeAppBarButtonSources()
         {
-            _trackButton = new AppBarButtonViewModel
-                           {
-                               IconUri = new Uri("/Assets/CurrentLocation.png", UriKind.Relative),
-                               Text = "track",
-                               IsEnabled = !IsTrackingCurrentLocation.Value,
-                               Command = new DelegateCommand(OnStartTrackingCurrentLocation)
-                           };
-            _deletePlaceButton = new AppBarButtonViewModel
-            {
-                IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
-                Text = "delete",
-                Command = new DelegateCommand(OnDeleteSelectedPlace)
-            };
             _keepSearchResultButton = new AppBarButtonViewModel
             {
                 IconUri = new Uri("/Assets/Pin.png", UriKind.Relative),
@@ -1112,7 +1099,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 			{
 				_defaultButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
 				{
-					_trackButton,
+					(_trackButton = new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/CurrentLocation.png", UriKind.Relative),
+                        Text = "track",
+                        IsEnabled = !IsTrackingCurrentLocation.Value,
+                        Command = new DelegateCommand(OnStartTrackingCurrentLocation)
+                    }),
 					new AppBarButtonViewModel
 					{
 						IconUri = new Uri("/Assets/Search.png", UriKind.Relative),
@@ -1124,7 +1117,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 						IconUri = new Uri("/Assets/Route.png", UriKind.Relative),
 						Text = "route",
 						Command = new DelegateCommand(() => VisualState.Value = VisualStates.Route)
-					}
+					},
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/List.png", UriKind.Relative),
+                        Text = "browse",
+                        Command = new DelegateCommand(()=> { })
+                    }
 				},
 				_routeSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
 				{
@@ -1160,7 +1159,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 						Text = "arrive",
 						Command = new DelegateCommand(OnSetSelectedPlaceAsArriveLocation)
 					},
-					_deletePlaceButton
+					(_deletePlaceButton = new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
+                        Text = "delete",
+                        Command = new DelegateCommand(OnDeleteSelectedPlace)
+                    })
 				}
 			};
             SelectedAppBarButtonItemsSource = AppBarButtonItemsSources[0];

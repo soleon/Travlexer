@@ -161,6 +161,7 @@
     <Content Include="Assets\CurrentLocation.png" />
     <Content Include="Assets\Depart.png" />
     <Content Include="Assets\Information.png" />
+    <Content Include="Assets\List.png" />
     <Content Include="Assets\Pin.png" />
     <Content Include="Assets\Route.png" />
     <Content Include="Assets\SatelliteView.png" />

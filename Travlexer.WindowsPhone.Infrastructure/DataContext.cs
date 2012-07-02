@@ -38,6 +38,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private static readonly Dictionary<PlaceIcon, string> _placeIconMap;
         private static readonly Dictionary<ElementColor, string> _elementColorMap;
 
+        private readonly ISerializer<byte[]> _binarySerializer;
+        private readonly IGoogleMapsClient _googleMapsClient;
+        private readonly ObservableCollection<Place> _places;
+        private readonly ObservableCollection<Route> _routes;
+        private readonly ObservableCollection<Trip> _trips;
+        private readonly ObservableCollection<Tour> _tours;
+        private readonly IStorage _storageProvider;
 
         #region Public Properties
 
@@ -92,9 +99,29 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public ReadOnlyObservableCollection<Route> Routes { get; private set; }
 
         /// <summary>
+        /// Gets the collection of all trips planned by the user.
+        /// </summary>
+        public ReadOnlyObservableCollection<Trip> Trips { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of all tours planned by the user.
+        /// </summary>
+        public ReadOnlyObservableCollection<Tour> Tours { get; private set; }
+
+        /// <summary>
         /// Gets the unit system that is currently in use.
         /// </summary>
         public ObservableValue<Units> Unit { get; private set; }
+
+        public Dictionary<PlaceIcon, string> PlaceIconMap
+        {
+            get { return _placeIconMap; }
+        }
+
+        public Dictionary<ElementColor, string> ElementColorMap
+        {
+            get { return _elementColorMap; }
+        }
 
         #endregion
 
@@ -499,16 +526,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
             }
         }
 
-        public Dictionary<PlaceIcon, string> PlaceIconMap
-        {
-            get { return _placeIconMap; }
-        }
-
-        public Dictionary<ElementColor, string> ElementColorMap
-        {
-            get { return _elementColorMap; }
-        }
-
         #endregion
 
 
@@ -643,18 +660,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
             TravelMode = new ObservableValue<TravelMode>();
             Unit = new ObservableValue<Units>();
 
-            Places = new ReadOnlyObservableCollection<Place>(_places);
             MapOverlays = new ObservableCollection<Layer>();
+            Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
             Routes = new ReadOnlyObservableCollection<Route>(_routes = new ObservableCollection<Route>());
+            Trips = new ReadOnlyObservableCollection<Trip>(_trips = new ObservableCollection<Trip>());
+            Tours = new ReadOnlyObservableCollection<Tour>(_tours = new ObservableCollection<Tour>());
         }
 
         #endregion
-
-
-        private readonly ISerializer<byte[]> _binarySerializer;
-        private readonly IGoogleMapsClient _googleMapsClient;
-        private readonly ObservableCollection<Place> _places = new ObservableCollection<Place>();
-        private readonly ObservableCollection<Route> _routes;
-        private readonly IStorage _storageProvider;
     }
 }

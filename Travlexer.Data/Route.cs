@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Codify.Entities;
 using Codify.Extensions;
 
@@ -22,7 +22,7 @@ namespace Travlexer.Data
 
         #region Public Properties
 
-        public List<Location> Points { get; set; }
+        public Collection<Location> Points { get; set; }
 
         public RouteMethod Method { get; set; }
 
