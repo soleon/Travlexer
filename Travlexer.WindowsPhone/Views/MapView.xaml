@@ -578,12 +578,12 @@
                                                            CommandParameter="{Binding}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                            <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
+                            <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
                                                   Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                                   StrokeEndLineCap="Round"
                                                   StrokeStartLineCap="Round"
                                                   StrokeThickness="8" />
-                            <!--<Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
+                            <!--<Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
 											  Stroke="{StaticResource PhoneForegroundBrush}"
 											  StrokeThickness="4"
 											  StrokeStartLineCap="Round"
@@ -647,12 +647,12 @@
                                                    CommandParameter="{Binding}" />
                         </Triggers:ElementMouseButtonActivityTrigger>
                     </i:Interaction.Triggers>
-                    <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
+                    <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
                                           Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                           StrokeEndLineCap="Round"
                                           StrokeStartLineCap="Round"
                                           StrokeThickness="8" />
-                    <!--<Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationListToLocationCollectionConverter}}"
+                    <!--<Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
 									  Stroke="{StaticResource PhoneForegroundBrush}"
 									  StrokeThickness="4"
 									  StrokeStartLineCap="Round"
