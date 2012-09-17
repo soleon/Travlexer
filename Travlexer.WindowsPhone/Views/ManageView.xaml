@@ -14,6 +14,7 @@
                             mc:Ignorable="d"
                             d:DesignHeight="768"
                             d:DesignWidth="480"
+                            d:DataContext="{Binding ManageViewModel, Source={StaticResource DesignTime}}"
                             shell:SystemTray.IsVisible="True">
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="CheckListBoxStyle"
@@ -61,14 +62,6 @@
     <phone:PhoneApplicationPage.Style>
         <StaticResource ResourceKey="PageDefault" />
     </phone:PhoneApplicationPage.Style>
-    <d:DataContext>
-        <Binding Path="ManageViewModel">
-            <Binding.Source>
-                <DesignTime xmlns="clr-namespace:Travlexer.WindowsPhone" />
-            </Binding.Source>
-        </Binding>
-    </d:DataContext>
-
     <controls:Pivot Title="MANAGE">
         <controls:PivotItem Header="Tours">
             <ListBox ItemsSource="{Binding Tours}"
