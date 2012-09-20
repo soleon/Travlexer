@@ -10,7 +10,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public Uri IconUri
 		{
 			get { return _iconUri; } 
-			set { SetProperty(ref _iconUri, value, IconUriProperty); }
+			set { SetValue(ref _iconUri, value, IconUriProperty); }
 		}
 
 		private Uri _iconUri;

@@ -52,7 +52,7 @@ namespace Travlexer.Data
 		public string Name
 		{
 			get { return _name; }
-			set { SetProperty(ref _name, value, NameProperty); }
+			set { SetValue(ref _name, value, NameProperty); }
 		}
 
 		private string _name;
@@ -61,7 +61,7 @@ namespace Travlexer.Data
 		public Location Location
 		{
 			get { return _location; }
-			set { SetProperty(ref _location, value, LocationProperty); }
+			set { SetValue(ref _location, value, LocationProperty); }
 		}
 
 		private Location _location;
@@ -70,7 +70,7 @@ namespace Travlexer.Data
 		public string Address
 		{
 			get { return _address; }
-			set { SetProperty(ref _address, value, AddressProperty); }
+			set { SetValue(ref _address, value, AddressProperty); }
 		}
 
 		private string _address;
@@ -79,7 +79,7 @@ namespace Travlexer.Data
 		public string ContactNumber
 		{
 			get { return _contactNumber; }
-			set { SetProperty(ref _contactNumber, value, ContactNumberProperty); }
+			set { SetValue(ref _contactNumber, value, ContactNumberProperty); }
 		}
 
 		private string _contactNumber;
@@ -88,7 +88,7 @@ namespace Travlexer.Data
 		public string WebSite
 		{
 			get { return _webSite; }
-			set { SetProperty(ref _webSite, value, WebSiteProperty); }
+			set { SetValue(ref _webSite, value, WebSiteProperty); }
 		}
 
 		private string _webSite;
@@ -97,7 +97,7 @@ namespace Travlexer.Data
 		public string Rating
 		{
 			get { return _rating; }
-			set { SetProperty(ref _rating, value, RatingProperty); }
+			set { SetValue(ref _rating, value, RatingProperty); }
 		}
 
 		private string _rating;
@@ -106,7 +106,7 @@ namespace Travlexer.Data
 		public ElementColor Color
 		{
 			get { return _color; }
-			set { SetProperty(ref _color, value, ColorProperty); }
+			set { SetValue(ref _color, value, ColorProperty); }
 		}
 
 		private ElementColor _color;
@@ -115,7 +115,7 @@ namespace Travlexer.Data
 		public PlaceIcon Icon
 		{
 			get { return _icon; }
-			set { SetProperty(ref _icon, value, IconProperty); }
+			set { SetValue(ref _icon, value, IconProperty); }
 		}
 
 		private PlaceIcon _icon;
@@ -124,7 +124,7 @@ namespace Travlexer.Data
 		public bool IsSearchResult
 		{
 			get { return _isSearchResult; }
-			set { SetProperty(ref _isSearchResult, value, IsSearchResultProperty); }
+			set { SetValue(ref _isSearchResult, value, IsSearchResultProperty); }
 		}
 
 		private bool _isSearchResult;
@@ -133,7 +133,7 @@ namespace Travlexer.Data
 		public string Notes
 		{
 			get { return _notes; }
-			set { SetProperty(ref _notes, value, NotesProperty); }
+			set { SetValue(ref _notes, value, NotesProperty); }
 		}
 
 		private string _notes;
@@ -142,7 +142,7 @@ namespace Travlexer.Data
 		public ViewPort ViewPort
 		{
 			get { return _viewPort; }
-			set { SetProperty(ref _viewPort, value, ViewPortProperty); }
+			set { SetValue(ref _viewPort, value, ViewPortProperty); }
 		}
 
 		private ViewPort _viewPort;
@@ -151,7 +151,7 @@ namespace Travlexer.Data
 		public string Reference
 		{
 			get { return _reference; }
-			set { SetProperty(ref _reference, value, ReferenceProperty); }
+			set { SetValue(ref _reference, value, ReferenceProperty); }
 		}
 
 		private string _reference;
@@ -160,7 +160,7 @@ namespace Travlexer.Data
 		public DataStates DataState
 		{
 			get { return _dataState; }
-			set { SetProperty(ref _dataState, value, DataStateProperty); }
+			set { SetValue(ref _dataState, value, DataStateProperty); }
 		}
 
 		private DataStates _dataState;

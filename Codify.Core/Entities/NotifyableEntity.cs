@@ -33,7 +33,7 @@ namespace Codify.Entities
             }
         }
 
-        protected bool SetProperty<T>(ref T property, T value, string propertyName)
+        protected bool SetValue<T>(ref T property, T value, string propertyName)
         {
             if (Equals(property, value))
             {
@@ -44,7 +44,7 @@ namespace Codify.Entities
             return true;
         }
 
-        protected bool SetProperty<T>(ref T property, T value, params string[] propertyNames)
+        protected bool SetValue<T>(ref T property, T value, params string[] propertyNames)
         {
             if (Equals(property, value))
             {

@@ -14,7 +14,7 @@ namespace Travlexer.Data
         public string Name
         {
             get { return _name; }
-            set { SetProperty(ref _name, value, NameProperty); }
+            set { SetValue(ref _name, value, NameProperty); }
         }
 
         private string _name;

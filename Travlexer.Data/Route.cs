@@ -37,7 +37,7 @@ namespace Travlexer.Data
         public string Name
         {
             get { return _name; }
-            set { SetProperty(ref _name, value, NameProperty); }
+            set { SetValue(ref _name, value, NameProperty); }
         }
 
         private string _name;
@@ -46,7 +46,7 @@ namespace Travlexer.Data
         public ElementColor Color
         {
             get { return _color; }
-            set { SetProperty(ref _color, value, ColorProperty); }
+            set { SetValue(ref _color, value, ColorProperty); }
         }
 
         private ElementColor _color;

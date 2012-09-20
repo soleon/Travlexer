@@ -56,7 +56,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public bool IsBusy
         {
             get { return _isBusy; }
-            private set { SetProperty(ref _isBusy, value, IsBusyProperty); }
+            private set { SetValue(ref _isBusy, value, IsBusyProperty); }
         }
 
         private bool _isBusy;

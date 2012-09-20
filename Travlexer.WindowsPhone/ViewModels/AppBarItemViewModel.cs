@@ -8,7 +8,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public string Text
 		{
 			get { return _text; }
-			set { SetProperty(ref _text, value, TextProperty); }
+			set { SetValue(ref _text, value, TextProperty); }
 		}
 
 		private string _text;
@@ -17,7 +17,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public bool IsEnabled
 		{
 			get { return _isEnabled; }
-			set { SetProperty(ref _isEnabled, value, IsEnabledProperty); }
+			set { SetValue(ref _isEnabled, value, IsEnabledProperty); }
 		}
 
 		private bool _isEnabled = true;
@@ -26,7 +26,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public ICommand Command
 		{
 			get { return _command; }
-			set { SetProperty(ref _command, value, CommandProperty); }
+			set { SetValue(ref _command, value, CommandProperty); }
 		}
 
 		private ICommand _command;
@@ -35,7 +35,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 		public object CommandParameter
 		{
 			get { return _commandParameter; }
-			set { SetProperty(ref _commandParameter, value, CommandParameterProperty); }
+			set { SetValue(ref _commandParameter, value, CommandParameterProperty); }
 		}
 
 		private object _commandParameter;

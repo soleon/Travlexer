@@ -43,7 +43,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private readonly ObservableCollection<Place> _places;
         private readonly ObservableCollection<Route> _routes;
         private readonly ObservableCollection<Trip> _trips;
-        private readonly ObservableCollection<Tour> _tours;
         private readonly IStorage _storageProvider;
 
         #region Public Properties
@@ -102,11 +101,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// Gets the collection of all trips planned by the user.
         /// </summary>
         public ReadOnlyObservableCollection<Trip> Trips { get; private set; }
-
-        /// <summary>
-        /// Gets the collection of all tours planned by the user.
-        /// </summary>
-        public ReadOnlyObservableCollection<Tour> Tours { get; private set; }
 
         /// <summary>
         /// Gets the unit system that is currently in use.
@@ -173,13 +167,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// </summary>
         public void ClearSearchResults()
         {
-            for (int i = _places.Count - 1; i >= 0; i--)
-            {
+            for (var i = _places.Count - 1; i >= 0; i--)
                 if (_places[i].IsSearchResult)
-                {
                     _places.RemoveAt(i);
-                }
-            }
         }
 
         /// <summary>
@@ -526,6 +516,33 @@ namespace Travlexer.WindowsPhone.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Removes the specified trip.
+        /// </summary>
+        /// <param name="trip">The trip to be removed.</param>
+        public void RemoveTrip(Trip trip)
+        {
+            _trips.Remove(trip);
+        }
+
+        /// <summary>
+        /// Removes all trips.
+        /// </summary>
+        public void ClearTrips()
+        {
+            _trips.Clear();
+        }
+
+        /// <summary>
+        /// Removes all personal places.
+        /// </summary>
+        public void ClearPersonalPlaces()
+        {
+            for (var i = _places.Count - 1; i >= 0; i--)
+                if (!_places[i].IsSearchResult)
+                    _places.RemoveAt(i);
+        }
+
         #endregion
 
 
@@ -664,7 +681,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
             Routes = new ReadOnlyObservableCollection<Route>(_routes = new ObservableCollection<Route>());
             Trips = new ReadOnlyObservableCollection<Trip>(_trips = new ObservableCollection<Trip>());
-            Tours = new ReadOnlyObservableCollection<Tour>(_tours = new ObservableCollection<Tour>());
         }
 
         #endregion

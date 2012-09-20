@@ -761,4 +761,8 @@
 	<Style x:Key="FullWidthListBoxItemStyle" TargetType="ListBoxItem">
 		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 	</Style>
+	<Style x:Key="CheckableListBoxItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource FullWidthListBoxItemStyle}">
+		
+		
+	</Style>
 </ResourceDictionary>

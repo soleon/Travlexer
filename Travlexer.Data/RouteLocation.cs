@@ -17,7 +17,7 @@ namespace Travlexer.Data
 			get { return _address; }
 			set
 			{
-				if (SetProperty(ref _address, value, AddressProperty))
+				if (SetValue(ref _address, value, AddressProperty))
 				{
 					PlaceId = Guid.Empty;
 				}

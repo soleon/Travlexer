@@ -189,7 +189,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             get { return _selectedPushpin; }
             set
             {
-                if (!SetProperty(ref _selectedPushpin, value, SelectedPushpinProperty))
+                if (!SetValue(ref _selectedPushpin, value, SelectedPushpinProperty))
                 {
                     return;
                 }
@@ -236,7 +236,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             get { return _selectedRoute; }
             set
             {
-                if (!SetProperty(ref _selectedRoute, value, SelectedRouteProperty))
+                if (!SetValue(ref _selectedRoute, value, SelectedRouteProperty))
                 {
                     return;
                 }
@@ -255,7 +255,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             get { return _dragPushpin; }
             set
             {
-                if (!SetProperty(ref _dragPushpin, value, DragPushpinProperty))
+                if (!SetValue(ref _dragPushpin, value, DragPushpinProperty))
                 {
                     return;
                 }
@@ -278,7 +278,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public GeoCoordinate CurrentLocation
         {
             get { return _currentLocation; }
-            set { SetProperty(ref _currentLocation, value, CurrentLocationProperty); }
+            set { SetValue(ref _currentLocation, value, CurrentLocationProperty); }
         }
 
         private GeoCoordinate _currentLocation;
@@ -315,7 +315,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             get { return _selectedSuggestion; }
             set
             {
-                if (SetProperty(ref _selectedSuggestion, value, SelectedSuggestionProperty) && value != null)
+                if (SetValue(ref _selectedSuggestion, value, SelectedSuggestionProperty) && value != null)
                 {
                     OnSuggestionSelected();
                 }
@@ -466,7 +466,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public ObservableCollection<AppBarButtonViewModel> SelectedAppBarButtonItemsSource
         {
             get { return _selectedAppBarButtonItemsSource; }
-            private set { SetProperty(ref _selectedAppBarButtonItemsSource, value, SelectedAppBarButtonItemsSourceProperty); }
+            private set { SetValue(ref _selectedAppBarButtonItemsSource, value, SelectedAppBarButtonItemsSourceProperty); }
         }
 
         private ObservableCollection<AppBarButtonViewModel> _selectedAppBarButtonItemsSource;
@@ -475,7 +475,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public ObservableCollection<AppBarMenuItemViewModel> SelectedAppBarMenuItemsSource
         {
             get { return _selectedAppBarMenuItemsSource; }
-            private set { SetProperty(ref _selectedAppBarMenuItemsSource, value, SelectedAppBarMenuItemsSourceProperty); }
+            private set { SetValue(ref _selectedAppBarMenuItemsSource, value, SelectedAppBarMenuItemsSourceProperty); }
         }
 
         private ObservableCollection<AppBarMenuItemViewModel> _selectedAppBarMenuItemsSource;
@@ -487,7 +487,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public bool IsAppBarVisible
         {
             get { return _isAppBarVisible; }
-            private set { SetProperty(ref _isAppBarVisible, value, IsAppBarVisibleProperty); }
+            private set { SetValue(ref _isAppBarVisible, value, IsAppBarVisibleProperty); }
         }
 
         private bool _isAppBarVisible = true;
@@ -1121,7 +1121,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					},
                     new AppBarButtonViewModel
                     {
-                        IconUri = new Uri("/Assets/List.png", UriKind.Relative),
+                        IconUri = new Uri("/Assets/CheckList.png", UriKind.Relative),
                         Text = "browse",
                         Command = new DelegateCommand(()=> ApplicationContext.NavigationService.Navigate<ManageViewModel>())
                     }

@@ -83,11 +83,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
         ReadOnlyObservableCollection<Trip> Trips { get; }
 
         /// <summary>
-        /// Gets the collection of all tours planned by the user.
-        /// </summary>
-        ReadOnlyObservableCollection<Tour> Tours { get; }
-
-        /// <summary>
         /// Adds a new place.
         /// </summary>
         /// <param name="location">The location of the place.</param>
@@ -192,5 +187,21 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// Toggles the specified map overlay.
         /// </summary>
         void ToggleMapOverlay(Layer layer);
+
+        /// <summary>
+        /// Removes the specified trip.
+        /// </summary>
+        /// <param name="trip">The trip to be removed.</param>
+        void RemoveTrip(Trip trip);
+
+        /// <summary>
+        /// Removes all trips.
+        /// </summary>
+        void ClearTrips();
+
+        /// <summary>
+        /// Removes all personal places.
+        /// </summary>
+        void ClearPersonalPlaces();
     }
 }

@@ -60,7 +60,7 @@ namespace Travlexer.WindowsPhone
                 Initialize();
                 var place = ApplicationContext.Data.Places[0];
                 ApplicationContext.Data.SelectedPlace = place;
-                var vm = new PlaceDetailsViewModel { Data = place };
+                var vm = new PlaceDetailsViewModel {Data = place};
                 vm.Data.Notes = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
                 return vm;
             }
@@ -75,6 +75,13 @@ namespace Travlexer.WindowsPhone
                 return _kernel.Get<ManageViewModel>();
             }
         }
+
+        public CheckableViewModel<object> CheckableViewModel
+        {
+            get { return _checkableViewModel ?? (_checkableViewModel = new CheckableViewModel<object>()); }
+        }
+
+        private CheckableViewModel<object> _checkableViewModel;
 
         private void Initialize()
         {
@@ -91,10 +98,10 @@ namespace Travlexer.WindowsPhone
 
             ApplicationContext.Initialize(_kernel);
             ApplicationContext.Data.AddNewPlace(new Location
-            {
-                Latitude = 9.1540930,
-                Longitude = -1.39166990
-            });
+                                                {
+                                                    Latitude = 9.1540930,
+                                                    Longitude = -1.39166990
+                                                });
         }
 #endif
     }

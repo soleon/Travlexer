@@ -5,16 +5,15 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+                            xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                            xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
+                            xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
                             x:Class="Travlexer.WindowsPhone.Views.ManageView"
-                            FontFamily="{StaticResource PhoneFontFamilyNormal}"
-                            FontSize="{StaticResource PhoneFontSizeNormal}"
-                            Foreground="{StaticResource PhoneForegroundBrush}"
                             SupportedOrientations="Portrait"
                             Orientation="Portrait"
                             mc:Ignorable="d"
                             d:DesignHeight="768"
                             d:DesignWidth="480"
-                            d:DataContext="{Binding ManageViewModel, Source={StaticResource DesignTime}}"
                             shell:SystemTray.IsVisible="True">
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="CheckListBoxStyle"
@@ -23,24 +22,30 @@
                 <Setter.Value>
                     <DataTemplate>
                         <Grid>
+                            <d:DesignProperties.DataContext>
+                                <Binding Path="CheckableViewModel"
+                                         Source="{StaticResource DesignTime}" />
+                            </d:DesignProperties.DataContext>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <CheckBox VerticalAlignment="Center" />
+                            <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                      VerticalAlignment="Center" />
                             <Button Grid.Column="1"
                                     VerticalAlignment="Center"
                                     HorizontalContentAlignment="Left"
                                     Style="{StaticResource EmptyButton}">
                                 <TextBlock TextTrimming="WordEllipsis">
-                                    <Run Text="{Binding Name}"
+                                    <Run Text="{Binding Data.Name}"
                                          FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    <Run Text=" " />
                                     <LineBreak />
-                                    <Run Text="{Binding Address}"
+                                    <Run Text=" " />
+                                    <Run Text="{Binding Data.Address}"
                                          Foreground="{StaticResource PhoneSubtleBrush}"
-                                         FontSize="{StaticResource PhoneFontSizeSmall}" />
-                                </TextBlock>
+                                         FontSize="{StaticResource PhoneFontSizeSmall}" /></TextBlock>
                             </Button>
                             <Button Grid.Column="2"
                                     VerticalAlignment="Center"
@@ -59,30 +64,59 @@
                     Value="{StaticResource FullWidthListBoxItemStyle}" />
         </Style>
     </phone:PhoneApplicationPage.Resources>
+    <phone:PhoneApplicationPage.FontFamily>
+        <StaticResource ResourceKey="PhoneFontFamilyNormal" />
+    </phone:PhoneApplicationPage.FontFamily>
+    <phone:PhoneApplicationPage.FontSize>
+        <StaticResource ResourceKey="PhoneFontSizeNormal" />
+    </phone:PhoneApplicationPage.FontSize>
+    <phone:PhoneApplicationPage.Foreground>
+        <StaticResource ResourceKey="PhoneForegroundBrush" />
+    </phone:PhoneApplicationPage.Foreground>
+    <d:DesignProperties.DataContext>
+        <Binding Path="ManageViewModel"
+                 Source="{StaticResource DesignTime}" />
+    </d:DesignProperties.DataContext>
     <phone:PhoneApplicationPage.Style>
         <StaticResource ResourceKey="PageDefault" />
     </phone:PhoneApplicationPage.Style>
-    <controls:Pivot Title="MANAGE">
-        <controls:PivotItem Header="Tours">
-            <ListBox ItemsSource="{Binding Tours}"
-                     Style="{StaticResource CheckListBoxStyle}" />
-        </controls:PivotItem>
-        <controls:PivotItem Header="Trips">
+    <controls:Pivot Title="MANAGE"
+                    Name="ManagementPivot"
+                    SelectionChanged="OnManagementPivotSelectionChanged">
+        <controls:PivotItem Header="Trips"
+                            ViewModels:DataExtensions.ManagementSection="Trips">
             <ListBox ItemsSource="{Binding Trips}"
                      Style="{StaticResource CheckListBoxStyle}" />
         </controls:PivotItem>
-        <controls:PivotItem Header="Routs">
+        <controls:PivotItem Header="Routes"
+                            ViewModels:DataExtensions.ManagementSection="Routes">
             <ListBox ItemsSource="{Binding Routes}"
                      Style="{StaticResource CheckListBoxStyle}" />
         </controls:PivotItem>
-        <controls:PivotItem Header="Personal Pins">
+        <controls:PivotItem Header="Personal Pins"
+                            ViewModels:DataExtensions.ManagementSection="PersonalPlaces">
             <ListBox ItemsSource="{Binding PersonalPlaces}"
                      Style="{StaticResource CheckListBoxStyle}" />
         </controls:PivotItem>
-        <controls:PivotItem Header="Search Results">
+        <controls:PivotItem Header="Search Results"
+                            ViewModels:DataExtensions.ManagementSection="SearchResults">
             <ListBox ItemsSource="{Binding SearchResults}"
                      Style="{StaticResource CheckListBoxStyle}" />
         </controls:PivotItem>
     </controls:Pivot>
-
+    <ShellExtension:ApplicationBar.ApplicationBar>
+        <ShellExtension:ApplicationBar>
+            <ShellExtension:ApplicationBar.Buttons>
+                <ShellExtension:ApplicationBarIconButton IconUri="\Assets\CheckList.png"
+                                                         Text="all"
+                                                         Command="{Binding CommandSelectAllItems}" />
+                <ShellExtension:ApplicationBarIconButton IconUri="\Assets\List.png"
+                                                         Text="none"
+                                                         Command="{Binding CommandClearSelection}" />
+                <ShellExtension:ApplicationBarIconButton IconUri="\Assets\Delete.png"
+                                                         Text="delete"
+                                                         Command="{Binding CommandDeleteSelectedItems}" />
+            </ShellExtension:ApplicationBar.Buttons>
+        </ShellExtension:ApplicationBar>
+    </ShellExtension:ApplicationBar.ApplicationBar>
 </phone:PhoneApplicationPage>

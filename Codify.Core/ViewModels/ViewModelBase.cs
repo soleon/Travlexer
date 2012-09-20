@@ -27,7 +27,7 @@ namespace Codify.ViewModels
         public TParent Parent
         {
             get { return _parent; }
-            set { SetProperty(ref _parent, value, ParentProperty); }
+            set { SetValue(ref _parent, value, ParentProperty); }
         }
 
         public void Dispose()
