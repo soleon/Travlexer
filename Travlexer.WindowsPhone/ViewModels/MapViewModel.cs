@@ -100,8 +100,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             // Initialise local properties.
             VisualState = new ObservableValue<VisualStates>();
             Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
-            Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), ApplicationContext.Data.Places);
-            Routes = new AdaptedObservableCollection<Route, RouteViewModel>(r => new RouteViewModel(r, this), ApplicationContext.Data.Routes);
+            Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), source: ApplicationContext.Data.Places);
+            Routes = new AdaptedObservableCollection<Route, RouteViewModel>(r => new RouteViewModel(r, this), source: ApplicationContext.Data.Routes);
             DepartureLocation = new RouteLocation();
             ArrivalLocation = new RouteLocation();
 

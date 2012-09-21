@@ -28,10 +28,10 @@ namespace Travlexer.WindowsPhone.ViewModels
             _data = data;
             var places = data.Places;
 
-            Routes = new AdaptedObservableCollection<Route, CheckableViewModel<Route>>(route => new CheckableViewModel<Route> {Data = route}, _data.Routes);
-            Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> {Data = trip}, _data.Trips);
-            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => !place.IsSearchResult, places);
-            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => place.IsSearchResult, places);
+            Routes = new AdaptedObservableCollection<Route, CheckableViewModel<Route>>(route => new CheckableViewModel<Route> { Data = route }, source: _data.Routes);
+            Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> { Data = trip }, source: _data.Trips);
+            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
 
             CommandDeleteSelectedItems = new DelegateCommand(OnDeleteSelectedItems);
             CommandSelectAllItems = new DelegateCommand(OnSelectAllItems);

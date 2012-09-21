@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\RealTimeBindingBehavior.cs" />
+    <Compile Include="Collections\ConditionalObservableCollection.cs" />
     <Compile Include="Controls\ItemsControlExtension.cs" />
     <Compile Include="Controls\PanelExtension.cs" />
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
