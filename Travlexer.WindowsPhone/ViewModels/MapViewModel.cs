@@ -737,7 +737,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             UIThread.InvokeBack(() => VisualState.Value = VisualStates.Default);
 
             ApplicationContext.Configuration.IsBusy.Value = true;
-            ApplicationContext.Data.GetPlaceDetails(SelectedSuggestion.Reference, args =>
+            ApplicationContext.Data.GetPlaceDetailsForSearch(SelectedSuggestion.Reference, args =>
             {
                 ApplicationContext.Configuration.IsBusy.Value = false;
                 if (args.Status != CallbackStatus.Successful)

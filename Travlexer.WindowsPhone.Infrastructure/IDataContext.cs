@@ -135,7 +135,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// </summary>
         /// <param name="reference">The reference key to the place.</param>
         /// <param name="callback">The callback to be executed when this process is finished.</param>
-        void GetPlaceDetails(string reference, Action<CallbackEventArgs<Place>> callback = null);
+        void GetPlaceDetailsForSearch(string reference, Action<CallbackEventArgs<Place>> callback = null);
 
         /// <summary>
         /// Searches for places that matches the input.
@@ -203,5 +203,11 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// Removes all personal places.
         /// </summary>
         void ClearPersonalPlaces();
+
+        /// <summary>
+        /// Removes the place specified by the id.
+        /// </summary>
+        /// <param name="id">The id of the place to be removed.</param>
+        void RemovePlace(Guid id);
     }
 }

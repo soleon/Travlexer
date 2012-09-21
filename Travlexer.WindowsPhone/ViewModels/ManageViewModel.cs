@@ -5,6 +5,7 @@ using System.Windows;
 using Codify.Collections;
 using Codify.Commands;
 using Codify.Entities;
+using Codify.Extensions;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Infrastructure;
 
@@ -99,40 +100,60 @@ namespace Travlexer.WindowsPhone.ViewModels
             switch (_selectedManagementSection)
             {
                 case ManagementSections.Trips:
-                    if (Trips.All(t => !t.IsChecked)) return;
-                    if (MessageBox.Show("This will remove all selected trips including all routes and places in these trips. Do you want to continue?", "Remove Trips", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                        for (var i = Trips.Count - 1; i >= 0; i--)
+                    if (Trips.All(t => !t.IsChecked) ||
+                        MessageBox.Show("This will remove all selected trips including all routes and places in these trips. Do you want to continue?", "Remove Trips", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        return;
+
+                    var selectedTrips = Trips.Where(tripVm => tripVm.IsChecked).Select(tripVm => tripVm.Data).ToArray();
+                    for (var i = selectedTrips.Length - 1; i >= 0; i--)
+                    {
+                        var trip = selectedTrips[i];
+                        var routes = trip.Routes;
+                        for (var j = routes.Count - 1; j >= 0; j--)
                         {
-                            var item = Trips[i];
-                            if (item.IsChecked) _data.RemoveTrip(item.Data);
+                            var route = routes[j];
+                            var id = route.DeparturePlaceId;
+                            if (id != Guid.Empty) _data.RemovePlace(route.DeparturePlaceId);
+                            id = route.ArrivalPlaceId;
+                            if (id != Guid.Empty) _data.RemovePlace(route.ArrivalPlaceId);
+                            _data.RemoveRoute(route);
                         }
+                        _data.RemoveTrip(trip);
+                    }
                     break;
                 case ManagementSections.Routes:
-                    if (Routes.All(r => !r.IsChecked)) return;
-                    if (MessageBox.Show("This will remove all selected routes including all places in these routes. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                        for (var i = Routes.Count - 1; i >= 0; i--)
-                        {
-                            var item = Routes[i];
-                            if (item.IsChecked) _data.RemoveRoute(item.Data);
-                        }
+                    if (Routes.All(r => !r.IsChecked) ||
+                        MessageBox.Show("This will remove all selected routes including all places in these routes. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        return;
+
+                    var selectedRoutes = Routes.Where(routeVm => routeVm.IsChecked).Select(routeVm => routeVm.Data).ToArray();
+                    for (var i = selectedRoutes.Length - 1; i >= 0; i--)
+                    {
+                        var route = selectedRoutes[i];
+                        var id = route.DeparturePlaceId;
+                        if (id != Guid.Empty) _data.RemovePlace(route.DeparturePlaceId);
+                        id = route.ArrivalPlaceId;
+                        if (id != Guid.Empty) _data.RemovePlace(route.ArrivalPlaceId);
+                        _data.RemoveRoute(route);
+                    }
                     break;
                 case ManagementSections.PersonalPlaces:
-                    if (PersonalPlaces.All(p => !p.IsChecked)) return;
-                    if (MessageBox.Show("This will remove all selected places. Do you want to continue?", "Clear Places", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                        for (var i = PersonalPlaces.Count - 1; i >= 0; i--)
-                        {
-                            var item = PersonalPlaces[i];
-                            if (item.IsChecked) _data.RemovePlace(item.Data);
-                        }
+                    if (PersonalPlaces.All(p => !p.IsChecked) ||
+                        MessageBox.Show("This will remove all selected places. Do you want to continue?", "Clear Places", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        return;
+
+                    var selectedPlaces = PersonalPlaces.Where(placeVm => placeVm.IsChecked).Select(placeVm => placeVm.Data).ToArray();
+                    for (var i = selectedPlaces.Length - 1; i >= 0; i--)
+                        _data.RemovePlace(selectedPlaces[i]);
                     break;
                 case ManagementSections.SearchResults:
-                    if (SearchResults.All(p => !p.IsChecked)) return;
-                    if (MessageBox.Show("This will remove all selected search results. Do you want to continue?", "Clear Search Results", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                        for (var i = SearchResults.Count - 1; i >= 0; i--)
-                        {
-                            var item = SearchResults[i];
-                            if (item.IsChecked) _data.RemovePlace(item.Data);
-                        }
+                    if (SearchResults.All(p => !p.IsChecked) ||
+                        MessageBox.Show("This will remove all selected search results. Do you want to continue?", "Clear Search Results", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        return;
+
+                    var selectedResults = SearchResults.Where(placeVm => placeVm.IsChecked).Select(placeVm => placeVm.Data).ToArray();
+                    for (var i = selectedResults.Length - 1; i >= 0; i--)
+                        _data.RemovePlace(selectedResults[i]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

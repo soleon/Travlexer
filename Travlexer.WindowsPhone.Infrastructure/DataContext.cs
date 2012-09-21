@@ -147,6 +147,15 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
+        /// Removes the place specified by the id.
+        /// </summary>
+        /// <param name="id">The id of the place to be removed.</param>
+        public void RemovePlace(Guid id)
+        {
+            _places.FirstOrDefault(p => p.Id == id).UseIfNotNull(p => _places.Remove(p));
+        }
+
+        /// <summary>
         /// Removes the specified route.
         /// </summary>
         public void RemoveRoute(Route route)
@@ -263,7 +272,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// </summary>
         /// <param name="reference">The reference key to the place.</param>
         /// <param name="callback">The callback to be executed when this process is finished.</param>
-        public void GetPlaceDetails(string reference, Action<CallbackEventArgs<Place>> callback = null)
+        public void GetPlaceDetailsForSearch(string reference, Action<CallbackEventArgs<Place>> callback = null)
         {
             ProcessCall<Response<Codify.GoogleMaps.Entities.Place>, Codify.GoogleMaps.Entities.Place, Place>(
                 (c, r) => c.GetPlaceDetails(reference, r),
