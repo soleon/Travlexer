@@ -9,8 +9,6 @@ namespace Travlexer.WindowsPhone.Converters
 {
     public class ElementColorKeyValueConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is ElementColor))
@@ -28,7 +26,5 @@ namespace Travlexer.WindowsPhone.Converters
             }
             return ((KeyValuePair<ElementColor, string>)value).Key;
         }
-
-        #endregion
     }
 }

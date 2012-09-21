@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 using Codify;
 using Codify.Commands;
 using Codify.Extensions;
 using Codify.ViewModels;
 using Codify.WindowsPhone;
-using Microsoft.Phone.Tasks;
 using Travlexer.Data;
 
 namespace Travlexer.WindowsPhone.ViewModels

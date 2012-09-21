@@ -156,7 +156,7 @@
                            VerticalAlignment="Center" />
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
                            Grid.Row="1"
-                           Fill="{StaticResource BrushIconPin}"
+                           Fill="{StaticResource BrushIconCoordinate}"
                            VerticalAlignment="Center" />
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
                            Grid.Row="2"

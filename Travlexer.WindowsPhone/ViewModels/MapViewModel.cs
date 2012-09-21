@@ -1092,7 +1092,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             _keepSearchResultButton = new AppBarButtonViewModel
             {
-                IconUri = new Uri("/Assets/Pin.png", UriKind.Relative),
+                IconUri = new Uri("/Assets/AddPlace.png", UriKind.Relative),
                 Text = "keep",
                 Command = new DelegateCommand(OnKeepSelectedSearchResult)
             };
@@ -1162,7 +1162,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 					},
 					(_deletePlaceButton = new AppBarButtonViewModel
                     {
-                        IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
+                        IconUri = new Uri("/Assets/DeletePlace.png", UriKind.Relative),
                         Text = "delete",
                         Command = new DelegateCommand(OnDeleteSelectedPlace)
                     })

@@ -168,14 +168,15 @@
     <None Include="Properties\WMAppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AddPlace.png" />
     <Content Include="Assets\Arrive.png" />
     <Content Include="Assets\Delete.png" />
     <Content Include="Assets\CurrentLocation.png" />
+    <Content Include="Assets\DeletePlace.png" />
     <Content Include="Assets\Depart.png" />
     <Content Include="Assets\Information.png" />
     <Content Include="Assets\CheckList.png" />
     <Content Include="Assets\List.png" />
-    <Content Include="Assets\Pin.png" />
     <Content Include="Assets\Route.png" />
     <Content Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />
