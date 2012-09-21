@@ -3,235 +3,254 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace Codify.Collections
 {
-	public class AdaptedObservableCollection<TSource, TTarget> : ObservableCollection<TTarget>
-	{
-		#region Private Members
+    public class AdaptedObservableCollection<TSource, TTarget> : ObservableCollection<TTarget>
+    {
+        #region Private Members
 
-		/// <summary>
-		/// A reference to the function used to wrap source items.
-		/// </summary>
-		private readonly Func<TSource, TTarget> _converterFunction;
+        /// <summary>
+        ///   A reference to the function used to wrap source items.
+        /// </summary>
+        private readonly Func<TSource, TTarget> _converterFunction;
 
-		/// <summary>
-		/// A reference to the function used to determine if the source item passes the condition.
-		/// </summary>
-		private readonly Func<TSource, bool> _conditionFunction;
+        /// <summary>
+        ///   A reference to the function used to determine if the source item passes the condition.
+        /// </summary>
+        private readonly Func<TSource, bool> _conditionFunction;
 
-		#endregion
+        /// <summary>
+        ///   An internal list that keep track of the exact source items that maps 1 to 1 to target items in this collection.
+        /// </summary>
+        private readonly List<TSource> _sourceItems = new List<TSource>();
 
-
-		#region Public Properties
-
-		/// <summary>
-		/// Gets or sets the source collection to bind to.
-		/// </summary>
-		public INotifyCollectionChanged Source
-		{
-			get { return _source; }
-			set
-			{
-				if (_source == value)
-				{
-					return;
-				}
-
-				var newValue = value as IList<TSource>;
-
-				if (value != null && newValue == null)
-				{
-					throw new InvalidOperationException("Source collection must be an observable IList<TSource>. Use ObservableCollection<TSource> or ReadOnlyObservableCollection<TSource>.");
-				}
-
-				var oldValue = _source;
-				_source = value;
-				OnSourceChanged(oldValue, value);
-			}
-		}
-
-		private INotifyCollectionChanged _source;
-
-		#endregion
+        #endregion
 
 
-		#region Constructors
+        #region Public Properties
 
-		/// <summary>
-		/// Creates a new instance of <see cref="AdaptedObservableCollection{TSource, TTarget}"/>.
-		/// </summary>
-		/// <param name="converterFunction">The function used to convert <see cref="TSource"/> items to <see cref="TTarget"/> items.</param>
-		/// <param name="source">The observable collection of <see cref="TSource"/> items.</param>
-		public AdaptedObservableCollection(Func<TSource, TTarget> converterFunction, INotifyCollectionChanged source = null)
-			: this(converterFunction, null, source) { }
+        /// <summary>
+        ///   Gets or sets the source collection to bind to.
+        /// </summary>
+        public INotifyCollectionChanged Source
+        {
+            get { return _source; }
+            set
+            {
+                if (_source == value) return;
 
-		/// <summary>
-		/// Creates a new instance of <see cref="AdaptedObservableCollection{TSource, TTarget}"/>.
-		/// </summary>
-		/// <param name="converterFunction">The function used to convert <see cref="TSource"/> items to <see cref="TTarget"/> items.</param>
-		/// <param name="conditionFunction">The function used to filter <see cref="TSource"/> items.</param>
-		/// <param name="source">The observable collection of <see cref="TSource"/> items.</param>
-		public AdaptedObservableCollection(Func<TSource, TTarget> converterFunction, Func<TSource, bool> conditionFunction, INotifyCollectionChanged source = null)
-		{
-			_converterFunction = converterFunction;
-			_conditionFunction = conditionFunction;
-			Source = source;
-		}
+                var newValue = value as IList<TSource>;
 
-		#endregion
+                if (value != null && newValue == null)
+                    throw new InvalidOperationException("Source collection must be an observable IList<TSource>. Use ObservableCollection<TSource> or ReadOnlyObservableCollection<TSource>.");
 
+                var oldValue = _source;
+                _source = value;
+                OnSourceChanged(oldValue, value);
+            }
+        }
 
-		#region Private Methods
+        private INotifyCollectionChanged _source;
 
-		/// <summary>
-		/// Determines if the given <see cref="TSource"/> item is part of the adapted set.
-		/// </summary>
-		/// <param name="item"></param>
-		/// <returns>True if filter passes or does not exist, otherwise false.</returns>
-		private bool CheckSourceItem(TSource item)
-		{
-			return _conditionFunction == null || _conditionFunction(item);
-		}
-
-		#endregion
+        #endregion
 
 
-		#region Event Handling
+        #region Constructors
 
-		/// <summary>
-		/// Called when the source is changed.
-		/// </summary>
-		/// <param name="oldSource">The old source value.</param>
-		/// <param name="newSource">The new source value.</param>
-		private void OnSourceChanged(INotifyCollectionChanged oldSource, INotifyCollectionChanged newSource)
-		{
-			// Unbind old source
-			if (oldSource != null)
-			{
-				oldSource.CollectionChanged -= OnSourceItemCollectionChanged;
-			}
+        /// <summary>
+        ///   Creates a new instance of <see cref="AdaptedObservableCollection{TSource, TTarget}" />.
+        /// </summary>
+        /// <param name="converterFunction"> The function used to convert <see cref="TSource" /> items to <see cref="TTarget" /> items. </param>
+        /// <param name="source"> The observable collection of <see cref="TSource" /> items. </param>
+        public AdaptedObservableCollection(Func<TSource, TTarget> converterFunction, INotifyCollectionChanged source = null)
+            : this(converterFunction, null, source) { }
 
+        /// <summary>
+        ///   Creates a new instance of <see cref="AdaptedObservableCollection{TSource, TTarget}" />.
+        /// </summary>
+        /// <param name="converterFunction"> The function used to convert <see cref="TSource" /> items to <see cref="TTarget" /> items. </param>
+        /// <param name="conditionFunction"> The function used to filter <see cref="TSource" /> items. </param>
+        /// <param name="source"> The observable collection of <see cref="TSource" /> items. </param>
+        public AdaptedObservableCollection(Func<TSource, TTarget> converterFunction, Func<TSource, bool> conditionFunction, INotifyCollectionChanged source = null)
+        {
+            _converterFunction = converterFunction;
+            _conditionFunction = conditionFunction;
+            Source = source;
+        }
 
-			// Notify a source collection reset
-			OnSourceReset();
-
-
-			// Don't do anything if new source is null
-			if (newSource == null)
-			{
-				return;
-			}
-
-
-			// Sync immediately
-			OnSourceItemsAdded(0, (IList)newSource);
+        #endregion
 
 
-			// Bind new source collection
-			newSource.CollectionChanged += OnSourceItemCollectionChanged;
-		}
+        #region Private Methods
 
-		/// <summary>
-		/// Called when the source items have changed
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void OnSourceItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			switch (e.Action)
-			{
-				case NotifyCollectionChangedAction.Add:
-					OnSourceItemsAdded(e.NewStartingIndex, e.NewItems);
-					break;
+        /// <summary>
+        ///   Determines if the given <see cref="TSource" /> item is part of the adapted set.
+        /// </summary>
+        /// <param name="sourceItem"> </param>
+        /// <returns> True if filter passes or does not exist, otherwise false. </returns>
+        private bool IsValidItem(TSource sourceItem)
+        {
+            return _conditionFunction == null || _conditionFunction(sourceItem);
+        }
 
-				case NotifyCollectionChangedAction.Remove:
-					OnSourceItemsRemoved(e.OldStartingIndex, e.OldItems);
-					break;
+        #endregion
 
-				case NotifyCollectionChangedAction.Replace:
-					OnSourceItemReplaced(e.NewStartingIndex, (TSource)e.NewItems[0]);
-					break;
 
-				case NotifyCollectionChangedAction.Reset:
-					OnSourceReset();
-					break;
-			}
-		}
+        #region Event Handling
 
-		/// <summary>
-		/// Called when a collection of items is added in the source collection.
-		/// </summary>
-		/// <param name="startingIndex">The index to insert the collection.</param>
-		/// <param name="items">The new items.</param>
-		private void OnSourceItemsAdded(int startingIndex, IList items)
-		{
-			var len = items.Count;
-			var currentIndex = startingIndex;
+        /// <summary>
+        ///   Called when the source is changed.
+        /// </summary>
+        /// <param name="oldSource"> The old source value. </param>
+        /// <param name="newSource"> The new source value. </param>
+        private void OnSourceChanged(INotifyCollectionChanged oldSource, INotifyCollectionChanged newSource)
+        {
+            // Unbind old source
+            if (oldSource != null) oldSource.CollectionChanged -= OnSourceItemCollectionChanged;
 
-			for (var i = 0; i < len; i++)
-			{
-				var sourceItem = (TSource)items[i];
+            // Notify a source collection reset
+            OnSourceReset();
 
-				if (!CheckSourceItem(sourceItem))
-				{
-					continue;
-				}
+            // Don't do anything if new source is null
+            if (newSource == null) return;
 
-				var targetItem = _converterFunction((TSource)items[i]);
-				Insert(currentIndex, targetItem);
-				currentIndex++;
-			}
-		}
+            // Sync immediately
+            OnSourceItemsAdded((IList)newSource);
 
-		/// <summary>
-		/// Called when a collection of items is removed from the source collection.
-		/// </summary>
-		/// <param name="startingIndex">The index of the first item.</param>
-		/// <param name="items">The old items.</param>
-		private void OnSourceItemsRemoved(int startingIndex, IList items)
-		{
-			var len = items.Count;
+            // Bind new source collection
+            newSource.CollectionChanged += OnSourceItemCollectionChanged;
+        }
 
-			for (var i = 0; i < len; i++)
-			{
-				var sourceItem = (TSource)items[i];
+        /// <summary>
+        ///   Called when the source items have changed
+        /// </summary>
+        /// <param name="sender"> </param>
+        /// <param name="e"> </param>
+        private void OnSourceItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    OnSourceItemsAdded(e.NewItems);
+                    break;
 
-				if (!CheckSourceItem(sourceItem))
-				{
-					continue;
-				}
+                case NotifyCollectionChangedAction.Remove:
+                    OnSourceItemsRemoved(e.OldItems);
+                    break;
 
-				RemoveAt(startingIndex);
-			}
-		}
+                case NotifyCollectionChangedAction.Replace:
+                    OnSourceItemReplaced((TSource)e.OldItems[0], (TSource)e.NewItems[0]);
+                    break;
 
-		/// <summary>
-		/// Called when an item is replaced in the source collection.
-		/// </summary>
-		/// <param name="index">The index of the item.</param>
-		/// <param name="newItem">The new source item.</param>
-		private void OnSourceItemReplaced(int index, TSource newItem)
-		{
-			if (CheckSourceItem(newItem))
-			{
-				var targetItem = _converterFunction(newItem);
-				this[index] = targetItem;
-			}
-			else
-			{
-				RemoveAt(index);
-			}
-		}
+                case NotifyCollectionChangedAction.Reset:
+                    OnSourceReset();
+                    break;
+            }
+        }
 
-		/// <summary>
-		/// Called when the source collection is reset.
-		/// </summary>
-		private void OnSourceReset()
-		{
-			Clear();
-		}
+        /// <summary>
+        ///   Called when a collection of items is added in the source collection.
+        /// </summary>
+        /// <param name="items"> The new items. </param>
+        private void OnSourceItemsAdded(IEnumerable items)
+        {
+            foreach (TSource sourceItem in items)
+            {
+                if (!IsValidItem(sourceItem)) continue;
 
-		#endregion
-	}
+                var index = DetermineIndex(sourceItem);
+                var targetItem = _converterFunction(sourceItem);
+                if (index >= Count)
+                {
+                    _sourceItems.Add(sourceItem);
+                    Add(targetItem);
+                }
+                else
+                {
+                    _sourceItems.Insert(index, sourceItem);
+                    InsertItem(index, targetItem);
+                }
+            }
+        }
+
+
+        /// <summary>
+        ///   Determines the index of a new source collection item in this adapted collection.
+        /// </summary>
+        private int DetermineIndex(TSource newSourceItem)
+        {
+            // Cast source collection to IList<TSource>, because the IndexOf method is required.
+            var source = (IList<TSource>)_source;
+
+            // Get the index of the source item in the source collection.
+            var sourceIndex = source.IndexOf(newSourceItem);
+
+            // If there is no condition function or source item is either the first item or it does not exist in source collection,
+            // just return the source index.
+            if (_conditionFunction == null || sourceIndex <= 0) return sourceIndex;
+
+            var previousItem = default(TSource);
+
+            // Try to find the previous matching item in the source collection.
+            for (var i = sourceIndex - 1; i >= 0; i--)
+            {
+                var item = source[i];
+                if (!_conditionFunction(item)) continue;
+                previousItem = item;
+                break;
+            }
+
+            // If no previous matching item can be found, then the new source item should be the first item in this collection.
+            if (Equals(previousItem, default(TSource))) return 0;
+
+            // If a previous matching item is found, then the new source item should be the next item of this previous item.
+            return _sourceItems.IndexOf(previousItem) + 1;
+        }
+
+        /// <summary>
+        ///   Called when a collection of items is removed from the source collection.
+        /// </summary>
+        /// <param name="items"> The old items. </param>
+        private void OnSourceItemsRemoved(IEnumerable items)
+        {
+            foreach (var index in from TSource sourceItem in items where IsValidItem(sourceItem) select _sourceItems.IndexOf(sourceItem))
+            {
+                RemoveItem(index);
+                _sourceItems.RemoveAt(index);
+            }
+        }
+
+        /// <summary>
+        ///   Called when an item is replaced in the source collection.
+        /// </summary>
+        /// <param name="oldItem"> The old source item. </param>
+        /// <param name="newItem"> The new source item. </param>
+        private void OnSourceItemReplaced(TSource oldItem, TSource newItem)
+        {
+            var index = -_sourceItems.IndexOf(oldItem);
+            if (IsValidItem(newItem))
+            {
+                var targetItem = _converterFunction(newItem);
+                _sourceItems[index] = newItem;
+                this[index] = targetItem;
+            }
+            else
+            {
+                _sourceItems.RemoveAt(index);
+                RemoveItem(index);
+            }
+        }
+
+        /// <summary>
+        ///   Called when the source collection is reset.
+        /// </summary>
+        private void OnSourceReset()
+        {
+            Clear();
+        }
+
+        #endregion
+    }
 }

@@ -19,16 +19,6 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        /// Execute the specified action if the target is null.
-        /// </summary>
-        /// <param name="target">The target to check for nullity.</param>
-        /// <param name="action">The action to execute if <see cref="target"/> is null.</param>
-        public static void DoIfNull(this object target, Action action)
-        {
-            if (target == null && action != null) action();
-        }
-
-        /// <summary>
         /// Processes the target and returns a value if the target is not null.
         /// </summary>
         /// <typeparam name="TTarget">The type of the target.</typeparam>
@@ -37,7 +27,7 @@ namespace Codify.Extensions
         /// <param name="function">The function that takes the target as an argument and produces a value of the type <see cref="TResult"/>.</param>
         /// <param name="defaultResult">The optional default result to return either if the target or the processing function is null, the default value of the type <see cref="TResult"/> is returned if this parameter is not specified.</param>
         /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
-        public static TResult ProcessIfNotNull<TTarget, TResult>(this TTarget target, Func<TTarget, TResult> function, TResult defaultResult = default(TResult)) where TTarget : class
+        public static TResult UseIfNotNull<TTarget, TResult>(this TTarget target, Func<TTarget, TResult> function, TResult defaultResult = default(TResult)) where TTarget : class
         {
             return target == null || function == null ? defaultResult : function(target);
         }

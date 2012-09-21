@@ -107,7 +107,7 @@ namespace Codify.Extensions
         /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
         public static TResult ExecuteIfNotNull<TResult>(this Func<TResult> function, TResult defaultResult = default(TResult))
         {
-            return function.ProcessIfNotNull(f => f(), defaultResult);
+            return function.UseIfNotNull(f => f(), defaultResult);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Codify.Extensions
         /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
         public static TResult ExecuteIfNotNull<T, TResult>(this Func<T, TResult> function, T param, TResult defaultResult = default(TResult))
         {
-            return function.ProcessIfNotNull(f => f(param), defaultResult);
+            return function.UseIfNotNull(f => f(param), defaultResult);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Codify.Extensions
         /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
         public static TResult ExecuteIfNotNull<T1, T2, TResult>(this Func<T1, T2, TResult> function, T1 param1, T2 param2, TResult defaultResult = default(TResult))
         {
-            return function.ProcessIfNotNull(f => f(param1, param2), defaultResult);
+            return function.UseIfNotNull(f => f(param1, param2), defaultResult);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Codify.Extensions
         /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
         public static TResult ExecuteIfNotNull<T1, T2, T3, T4, TResult>(this Func<T1, T2, T3, T4, TResult> function, T1 param1, T2 param2, T3 param3, T4 param4, TResult defaultResult = default(TResult))
         {
-            return function.ProcessIfNotNull(f => f(param1, param2, param3, param4), defaultResult);
+            return function.UseIfNotNull(f => f(param1, param2, param3, param4), defaultResult);
         }
     }
 }
