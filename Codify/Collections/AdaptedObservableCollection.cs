@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -9,10 +7,10 @@ using Codify.Extensions;
 namespace Codify.Collections
 {
     /// <summary>
-    /// A read only observable collection that synchronises to a source collection of a different item type.
+    ///   A read only observable collection that synchronises to a source collection of a different item type.
     /// </summary>
-    /// <typeparam name="TSource">The type of the items in the source collection.</typeparam>
-    /// <typeparam name="TTarget">The type of the items in this collection.</typeparam>
+    /// <typeparam name="TSource"> The type of the items in the source collection. </typeparam>
+    /// <typeparam name="TTarget"> The type of the items in this collection. </typeparam>
     public class AdaptedObservableCollection<TSource, TTarget> : ObservableCollection<TTarget>
     {
         #region Private Members
@@ -66,6 +64,19 @@ namespace Codify.Collections
         #endregion
 
 
+        #region Public Methods
+
+        /// <summary>
+        /// Forces a refresh of this collection.
+        /// </summary>
+        public void Refresh()
+        {
+            _conditionalSourceCollection.Refresh();
+        }
+
+        #endregion
+
+
         #region Event Handling
 
         private void OnSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -73,21 +84,21 @@ namespace Codify.Collections
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    {
-                        var index = e.NewStartingIndex;
-                        foreach (TSource item in e.NewItems)
-                            this.SafeInsert(index++, _converter(item));
-                        break;
-                    }
+                {
+                    var index = e.NewStartingIndex;
+                    foreach (TSource item in e.NewItems)
+                        this.SafeInsert(index++, _converter(item));
+                    break;
+                }
                 case NotifyCollectionChangedAction.Remove:
-                    {
-                        var index = e.OldStartingIndex;
-                        foreach (var item in e.OldItems)
-                            RemoveItem(index++);
-                        break;
-                    }
+                {
+                    var index = e.OldStartingIndex;
+                    foreach (var item in e.OldItems)
+                        RemoveItem(index++);
+                    break;
+                }
                 case NotifyCollectionChangedAction.Replace:
-                    SetItem(e.NewStartingIndex, _converter((TSource)e.NewItems[0]));
+                    SetItem(e.NewStartingIndex, _converter((TSource) e.NewItems[0]));
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     ClearItems();

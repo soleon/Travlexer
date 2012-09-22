@@ -91,6 +91,20 @@ namespace Codify.Collections
         #endregion
 
 
+        #region Public Methods
+
+        /// <summary>
+        /// Forces a refresh of this collection.
+        /// </summary>
+        public void Refresh()
+        {
+            OnSourceReset();
+            OnSourceItemsAdded((IEnumerable)_source);
+        }
+
+        #endregion
+
+
         #region Private Methods
 
         /// <summary>

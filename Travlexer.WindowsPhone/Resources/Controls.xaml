@@ -11,6 +11,7 @@
 					xmlns:Codify="clr-namespace:Codify;assembly=Codify"
 					xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
 					xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
+                    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                     mc:Ignorable="d">
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="Brushes.xaml" />
@@ -640,7 +641,19 @@
 				</toolkit:NavigationOutTransition>
 			</Setter.Value>
 		</Setter>
-	</Style>
+        <Setter Property="shell:SystemTray.IsVisible"
+                Value="True" />
+        <Setter Property="FontFamily"
+                Value="{StaticResource PhoneFontFamilyNormal}" />
+        <Setter Property="FontSize"
+                Value="{StaticResource PhoneFontSizeNormal}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource PhoneForegroundBrush}" />
+        <Setter Property="Orientation"
+                Value="Portrait" />
+        <Setter Property="SupportedOrientations"
+                Value="Portrait" />
+    </Style>
 	<Style TargetType="Controls:AutoCompleteBox">
 		<Setter Property="Background"
 				Value="{StaticResource PhoneTextBoxBrush}" />
@@ -758,11 +771,7 @@
 		<Setter Property="Margin" Value="{StaticResource PhoneMargin}"/>
 		<Setter Property="HorizontalContentAlignment" Value="Left"/>
 	</Style>
-	<Style x:Key="FullWidthListBoxItemStyle" TargetType="ListBoxItem">
+	<Style TargetType="ListBoxItem">
 		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-	</Style>
-	<Style x:Key="CheckableListBoxItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource FullWidthListBoxItemStyle}">
-		
-		
 	</Style>
 </ResourceDictionary>

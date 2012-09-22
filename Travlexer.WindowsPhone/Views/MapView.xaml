@@ -19,14 +19,9 @@
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                                   xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
                                   Style="{StaticResource PageDefault}"
-                                  FontFamily="{StaticResource PhoneFontFamilyNormal}"
-                                  FontSize="{StaticResource PhoneFontSizeNormal}"
-                                  Foreground="{StaticResource PhoneForegroundBrush}"
-                                  Orientation="Portrait"
                                   mc:Ignorable="d"
-                                  d:DesignWidth="480"
                                   d:DesignHeight="768"
-                                  shell:SystemTray.IsVisible="True"
+                                  d:DesignWidth="480"
                                   d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
     <phone:PhoneApplicationPage.Resources>
         <ScaleTransform x:Key="TileScale" />

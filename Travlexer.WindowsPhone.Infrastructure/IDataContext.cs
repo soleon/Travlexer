@@ -20,7 +20,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// <summary>
         /// Gets or sets the selected place.
         /// </summary>
-        Place SelectedPlace { get; set; }
+        ObservableValue<Place> SelectedPlace { get; set; }
 
         /// <summary>
         /// Gets or sets the map center geo-location.

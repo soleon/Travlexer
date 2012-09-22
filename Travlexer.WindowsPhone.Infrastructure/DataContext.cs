@@ -55,7 +55,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// <summary>
         /// Gets or sets the selected place.
         /// </summary>
-        public Place SelectedPlace { get; set; }
+        public ObservableValue<Place> SelectedPlace { get; set; }
 
         /// <summary>
         /// Gets or sets the map center geo-location.
@@ -685,6 +685,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             RouteMethod = new ObservableValue<RouteMethod>();
             TravelMode = new ObservableValue<TravelMode>();
             Unit = new ObservableValue<Units>();
+            SelectedPlace = new ObservableValue<Place>();
 
             MapOverlays = new ObservableCollection<Layer>();
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());

@@ -16,8 +16,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Private Members
 
         private readonly IDataContext _data;
-        private readonly Dictionary<ManagementSections, IEnumerable<AppBarButtonViewModel>> _managementSectionAppBarButtons;
-        private readonly Dictionary<ManagementSections, IEnumerable<AppBarMenuItemViewModel>> _managementSectionMenuItems;
 
         #endregion
 
@@ -29,21 +27,30 @@ namespace Travlexer.WindowsPhone.ViewModels
             _data = data;
             var places = data.Places;
 
-            Routes = new AdaptedObservableCollection<Route, CheckableViewModel<Route>>(route => new CheckableViewModel<Route> { Data = route }, source: _data.Routes);
-            Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> { Data = trip }, source: _data.Trips);
-            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
-            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            Routes = new AdaptedObservableCollection<Route, CheckableViewModel<Route>>(route => new CheckableViewModel<Route> {Data = route}, source: _data.Routes);
+            Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> {Data = trip}, source: _data.Trips);
+            PersonalPlaces = new AdaptedObservableCollection<Place, PlaceManagementItemViewModel>(place => new PlaceManagementItemViewModel { Data = place }, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            SearchResults = new AdaptedObservableCollection<Place, PlaceManagementItemViewModel>(place => new PlaceManagementItemViewModel { Data = place }, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
 
             CommandDeleteSelectedItems = new DelegateCommand(OnDeleteSelectedItems);
             CommandSelectAllItems = new DelegateCommand(OnSelectAllItems);
             CommandClearSelection = new DelegateCommand(OnClearSelection);
+            CommandPinSelectedSearchResult = new DelegateCommand(OnPinSelectedSearchResult);
         }
-
 
         #endregion
 
 
         #region Event Handling
+
+        private void OnPinSelectedSearchResult()
+        {
+            var selectedSearchResults = SearchResults.Where(p => p.IsChecked).ToArray();
+            if (selectedSearchResults.Length == 0) return;
+            selectedSearchResults.ForEach(p => p.Data.IsSearchResult = false);
+            PersonalPlaces.Refresh();
+            SearchResults.Refresh();
+        }
 
         private void OnClearSelection()
         {
@@ -169,14 +176,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public AdaptedObservableCollection<Trip, CheckableViewModel<Trip>> Trips { get; private set; }
 
-        public AdaptedObservableCollection<Place, CheckableViewModel<Place>> PersonalPlaces { get; private set; }
+        public AdaptedObservableCollection<Place, PlaceManagementItemViewModel> PersonalPlaces { get; private set; }
 
-        public AdaptedObservableCollection<Place, CheckableViewModel<Place>> SearchResults { get; private set; }
+        public AdaptedObservableCollection<Place, PlaceManagementItemViewModel> SearchResults { get; private set; }
 
         public ManagementSections SelectedManagementSection
         {
             get { return _selectedManagementSection; }
-            set { SetValue(ref _selectedManagementSection, value, SelectedManagementSectionProperty); }
+            set { SetValue(ref _selectedManagementSection, value, SelectedManagementSectionProperty, IsSearchResultsSectionSelectedProperty); }
         }
 
         private ManagementSections _selectedManagementSection;
@@ -200,6 +207,13 @@ namespace Travlexer.WindowsPhone.ViewModels
         private IEnumerable<AppBarMenuItemViewModel> _selectedManagementSectionMenuItems;
         private const string SelectedManagementSectionMenuItemsProperty = "SelectedManagementSectionMenuItems";
 
+        public bool IsSearchResultsSectionSelected
+        {
+            get { return _selectedManagementSection == ManagementSections.SearchResults; }
+        }
+
+        private const string IsSearchResultsSectionSelectedProperty = "IsSearchResultsSectionSelected";
+
         #endregion
 
 
@@ -211,6 +225,24 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public DelegateCommand CommandClearSelection { get; private set; }
 
+        public DelegateCommand CommandPinSelectedSearchResult { get; private set; }
+
         #endregion
+    }
+
+    public class PlaceManagementItemViewModel : CheckableViewModel<Place>
+    {
+        public PlaceManagementItemViewModel()
+        {
+            CommandGoToPlace = new DelegateCommand(OnGoToPlace);
+        }
+
+        private void OnGoToPlace()
+        {
+            ApplicationContext.Data.SelectedPlace.Value = Data;
+            ApplicationContext.NavigationService.GoBack();
+        }
+
+        public DelegateCommand CommandGoToPlace { get; private set; }
     }
 }

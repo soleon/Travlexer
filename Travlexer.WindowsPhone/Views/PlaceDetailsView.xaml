@@ -10,14 +10,9 @@
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                                   Style="{StaticResource PageDefault}"
                                   x:Name="Page"
-                                  FontFamily="{StaticResource PhoneFontFamilyNormal}"
-                                  FontSize="{StaticResource PhoneFontSizeNormal}"
-                                  Foreground="{StaticResource PhoneForegroundBrush}"
-                                  Orientation="Portrait"
                                   mc:Ignorable="d"
                                   d:DesignHeight="768"
                                   d:DesignWidth="480"
-                                  shell:SystemTray.IsVisible="True"
                                   d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"

@@ -337,10 +337,8 @@
     <ImageBrush x:Key="BrushIconRightArrow"
                 Stretch="None">
         <Imaging:UIBitmap.Content>
-            <Path Data="M50,0C22.388,0,0,22.388,0,50s22.388,50,50,50s50-22.388,50-50S77.612,0,50,0z M50.098,75V56.25H25  v-12.5h25.098V25.098L75,50L50.098,75z"
-                  Style="{StaticResource IconPathBase}"
-                  Width="{StaticResource IconContainerDimension}"
-                  Height="{StaticResource IconContainerDimension}" />
+            <Path Data="F1 M 12,22L 12,26L 28.25,26L 21,33L 27.5,33L 37,24L 27.5,15L 21,15L 28.25,22L 12,22 Z"
+                  Style="{StaticResource IconPathBase}" />
         </Imaging:UIBitmap.Content>
     </ImageBrush>
 </ResourceDictionary>

@@ -15,7 +15,6 @@ using Codify.Extensions;
 using Codify.GoogleMaps.Controls;
 using Codify.Services;
 using Codify.Threading;
-using Codify.WindowsPhone;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Converters;
 using Travlexer.WindowsPhone.Infrastructure;
@@ -24,7 +23,7 @@ using Travlexer.WindowsPhone.Views;
 namespace Travlexer.WindowsPhone.ViewModels
 {
     /// <summary>
-    /// Defines the view model for <see cref="MapView"/>
+    ///   Defines the view model for <see cref="MapView" />
     /// </summary>
     public class MapViewModel : NotifyableEntity
     {
@@ -38,6 +37,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Private Members
 
         private readonly GeoCoordinateWatcher _geoWatcher;
+        private readonly IDataContext _data;
 
         private AppBarButtonViewModel
             _trackButton,
@@ -73,17 +73,17 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Public Events
 
         /// <summary>
-        /// Occurs when the execution of <see cref="CommandSearch"/> is completed successfully.
+        ///   Occurs when the execution of <see cref="CommandSearch" /> is completed successfully.
         /// </summary>
         public event Action<IList<Place>> SearchSucceeded;
 
         /// <summary>
-        /// Occurs when <see cref="Suggestions"/> are retrieved from service client.
+        ///   Occurs when <see cref="Suggestions" /> are retrieved from service client.
         /// </summary>
         public event Action SuggestionsRetrieved;
 
         /// <summary>
-        /// Occurs when <see cref="CommandRoute"/> is successfully finished.
+        ///   Occurs when <see cref="CommandRoute" /> is successfully finished.
         /// </summary>
         public event Action<Route> RouteSucceeded;
 
@@ -93,15 +93,16 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapViewModel"/> class.
+        ///   Initializes a new instance of the <see cref="MapViewModel" /> class.
         /// </summary>
         public MapViewModel()
         {
             // Initialise local properties.
+            _data = ApplicationContext.Data;
             VisualState = new ObservableValue<VisualStates>();
             Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
-            Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), source: ApplicationContext.Data.Places);
-            Routes = new AdaptedObservableCollection<Route, RouteViewModel>(r => new RouteViewModel(r, this), source: ApplicationContext.Data.Routes);
+            Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), source: _data.Places);
+            Routes = new AdaptedObservableCollection<Route, RouteViewModel>(r => new RouteViewModel(r, this), source: _data.Routes);
             DepartureLocation = new RouteLocation();
             ArrivalLocation = new RouteLocation();
 
@@ -128,9 +129,9 @@ namespace Travlexer.WindowsPhone.ViewModels
                 if (ZoomLevel.Value > 1D)
                     ZoomLevel.Value = Math.Max(ZoomLevel.Value -= 1D, 1D);
             });
-            CommandShowStreetLayer = new DelegateCommand(() => ApplicationContext.Data.MapBaseLayer.Value = Layer.Street);
-            CommandShowSatelliteHybridLayer = new DelegateCommand(() => ApplicationContext.Data.MapBaseLayer.Value = Layer.SatelliteHybrid);
-            CommandToggleMapOverlay = new DelegateCommand<Layer>(ApplicationContext.Data.ToggleMapOverlay);
+            CommandShowStreetLayer = new DelegateCommand(() => _data.MapBaseLayer.Value = Layer.Street);
+            CommandShowSatelliteHybridLayer = new DelegateCommand(() => _data.MapBaseLayer.Value = Layer.SatelliteHybrid);
+            CommandToggleMapOverlay = new DelegateCommand<Layer>(_data.ToggleMapOverlay);
             CommandToggleToolbar = new DelegateCommand(ApplicationContext.Configuration.ToggleToolbarState);
             CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartureLocation.Address = CurrentLocationString);
             CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArrivalLocation.Address = CurrentLocationString);
@@ -139,7 +140,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandDeactivate = new DelegateCommand(OnDeactivate);
 
             // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
+            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
 
 
@@ -149,8 +150,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 
             // Handle necessary events.
             Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
-            ApplicationContext.Data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChanged(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
-            ApplicationContext.Data.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChanged(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
+            _data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChanged(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
+            _data.SelectedPlace.ValueChanged += (old, @new) => SelectedPushpin = Pushpins.FirstOrDefault(p => p.Data == @new);
+            _data.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChanged(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
             VisualState.ValueChanged += OnVisualStateChanged;
             IsTrackingCurrentLocation.ValueChanged += OnIsTrackingCurrentLocationValueChanged;
 
@@ -177,12 +179,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Public Properties
 
         /// <summary>
-        /// Gets the collection of all user pins.
+        ///   Gets the collection of all user pins.
         /// </summary>
         public AdaptedObservableCollection<Place, PlaceViewModel> Pushpins { get; private set; }
 
         /// <summary>
-        /// Gets or sets the selected place.
+        ///   Gets or sets the selected place.
         /// </summary>
         public PlaceViewModel SelectedPushpin
         {
@@ -216,7 +218,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     }
                     VisualState.Value = VisualStates.PushpinSelected;
                 }
-                ApplicationContext.Data.SelectedPlace = value == null ? null : value.Data;
+                _data.SelectedPlace.Value = value == null ? null : value.Data;
             }
         }
 
@@ -224,12 +226,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         private const string SelectedPushpinProperty = "SelectedPushpin";
 
         /// <summary>
-        /// Gets all routes planned by the user.
+        ///   Gets all routes planned by the user.
         /// </summary>
         public AdaptedObservableCollection<Route, RouteViewModel> Routes { get; private set; }
 
         /// <summary>
-        /// Gets or sets the selected route.
+        ///   Gets or sets the selected route.
         /// </summary>
         public RouteViewModel SelectedRoute
         {
@@ -248,7 +250,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         private const string SelectedRouteProperty = "SelectedRoute";
 
         /// <summary>
-        /// Gets or sets the pushpin that's been dragged.
+        ///   Gets or sets the pushpin that's been dragged.
         /// </summary>
         public PlaceViewModel DragPushpin
         {
@@ -285,30 +287,30 @@ namespace Travlexer.WindowsPhone.ViewModels
         private const string CurrentLocationProperty = "CurrentLocation";
 
         /// <summary>
-        /// Gets or sets the map center geo-coordination.
+        ///   Gets or sets the map center geo-coordination.
         /// </summary>
         public ObservableValue<GeoCoordinate> Center
         {
-            get { return ApplicationContext.Data.MapCenter; }
+            get { return _data.MapCenter; }
         }
 
         /// <summary>
-        /// Gets or sets the zoom level of the map.
+        ///   Gets or sets the zoom level of the map.
         /// </summary>
         public ObservableValue<double> ZoomLevel
         {
-            get { return ApplicationContext.Data.MapZoomLevel; }
+            get { return _data.MapZoomLevel; }
         }
 
         /// <summary>
-        /// Gets the suggestions based on the <see cref="SearchInput"/>.
+        ///   Gets the suggestions based on the <see cref="SearchInput" />.
         /// </summary>
         public ReadOnlyObservableCollection<SearchSuggestion> Suggestions { get; private set; }
 
         private readonly ObservableCollection<SearchSuggestion> _suggestions = new ObservableCollection<SearchSuggestion>();
 
         /// <summary>
-        /// Gets or sets the selected <see cref="Travlexer.Data.SearchSuggestion"/>.
+        ///   Gets or sets the selected <see cref="Travlexer.Data.SearchSuggestion" />.
         /// </summary>
         public SearchSuggestion SelectedSuggestion
         {
@@ -326,20 +328,20 @@ namespace Travlexer.WindowsPhone.ViewModels
         private const string SelectedSuggestionProperty = "SelectedSuggestion";
 
         /// <summary>
-        /// Gets or sets the search input.
+        ///   Gets or sets the search input.
         /// </summary>
         public ObservableValue<string> SearchInput
         {
-            get { return ApplicationContext.Data.SearchInput; }
+            get { return _data.SearchInput; }
         }
 
         /// <summary>
-        /// Gets the visual state of the view.
+        ///   Gets the visual state of the view.
         /// </summary>
         public ObservableValue<VisualStates> VisualState { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the map is tracking current location.
+        ///   Gets or sets a value indicating whether the map is tracking current location.
         /// </summary>
         public ObservableValue<bool> IsTrackingCurrentLocation
         {
@@ -347,58 +349,56 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is busy.
+        ///   Gets or sets a value indicating whether this instance is busy.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is busy; otherwise, <c>false</c>.
-        /// </value>
+        /// <value> <c>true</c> if this instance is busy; otherwise, <c>false</c> . </value>
         public ObservableValue<bool> IsBusy
         {
             get { return ApplicationContext.Configuration.IsBusy; }
         }
 
         /// <summary>
-        /// Gets the visibility of online street layer.
+        ///   Gets the visibility of online street layer.
         /// </summary>
         public Visibility IsStreetLayerVisible
         {
-            get { return ApplicationContext.Data.MapBaseLayer.Value == Layer.Street ? Visibility.Visible : Visibility.Collapsed; }
+            get { return _data.MapBaseLayer.Value == Layer.Street ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
 
         /// <summary>
-        /// Gets the visibility of online satellite hybrid layer.
+        ///   Gets the visibility of online satellite hybrid layer.
         /// </summary>
         public Visibility IsSatelliteHybridLayerVisible
         {
-            get { return ApplicationContext.Data.MapBaseLayer.Value == Layer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
+            get { return _data.MapBaseLayer.Value == Layer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
 
         /// <summary>
-        /// Gets the visibility of online traffic layer.
+        ///   Gets the visibility of online traffic layer.
         /// </summary>
         public Visibility IsTrafficLayerVisible
         {
-            get { return ApplicationContext.Data.MapOverlays.Contains(Layer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+            get { return _data.MapOverlays.Contains(Layer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
 
         /// <summary>
-        /// Gets the visibility of online transit layer.
+        ///   Gets the visibility of online transit layer.
         /// </summary>
         public Visibility IsTransitLayerVisible
         {
-            get { return ApplicationContext.Data.MapOverlays.Contains(Layer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+            get { return _data.MapOverlays.Contains(Layer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
 
         /// <summary>
-        /// Gets the state of the toolbar.
+        ///   Gets the state of the toolbar.
         /// </summary>
         public ObservableValue<ExpansionStates> ToolbarState
         {
@@ -406,7 +406,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Gets the value indicates if the application is working in offline mode.
+        ///   Gets the value indicates if the application is working in offline mode.
         /// </summary>
         public ObservableValue<bool> IsOnline
         {
@@ -414,7 +414,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Gets the available route modes.
+        ///   Gets the available route modes.
         /// </summary>
         public List<KeyValueIcon<TravelMode, string, ImageBrush>> TravelModes
         {
@@ -422,15 +422,15 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Gets the selected route mode.
+        ///   Gets the selected route mode.
         /// </summary>
         public ObservableValue<TravelMode> SelectedTravelMode
         {
-            get { return ApplicationContext.Data.TravelMode; }
+            get { return _data.TravelMode; }
         }
 
         /// <summary>
-        /// Gets the available route methods.
+        ///   Gets the available route methods.
         /// </summary>
         public List<KeyValueIcon<RouteMethod, string, ImageBrush>> RouteMethods
         {
@@ -438,30 +438,30 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Gets the selected route method.
+        ///   Gets the selected route method.
         /// </summary>
         public ObservableValue<RouteMethod> SelectedRouteMethod
         {
-            get { return ApplicationContext.Data.RouteMethod; }
+            get { return _data.RouteMethod; }
         }
 
         /// <summary>
-        /// Gets the departure location.
+        ///   Gets the departure location.
         /// </summary>
         public RouteLocation DepartureLocation { get; private set; }
 
         /// <summary>
-        /// Gets the arrival location.
+        ///   Gets the arrival location.
         /// </summary>
         public RouteLocation ArrivalLocation { get; private set; }
 
         /// <summary>
-        /// Gets the application bar button items sources.
+        ///   Gets the application bar button items sources.
         /// </summary>
         public ObservableCollection<AppBarButtonViewModel>[] AppBarButtonItemsSources { get; private set; }
 
         /// <summary>
-        /// Gets the selected app bar button items source.
+        ///   Gets the selected app bar button items source.
         /// </summary>
         public ObservableCollection<AppBarButtonViewModel> SelectedAppBarButtonItemsSource
         {
@@ -482,7 +482,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         private const string SelectedAppBarMenuItemsSourceProperty = "SelectedAppBarMenuItemsSource";
 
         /// <summary>
-        /// Gets a value indicating whether this the application bar is visible.
+        ///   Gets a value indicating whether this the application bar is visible.
         /// </summary>
         public bool IsAppBarVisible
         {
@@ -499,107 +499,107 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Commands
 
         /// <summary>
-        /// Gets the command that adds a user pin.
+        ///   Gets the command that adds a user pin.
         /// </summary>
         public DelegateCommand<Location> CommandAddPlace { get; private set; }
 
         /// <summary>
-        /// Gets the command that toggles the pushpin content state.
+        ///   Gets the command that toggles the pushpin content state.
         /// </summary>
         public DelegateCommand<PlaceViewModel> CommandSelectPushpin { get; private set; }
 
         /// <summary>
-        /// Gets the command that toggles the pushpin content state.
+        ///   Gets the command that toggles the pushpin content state.
         /// </summary>
         public DelegateCommand<RouteViewModel> CommandSelectRoute { get; private set; }
 
         /// <summary>
-        /// Gets the command deletes a user pin.
+        ///   Gets the command deletes a user pin.
         /// </summary>
         public DelegateCommand<PlaceViewModel> CommandDeletePlace { get; private set; }
 
         /// <summary>
-        /// Gets the command that gets suggestions that based on the <see cref="SearchInput"/>.
+        ///   Gets the command that gets suggestions that based on the <see cref="SearchInput" />.
         /// </summary>
         public DelegateCommand CommandGetSuggestions { get; private set; }
 
         /// <summary>
-        /// Gets the command that performs the search based on the <see cref="SearchInput"/>.
+        ///   Gets the command that performs the search based on the <see cref="SearchInput" />.
         /// </summary>
         public DelegateCommand CommandSearch { get; private set; }
 
         /// <summary>
-        /// Gets the command that stops tracking current location.
+        ///   Gets the command that stops tracking current location.
         /// </summary>
         public DelegateCommand CommandStopTrackingCurrentLocation { get; private set; }
 
         /// <summary>
-        /// Gets the command that sets the <see cref="VisualState"/> to <see cref="VisualStates.Default"/>.
+        ///   Gets the command that sets the <see cref="VisualState" /> to <see cref="VisualStates.Default" />.
         /// </summary>
         public DelegateCommand CommandGoToDefaultState { get; private set; }
 
         /// <summary>
-        /// Gets the command that updates the information of a given place.
+        ///   Gets the command that updates the information of a given place.
         /// </summary>
         public DelegateCommand<PlaceViewModel> CommandUpdatePlace { get; private set; }
 
         /// <summary>
-        /// Gets the command that starts geo coordinate watcher.
+        ///   Gets the command that starts geo coordinate watcher.
         /// </summary>
         public DelegateCommand CommandStartGeoWatcher { get; private set; }
 
         /// <summary>
-        /// Gets the command that stops geo coordinate watcher.
+        ///   Gets the command that stops geo coordinate watcher.
         /// </summary>
         public DelegateCommand CommandStopGeoWatcher { get; private set; }
 
         /// <summary>
-        /// Gets the command that adds a place at the <see cref="CurrentLocation"/>.
+        ///   Gets the command that adds a place at the <see cref="CurrentLocation" />.
         /// </summary>
         public DelegateCommand CommandAddCurrentPlace { get; private set; }
 
         /// <summary>
-        /// Gets the command that zooms in the map.
+        ///   Gets the command that zooms in the map.
         /// </summary>
         public DelegateCommand CommandZoomIn { get; private set; }
 
         /// <summary>
-        /// Gets the command that zooms out the map.
+        ///   Gets the command that zooms out the map.
         /// </summary>
         public DelegateCommand CommandZoomOut { get; private set; }
 
         /// <summary>
-        /// Gets the command that shows the street layer.
+        ///   Gets the command that shows the street layer.
         /// </summary>
         public DelegateCommand CommandShowStreetLayer { get; private set; }
 
         /// <summary>
-        /// Gets the command that shows the satellite hybrid layer.
+        ///   Gets the command that shows the satellite hybrid layer.
         /// </summary>
         public DelegateCommand CommandShowSatelliteHybridLayer { get; private set; }
 
         /// <summary>
-        /// Gets the command that toggles traffic layer.
+        ///   Gets the command that toggles traffic layer.
         /// </summary>
         public DelegateCommand<Layer> CommandToggleMapOverlay { get; private set; }
 
         /// <summary>
-        /// Gets the command that toggles the <see cref="ToolbarState"/>.
+        ///   Gets the command that toggles the <see cref="ToolbarState" />.
         /// </summary>
         public DelegateCommand CommandToggleToolbar { get; private set; }
 
         /// <summary>
-        /// Gets the command that sets depart location to current location.
+        ///   Gets the command that sets depart location to current location.
         /// </summary>
         public DelegateCommand CommandSetDepartLocationToCurrentLocation { get; private set; }
 
         /// <summary>
-        /// Gets the command that sets arrive location to current location.
+        ///   Gets the command that sets arrive location to current location.
         /// </summary>
         public DelegateCommand CommandSetArriveLocationToCurrentLocation { get; private set; }
 
         /// <summary>
-        /// Gets the command that finds a route.
+        ///   Gets the command that finds a route.
         /// </summary>
         public DelegateCommand CommandRoute { get; private set; }
 
@@ -613,42 +613,42 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Event Handling
 
         /// <summary>
-        /// Called when <see cref="CommandGoToDefaultState"/>.
+        ///   Called when <see cref="CommandGoToDefaultState" />.
         /// </summary>
         private void OnGoToDefaultState()
         {
-            ApplicationContext.Data.CancelGetSuggestions();
+            _data.CancelGetSuggestions();
             VisualState.Value = VisualStates.Default;
         }
 
         /// <summary>
-        /// Called when <see cref="CommandAddPlace"/> is executed.
+        ///   Called when <see cref="CommandAddPlace" /> is executed.
         /// </summary>
         private void OnAddPlace(Location location)
         {
             VisualState.Value = VisualStates.Default;
-            ApplicationContext.Data.AddNewPlace(location);
+            _data.AddNewPlace(location);
         }
 
         /// <summary>
-        /// Called when <see cref="CommandDeletePlace"/> is executed.
+        ///   Called when <see cref="CommandDeletePlace" /> is executed.
         /// </summary>
         private void OnDeletePlace(PlaceViewModel vm)
         {
-            ApplicationContext.Data.RemovePlace(vm.Data);
+            _data.RemovePlace(vm.Data);
         }
 
         /// <summary>
-        /// Called when <see cref="CommandDeletePlace"/> is executed.
+        ///   Called when <see cref="CommandDeletePlace" /> is executed.
         /// </summary>
         private void OnDeleteSelectedPlace()
         {
-            ApplicationContext.Data.RemovePlace(SelectedPushpin.Data);
+            _data.RemovePlace(SelectedPushpin.Data);
             SelectedPushpin = null;
         }
 
         /// <summary>
-        /// Called when the "keep" application bar button is pressed when a search result is selected.
+        ///   Called when the "keep" application bar button is pressed when a search result is selected.
         /// </summary>
         private void OnKeepSelectedSearchResult()
         {
@@ -657,10 +657,10 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when items in <see cref="Pushpins"/> collection are changed.
+        ///   Called when items in <see cref="Pushpins" /> collection are changed.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="sender"> The sender. </param>
+        /// <param name="e"> The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data. </param>
         private void OnPushpinsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -679,15 +679,15 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="CommandSearch"/> is executed.
+        ///   Called when <see cref="CommandSearch" /> is executed.
         /// </summary>
         private void OnSearch()
         {
             if (SearchInput.Value.IsNullOrEmpty()) return;
             ApplicationContext.Configuration.IsBusy.Value = true;
             VisualState.Value = VisualStates.Default;
-            ApplicationContext.Data.CancelGetSuggestions();
-            ApplicationContext.Data.Search(Center.Value.ToLocalLocation(), SearchInput.Value, callback =>
+            _data.CancelGetSuggestions();
+            _data.Search(Center.Value.ToLocalLocation(), SearchInput.Value, callback =>
             {
                 ApplicationContext.Configuration.IsBusy.Value = false;
                 if (callback.Status != CallbackStatus.Successful)
@@ -702,7 +702,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="CommandGetSuggestions"/> is executed.
+        ///   Called when <see cref="CommandGetSuggestions" /> is executed.
         /// </summary>
         private void OnGetSuggestions()
         {
@@ -713,7 +713,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             }
 
             ApplicationContext.Configuration.IsBusy.Value = true;
-            ApplicationContext.Data.GetSuggestions(Center.Value.ToLocalLocation(), SearchInput.Value, args =>
+            _data.GetSuggestions(Center.Value.ToLocalLocation(), SearchInput.Value, args =>
             {
                 ApplicationContext.Configuration.IsBusy.Value = false;
                 SelectedSuggestion = null;
@@ -729,7 +729,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="SelectedSuggestion"/> is changed to another valid value.
+        ///   Called when <see cref="SelectedSuggestion" /> is changed to another valid value.
         /// </summary>
         private void OnSuggestionSelected()
         {
@@ -737,7 +737,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             UIThread.InvokeBack(() => VisualState.Value = VisualStates.Default);
 
             ApplicationContext.Configuration.IsBusy.Value = true;
-            ApplicationContext.Data.GetPlaceDetailsForSearch(SelectedSuggestion.Reference, args =>
+            _data.GetPlaceDetailsForSearch(SelectedSuggestion.Reference, args =>
             {
                 ApplicationContext.Configuration.IsBusy.Value = false;
                 if (args.Status != CallbackStatus.Successful)
@@ -746,14 +746,14 @@ namespace Travlexer.WindowsPhone.ViewModels
                     return;
                 }
                 IsTrackingCurrentLocation.Value = false;
-                SearchSucceeded.ExecuteIfNotNull(new List<Place> { args.Result });
+                SearchSucceeded.ExecuteIfNotNull(new List<Place> {args.Result});
             });
 
             ResetSearchSuggestions();
         }
 
         /// <summary>
-        /// Called when <see cref="CommandStopTrackingCurrentLocation"/> is executed.
+        ///   Called when <see cref="CommandStopTrackingCurrentLocation" /> is executed.
         /// </summary>
         private void OnStopTrackingCurrentLocation()
         {
@@ -761,7 +761,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="CommandStopTrackingCurrentLocation"/> is executed.
+        ///   Called when <see cref="CommandStopTrackingCurrentLocation" /> is executed.
         /// </summary>
         private void OnStartTrackingCurrentLocation()
         {
@@ -769,7 +769,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="GeoCoordinateWatcher.PositionChanged"/> event is raised.
+        ///   Called when <see cref="GeoCoordinateWatcher.PositionChanged" /> event is raised.
         /// </summary>
         private void OnGeoWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
@@ -795,16 +795,16 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="CommandUpdatePlace"/> is executed.
+        ///   Called when <see cref="CommandUpdatePlace" /> is executed.
         /// </summary>
-        /// <param name="pushpin">The pushpin view model.</param>
+        /// <param name="pushpin"> The pushpin view model. </param>
         private void OnUpdatePlace(PlaceViewModel pushpin)
         {
-            ApplicationContext.Data.GetPlaceDetails(pushpin.Data);
+            _data.GetPlaceDetails(pushpin.Data);
         }
 
         /// <summary>
-        /// Called when the value of <see cref="VisualState"/> is chagned.
+        ///   Called when the value of <see cref="VisualState" /> is chagned.
         /// </summary>
         private void OnVisualStateChanged(VisualStates old, VisualStates @new)
         {
@@ -847,7 +847,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when the value of <see cref="IsTrackingCurrentLocation"/> has changed.
+        ///   Called when the value of <see cref="IsTrackingCurrentLocation" /> has changed.
         /// </summary>
         private void OnIsTrackingCurrentLocationValueChanged(bool old, bool @new)
         {
@@ -861,14 +861,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="CommandRoute"/> is executed.
+        ///   Called when <see cref="CommandRoute" /> is executed.
         /// </summary>
         private void OnRoute()
         {
-            if (DepartureLocation.Address.IsNullOrEmpty() || ArrivalLocation.Address.IsNullOrEmpty())
-            {
+            if (string.IsNullOrEmpty(DepartureLocation.Address) || string.IsNullOrEmpty(ArrivalLocation.Address))
                 return;
-            }
 
             var departureLocation = DepartureLocation;
             var arrivalLocation = ArrivalLocation;
@@ -876,7 +874,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             string departureAddress;
             if (departureLocation.PlaceId != Guid.Empty)
             {
-                var departurePlace = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
+                var departurePlace = _data.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
                 departureAddress = departurePlace == null ? departureLocation.Address : departurePlace.Location.ToString();
             }
             else
@@ -887,7 +885,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             string arrivalAddress;
             if (arrivalLocation.PlaceId != Guid.Empty)
             {
-                var arrivalPlace = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
+                var arrivalPlace = _data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
                 arrivalAddress = arrivalPlace == null ? arrivalLocation.Address : arrivalPlace.Location.ToString();
             }
             else
@@ -919,7 +917,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
             IsBusy.Value = true;
             VisualState.Value = VisualStates.Default;
-            ApplicationContext.Data.GetRoute(departureAddress, arrivalAddress, SelectedTravelMode.Value, SelectedRouteMethod.Value, callback =>
+            _data.GetRoute(departureAddress, arrivalAddress, SelectedTravelMode.Value, SelectedRouteMethod.Value, callback =>
             {
                 IsBusy.Value = false;
                 Route route;
@@ -939,11 +937,11 @@ namespace Travlexer.WindowsPhone.ViewModels
                 IsTrackingCurrentLocation.Value = false;
 
                 // Check if there's already a departure place.
-                var place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
+                var place = _data.Places.FirstOrDefault(p => p.Id == departureLocation.PlaceId);
                 if (place == null)
                 {
                     var point = points[0];
-                    place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Location == point) ?? ApplicationContext.Data.AddNewPlace(point);
+                    place = _data.Places.FirstOrDefault(p => p.Location == point) ?? _data.AddNewPlace(point);
                     route.DeparturePlaceId = place.Id;
                 }
                 else
@@ -952,11 +950,11 @@ namespace Travlexer.WindowsPhone.ViewModels
                 }
 
                 // Check if there's already an arrival place.
-                place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
+                place = _data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
                 if (place == null)
                 {
                     var point = points[count - 1];
-                    place = ApplicationContext.Data.Places.FirstOrDefault(p => p.Location == point) ?? ApplicationContext.Data.AddNewPlace(point);
+                    place = _data.Places.FirstOrDefault(p => p.Location == point) ?? _data.AddNewPlace(point);
                     route.ArrivalPlaceId = place.Id;
                 }
                 else
@@ -969,22 +967,22 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when "clear routes" menu item is pressed in the application bar.
+        ///   Called when "clear routes" menu item is pressed in the application bar.
         /// </summary>
         private void OnClearRoutes()
         {
-            if (ApplicationContext.Data.Routes.Count == 0)
+            if (_data.Routes.Count == 0)
             {
                 return;
             }
             if (MessageBox.Show("This will clear all routes on the map. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                ApplicationContext.Data.ClearRoutes();
+                _data.ClearRoutes();
             }
         }
 
         /// <summary>
-        /// Called when the "arrive" application bar button is pressed when a pushpin is selected.
+        ///   Called when the "arrive" application bar button is pressed when a pushpin is selected.
         /// </summary>
         private void OnSetSelectedPlaceAsArriveLocation()
         {
@@ -997,7 +995,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when the "depart" application bar button is pressed when a pushpin is selected.
+        ///   Called when the "depart" application bar button is pressed when a pushpin is selected.
         /// </summary>
         private void OnSetSelectedPlaceAsDepartLocation()
         {
@@ -1010,7 +1008,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when the "remove" application bar button is pressed when a route is selected.
+        ///   Called when the "remove" application bar button is pressed when a route is selected.
         /// </summary>
         private void OnDeleteSelectedRoute()
         {
@@ -1019,7 +1017,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             if (result == MessageBoxResult.OK)
             {
                 var count = 0;
-                var places = ApplicationContext.Data.Places;
+                var places = _data.Places;
                 for (var i = places.Count - 1; i >= 0; i--)
                 {
                     var place = places[i];
@@ -1028,7 +1026,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     {
                         continue;
                     }
-                    ApplicationContext.Data.RemovePlace(place);
+                    _data.RemovePlace(place);
                     if (count == 1)
                     {
                         break;
@@ -1036,12 +1034,12 @@ namespace Travlexer.WindowsPhone.ViewModels
                     count++;
                 }
             }
-            ApplicationContext.Data.RemoveRoute(route);
+            _data.RemoveRoute(route);
             SelectedRoute = null;
         }
 
         /// <summary>
-        /// Called when <see cref="Codify.WindowsPhone.NavigationService.BackKeyPress"/> event is fired.
+        ///   Called when <see cref="Codify.WindowsPhone.NavigationService.BackKeyPress" /> event is fired.
         /// </summary>
         private void OnBackKeyPress(object sender, CancelEventArgs e)
         {
@@ -1054,7 +1052,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when the "details" application bar button is pressed when a pushpin is selected.
+        ///   Called when the "details" application bar button is pressed when a pushpin is selected.
         /// </summary>
         private void OnViewSelectedPlaceDetails()
         {
@@ -1062,7 +1060,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="CommandDeactivate"/> is executed.
+        ///   Called when <see cref="CommandDeactivate" /> is executed.
         /// </summary>
         private void OnDeactivate()
         {
@@ -1070,7 +1068,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        /// Called when <see cref="CommandActivate"/> is executed.
+        ///   Called when <see cref="CommandActivate" /> is executed.
         /// </summary>
         private void OnActivate()
         {
@@ -1097,95 +1095,99 @@ namespace Travlexer.WindowsPhone.ViewModels
                 Command = new DelegateCommand(OnKeepSelectedSearchResult)
             };
             AppBarButtonItemsSources = new[]
-			{
-				_defaultButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
-				{
-					(_trackButton = new AppBarButtonViewModel
+            {
+                _defaultButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
+                {
+                    (_trackButton = new AppBarButtonViewModel
                     {
                         IconUri = new Uri("/Assets/CurrentLocation.png", UriKind.Relative),
                         Text = "track",
                         IsEnabled = !IsTrackingCurrentLocation.Value,
                         Command = new DelegateCommand(OnStartTrackingCurrentLocation)
                     }),
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Search.png", UriKind.Relative),
-						Text = "search",
-						Command = new DelegateCommand(() => VisualState.Value = VisualStates.Search)
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Route.png", UriKind.Relative),
-						Text = "route",
-						Command = new DelegateCommand(() => VisualState.Value = VisualStates.Route)
-					},
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Search.png", UriKind.Relative),
+                        Text = "search",
+                        Command = new DelegateCommand(() => VisualState.Value = VisualStates.Search)
+                    },
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Route.png", UriKind.Relative),
+                        Text = "route",
+                        Command = new DelegateCommand(() => VisualState.Value = VisualStates.Route)
+                    },
                     new AppBarButtonViewModel
                     {
                         IconUri = new Uri("/Assets/CheckList.png", UriKind.Relative),
-                        Text = "browse",
-                        Command = new DelegateCommand(()=> ApplicationContext.NavigationService.Navigate<ManageViewModel>())
+                        Text = "manage",
+                        Command = new DelegateCommand(() =>
+                        {
+                            CommandStopTrackingCurrentLocation.Execute();
+                            ApplicationContext.NavigationService.Navigate<ManageViewModel>();
+                        })
                     }
-				},
-				_routeSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
-				{
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
-						Text = "details"
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
-						Text = "remove",
-						Command = new DelegateCommand(OnDeleteSelectedRoute)
-					}
-				},
-				_pushpinSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
-				{
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
-						Text = "details",
-						Command = new DelegateCommand(OnViewSelectedPlaceDetails)
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Depart.png", UriKind.Relative),
-						Text = "depart",
-						Command = new DelegateCommand(OnSetSelectedPlaceAsDepartLocation)
-					},
-					new AppBarButtonViewModel
-					{
-						IconUri = new Uri("/Assets/Arrive.png", UriKind.Relative),
-						Text = "arrive",
-						Command = new DelegateCommand(OnSetSelectedPlaceAsArriveLocation)
-					},
-					(_deletePlaceButton = new AppBarButtonViewModel
+                },
+                _routeSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
+                {
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
+                        Text = "details"
+                    },
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
+                        Text = "remove",
+                        Command = new DelegateCommand(OnDeleteSelectedRoute)
+                    }
+                },
+                _pushpinSelectedButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
+                {
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
+                        Text = "details",
+                        Command = new DelegateCommand(OnViewSelectedPlaceDetails)
+                    },
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Depart.png", UriKind.Relative),
+                        Text = "depart",
+                        Command = new DelegateCommand(OnSetSelectedPlaceAsDepartLocation)
+                    },
+                    new AppBarButtonViewModel
+                    {
+                        IconUri = new Uri("/Assets/Arrive.png", UriKind.Relative),
+                        Text = "arrive",
+                        Command = new DelegateCommand(OnSetSelectedPlaceAsArriveLocation)
+                    },
+                    (_deletePlaceButton = new AppBarButtonViewModel
                     {
                         IconUri = new Uri("/Assets/DeletePlace.png", UriKind.Relative),
                         Text = "delete",
                         Command = new DelegateCommand(OnDeleteSelectedPlace)
                     })
-				}
-			};
+                }
+            };
             SelectedAppBarButtonItemsSource = AppBarButtonItemsSources[0];
         }
 
         private void InitializeAppBarMenuItemsSource()
         {
             SelectedAppBarMenuItemsSource = _appBarMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
-			{
-				new AppBarMenuItemViewModel
-				{
-					Text = "clear search",
-					Command = new DelegateCommand(ApplicationContext.Data.ClearSearchResults)
-				},
-				new AppBarMenuItemViewModel
-				{
-					Text = "clear routes",
-					Command = new DelegateCommand(OnClearRoutes)
-				}
-			};
+            {
+                new AppBarMenuItemViewModel
+                {
+                    Text = "clear search",
+                    Command = new DelegateCommand(_data.ClearSearchResults)
+                },
+                new AppBarMenuItemViewModel
+                {
+                    Text = "clear routes",
+                    Command = new DelegateCommand(OnClearRoutes)
+                }
+            };
         }
 
         #endregion

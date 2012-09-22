@@ -16,7 +16,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public PlaceDetailsViewModel()
         {
-            Data = ApplicationContext.Data.SelectedPlace;
+            Data = ApplicationContext.Data.SelectedPlace.Value;
             Data.PropertyChanged -= OnDataPropertyChanged;
             Data.PropertyChanged += OnDataPropertyChanged;
 
