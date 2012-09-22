@@ -638,8 +638,7 @@
                     <i:Interaction.Triggers>
                         <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedRouteLayer}"
                                                                     Element="{Binding ElementName=Map}">
-                            <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
-                                                   CommandParameter="{Binding}" />
+                            <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}" />
                         </Triggers:ElementMouseButtonActivityTrigger>
                     </i:Interaction.Triggers>
                     <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
@@ -673,13 +672,10 @@
                               Visibility="{Binding Converter={StaticResource VisibilityConverter}}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Tap">
-                            <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
-                                                   CommandParameter="{Binding}" />
+                            <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}" />
                         </i:EventTrigger>
-                        <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedPushpinLayer}"
-                                                                    Element="{Binding ElementName=Map}">
-                            <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}"
-                                                   CommandParameter="{Binding}" />
+                        <Triggers:ElementMouseButtonActivityTrigger Element="{Binding ElementName=Map}">
+                            <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}" />
                         </Triggers:ElementMouseButtonActivityTrigger>
                         <i:EventTrigger>
                             <ec:GoToStateAction StateName="Drop"

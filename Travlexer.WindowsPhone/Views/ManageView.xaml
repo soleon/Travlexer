@@ -12,7 +12,8 @@
                             d:DesignHeight="768"
                             d:DesignWidth="480"
                             Style="{StaticResource PageDefault}"
-                            d:DataContext="{Binding ManageViewModel, Source={StaticResource DesignTime}}">
+                            d:DataContext="{Binding ManageViewModel, Source={StaticResource DesignTime}}"
+                            Name="Page">
     <phone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="PlaceItemDataTemplate">
             <Grid d:DataContext="{Binding CheckableViewModel, Source={StaticResource DesignTime}}">
@@ -26,7 +27,9 @@
                 <Button Grid.Column="1"
                         VerticalAlignment="Center"
                         HorizontalContentAlignment="Left"
-                        Style="{StaticResource EmptyButton}">
+                        Style="{StaticResource EmptyButton}"
+                        Command="{Binding ElementName=Page, Path=DataContext.CommandShowPlaceDetails}"
+                        CommandParameter="{Binding Data}">
                     <TextBlock TextTrimming="WordEllipsis">
                         <Run Text="{Binding Data.Name}"
                              FontSize="{StaticResource PhoneFontSizeLarge}" />
@@ -39,7 +42,8 @@
                     </TextBlock>
                 </Button>
                 <Controls:CircleButton Grid.Column="2"
-                                       Command="{Binding CommandGoToPlace}"
+                                       Command="{Binding DataContext.CommandGoToPlace, ElementName=Page}"
+                                       CommandParameter="{Binding Data}"
                                        VerticalAlignment="Center">
                     <Rectangle Fill="{StaticResource BrushIconRightArrow}"
                                Style="{StaticResource IconRectangleStyle}" />
@@ -79,7 +83,7 @@
         </controls:PivotItem>
     </controls:Pivot>
     <ShellExtension:ApplicationBar.ApplicationBar>
-        <ShellExtension:ApplicationBar>
+        <ShellExtension:ApplicationBar x:Name="AppBar">
             <ShellExtension:ApplicationBar.Buttons>
                 <ShellExtension:ApplicationBarIconButton IconUri="\Assets\CheckList.png"
                                                          Text="all"
@@ -90,10 +94,6 @@
                 <ShellExtension:ApplicationBarIconButton IconUri="\Assets\Delete.png"
                                                          Text="delete"
                                                          Command="{Binding CommandDeleteSelectedItems}" />
-                <ShellExtension:ApplicationBarIconButton IconUri="\Assets\AddPlace.png"
-                                                         Text="to personal"
-                                                         Command="{Binding CommandPinSelectedSearchResult}"
-                                                         IsEnabled="{Binding IsSearchResultsSectionSelected}" />
             </ShellExtension:ApplicationBar.Buttons>
         </ShellExtension:ApplicationBar>
     </ShellExtension:ApplicationBar.ApplicationBar>

@@ -432,7 +432,7 @@ namespace Codify.WindowsPhone.ShellExtension
 					}));
 					break;
 				case NotifyCollectionChangedAction.Remove:
-					buttons.RemoveRange(e.NewItems.Cast<ApplicationBarIconButton>().Select(b => b.Item));
+					buttons.RemoveRange(e.OldItems.Cast<ApplicationBarIconButton>().Select(b => b.Item));
 					break;
 				case NotifyCollectionChangedAction.Reset:
 					buttons.Clear();

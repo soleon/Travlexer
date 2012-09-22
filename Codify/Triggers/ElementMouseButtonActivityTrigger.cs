@@ -39,7 +39,7 @@ namespace Codify.Triggers
             "CanTrigger",
             typeof(bool),
             typeof(ElementMouseButtonActivityTrigger),
-            null);
+            new PropertyMetadata(true));
         #endregion
 
 
