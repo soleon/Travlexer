@@ -21,7 +21,7 @@ namespace Travlexer.WindowsPhone.Views
             _pinSelectedSearchResultButton = new ApplicationBarIconButton
             {
                 IconUri = new Uri("\\Assets\\AddPlace.png", UriKind.Relative),
-                Text = "to personal"
+                Text = "add to pins"
             };
             _pinSelectedSearchResultButton.SetBinding(ApplicationBarIconButton.CommandProperty, new Binding("CommandPinSelectedSearchResult") { Mode = BindingMode.OneTime });
 

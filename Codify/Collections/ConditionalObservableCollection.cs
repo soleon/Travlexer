@@ -12,7 +12,7 @@ namespace Codify.Collections
     ///   A read only observable collection that conditionally synchronises to a source <see cref="INotifyCollectionChanged" /> collection.
     /// </summary>
     /// <typeparam name="T"> The type of items in the collection. </typeparam>
-    public class ConditionalObservableCollection<T> : ObservableCollection<T>
+    public class ConditionalObservableCollection<T> : ObservableCollection<T>, IDisposable
     {
         #region Private Fields
 
@@ -100,6 +100,14 @@ namespace Codify.Collections
         {
             OnSourceReset();
             OnSourceItemsAdded((IEnumerable)_source);
+        }
+
+        /// <summary>
+        /// Clears existing items and stops synchronising with the current <see cref="Source"/> collection.
+        /// </summary>
+        public void Dispose()
+        {
+            Source = null;
         }
 
         #endregion

@@ -1091,7 +1091,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             _keepSearchResultButton = new AppBarButtonViewModel
             {
                 IconUri = new Uri("/Assets/AddPlace.png", UriKind.Relative),
-                Text = "keep",
+                Text = "mark as pin",
                 Command = new DelegateCommand(OnKeepSelectedSearchResult)
             };
             AppBarButtonItemsSources = new[]

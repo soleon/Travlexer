@@ -13,22 +13,6 @@
         <Setter Property="StrokeThickness"
                 Value="5" />
     </Style>
-    <Style TargetType="Icons:Search"
-           BasedOn="{StaticResource IconBaseStyle}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Icons:Search">
-                    <Path Data="M20,32 L8.9125004,43.170834 M48,20 C48,28.836555 40.836555,36 32,36 C23.163445,36 16,28.836555 16,20 C16,11.163444 23.163445,4 32,4 C40.836555,4 48,11.163444 48,20 z"
-                          Stretch="Uniform"
-                          Stroke="{TemplateBinding Foreground}"
-                          StrokeThickness="{TemplateBinding StrokeThickness}"
-                          Fill="{TemplateBinding Background}" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="StrokeThickness"
-                Value="4" />
-    </Style>
     <Style TargetType="Icons:Slash"
            BasedOn="{StaticResource IconBaseStyle}">
         <Setter Property="StrokeThickness"
@@ -90,17 +74,6 @@
         <Imaging:UIBitmap.Content>
             <Path Data="M18,9c0-0.338-0.022-0.671-0.059-1l-1.011,0C16.479,4.383,13.617,1.521,10,1.069V0.059C9.671,0.022,9.338,0,9,0 S8.329,0.022,8,0.059v1.011C4.383,1.521,1.521,4.383,1.069,8L0.059,8C0.022,8.329,0,8.662,0,9s0.022,0.671,0.059,1h1.011 C1.521,13.617,4.383,16.479,8,16.931v1.011C8.329,17.978,8.662,18,9,18s0.671-0.022,1-0.059v-1.011 c3.616-0.452,6.479-3.313,6.931-6.93h1.011C17.978,9.672,18,9.339,18,9z M10,14.91V14c0-0.553-0.448-1-1-1s-1,0.447-1,1v0.91 c-2.51-0.422-4.487-2.398-4.909-4.909L4,10c0.553,0,1-0.448,1-1c0-0.552-0.447-1-1-1H3.09C3.513,5.49,5.49,3.513,8,3.09V4 c0,0.552,0.448,1,1,1s1-0.448,1-1V3.09c2.511,0.422,4.488,2.399,4.91,4.91H14c-0.553,0-1,0.448-1,1c0,0.552,0.447,1,1,1l0.91,0.001 C14.487,12.512,12.511,14.488,10,14.91z"
                   Style="{StaticResource IconPathBase}" />
-        </Imaging:UIBitmap.Content>
-    </ImageBrush>
-    <ImageBrush x:Key="BrushIconSearch"
-                Stretch="Uniform">
-        <Imaging:UIBitmap.Content>
-            <Path Data="M20,32 L8.9125004,43.170834 M48,20 C48,28.836555 40.836555,36 32,36 C23.163445,36 16,28.836555 16,20 C16,11.163444 23.163445,4 32,4 C40.836555,4 48,11.163444 48,20 z"
-                  StrokeThickness="5"
-                  Stroke="{StaticResource PhoneForegroundBrush}"
-                  Width="32"
-                  Height="32"
-                  Stretch="Uniform" />
         </Imaging:UIBitmap.Content>
     </ImageBrush>
     <ImageBrush x:Key="BrushIconDownArrow"
@@ -338,6 +311,13 @@
                 Stretch="None">
         <Imaging:UIBitmap.Content>
             <Path Data="F1 M 12,22L 12,26L 28.25,26L 21,33L 27.5,33L 37,24L 27.5,15L 21,15L 28.25,22L 12,22 Z"
+                  Style="{StaticResource IconPathBase}" />
+        </Imaging:UIBitmap.Content>
+    </ImageBrush>
+    <ImageBrush x:Key="BrushIconSearch"
+                Stretch="None">
+        <Imaging:UIBitmap.Content>
+            <Path Data="F1 M 14.8076,31.1139L 20.0677,25.9957C 19.3886,24.8199 19.25,23.4554 19.25,22C 19.25,17.5817 22.5817,14 27,14C 31.4183,14 35,17.5817 35,22C 35,26.4183 31.4183,29.75 27,29.75C 25.6193,29.75 24.3204,29.6502 23.1868,29.0345L 17.8861,34.1924C 17.105,34.9734 15.5887,34.9734 14.8076,34.1924C 14.0266,33.4113 14.0266,31.895 14.8076,31.1139 Z M 27,17C 24.2386,17 22,19.2386 22,22C 22,24.7614 24.2386,27 27,27C 29.7614,27 32,24.7614 32,22C 32,19.2386 29.7614,17 27,17 Z"
                   Style="{StaticResource IconPathBase}" />
         </Imaging:UIBitmap.Content>
     </ImageBrush>

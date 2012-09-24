@@ -6,7 +6,6 @@
                                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                   xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-                                  xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                                   Style="{StaticResource PageDefault}"
                                   x:Name="Page"
@@ -89,10 +88,14 @@
             </Grid>
         </DataTemplate>
     </CodifyPhone:PhoneApplicationPage.Resources>
-    <ShellExtension:ApplicationBar.ApplicationBar>
-        <ShellExtension:ApplicationBar />
-    </ShellExtension:ApplicationBar.ApplicationBar>
-    <controls:Pivot Title="{Binding Data.Name}">
+    <controls:Pivot>
+        <controls:Pivot.Title>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="SEARCH RESULT: "
+                           Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}" />
+                <TextBlock Text="{Binding Data.Name}" />
+            </StackPanel>
+        </controls:Pivot.Title>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="DataStateGroup">
                 <VisualState x:Name="None" />
@@ -222,50 +225,67 @@
         </controls:PivotItem>
         <controls:PivotItem Header="personalize">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBox GotFocus="SelectAllOnTextBoxGotFocus"
-                         InputScope="Text"
-                         Text="{Binding Data.Name, Mode=TwoWay}"
-                         TextWrapping="Wrap"
-                         d:LayoutOverrides="Height" />
-                <toolkit:ListPicker Grid.Row="1"
-                                    FullModeHeader="change place icon"
-                                    FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}"
-                                    ItemsSource="{Binding PlaceIcons}"
-                                    ItemTemplate="{StaticResource PlaceIconItemTemplate}"
-                                    SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" />
-                <toolkit:ListPicker Grid.Row="2"
-                                    FullModeHeader="change place color"
-                                    FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}"
-                                    ItemsSource="{Binding PlaceColors}"
-                                    ItemTemplate="{StaticResource PlaceColorItemTemplate}"
-                                    SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" />
-                <TextBox x:Name="NotesTextBox"
-                         Grid.Row="3"
-                         Height="220"
-                         AcceptsReturn="True"
-                         GotFocus="SelectAllOnTextBoxGotFocus"
-                         InputScope="Text"
-                         Text="{Binding Data.Notes, Mode=TwoWay}"
-                         TextWrapping="Wrap"
-                         VerticalAlignment="Top"
-                         d:LayoutOverrides="Height" />
-                <TextBlock Grid.Row="3"
-                           Margin="16,16,0,0"
-                           FontStyle="Italic"
-                           Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}"
-                           HorizontalAlignment="Left"
-                           IsHitTestVisible="False"
-                           Text="Notes..."
-                           VerticalAlignment="Top"
-                           Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox}" />
+                <RichTextBox IsReadOnly="True"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             TextAlignment="Center"
+                             FontFamily="{StaticResource PhoneFontFamilyLight}"
+                             FontSize="{StaticResource PhoneFontSizeLarge}"
+                             Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}">
+                    <Paragraph>
+                        to customize this search result,
+                        <LineBreak />
+                        <Hyperlink Command="{Binding CommandMarkAsPin}">
+                            mark it as personal pin
+                        </Hyperlink>
+                        .
+                    </Paragraph>
+                </RichTextBox>
+                <Grid Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBox GotFocus="SelectAllOnTextBoxGotFocus"
+                             InputScope="Text"
+                             Text="{Binding Data.Name, Mode=TwoWay}"
+                             TextWrapping="Wrap"
+                             d:LayoutOverrides="Height" />
+                    <toolkit:ListPicker Grid.Row="1"
+                                        FullModeHeader="change place icon"
+                                        FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}"
+                                        ItemsSource="{Binding PlaceIcons}"
+                                        ItemTemplate="{StaticResource PlaceIconItemTemplate}"
+                                        SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" />
+                    <toolkit:ListPicker Grid.Row="2"
+                                        FullModeHeader="change place color"
+                                        FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}"
+                                        ItemsSource="{Binding PlaceColors}"
+                                        ItemTemplate="{StaticResource PlaceColorItemTemplate}"
+                                        SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" />
+                    <TextBox x:Name="NotesTextBox"
+                             Grid.Row="3"
+                             Height="220"
+                             AcceptsReturn="True"
+                             GotFocus="SelectAllOnTextBoxGotFocus"
+                             InputScope="Text"
+                             Text="{Binding Data.Notes, Mode=TwoWay}"
+                             TextWrapping="Wrap"
+                             VerticalAlignment="Top"
+                             d:LayoutOverrides="Height" />
+                    <TextBlock Grid.Row="3"
+                               Margin="16,16,0,0"
+                               FontStyle="Italic"
+                               Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}"
+                               HorizontalAlignment="Left"
+                               IsHitTestVisible="False"
+                               Text="Notes..."
+                               VerticalAlignment="Top"
+                               Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox}" />
+                </Grid>
             </Grid>
         </controls:PivotItem>
-        <controls:PivotItem Header="nearby" />
     </controls:Pivot>
 </CodifyPhone:PhoneApplicationPage>

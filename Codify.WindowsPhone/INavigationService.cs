@@ -37,5 +37,10 @@ namespace Codify.WindowsPhone
 		/// This event is raised when the shell chrome is no longer covering the frame.
 		/// </summary>
 		event EventHandler Unobscured;
+
+	    /// <summary>
+	    /// Occurs when a new navigation is requested.
+	    /// </summary>
+	    event NavigatingCancelEventHandler Navigating;
 	}
 }

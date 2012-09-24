@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Navigation;
 using Codify.Collections;
 using Codify.Commands;
 using Codify.Entities;
@@ -27,10 +28,10 @@ namespace Travlexer.WindowsPhone.ViewModels
             _data = data;
             var places = data.Places;
 
-            Routes = new AdaptedObservableCollection<Route, CheckableViewModel<Route>>(route => new CheckableViewModel<Route> {Data = route}, source: _data.Routes);
+            Routes = new AdaptedObservableCollection<Route, RouteSummaryViewModel>(route => new RouteSummaryViewModel(route), source: _data.Routes);
             Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> {Data = trip}, source: _data.Trips);
-            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
-            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
 
             CommandDeleteSelectedItems = new DelegateCommand(OnDeleteSelectedItems);
             CommandSelectAllItems = new DelegateCommand(OnSelectAllItems);
@@ -38,12 +39,27 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandPinSelectedSearchResult = new DelegateCommand(OnPinSelectedSearchResult);
             CommandGoToPlace = new DelegateCommand<Place>(OnGoToPlace);
             CommandShowPlaceDetails = new DelegateCommand<Place>(OnShowPlaceDetails);
+
+            ApplicationContext.NavigationService.Navigating += OnNavigating;
         }
 
         #endregion
 
 
         #region Event Handling
+
+        /// <summary>
+        /// Captures navigate back event from this view model to perform some disposal actions.
+        /// </summary>
+        private void OnNavigating(object sender, NavigatingCancelEventArgs e)
+        {
+            if (sender != this || e.NavigationMode != NavigationMode.Back) return;
+            ApplicationContext.NavigationService.Navigating -= OnNavigating;
+            Routes.Dispose();
+            Trips.Dispose();
+            PersonalPlaces.Dispose();
+            SearchResults.Dispose();
+        }
 
         private void OnShowPlaceDetails(Place place)
         {
@@ -147,15 +163,13 @@ namespace Travlexer.WindowsPhone.ViewModels
                         MessageBox.Show("This will remove all selected routes including all places in these routes. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
 
-                    var selectedRoutes = Routes.Where(routeVm => routeVm.IsChecked).Select(routeVm => routeVm.Data).ToArray();
+                    var selectedRoutes = Routes.Where(routeVm => routeVm.IsChecked).ToArray();
                     for (var i = selectedRoutes.Length - 1; i >= 0; i--)
                     {
                         var route = selectedRoutes[i];
-                        var id = route.DeparturePlaceId;
-                        if (id != Guid.Empty) _data.RemovePlace(route.DeparturePlaceId);
-                        id = route.ArrivalPlaceId;
-                        if (id != Guid.Empty) _data.RemovePlace(route.ArrivalPlaceId);
-                        _data.RemoveRoute(route);
+                        _data.RemovePlace(route.DeparturePlace);
+                        _data.RemovePlace(route.ArrivalPlace);
+                        _data.RemoveRoute(route.Data);
                     }
                     break;
                 case ManagementSections.PersonalPlaces:
@@ -186,7 +200,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         #region Public Properties
 
-        public AdaptedObservableCollection<Route, CheckableViewModel<Route>> Routes { get; private set; }
+        public AdaptedObservableCollection<Route, RouteSummaryViewModel> Routes { get; private set; }
 
         public AdaptedObservableCollection<Trip, CheckableViewModel<Trip>> Trips { get; private set; }
 
@@ -246,5 +260,28 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand<Place> CommandShowPlaceDetails { get; private set; }
 
         #endregion
+    }
+
+    public class RouteSummaryViewModel : CheckableViewModel<Route>
+    {
+        public RouteSummaryViewModel(Route data)
+        {
+            base.Data = data;
+            ApplicationContext.Data.Places.ForEach(
+                p =>
+                {
+                    if (p.Id == data.DeparturePlaceId) DeparturePlace = p;
+                    else if (p.Id == data.ArrivalPlaceId) ArrivalPlace = p;
+                });
+        }
+
+        public Place DeparturePlace { get; private set; }
+
+        public Place ArrivalPlace { get; private set; }
+
+        public new Route Data
+        {
+            get { return base.Data; }
+        }
     }
 }

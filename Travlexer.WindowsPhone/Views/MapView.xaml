@@ -536,8 +536,10 @@
                            TextAlignment="Center"
                            VerticalAlignment="Center"
                            Visibility="Collapsed">
-					<Run Text="Offline mode not available" /><LineBreak />
-					<Run Text="at this zoom level" /></TextBlock>
+                    <Run Text="Offline mode not available" />
+                    <LineBreak />
+                    <Run Text="at this zoom level" />
+                </TextBlock>
             </Maps:MapLayer>
             <Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
                           Location="{Binding CurrentLocation}"
@@ -598,8 +600,7 @@
                         <Maps:Pushpin x:Name="Pushpin"
                                       Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                       Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
-                                      PositionOrigin="BottomCenter"
-                                      Tag="{Binding Data.IsSearchResult}">
+                                      PositionOrigin="BottomCenter">
                             <toolkit:GestureService.GestureListener>
                                 <toolkit:GestureListener DragCompleted="OnPushpinDragCompleted"
                                                          DragDelta="OnPushpinDragDelta"
@@ -617,9 +618,14 @@
                                                         TargetObject="{Binding ElementName=Pushpin}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                            <Rectangle Height="32"
-                                       Width="32"
-                                       Fill="{Binding Data.Icon, Converter={StaticResource PlaceIconToBrushConverter}}" />
+                            <Grid>
+                            <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                       Fill="{Binding Data.Icon, Converter={StaticResource PlaceIconToBrushConverter}}"
+                                       Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}" />
+                            <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                        Fill="{StaticResource BrushIconSearch}"
+                                        Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}" />
+                            </Grid>
                         </Maps:Pushpin>
                     </DataTemplate>
                 </CodifyControls:PanelExtension.ItemTemplate>
@@ -689,7 +695,7 @@
                                              CommandRefreshParameter="{Binding}"
                                              ContactNumber="{Binding Data.ContactNumber}"
                                              Icon="{Binding Data.Icon}"
-                                             IsSearchResult="{Binding Data.IsSearchResult, Mode=TwoWay}"
+                                             IsSearchResult="{Binding Data.IsSearchResult}"
                                              Rating="{Binding Data.Rating}"
                                              Title="{Binding Data.Name}"
                                              VisualState="Collapsed"

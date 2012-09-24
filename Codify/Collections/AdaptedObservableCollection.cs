@@ -11,7 +11,7 @@ namespace Codify.Collections
     /// </summary>
     /// <typeparam name="TSource"> The type of the items in the source collection. </typeparam>
     /// <typeparam name="TTarget"> The type of the items in this collection. </typeparam>
-    public class AdaptedObservableCollection<TSource, TTarget> : ObservableCollection<TTarget>
+    public class AdaptedObservableCollection<TSource, TTarget> : ObservableCollection<TTarget>, IDisposable
     {
         #region Private Members
 
@@ -61,13 +61,21 @@ namespace Codify.Collections
             set { _conditionalSourceCollection.Source = value; }
         }
 
+        /// <summary>
+        ///   Clears existing items and stops synchronising with the current <see cref="Source" /> collection.
+        /// </summary>
+        public void Dispose()
+        {
+            _conditionalSourceCollection.Dispose();
+        }
+
         #endregion
 
 
         #region Public Methods
 
         /// <summary>
-        /// Forces a refresh of this collection.
+        ///   Forces a refresh of this collection.
         /// </summary>
         public void Refresh()
         {

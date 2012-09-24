@@ -23,6 +23,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandUpdatePlaceInfo = new DelegateCommand(() => ApplicationContext.Data.GetPlaceDetails(Data));
             CommandNavigateToUrl = new DelegateCommand<string>(Utilities.OpenUrl);
             CommandCallNumber = new DelegateCommand<string>(number => Utilities.CallPhoneNumber(Data.Name, number));
+            CommandMarkAsPin = new DelegateCommand(() => Data.IsSearchResult = false);
 
             IsBusy = Data.DataState == DataStates.Busy;
         }
@@ -56,6 +57,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             get { return _isBusy; }
             private set { SetValue(ref _isBusy, value, IsBusyProperty); }
         }
+
+        public DelegateCommand CommandMarkAsPin { get; private set; }
 
         private bool _isBusy;
         private const string IsBusyProperty = "IsBusy";
