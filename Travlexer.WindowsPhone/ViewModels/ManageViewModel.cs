@@ -86,19 +86,19 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             switch (_selectedManagementSection)
             {
-                case ManagementSections.Trips:
+                case ManagementSection.Trips:
                     foreach (var trip in Trips)
                         trip.IsChecked = false;
                     break;
-                case ManagementSections.Routes:
+                case ManagementSection.Routes:
                     foreach (var route in Routes)
                         route.IsChecked = false;
                     break;
-                case ManagementSections.PersonalPlaces:
+                case ManagementSection.PersonalPlaces:
                     foreach (var place in PersonalPlaces)
                         place.IsChecked = false;
                     break;
-                case ManagementSections.SearchResults:
+                case ManagementSection.SearchResults:
                     foreach (var place in SearchResults)
                         place.IsChecked = false;
                     break;
@@ -111,19 +111,19 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             switch (_selectedManagementSection)
             {
-                case ManagementSections.Trips:
+                case ManagementSection.Trips:
                     foreach (var trip in Trips)
                         trip.IsChecked = true;
                     break;
-                case ManagementSections.Routes:
+                case ManagementSection.Routes:
                     foreach (var route in Routes)
                         route.IsChecked = true;
                     break;
-                case ManagementSections.PersonalPlaces:
+                case ManagementSection.PersonalPlaces:
                     foreach (var place in PersonalPlaces)
                         place.IsChecked = true;
                     break;
-                case ManagementSections.SearchResults:
+                case ManagementSection.SearchResults:
                     foreach (var place in SearchResults)
                         place.IsChecked = true;
                     break;
@@ -136,7 +136,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             switch (_selectedManagementSection)
             {
-                case ManagementSections.Trips:
+                case ManagementSection.Trips:
                     if (Trips.All(t => !t.IsChecked) ||
                         MessageBox.Show("This will remove all selected trips including all routes and places in these trips. Do you want to continue?", "Remove Trips", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
@@ -158,7 +158,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                         _data.RemoveTrip(trip);
                     }
                     break;
-                case ManagementSections.Routes:
+                case ManagementSection.Routes:
                     if (Routes.All(r => !r.IsChecked) ||
                         MessageBox.Show("This will remove all selected routes including all places in these routes. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
@@ -172,7 +172,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                         _data.RemoveRoute(route.Data);
                     }
                     break;
-                case ManagementSections.PersonalPlaces:
+                case ManagementSection.PersonalPlaces:
                     if (PersonalPlaces.All(p => !p.IsChecked) ||
                         MessageBox.Show("This will remove all selected places. Do you want to continue?", "Clear Places", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
@@ -181,7 +181,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     for (var i = selectedPlaces.Length - 1; i >= 0; i--)
                         _data.RemovePlace(selectedPlaces[i]);
                     break;
-                case ManagementSections.SearchResults:
+                case ManagementSection.SearchResults:
                     if (SearchResults.All(p => !p.IsChecked) ||
                         MessageBox.Show("This will remove all selected search results. Do you want to continue?", "Clear Search Results", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
@@ -208,13 +208,13 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public AdaptedObservableCollection<Place, CheckableViewModel<Place>> SearchResults { get; private set; }
 
-        public ManagementSections SelectedManagementSection
+        public ManagementSection SelectedManagementSection
         {
             get { return _selectedManagementSection; }
             set { SetValue(ref _selectedManagementSection, value, SelectedManagementSectionProperty, IsSearchResultsSectionSelectedProperty); }
         }
 
-        private ManagementSections _selectedManagementSection;
+        private ManagementSection _selectedManagementSection;
         private const string SelectedManagementSectionProperty = "SelectedManagementSection";
 
         public IEnumerable<AppBarButtonViewModel> SelectedManagementSectionAppBarButtons
@@ -237,7 +237,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public bool IsSearchResultsSectionSelected
         {
-            get { return _selectedManagementSection == ManagementSections.SearchResults; }
+            get { return _selectedManagementSection == ManagementSection.SearchResults; }
         }
 
         private const string IsSearchResultsSectionSelectedProperty = "IsSearchResultsSectionSelected";

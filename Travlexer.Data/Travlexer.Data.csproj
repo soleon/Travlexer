@@ -36,6 +36,7 @@
     <Reference Include="System.Windows" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataExtensions.cs" />
     <Compile Include="ElementColor.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Place.cs" />

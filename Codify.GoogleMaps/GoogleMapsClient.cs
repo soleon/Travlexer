@@ -66,7 +66,7 @@ namespace Codify.GoogleMaps
 			_language = Utilities.CurrentLanguageCode;
 
 			_region = RegionInfo.CurrentRegion.TwoLetterISORegionName;
-			_basePlacesSearchUrl = "place/search/json?radius=50000&sensor=true&key=" + ApiKey + "&language=" + _language;
+			_basePlacesSearchUrl = "place/search/json?radius=5000&sensor=true&key=" + ApiKey + "&language=" + _language;
 			_basePlaceDetailsUrl = "place/details/json?sensor=true&key=" + ApiKey + "&language=" + _language + "&reference=";
 			_baseGeocodingUrl = "geocode/json?sensor=true&language=" + _language + "&region=" + _region;
 			_baseDirectionsUrl = "directions/json?sensor=true&language=" + _language + "&region=" + _region;

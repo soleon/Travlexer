@@ -100,7 +100,7 @@
     <Compile Include="ViewModels\CheckableViewModel.cs" />
     <Compile Include="ViewModels\DataExtensions.cs" />
     <Compile Include="ViewModels\KeyValueIcon.cs" />
-    <Compile Include="ViewModels\ManagementSections.cs" />
+    <Compile Include="ViewModels\ManagementSection.cs" />
     <Compile Include="ViewModels\ManageViewModel.cs" />
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="ViewModels\PlaceDetailsViewModel.cs" />

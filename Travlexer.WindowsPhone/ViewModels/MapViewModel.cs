@@ -40,9 +40,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         private readonly IDataContext _data;
 
         private AppBarButtonViewModel
-            _trackButton,
-            _keepSearchResultButton,
-            _deletePlaceButton;
+            _trackButton;
 
         private ObservableCollection<AppBarButtonViewModel>
             _defaultButtonItemsSource,
@@ -50,7 +48,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             _pushpinSelectedButtonItemsSource;
 
         private ObservableCollection<AppBarMenuItemViewModel>
-            _appBarMenuItemsSource;
+            _defaultMenuItemsSource,
+            _searchResultSelectedMenuItemsSource;
 
         #endregion
 
@@ -140,7 +139,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandDeactivate = new DelegateCommand(OnDeactivate);
 
             // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
+            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
 
 
@@ -208,14 +207,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     {
                         OnUpdatePlace(value);
                     }
-                    if (value.Data.IsSearchResult)
-                    {
-                        _pushpinSelectedButtonItemsSource[3] = _keepSearchResultButton;
-                    }
-                    else
-                    {
-                        _pushpinSelectedButtonItemsSource[3] = _deletePlaceButton;
-                    }
+
                     VisualState.Value = VisualStates.PushpinSelected;
                 }
                 _data.SelectedPlace.Value = value == null ? null : value.Data;
@@ -460,6 +452,8 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         public ObservableCollection<AppBarButtonViewModel>[] AppBarButtonItemsSources { get; private set; }
 
+        public ObservableCollection<AppBarMenuItemViewModel>[] AppBarMenuItemsSources { get; private set; }
+
         /// <summary>
         ///   Gets the selected app bar button items source.
         /// </summary>
@@ -627,7 +621,8 @@ namespace Travlexer.WindowsPhone.ViewModels
         private void OnAddPlace(Location location)
         {
             VisualState.Value = VisualStates.Default;
-            _data.AddNewPlace(location);
+            var newPlace = _data.AddNewPlace(location);
+            newPlace.Color = Data.DataExtensions.GetRandomElementColor();
         }
 
         /// <summary>
@@ -648,12 +643,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
         /// <summary>
-        ///   Called when the "keep" application bar button is pressed when a search result is selected.
+        ///   Called when the "mark as pin" application bar button is pressed when a search result is selected.
         /// </summary>
-        private void OnKeepSelectedSearchResult()
+        private void OnMarkSelectedSearchResultAsPin()
         {
             SelectedPushpin.Data.IsSearchResult = false;
-            _pushpinSelectedButtonItemsSource[3] = _deletePlaceButton;
+            SelectedAppBarMenuItemsSource = null;
         }
 
         /// <summary>
@@ -696,7 +691,10 @@ namespace Travlexer.WindowsPhone.ViewModels
                     return;
                 }
                 IsTrackingCurrentLocation.Value = false;
-                SearchSucceeded.ExecuteIfNotNull(callback.Result);
+                var results = callback.Result;
+                var color = Data.DataExtensions.GetRandomElementColor();
+                results.ForEach(result => result.Color = color);
+                SearchSucceeded.ExecuteIfNotNull(results);
             });
             ResetSearchSuggestions();
         }
@@ -746,7 +744,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     return;
                 }
                 IsTrackingCurrentLocation.Value = false;
-                SearchSucceeded.ExecuteIfNotNull(new List<Place> {args.Result});
+                SearchSucceeded.ExecuteIfNotNull(new List<Place> { args.Result });
             });
 
             ResetSearchSuggestions();
@@ -822,12 +820,12 @@ namespace Travlexer.WindowsPhone.ViewModels
                 case VisualStates.Default:
                     IsAppBarVisible = true;
                     SelectedAppBarButtonItemsSource = _defaultButtonItemsSource;
-                    SelectedAppBarMenuItemsSource = _appBarMenuItemsSource;
+                    SelectedAppBarMenuItemsSource = _defaultMenuItemsSource;
                     break;
                 case VisualStates.PushpinSelected:
                     IsAppBarVisible = true;
                     SelectedAppBarButtonItemsSource = _pushpinSelectedButtonItemsSource;
-                    SelectedAppBarMenuItemsSource = null;
+                    SelectedAppBarMenuItemsSource = _selectedPushpin.Data.IsSearchResult ? _searchResultSelectedMenuItemsSource : null;
                     break;
                 case VisualStates.RouteSelected:
                     IsAppBarVisible = true;
@@ -941,7 +939,12 @@ namespace Travlexer.WindowsPhone.ViewModels
                 if (place == null)
                 {
                     var point = points[0];
-                    place = _data.Places.FirstOrDefault(p => p.Location == point) ?? _data.AddNewPlace(point);
+                    place = _data.Places.FirstOrDefault(p => p.Location == point);
+                    if (place == null)
+                    {
+                        place = _data.AddNewPlace(point);
+                        place.Color = Data.DataExtensions.GetRandomElementColor();
+                    }
                     route.DeparturePlaceId = place.Id;
                 }
                 else
@@ -954,7 +957,12 @@ namespace Travlexer.WindowsPhone.ViewModels
                 if (place == null)
                 {
                     var point = points[count - 1];
-                    place = _data.Places.FirstOrDefault(p => p.Location == point) ?? _data.AddNewPlace(point);
+                    place = _data.Places.FirstOrDefault(p => p.Location == point);
+                    if (place == null)
+                    {
+                        place = _data.AddNewPlace(point);
+                        place.Color = Data.DataExtensions.GetRandomElementColor();
+                    }
                     route.ArrivalPlaceId = place.Id;
                 }
                 else
@@ -1088,12 +1096,6 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private void InitializeAppBarButtonSources()
         {
-            _keepSearchResultButton = new AppBarButtonViewModel
-            {
-                IconUri = new Uri("/Assets/AddPlace.png", UriKind.Relative),
-                Text = "mark as pin",
-                Command = new DelegateCommand(OnKeepSelectedSearchResult)
-            };
             AppBarButtonItemsSources = new[]
             {
                 _defaultButtonItemsSource = new ObservableCollection<AppBarButtonViewModel>
@@ -1162,12 +1164,12 @@ namespace Travlexer.WindowsPhone.ViewModels
                         Text = "arrive",
                         Command = new DelegateCommand(OnSetSelectedPlaceAsArriveLocation)
                     },
-                    (_deletePlaceButton = new AppBarButtonViewModel
+                    new AppBarButtonViewModel
                     {
-                        IconUri = new Uri("/Assets/DeletePlace.png", UriKind.Relative),
+                        IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
                         Text = "delete",
                         Command = new DelegateCommand(OnDeleteSelectedPlace)
-                    })
+                    }
                 }
             };
             SelectedAppBarButtonItemsSource = AppBarButtonItemsSources[0];
@@ -1175,19 +1177,33 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private void InitializeAppBarMenuItemsSource()
         {
-            SelectedAppBarMenuItemsSource = _appBarMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
-            {
-                new AppBarMenuItemViewModel
-                {
-                    Text = "clear search",
-                    Command = new DelegateCommand(_data.ClearSearchResults)
-                },
-                new AppBarMenuItemViewModel
-                {
-                    Text = "clear routes",
-                    Command = new DelegateCommand(OnClearRoutes)
-                }
-            };
+            _defaultMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
+                                      {
+                                          new AppBarMenuItemViewModel
+                                          {
+                                              Text = "clear search",
+                                              Command = new DelegateCommand(_data.ClearSearchResults)
+                                          },
+                                          new AppBarMenuItemViewModel
+                                          {
+                                              Text = "clear routes",
+                                              Command = new DelegateCommand(OnClearRoutes)
+                                          }
+                                      };
+            _searchResultSelectedMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
+                                                   {
+                                                       new AppBarMenuItemViewModel
+                                                       {
+                                                           Text = "mark as personal pin",
+                                                           Command = new DelegateCommand(OnMarkSelectedSearchResultAsPin)
+                                                       }
+                                                   };
+            AppBarMenuItemsSources = new[]
+                                     {
+                                         _defaultMenuItemsSource,
+                                         _selectedAppBarMenuItemsSource
+                                     };
+            SelectedAppBarMenuItemsSource = _defaultMenuItemsSource;
         }
 
         #endregion

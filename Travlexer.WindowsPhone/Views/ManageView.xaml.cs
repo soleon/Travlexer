@@ -3,13 +3,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Codify.Attributes;
-using Codify.Extensions;
 using Codify.WindowsPhone.ShellExtension;
 using Travlexer.WindowsPhone.ViewModels;
 
 namespace Travlexer.WindowsPhone.Views
 {
-    [ViewModelType(typeof(ManageViewModel))]
+    [ViewModelType(typeof (ManageViewModel))]
     public partial class ManageView
     {
         private readonly ApplicationBarIconButton _pinSelectedSearchResultButton;
@@ -19,11 +18,11 @@ namespace Travlexer.WindowsPhone.Views
             InitializeComponent();
 
             _pinSelectedSearchResultButton = new ApplicationBarIconButton
-            {
-                IconUri = new Uri("\\Assets\\AddPlace.png", UriKind.Relative),
-                Text = "add to pins"
-            };
-            _pinSelectedSearchResultButton.SetBinding(ApplicationBarIconButton.CommandProperty, new Binding("CommandPinSelectedSearchResult") { Mode = BindingMode.OneTime });
+                                             {
+                                                 IconUri = new Uri("\\Assets\\AddPlace.png", UriKind.Relative),
+                                                 Text = "add to pins"
+                                             };
+            _pinSelectedSearchResultButton.SetBinding(ApplicationBarIconButton.CommandProperty, new Binding("CommandPinSelectedSearchResult") {Mode = BindingMode.OneTime});
 
             SetBinding(SelectedManagementSectionProperty, new Binding("SelectedManagementSection") {Mode = BindingMode.TwoWay});
         }
@@ -37,7 +36,7 @@ namespace Travlexer.WindowsPhone.Views
 
             switch (section)
             {
-                case ManagementSections.SearchResults:
+                case ManagementSection.SearchResults:
                     AppBar.Buttons.Add(_pinSelectedSearchResultButton);
                     break;
                 default:
@@ -49,15 +48,15 @@ namespace Travlexer.WindowsPhone.Views
 
         #region SelectedManagementSection
 
-        public ManagementSections SelectedManagementSection
+        public ManagementSection SelectedManagementSection
         {
-            get { return (ManagementSections) GetValue(SelectedManagementSectionProperty); }
+            get { return (ManagementSection) GetValue(SelectedManagementSectionProperty); }
             set { SetValue(SelectedManagementSectionProperty, value); }
         }
 
         public static readonly DependencyProperty SelectedManagementSectionProperty = DependencyProperty.Register(
             "SelectedManagementSection",
-            typeof (ManagementSections),
+            typeof (ManagementSection),
             typeof (ManageView),
             null);
 
