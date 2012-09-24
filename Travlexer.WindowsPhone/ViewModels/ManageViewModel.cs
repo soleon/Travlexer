@@ -29,9 +29,9 @@ namespace Travlexer.WindowsPhone.ViewModels
             var places = data.Places;
 
             Routes = new AdaptedObservableCollection<Route, RouteSummaryViewModel>(route => new RouteSummaryViewModel(route), source: _data.Routes);
-            Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> {Data = trip}, source: _data.Trips);
-            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
-            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> { Data = trip }, source: _data.Trips);
+            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
 
             CommandDeleteSelectedItems = new DelegateCommand(OnDeleteSelectedItems);
             CommandSelectAllItems = new DelegateCommand(OnSelectAllItems);
@@ -53,12 +53,28 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         private void OnNavigating(object sender, NavigatingCancelEventArgs e)
         {
-            if (sender != this || e.NavigationMode != NavigationMode.Back) return;
-            ApplicationContext.NavigationService.Navigating -= OnNavigating;
-            Routes.Dispose();
-            Trips.Dispose();
-            PersonalPlaces.Dispose();
-            SearchResults.Dispose();
+            // Catches the "Back" navigating event except if it is navigating back from outside of this application.
+            if (!e.IsNavigationInitiator || e.NavigationMode != NavigationMode.Back) return;
+
+            if (sender == this)
+            {
+                // When the sender is this view model, then we are navigating back to the previous view model.
+                // Dispose all necessary data here.
+                ApplicationContext.NavigationService.Navigating -= OnNavigating;
+                Routes.Dispose();
+                Trips.Dispose();
+                PersonalPlaces.Dispose();
+                SearchResults.Dispose();
+            }
+            else
+            {
+                // When the sender is not this view model, then we are navigating back from somewhere else to this view model.
+                // Refresh all necessary data here.
+                Routes.Refresh();
+                Trips.Refresh();
+                PersonalPlaces.Refresh();
+                SearchResults.Refresh();
+            }
         }
 
         private void OnShowPlaceDetails(Place place)
