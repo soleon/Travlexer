@@ -93,9 +93,10 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
+                                <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
+                                           Margin="{StaticResource PhoneHorizontalMargin}" />
                                 <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                          Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
-                                          VerticalAlignment="Center" />
+                                          Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
                                 <Button Style="{StaticResource ItemButtonStyle}"
                                         Command="{Binding DataContext.CommandShowRouteDetails, ElementName=Page}"
                                         CommandParameter="{Binding Data}">

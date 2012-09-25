@@ -861,7 +861,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                 return;
             }
             Center.Value = CurrentLocation;
-            ZoomLevel.Value = 15;
+            if(ZoomLevel.Value < 15) ZoomLevel.Value = 15;
         }
 
         /// <summary>
@@ -958,6 +958,9 @@ namespace Travlexer.WindowsPhone.ViewModels
                     route.DeparturePlaceId = departureLocation.PlaceId;
                 }
                 place.ConnectedRouteIds.Add(route.Id);
+
+                // Use departure place's color as route's color.
+                route.Color = place.Color;
 
                 // Check if there's already an arrival place.
                 place = _data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
