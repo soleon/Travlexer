@@ -139,7 +139,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandDeactivate = new DelegateCommand(OnDeactivate);
 
             // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
+            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
 
 
@@ -638,8 +638,14 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         private void OnDeleteSelectedPlace()
         {
-            _data.RemovePlace(SelectedPushpin.Data);
-            SelectedPushpin = null;
+            var place = _selectedPushpin.Data;
+            var connectedRouteCount = place.ConnectedRouteIds.Count;
+            if (connectedRouteCount == 0 ||
+                MessageBox.Show("Deleting this location will also delete " + connectedRouteCount + " connecting route" + (connectedRouteCount > 1 ? "s" : null) + ". Do you want to continue?", "Delete Location", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                _data.RemovePlace(place);
+                SelectedPushpin = null;
+            }
         }
 
         /// <summary>
@@ -744,7 +750,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     return;
                 }
                 IsTrackingCurrentLocation.Value = false;
-                SearchSucceeded.ExecuteIfNotNull(new List<Place> { args.Result });
+                SearchSucceeded.ExecuteIfNotNull(new List<Place> {args.Result});
             });
 
             ResetSearchSuggestions();
@@ -951,6 +957,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                 {
                     route.DeparturePlaceId = departureLocation.PlaceId;
                 }
+                place.ConnectedRouteIds.Add(route.Id);
 
                 // Check if there's already an arrival place.
                 place = _data.Places.FirstOrDefault(p => p.Id == arrivalLocation.PlaceId);
@@ -969,6 +976,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                 {
                     route.ArrivalPlaceId = arrivalLocation.PlaceId;
                 }
+                place.ConnectedRouteIds.Add(route.Id);
 
                 RouteSucceeded.ExecuteIfNotNull(route);
             });
@@ -1178,31 +1186,31 @@ namespace Travlexer.WindowsPhone.ViewModels
         private void InitializeAppBarMenuItemsSource()
         {
             _defaultMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
-                                      {
-                                          new AppBarMenuItemViewModel
-                                          {
-                                              Text = "clear search",
-                                              Command = new DelegateCommand(_data.ClearSearchResults)
-                                          },
-                                          new AppBarMenuItemViewModel
-                                          {
-                                              Text = "clear routes",
-                                              Command = new DelegateCommand(OnClearRoutes)
-                                          }
-                                      };
+            {
+                new AppBarMenuItemViewModel
+                {
+                    Text = "clear search",
+                    Command = new DelegateCommand(_data.ClearSearchResults)
+                },
+                new AppBarMenuItemViewModel
+                {
+                    Text = "clear routes",
+                    Command = new DelegateCommand(OnClearRoutes)
+                }
+            };
             _searchResultSelectedMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
-                                                   {
-                                                       new AppBarMenuItemViewModel
-                                                       {
-                                                           Text = "mark as personal pin",
-                                                           Command = new DelegateCommand(OnMarkSelectedSearchResultAsPin)
-                                                       }
-                                                   };
+            {
+                new AppBarMenuItemViewModel
+                {
+                    Text = "mark as personal pin",
+                    Command = new DelegateCommand(OnMarkSelectedSearchResultAsPin)
+                }
+            };
             AppBarMenuItemsSources = new[]
-                                     {
-                                         _defaultMenuItemsSource,
-                                         _selectedAppBarMenuItemsSource
-                                     };
+            {
+                _defaultMenuItemsSource,
+                _selectedAppBarMenuItemsSource
+            };
             SelectedAppBarMenuItemsSource = _defaultMenuItemsSource;
         }
 

@@ -143,6 +143,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// <param name="place">The place to be removed.</param>
         public void RemovePlace(Place place)
         {
+            var connectedRouteIds = place.ConnectedRouteIds;
+            if (connectedRouteIds.Count > 0)
+                _routes.Where(r => connectedRouteIds.Contains(r.Id)).ToArray().ForEach(RemoveRoute);
             _places.Remove(place);
         }
 
@@ -160,6 +163,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// </summary>
         public void RemoveRoute(Route route)
         {
+            var id = route.Id;
+            _places.ForEach(p => p.ConnectedRouteIds.Remove(id));
             _routes.Remove(route);
         }
 

@@ -176,21 +176,24 @@ namespace Travlexer.WindowsPhone.ViewModels
                     break;
                 case ManagementSection.Routes:
                     if (Routes.All(r => !r.IsChecked) ||
-                        MessageBox.Show("This will remove all selected routes including all places in these routes. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        MessageBox.Show("This will remove all selected routes. Do you want to continue?", "Remove Routes", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
-
+                    var removePlaces = MessageBox.Show("Do you also want to remove all connected pins and search results?", "Remove Connected Locations", MessageBoxButton.OKCancel) == MessageBoxResult.OK;
                     var selectedRoutes = Routes.Where(routeVm => routeVm.IsChecked).ToArray();
                     for (var i = selectedRoutes.Length - 1; i >= 0; i--)
                     {
                         var route = selectedRoutes[i];
-                        _data.RemovePlace(route.DeparturePlace);
-                        _data.RemovePlace(route.ArrivalPlace);
+                        if (removePlaces)
+                        {
+                            _data.RemovePlace(route.DeparturePlace);
+                            _data.RemovePlace(route.ArrivalPlace);
+                        }
                         _data.RemoveRoute(route.Data);
                     }
                     break;
                 case ManagementSection.PersonalPlaces:
                     if (PersonalPlaces.All(p => !p.IsChecked) ||
-                        MessageBox.Show("This will remove all selected places. Do you want to continue?", "Clear Places", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        MessageBox.Show("This will remove all selected places and all routes that are connected to them. Do you want to continue?", "Remove Places", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
 
                     var selectedPlaces = PersonalPlaces.Where(placeVm => placeVm.IsChecked).Select(placeVm => placeVm.Data).ToArray();
@@ -199,7 +202,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     break;
                 case ManagementSection.SearchResults:
                     if (SearchResults.All(p => !p.IsChecked) ||
-                        MessageBox.Show("This will remove all selected search results. Do you want to continue?", "Clear Search Results", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        MessageBox.Show("This will remove all selected search results and all routes that are connected to them. Do you want to continue?", "Clear Search Results", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         return;
 
                     var selectedResults = SearchResults.Where(placeVm => placeVm.IsChecked).Select(placeVm => placeVm.Data).ToArray();
