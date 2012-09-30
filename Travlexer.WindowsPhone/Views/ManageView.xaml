@@ -94,38 +94,45 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
-                                           Margin="{StaticResource PhoneHorizontalMargin}" />
+                                           Width="2"
+                                           HorizontalAlignment="Right"/>
                                 <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                          Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
+                                          Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"/>
                                 <Button Style="{StaticResource ItemButtonStyle}"
                                         Command="{Binding DataContext.CommandShowRouteDetails, ElementName=Page}"
                                         CommandParameter="{Binding Data}">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Text="{Binding DeparturePlace.Name}"
-                                                   FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                        <TextBlock Text="{Binding DeparturePlace.Address}"
-                                                   Foreground="{StaticResource PhoneSubtleBrush}"
-                                                   FontSize="{StaticResource PhoneFontSizeSmall}"
-                                                   Grid.Row="1" />
-                                        <TextBlock Text="to"
-                                                   FontSize="{StaticResource PhoneFontSizeMediumLarge}"
-                                                   FontWeight="Bold"
-                                                   Grid.Row="2" />
-                                        <TextBlock Text="{Binding ArrivalPlace.Name}"
-                                                   FontSize="{StaticResource PhoneFontSizeLarge}"
-                                                   Grid.Row="3" />
-                                        <TextBlock Text="{Binding ArrivalPlace.Address}"
-                                                   Foreground="{StaticResource PhoneSubtleBrush}"
-                                                   FontSize="{StaticResource PhoneFontSizeSmall}"
-                                                   Grid.Row="4" />
-                                    </Grid>
+                                    <StackPanel>
+                                        <Grid>
+                                            <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
+                                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}"
+                                                       Margin="{StaticResource PhoneHorizontalMargin}"
+                                                       HorizontalAlignment="Right">
+                                                <Run Text="{Binding Distance}" />
+                                                <Run Text=" in "
+                                                     FontWeight="Bold"/>
+                                                <Run Text="{Binding Duration}" />
+                                            </TextBlock>
+                                        </Grid>
+                                        <TextBlock Margin="{StaticResource PhoneHorizontalMargin}">
+                                            <Run Text="{Binding DeparturePlace.Name}"
+                                                 FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <LineBreak />
+                                            <Run Text="{Binding DeparturePlace.Address}"
+                                                 Foreground="{StaticResource PhoneSubtleBrush}"
+                                                 FontSize="{StaticResource PhoneFontSizeSmall}" />
+                                            <LineBreak />
+                                            <Run Text="to"
+                                                 FontSize="{StaticResource PhoneFontSizeMediumLarge}"
+                                                 FontWeight="Bold" />
+                                            <LineBreak />
+                                            <Run Text="{Binding ArrivalPlace.Name}"
+                                                 FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <LineBreak />
+                                            <Run Text="{Binding ArrivalPlace.Address}"
+                                                 Foreground="{StaticResource PhoneSubtleBrush}"
+                                                 FontSize="{StaticResource PhoneFontSizeSmall}" />
+                                        </TextBlock>
+                                    </StackPanel>
                                 </Button>
                                 <Controls:CircleButton Command="{Binding DataContext.CommandGoToRoute, ElementName=Page}"
                                                        CommandParameter="{Binding Data}"

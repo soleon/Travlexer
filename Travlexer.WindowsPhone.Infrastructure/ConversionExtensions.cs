@@ -1,19 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Device.Location;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using Codify.Extensions;
+using Codify.GoogleMaps.Entities;
 using Microsoft.Phone.Controls.Maps;
 using Travlexer.Data;
+using Place = Travlexer.Data.Place;
+using Route = Travlexer.Data.Route;
+using RouteMethod = Codify.GoogleMaps.Entities.RouteMethod;
+using TravelMode = Codify.GoogleMaps.Entities.TravelMode;
+using ViewPort = Travlexer.Data.ViewPort;
 
 namespace Travlexer.WindowsPhone.Infrastructure
 {
@@ -32,14 +27,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
             };
         }
 
-        public static Location ToLocalLocation(this Codify.GoogleMaps.Entities.LatLng latLng)
+        public static Location ToLocalLocation(this LatLng latLng)
         {
-            return latLng == null ? null : new Location { Latitude = latLng.Lat, Longitude = latLng.Lng };
+            return latLng == null ? null : new Location {Latitude = latLng.Lat, Longitude = latLng.Lng};
         }
 
         public static Location ToLocalLocation(this GeoCoordinate coordinate)
         {
-            return coordinate == null ? null : new Location { Latitude = coordinate.Latitude, Longitude = coordinate.Longitude };
+            return coordinate == null ? null : new Location {Latitude = coordinate.Latitude, Longitude = coordinate.Longitude};
         }
 
         public static GeoCoordinate ToGeoCoordinate(this Location location)
@@ -47,9 +42,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
             return location == null ? null : new GeoCoordinate(location.Latitude, location.Longitude);
         }
 
-        public static Codify.GoogleMaps.Entities.LatLng ToGoogleLocation(this Location location)
+        public static LatLng ToGoogleLocation(this Location location)
         {
-            return location == null ? null : new Codify.GoogleMaps.Entities.LatLng { Lat = location.Latitude, Lng = location.Longitude };
+            return location == null ? null : new LatLng {Lat = location.Latitude, Lng = location.Longitude};
         }
 
         public static ViewPort ToLocalViewPort(this Codify.GoogleMaps.Entities.ViewPort viewPort)
@@ -104,7 +99,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             };
         }
 
-        public static SearchSuggestion ToLocalSearchSuggestion(this Codify.GoogleMaps.Entities.Suggestion suggestion)
+        public static SearchSuggestion ToLocalSearchSuggestion(this Suggestion suggestion)
         {
             if (suggestion == null)
             {
@@ -117,19 +112,19 @@ namespace Travlexer.WindowsPhone.Infrastructure
             };
         }
 
-        public static Codify.GoogleMaps.Entities.TravelMode ToGoogleTravelMode(this TravelMode mode)
+        public static TravelMode ToGoogleTravelMode(this Data.TravelMode mode)
         {
-            return (Codify.GoogleMaps.Entities.TravelMode)mode;
+            return (TravelMode) mode;
         }
 
-        public static Codify.GoogleMaps.Entities.RouteMethod ToGoogleRouteMethod(this RouteMethod method)
+        public static RouteMethod ToGoogleRouteMethod(this Data.RouteMethod method)
         {
-            return (Codify.GoogleMaps.Entities.RouteMethod)method;
+            return (RouteMethod) method;
         }
 
         public static Codify.GoogleMaps.Entities.Units ToGoogleUnits(this Units unit)
         {
-            return (Codify.GoogleMaps.Entities.Units)unit;
+            return (Codify.GoogleMaps.Entities.Units) unit;
         }
 
         public static Route ToLocalRoute(this Codify.GoogleMaps.Entities.Route route)
@@ -141,16 +136,17 @@ namespace Travlexer.WindowsPhone.Infrastructure
             var newRoute = new Route();
 
             var legs = route.Legs;
-            if (legs.Any())
+            if (!legs.IsNullOrEmpty())
             {
-                var steps = legs[0].Steps;
-                if (steps.Any())
+                var leg = legs[0];
+                newRoute.Distance = leg.Distance.Value;
+                newRoute.Duration = leg.Duration.Value;
+                var steps = leg.Steps;
+                if (!steps.IsNullOrEmpty())
                 {
                     var points = new Collection<Location>();
                     foreach (var step in steps)
-                    {
                         points.AddRange(Utilities.DecodePolylinePoints(step.Polyline.Points));
-                    }
                     newRoute.Points = points;
                 }
             }

@@ -280,27 +280,4 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         #endregion
     }
-
-    public class RouteSummaryViewModel : CheckableViewModel<Route>
-    {
-        public RouteSummaryViewModel(Route data)
-        {
-            base.Data = data;
-            ApplicationContext.Data.Places.ForEach(
-                p =>
-                {
-                    if (p.Id == data.DeparturePlaceId) DeparturePlace = p;
-                    else if (p.Id == data.ArrivalPlaceId) ArrivalPlace = p;
-                });
-        }
-
-        public Place DeparturePlace { get; private set; }
-
-        public Place ArrivalPlace { get; private set; }
-
-        public new Route Data
-        {
-            get { return base.Data; }
-        }
-    }
 }

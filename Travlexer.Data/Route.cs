@@ -34,6 +34,16 @@ namespace Travlexer.Data
 
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the distance in meters.
+        /// </summary>
+        public int Distance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the duration in seconds.
+        /// </summary>
+        public int Duration { get; set; }
+
         public string Name
         {
             get { return _name; }
