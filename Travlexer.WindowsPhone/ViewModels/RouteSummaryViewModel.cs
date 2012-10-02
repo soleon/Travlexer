@@ -20,8 +20,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public Place ArrivalPlace { get; private set; }
 
-        public string Distance { get { return Data.Distance.ToDistanceText(); } }
+        public string Distance
+        {
+            get { return Data.Distance.ToDistanceText(); }
+        }
 
-        public string Duration { get { return Data.Duration.ToDurationText(); } }
+        public string Duration
+        {
+            get { return Data.Duration.ToDurationText(); }
+        }
     }
 }

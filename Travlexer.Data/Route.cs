@@ -10,7 +10,7 @@ namespace Travlexer.Data
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Route"/> class.
+        ///   Initializes a new instance of the <see cref="Route" /> class.
         /// </summary>
         public Route()
         {
@@ -35,12 +35,12 @@ namespace Travlexer.Data
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the distance in meters.
+        ///   Gets or sets the distance in meters.
         /// </summary>
         public int Distance { get; set; }
 
         /// <summary>
-        /// Gets or sets the duration in seconds.
+        ///   Gets or sets the duration in seconds.
         /// </summary>
         public int Duration { get; set; }
 
@@ -108,8 +108,6 @@ namespace Travlexer.Data
 
         #region Operators
 
-
-
         public static bool operator ==(Route left, Route right)
         {
             return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.Equals(right);
@@ -124,7 +122,6 @@ namespace Travlexer.Data
 
 
         #region Private Methods
-
 
         #endregion
     }

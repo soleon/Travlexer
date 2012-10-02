@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Device.Location;
 using Codify.Entities;
@@ -72,10 +73,16 @@ namespace Travlexer.WindowsPhone
             get
             {
                 if (!DesignerProperties.IsInDesignTool) return null;
-                Initialize();
-                return _kernel.Get<ManageViewModel>();
+                if (_manageViewModel == null)
+                {
+                    Initialize();
+                    _manageViewModel = _kernel.Get<ManageViewModel>();
+                }
+                return _manageViewModel;
             }
         }
+
+        private ManageViewModel _manageViewModel;
 
         public CheckableViewModel<object> CheckableViewModel
         {

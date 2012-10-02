@@ -31,7 +31,7 @@
             <Setter Property="Grid.Column"
                     Value="1" />
             <Setter Property="HorizontalContentAlignment"
-                    Value="Left" />
+                    Value="Stretch" />
         </Style>
         <DataTemplate x:Key="PlaceItemDataTemplate">
             <Grid d:DataContext="{Binding CheckableViewModel, Source={StaticResource DesignTime}}">
@@ -91,13 +91,12 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                            Width="2"
-                                           HorizontalAlignment="Right"/>
+                                           HorizontalAlignment="Right" />
                                 <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                          Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"/>
+                                          Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
                                 <Button Style="{StaticResource ItemButtonStyle}"
                                         Command="{Binding DataContext.CommandShowRouteDetails, ElementName=Page}"
                                         CommandParameter="{Binding Data}">
@@ -109,7 +108,7 @@
                                                        HorizontalAlignment="Right">
                                                 <Run Text="{Binding Distance}" />
                                                 <Run Text=" in "
-                                                     FontWeight="Bold"/>
+                                                     FontWeight="Bold" />
                                                 <Run Text="{Binding Duration}" />
                                             </TextBlock>
                                         </Grid>
@@ -134,12 +133,6 @@
                                         </TextBlock>
                                     </StackPanel>
                                 </Button>
-                                <Controls:CircleButton Command="{Binding DataContext.CommandGoToRoute, ElementName=Page}"
-                                                       CommandParameter="{Binding Data}"
-                                                       Style="{StaticResource GoButtonStyle}">
-                                    <Rectangle Fill="{StaticResource BrushIconRightArrow}"
-                                               Style="{StaticResource IconRectangleStyle}" />
-                                </Controls:CircleButton>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
