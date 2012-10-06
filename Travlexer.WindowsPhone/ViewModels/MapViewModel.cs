@@ -15,6 +15,7 @@ using Codify.Extensions;
 using Codify.GoogleMaps.Controls;
 using Codify.Services;
 using Codify.Threading;
+using Codify.WindowsPhone;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Converters;
 using Travlexer.WindowsPhone.Infrastructure;
@@ -34,10 +35,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         #endregion
 
 
-        #region Private Members
+        #region Private Fields
 
         private readonly GeoCoordinateWatcher _geoWatcher;
         private readonly IDataContext _data;
+        private readonly IConfigurationContext _configuration;
+        private readonly INavigationService _navigation;
 
         private AppBarButtonViewModel
             _trackButton;
@@ -94,10 +97,13 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// <summary>
         ///   Initializes a new instance of the <see cref="MapViewModel" /> class.
         /// </summary>
-        public MapViewModel()
+        public MapViewModel(IDataContext data, IConfigurationContext configuration, INavigationService navigation)
         {
+            _data = data;
+            _configuration = configuration;
+            _navigation = navigation;
+
             // Initialise local properties.
-            _data = ApplicationContext.Data;
             VisualState = new ObservableValue<VisualStates>();
             Suggestions = new ReadOnlyObservableCollection<SearchSuggestion>(_suggestions);
             Pushpins = new AdaptedObservableCollection<Place, PlaceViewModel>(p => new PlaceViewModel(p, this), source: _data.Places);
@@ -131,7 +137,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandShowStreetLayer = new DelegateCommand(() => _data.MapBaseLayer.Value = Layer.Street);
             CommandShowSatelliteHybridLayer = new DelegateCommand(() => _data.MapBaseLayer.Value = Layer.SatelliteHybrid);
             CommandToggleMapOverlay = new DelegateCommand<Layer>(_data.ToggleMapOverlay);
-            CommandToggleToolbar = new DelegateCommand(ApplicationContext.Configuration.ToggleToolbarState);
+            CommandToggleToolbar = new DelegateCommand(_configuration.ToggleToolbarState);
             CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartureLocation.Address = CurrentLocationString);
             CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArrivalLocation.Address = CurrentLocationString);
             CommandRoute = new DelegateCommand(OnRoute);
@@ -156,7 +162,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             IsTrackingCurrentLocation.ValueChanged += OnIsTrackingCurrentLocationValueChanged;
 
             // Automatically track current position at first run.
-            if (ApplicationContext.Configuration.IsFirstRun)
+            if (_configuration.IsFirstRun)
             {
                 IsTrackingCurrentLocation.Value = true;
             }
@@ -335,7 +341,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         public ObservableValue<bool> IsTrackingCurrentLocation
         {
-            get { return ApplicationContext.Configuration.IsTrackingCurrentLocation; }
+            get { return _configuration.IsTrackingCurrentLocation; }
         }
 
         /// <summary>
@@ -344,7 +350,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// <value> <c>true</c> if this instance is busy; otherwise, <c>false</c> . </value>
         public ObservableValue<bool> IsBusy
         {
-            get { return ApplicationContext.Configuration.IsBusy; }
+            get { return _configuration.IsBusy; }
         }
 
         /// <summary>
@@ -392,7 +398,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         public ObservableValue<ExpansionStates> ToolbarState
         {
-            get { return ApplicationContext.Configuration.ToolbarState; }
+            get { return _configuration.ToolbarState; }
         }
 
         /// <summary>
@@ -400,7 +406,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         public ObservableValue<bool> IsOnline
         {
-            get { return ApplicationContext.Configuration.IsOnline; }
+            get { return _configuration.IsOnline; }
         }
 
         /// <summary>
@@ -683,12 +689,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         private void OnSearch()
         {
             if (SearchInput.Value.IsNullOrEmpty()) return;
-            ApplicationContext.Configuration.IsBusy.Value = true;
+            _configuration.IsBusy.Value = true;
             VisualState.Value = VisualStates.Default;
             _data.CancelGetSuggestions();
             _data.Search(Center.Value.ToLocalLocation(), SearchInput.Value, callback =>
             {
-                ApplicationContext.Configuration.IsBusy.Value = false;
+                _configuration.IsBusy.Value = false;
                 if (callback.Status != CallbackStatus.Successful)
                 {
                     MessageBox.Show("Sorry, we couldn't find anything for you.", "Nothing Was Found", MessageBoxButton.OK);
@@ -714,10 +720,10 @@ namespace Travlexer.WindowsPhone.ViewModels
                 return;
             }
 
-            ApplicationContext.Configuration.IsBusy.Value = true;
+            _configuration.IsBusy.Value = true;
             _data.GetSuggestions(Center.Value.ToLocalLocation(), SearchInput.Value, args =>
             {
-                ApplicationContext.Configuration.IsBusy.Value = false;
+                _configuration.IsBusy.Value = false;
                 SelectedSuggestion = null;
                 _suggestions.Clear();
                 if (args.Status != CallbackStatus.Successful)
@@ -738,10 +744,10 @@ namespace Travlexer.WindowsPhone.ViewModels
             // Invoke the state change async to hack a problem that the phone keyboard doesn't retract even when the focus is not on the search text box.
             UIThread.InvokeBack(() => VisualState.Value = VisualStates.Default);
 
-            ApplicationContext.Configuration.IsBusy.Value = true;
+            _configuration.IsBusy.Value = true;
             _data.GetPlaceDetailsForSearch(SelectedSuggestion.Reference, args =>
             {
-                ApplicationContext.Configuration.IsBusy.Value = false;
+                _configuration.IsBusy.Value = false;
                 if (args.Status != CallbackStatus.Successful)
                 {
                     MessageBox.Show("Sorry, we couldn't get any information for your selected place.", "No Information Found", MessageBoxButton.OK);
@@ -1073,7 +1079,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         private void OnViewSelectedPlaceDetails()
         {
-            ApplicationContext.NavigationService.Navigate<PlaceDetailsViewModel>();
+            _navigation.Navigate<PlaceDetailsViewModel>();
         }
 
         /// <summary>
@@ -1081,7 +1087,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         private void OnDeactivate()
         {
-            ApplicationContext.NavigationService.BackKeyPress -= OnBackKeyPress;
+            _navigation.BackKeyPress -= OnBackKeyPress;
         }
 
         /// <summary>
@@ -1089,7 +1095,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// </summary>
         private void OnActivate()
         {
-            ApplicationContext.NavigationService.BackKeyPress += OnBackKeyPress;
+            _navigation.BackKeyPress += OnBackKeyPress;
         }
 
         #endregion
@@ -1135,7 +1141,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                         Command = new DelegateCommand(() =>
                         {
                             CommandStopTrackingCurrentLocation.Execute();
-                            ApplicationContext.NavigationService.Navigate<ManageViewModel>();
+                            _navigation.Navigate<ManageViewModel>();
                         })
                     }
                 },
@@ -1145,7 +1151,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     {
                         IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
                         Text = "details",
-                        Command = new DelegateCommand(()=>ApplicationContext.NavigationService.Navigate<RouteDetailsViewModel>())
+                        Command = new DelegateCommand(()=>_navigation.Navigate<RouteDetailsViewModel>())
                     },
                     new AppBarButtonViewModel
                     {

@@ -7,7 +7,6 @@ using Codify.Storage;
 using Codify.WindowsPhone;
 using Microsoft.Phone.Controls;
 using Ninject;
-using Ninject.Syntax;
 using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone
@@ -61,15 +60,15 @@ namespace Travlexer.WindowsPhone
         {
             // Initialize Ioc container.
             var kernel = new StandardKernel();
-                kernel.Bind<Func<Type, NotifyableEntity>>().ToMethod(context => t => context.Kernel.Get(t) as NotifyableEntity);
-                kernel.Bind<PhoneApplicationFrame>().ToConstant(frame);
-                kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
-                kernel.Bind<IStorage>().To<IsolatedStorage>().InSingletonScope();
-                kernel.Bind<ISerializer<byte[]>>().To<BinarySerializer>().InSingletonScope();
-                kernel.Bind<IGoogleMapsClient>().To<GoogleMapsClient>().InSingletonScope();
-                kernel.Bind<IDataContext>().To<DataContext>().InSingletonScope();
-                kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
-                Initialize(kernel);
+            kernel.Bind<Func<Type, NotifyableEntity>>().ToMethod(context => t => context.Kernel.Get(t) as NotifyableEntity);
+            kernel.Bind<PhoneApplicationFrame>().ToConstant(frame);
+            kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
+            kernel.Bind<IStorage>().To<IsolatedStorage>().InSingletonScope();
+            kernel.Bind<ISerializer<byte[]>>().To<BinarySerializer>().InSingletonScope();
+            kernel.Bind<IGoogleMapsClient>().To<GoogleMapsClient>().InSingletonScope();
+            kernel.Bind<IDataContext>().To<DataContext>().InSingletonScope();
+            kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
+            Initialize(kernel);
         }
 
         /// <summary>

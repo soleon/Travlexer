@@ -25,10 +25,16 @@ namespace Travlexer.WindowsPhone
             get
             {
                 if (!DesignerProperties.IsInDesignTool) return null;
-                Initialize();
-                return new MapViewModel();
+                if (_mapViewModel == null)
+                {
+                    Initialize();
+                    _mapViewModel = _kernel.Get<MapViewModel>();
+                }
+                return _mapViewModel;
             }
         }
+
+        private MapViewModel _mapViewModel;
 
         public LocationCollection SampleLocations
         {
@@ -94,9 +100,13 @@ namespace Travlexer.WindowsPhone
             get
             {
                 if (!DesignerProperties.IsInDesignTool) return null;
-                Initialize();
-                ApplicationContext.Data.SelectedRoute.Value = ApplicationContext.Data.Routes[0];
-                return _routeDetailsViewModel ?? (_routeDetailsViewModel = new RouteDetailsViewModel());
+                if (_routeDetailsViewModel == null)
+                {
+                    Initialize();
+                    ApplicationContext.Data.SelectedRoute.Value = ApplicationContext.Data.Routes[0];
+                    _routeDetailsViewModel = _kernel.Get<RouteDetailsViewModel>();
+                }
+                return _routeDetailsViewModel;
             }
         }
 

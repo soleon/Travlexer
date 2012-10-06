@@ -7,6 +7,7 @@ using Codify.Collections;
 using Codify.Commands;
 using Codify.Entities;
 using Codify.Extensions;
+using Codify.WindowsPhone;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Infrastructure;
 
@@ -17,15 +18,18 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Private Members
 
         private readonly IDataContext _data;
+        private readonly INavigationService _navigationService;
 
         #endregion
 
 
         #region Constructors
 
-        public ManageViewModel(IDataContext data)
+        public ManageViewModel(IDataContext data, INavigationService navigationService)
         {
             _data = data;
+            _navigationService = navigationService;
+
             var places = data.Places;
 
             Routes = new AdaptedObservableCollection<Route, RouteSummaryViewModel>(route => new RouteSummaryViewModel(route), source: _data.Routes);
@@ -39,8 +43,15 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandPinSelectedSearchResult = new DelegateCommand(OnPinSelectedSearchResult);
             CommandGoToPlace = new DelegateCommand<Place>(OnGoToPlace);
             CommandShowPlaceDetails = new DelegateCommand<Place>(OnShowPlaceDetails);
+            CommandShowRouteDetails = new DelegateCommand<Route>(OnShowRouteDetails);
 
-            ApplicationContext.NavigationService.Navigating += OnNavigating;
+            _navigationService.Navigating += OnNavigating;
+        }
+
+        private void OnShowRouteDetails(Route route)
+        {
+            _data.SelectedRoute.Value = route;
+            _navigationService.Navigate<RouteDetailsViewModel>();
         }
 
         #endregion
@@ -60,7 +71,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             {
                 // When the sender is this view model, then we are navigating back to the previous view model.
                 // Dispose all necessary data here.
-                ApplicationContext.NavigationService.Navigating -= OnNavigating;
+                _navigationService.Navigating -= OnNavigating;
                 Routes.Dispose();
                 Trips.Dispose();
                 PersonalPlaces.Dispose();
@@ -79,14 +90,14 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private void OnShowPlaceDetails(Place place)
         {
-            ApplicationContext.Data.SelectedPlace.Value = place;
-            ApplicationContext.NavigationService.Navigate<PlaceDetailsViewModel>();
+            _data.SelectedPlace.Value = place;
+            _navigationService.Navigate<PlaceDetailsViewModel>();
         }
 
         private void OnGoToPlace(Place place)
         {
-            ApplicationContext.Data.SelectedPlace.Value = place;
-            ApplicationContext.NavigationService.GoBack();
+            _data.SelectedPlace.Value = place;
+            _navigationService.GoBack();
         }
 
         private void OnPinSelectedSearchResult()
@@ -277,6 +288,8 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand<Place> CommandGoToPlace { get; private set; }
 
         public DelegateCommand<Place> CommandShowPlaceDetails { get; private set; }
+
+        public DelegateCommand<Route> CommandShowRouteDetails { get; private set; }
 
         #endregion
     }

@@ -108,6 +108,7 @@
     <Compile Include="ViewModels\PlaceDetailsViewModel.cs" />
     <Compile Include="ViewModels\PlaceViewModel.cs" />
     <Compile Include="ViewModels\RouteDetailsViewModel.cs" />
+    <Compile Include="ViewModels\RouteStepSummaryViewModel.cs" />
     <Compile Include="ViewModels\RouteSummaryViewModel.cs" />
     <Compile Include="ViewModels\RouteViewModel.cs" />
     <Compile Include="Views\ManageView.xaml.cs">

@@ -2,18 +2,29 @@
 using System.Linq;
 using Codify.Commands;
 using Codify.Extensions;
-using Travlexer.Data;
 using Codify.ViewModels;
+using Travlexer.Data;
+using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
     public class RouteDetailsViewModel : DataViewModel<Route>
     {
-        public RouteDetailsViewModel()
-        {
-            var route = Data = ApplicationContext.Data.SelectedRoute.Value;
+        #region Private Fields
 
-            ApplicationContext.Data.Places.ForEach(
+        private readonly IDataContext _data;
+
+        #endregion
+
+
+        #region Constructors
+
+        public RouteDetailsViewModel(IDataContext data)
+        {
+            _data = data;
+            var route = Data = _data.SelectedRoute.Value;
+
+            _data.Places.ForEach(
                 p =>
                 {
                     if (p.Id == route.DeparturePlaceId) DeparturePlace = p;
@@ -25,6 +36,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 
             CommandGoToStep = new DelegateCommand<RouteStep>(step => SelectedStep = step);
         }
+
+        #endregion
+
+
+        #region Public Properties
 
         public IEnumerable<RouteStepSummaryViewModel> Steps { get; private set; }
 
@@ -51,19 +67,13 @@ namespace Travlexer.WindowsPhone.ViewModels
             get { return Data.Duration.ToDurationText(); }
         }
 
+        #endregion
+
+
+        #region Commands
+
         public DelegateCommand<RouteStep> CommandGoToStep { get; private set; }
-    }
-    public class RouteStepSummaryViewModel : DataViewModel<RouteStep>
-    {
-        public RouteStepSummaryViewModel(uint index, RouteStep step)
-        {
-            Index = index;
-            Data = step;
-            Distance = step.Distance.ToDistanceText();
-        }
 
-        public uint Index { get; private set; }
-
-        public string Distance { get; private set; }
+        #endregion
     }
 }
