@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Device.Location;
+using System.Text.RegularExpressions;
 using Codify.Extensions;
 using Codify.GoogleMaps.Entities;
 using Microsoft.Phone.Controls.Maps;
@@ -14,6 +16,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 {
     public static class ConversionExtensions
     {
+        private static readonly Regex XmlTagRegex = new Regex("<[^>]+>");
+        private static readonly Regex DivTagRegex = new Regex("<div[^>]*>");
+
         public static Place ToPlace(this Codify.GoogleMaps.Entities.Place googlePlace)
         {
             return new Place(googlePlace.Geometry.Location.ToLocalLocation(), name: googlePlace.Name)
@@ -129,10 +134,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
         public static Route ToLocalRoute(this Codify.GoogleMaps.Entities.Route route)
         {
-            if (route == null)
-            {
-                return null;
-            }
+            if (route == null) throw new ArgumentNullException("route", "Cannot convert null Codify.GoogleMaps.Entities.Route to local Travlexer.Data.Route.");
             var newRoute = new Route();
 
             var legs = route.Legs;
@@ -145,9 +147,20 @@ namespace Travlexer.WindowsPhone.Infrastructure
                 if (!steps.IsNullOrEmpty())
                 {
                     var points = new Collection<Location>();
+                    var routeSteps = new Collection<RouteStep>();
                     foreach (var step in steps)
+                    {
                         points.AddRange(Utilities.DecodePolylinePoints(step.Polyline.Points));
+                        routeSteps.Add(new RouteStep
+                        {
+                            Distance = step.Distance.Value,
+                            Instruction = XmlTagRegex.Replace(DivTagRegex.Replace(step.HtmlInstructions, Environment.NewLine), string.Empty),
+                            StartLocation = step.StartLocation.ToLocalLocation(),
+                            EndLocation = step.EndLocation.ToLocalLocation()
+                        });
+                    }
                     newRoute.Points = points;
+                    newRoute.Steps = routeSteps;
                 }
             }
 

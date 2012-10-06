@@ -139,7 +139,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandDeactivate = new DelegateCommand(OnDeactivate);
 
             // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
+            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
 
 
@@ -230,10 +230,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             get { return _selectedRoute; }
             set
             {
-                if (!SetValue(ref _selectedRoute, value, SelectedRouteProperty))
-                {
-                    return;
-                }
+                if (!SetValue(ref _selectedRoute, value, SelectedRouteProperty)) return;
+                _data.SelectedRoute.Value = value == null ? null : value.Data;
                 VisualState.Value = value == null ? VisualStates.Default : VisualStates.RouteSelected;
             }
         }
@@ -750,7 +748,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     return;
                 }
                 IsTrackingCurrentLocation.Value = false;
-                SearchSucceeded.ExecuteIfNotNull(new List<Place> {args.Result});
+                SearchSucceeded.ExecuteIfNotNull(new List<Place> { args.Result });
             });
 
             ResetSearchSuggestions();
@@ -861,7 +859,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                 return;
             }
             Center.Value = CurrentLocation;
-            if(ZoomLevel.Value < 15) ZoomLevel.Value = 15;
+            if (ZoomLevel.Value < 15) ZoomLevel.Value = 15;
         }
 
         /// <summary>
@@ -1146,7 +1144,8 @@ namespace Travlexer.WindowsPhone.ViewModels
                     new AppBarButtonViewModel
                     {
                         IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
-                        Text = "details"
+                        Text = "details",
+                        Command = new DelegateCommand(()=>ApplicationContext.NavigationService.Navigate<RouteDetailsViewModel>())
                     },
                     new AppBarButtonViewModel
                     {

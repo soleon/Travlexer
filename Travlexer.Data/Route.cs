@@ -24,6 +24,8 @@ namespace Travlexer.Data
 
         public Collection<Location> Points { get; set; }
 
+        public Collection<RouteStep> Steps { get; set; } 
+
         public RouteMethod Method { get; set; }
 
         public TravelMode Mode { get; set; }

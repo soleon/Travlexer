@@ -11,19 +11,13 @@ namespace Travlexer.WindowsPhone.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is ElementColor))
-            {
-                return null;
-            }
+            if (!(value is ElementColor)) return null;
             return ApplicationContext.Data.ElementColorMap.First(i => i.Key.Equals(value));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is KeyValuePair<ElementColor, string>))
-            {
-                return null;
-            }
+            if (!(value is KeyValuePair<ElementColor, string>)) return null;
             return ((KeyValuePair<ElementColor, string>)value).Key;
         }
     }

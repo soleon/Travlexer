@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Device.Location;
 using Codify.Entities;
 using Codify.GoogleMaps.Controls;
@@ -21,6 +22,11 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// Gets or sets the selected place.
         /// </summary>
         ObservableValue<Place> SelectedPlace { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected route.
+        /// </summary>
+        ObservableValue<Route> SelectedRoute { get; set; }
 
         /// <summary>
         /// Gets or sets the map center geo-location.
@@ -68,12 +74,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
         ObservableValue<Units> Unit { get; }
 
         /// <summary>
-        /// Gets a list of available place icons.
+        /// Gets a dictionary that contains available place icon enums mapping to their display names.
         /// </summary>
         Dictionary<PlaceIcon, string> PlaceIconMap { get; }
 
         /// <summary>
-        /// Gets a list of available element colors.
+        /// Gets a dictionary that contains available element color enums mapping to their display names.
         /// </summary>
         Dictionary<ElementColor, string> ElementColorMap { get; }
 
@@ -209,5 +215,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// </summary>
         /// <param name="id">The id of the place to be removed.</param>
         void RemovePlace(Guid id);
+
+        /// <summary>
+        /// Occurs when <see cref="DataContext.Places"/> collection is changed.
+        /// </summary>
+        event NotifyCollectionChangedEventHandler PlacesCollectionChanged;
     }
 }

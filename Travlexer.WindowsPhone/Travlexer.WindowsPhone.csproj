@@ -38,6 +38,8 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -105,6 +107,7 @@
     <Compile Include="ViewModels\MapViewModel.cs" />
     <Compile Include="ViewModels\PlaceDetailsViewModel.cs" />
     <Compile Include="ViewModels\PlaceViewModel.cs" />
+    <Compile Include="ViewModels\RouteDetailsViewModel.cs" />
     <Compile Include="ViewModels\RouteSummaryViewModel.cs" />
     <Compile Include="ViewModels\RouteViewModel.cs" />
     <Compile Include="Views\ManageView.xaml.cs">
@@ -115,6 +118,9 @@
     </Compile>
     <Compile Include="Views\PlaceDetailsView.xaml.cs">
       <DependentUpon>PlaceDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RouteDetailsView.xaml.cs">
+      <DependentUpon>RouteDetailsView.xaml</DependentUpon>
     </Compile>
     <Page Include="Page1.xaml">
       <SubType>Designer</SubType>
@@ -153,6 +159,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PlaceDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RouteDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

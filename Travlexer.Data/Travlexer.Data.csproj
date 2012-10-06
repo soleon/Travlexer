@@ -45,6 +45,7 @@
     <Compile Include="Route.cs" />
     <Compile Include="RouteLocation.cs" />
     <Compile Include="RouteMethod.cs" />
+    <Compile Include="RouteStep.cs" />
     <Compile Include="TravelMode.cs" />
     <Compile Include="SearchSuggestion.cs" />
     <Compile Include="Trip.cs" />

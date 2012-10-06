@@ -1,0 +1,77 @@
+﻿<phone:PhoneApplicationPage Name="Page"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                            xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls" x:Class="Travlexer.WindowsPhone.Views.RouteDetailsView"
+                            mc:Ignorable="d"
+                            d:DesignWidth="480"
+                            d:DesignHeight="768"
+                            Style="{StaticResource PageDefault}"
+                            d:DataContext="{Binding RouteDetailsViewModel, Source={StaticResource DesignTime}}">
+    <controls:Pivot Title="ROUTE DETAILS">
+        <controls:PivotItem Header="summary">
+            <ScrollViewer>
+                <Grid>
+                	<Grid.RowDefinitions>
+                		<RowDefinition/>
+                		<RowDefinition/>
+                		<RowDefinition/>
+                		<RowDefinition/>
+                		<RowDefinition Height="417*"/>
+                	</Grid.RowDefinitions>
+                	<Grid.ColumnDefinitions>
+                		<ColumnDefinition Width="Auto"/>
+                		<ColumnDefinition/>
+                	</Grid.ColumnDefinitions>
+                	<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconTrain}"/>
+					<TextBlock Grid.Column="1" Margin="{StaticResource PhoneMargin}">
+                                            <Run Text="{Binding DeparturePlace.Name}" />
+                                            <LineBreak />
+                                            <Run Text="{Binding DeparturePlace.Address}" />
+												 </TextBlock>
+                	<Rectangle Grid.Row="1" Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconTrain}"/>
+					<TextBlock Grid.Column="1" Grid.Row="1" Margin="{StaticResource PhoneMargin}">
+                                            <Run Text="{Binding ArrivalPlace.Name}" />
+                                            <LineBreak />
+                                            <Run Text="{Binding ArrivalPlace.Address}" />
+												 </TextBlock>
+                	<Rectangle Grid.Row="2" Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconTrain}"/>
+					<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Distance}" Margin="{StaticResource PhoneMargin}"/>
+                	<Rectangle Grid.Row="3" Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconTrain}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Duration}" Margin="{StaticResource PhoneMargin}"/>
+                </Grid>
+            </ScrollViewer>
+        </controls:PivotItem>
+
+        <controls:PivotItem Header="itinerary">
+            <ScrollViewer>
+				<ItemsControl ItemsSource="{Binding Steps}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Grid Margin="{StaticResource PhoneTextBoxInnerMargin}">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<TextBlock Text="{Binding Index}" VerticalAlignment="Center" FontFamily="{StaticResource PhoneFontFamilyLight}" />
+								<TextBlock TextWrapping="Wrap" Grid.Column="1" Margin="{StaticResource PhoneHorizontalMargin}">
+									<Run Text="{Binding Data.Instruction}" FontSize="{StaticResource PhoneFontSizeMedium}"/>
+									<LineBreak />
+									<Run Text="{Binding Distance}" FontSize="{StaticResource PhoneFontSizeSmall}" FontFamily="{StaticResource PhoneFontFamilySemiLight}" Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}"/>
+								</TextBlock>
+								<Controls:CircleButton Grid.Column="2" VerticalAlignment="Center" Command="{Binding DataContext.CommandGoToStep, ElementName=Page}" CommandParameter="{Binding Value}">
+									<Rectangle Style="{StaticResource IconRectangleStyle}" Fill="{StaticResource BrushIconRightArrow}"/>
+								</Controls:CircleButton>
+							</Grid>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+        </controls:PivotItem>
+    </controls:Pivot>
+
+</phone:PhoneApplicationPage>

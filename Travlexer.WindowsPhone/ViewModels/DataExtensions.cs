@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows;
 
 namespace Travlexer.WindowsPhone.ViewModels
@@ -9,18 +10,20 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public static ManagementSection GetManagementSection(DependencyObject obj)
         {
-            return (ManagementSection) obj.GetValue(ManagementSectionProperty);
+            if (obj == null) throw new ArgumentNullException("obj", "Unable to get management section on null dependency object");
+            return (ManagementSection)obj.GetValue(ManagementSectionProperty);
         }
 
         public static void SetManagementSection(DependencyObject obj, ManagementSection value)
         {
+            if (obj == null) throw new ArgumentNullException("obj", "Unable to set management section on null dependency object");
             obj.SetValue(ManagementSectionProperty, value);
         }
 
         public static readonly DependencyProperty ManagementSectionProperty = DependencyProperty.RegisterAttached(
             "ManagementSection",
-            typeof (ManagementSection),
-            typeof (DataExtensions),
+            typeof(ManagementSection),
+            typeof(DataExtensions),
             null);
 
         #endregion
@@ -36,7 +39,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public static string ToDistanceText(this int value)
         {
             if (value < 1000) return value + (value > 1 ? " meters" : " meter");
-            return ((double) value/1000).ToString("f1") + " km";
+            return ((double)value / 1000).ToString("f1", CultureInfo.CurrentCulture) + " km";
         }
 
         /// <summary>

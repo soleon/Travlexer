@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Device.Location;
 using Codify.Entities;
@@ -25,10 +24,7 @@ namespace Travlexer.WindowsPhone
         {
             get
             {
-                if (!DesignerProperties.IsInDesignTool)
-                {
-                    return null;
-                }
+                if (!DesignerProperties.IsInDesignTool) return null;
                 Initialize();
                 return new MapViewModel();
             }
@@ -38,13 +34,14 @@ namespace Travlexer.WindowsPhone
         {
             get
             {
+                if (!DesignerProperties.IsInDesignTool) return null;
                 return new LocationCollection
-                       {
-                           new GeoCoordinate(0, 0),
-                           new GeoCoordinate(0, 60),
-                           new GeoCoordinate(60, -30),
-                           new GeoCoordinate(60, 0)
-                       };
+                {
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(0, 60),
+                    new GeoCoordinate(60, -30),
+                    new GeoCoordinate(60, 0)
+                };
             }
         }
 
@@ -54,10 +51,7 @@ namespace Travlexer.WindowsPhone
         {
             get
             {
-                if (!DesignerProperties.IsInDesignTool)
-                {
-                    return null;
-                }
+                if (!DesignerProperties.IsInDesignTool) return null;
                 Initialize();
                 var place = ApplicationContext.Data.Places[0];
                 place.IsSearchResult = true;
@@ -86,10 +80,27 @@ namespace Travlexer.WindowsPhone
 
         public CheckableViewModel<object> CheckableViewModel
         {
-            get { return _checkableViewModel ?? (_checkableViewModel = new CheckableViewModel<object>()); }
+            get
+            {
+                if (!DesignerProperties.IsInDesignTool) return null;
+                return _checkableViewModel ?? (_checkableViewModel = new CheckableViewModel<object>());
+            }
         }
 
         private CheckableViewModel<object> _checkableViewModel;
+
+        public RouteDetailsViewModel RouteDetailsViewModel
+        {
+            get
+            {
+                if (!DesignerProperties.IsInDesignTool) return null;
+                Initialize();
+                ApplicationContext.Data.SelectedRoute.Value = ApplicationContext.Data.Routes[0];
+                return _routeDetailsViewModel ?? (_routeDetailsViewModel = new RouteDetailsViewModel());
+            }
+        }
+
+        private RouteDetailsViewModel _routeDetailsViewModel;
 
         private void Initialize()
         {
@@ -105,11 +116,21 @@ namespace Travlexer.WindowsPhone
             _kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
 
             ApplicationContext.Initialize(_kernel);
-            ApplicationContext.Data.AddNewPlace(new Location
-                                                {
-                                                    Latitude = 9.1540930,
-                                                    Longitude = -1.39166990
-                                                });
+            var place1 = ApplicationContext.Data.AddNewPlace(new Location
+            {
+                Latitude = 9.1540930,
+                Longitude = -1.39166990
+            });
+            var place2 = ApplicationContext.Data.AddNewPlace(new Location
+            {
+                Latitude = 9.1540930,
+                Longitude = -1.39166990
+            });
+            ApplicationContext.Data.GetRoute(null, null, default(TravelMode), default(RouteMethod), r =>
+            {
+                r.Result.ArrivalPlaceId = place1.Id;
+                r.Result.DeparturePlaceId = place2.Id;
+            });
         }
 #endif
     }

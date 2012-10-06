@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Device.Location;
 using System.Linq;
 using System.Net;
@@ -26,96 +27,144 @@ namespace Travlexer.WindowsPhone.Infrastructure
 {
     public class DataContext : IDataContext
     {
-        private const string PlacesProperty = "Places";
-        private const string MapCenterProperty = "MapCenter";
-        private const string MapZoomLevelProperty = "MapZoomLevel";
-        private const string SearchInputProperty = "SearchInput";
-        private const string RouteMethodProperty = "RouteMethod";
-        private const string TravelModeProperty = "TravelMode";
-        private const string MapBaseLayerProperty = "MapBaseLayer";
-        private const string MapOverlayProperty = "MapOverlay";
-        private const string RoutesProperty = "Routes";
-        private static readonly Dictionary<PlaceIcon, string> _placeIconMap;
-        private static readonly Dictionary<ElementColor, string> _elementColorMap;
+        #region Private Fields
 
         private readonly ISerializer<byte[]> _binarySerializer;
         private readonly IGoogleMapsClient _googleMapsClient;
-        private readonly ObservableCollection<Place> _places;
-        private readonly ObservableCollection<Route> _routes;
-        private readonly ObservableCollection<Trip> _trips;
         private readonly IStorage _storageProvider;
+
+        #endregion
+
+
+        #region Public Events
+
+        /// <summary>
+        /// Occurs when <see cref="Places"/> collection is changed.
+        /// </summary>
+        public event NotifyCollectionChangedEventHandler PlacesCollectionChanged
+        {
+            add { _places.CollectionChanged += value; }
+            remove { _places.CollectionChanged -= value; }
+        }
+
+        #endregion
+
 
         #region Public Properties
 
         /// <summary>
-        /// Gets the collection that contains all user pins.
+        ///   Gets the collection that contains all user pins.
         /// </summary>
         public ReadOnlyObservableCollection<Place> Places { get; private set; }
 
+        private readonly ObservableCollection<Place> _places;
+        private const string PlacesProperty = "Places";
+
         /// <summary>
-        /// Gets or sets the selected place.
+        ///   Gets or sets the selected place.
         /// </summary>
         public ObservableValue<Place> SelectedPlace { get; set; }
 
+        private const string SelectedPlaceProperty = "SelectedPlace";
+
         /// <summary>
-        /// Gets or sets the map center geo-location.
+        /// Gets or sets the selected route.
+        /// </summary>
+        public ObservableValue<Route> SelectedRoute { get; set; }
+
+        private const string SelectedRouteProperty = "SelectedRoute";
+
+        /// <summary>
+        ///   Gets or sets the map center geo-location.
         /// </summary>
         public ObservableValue<GeoCoordinate> MapCenter { get; private set; }
 
+        private const string MapCenterProperty = "MapCenter";
+
         /// <summary>
-        /// Gets or sets the map zoom level.
+        ///   Gets or sets the map zoom level.
         /// </summary>
         public ObservableValue<double> MapZoomLevel { get; private set; }
 
+        private const string MapZoomLevelProperty = "MapZoomLevel";
+
         /// <summary>
-        /// Gets or sets the search input.
+        ///   Gets or sets the search input.
         /// </summary>
         public ObservableValue<string> SearchInput { get; private set; }
 
+        private const string SearchInputProperty = "SearchInput";
+
         /// <summary>
-        /// Gets the route method.
+        ///   Gets the route method.
         /// </summary>
         public ObservableValue<RouteMethod> RouteMethod { get; private set; }
 
+        private const string RouteMethodProperty = "RouteMethod";
+
         /// <summary>
-        /// Gets the route mode.
+        ///   Gets the route mode.
         /// </summary>
         public ObservableValue<TravelMode> TravelMode { get; private set; }
 
+        private const string TravelModeProperty = "TravelMode";
+
         /// <summary>
-        /// Gets or sets the map base layer.
+        ///   Gets or sets the map base layer.
         /// </summary>
         public ObservableValue<Layer> MapBaseLayer { get; private set; }
 
+        private const string MapBaseLayerProperty = "MapBaseLayer";
+
         /// <summary>
-        /// Gets the map overlays.
+        ///   Gets the map overlays.
         /// </summary>
         public ObservableCollection<Layer> MapOverlays { get; private set; }
 
+        private const string MapOverlayProperty = "MapOverlay";
+
         /// <summary>
-        /// Gets the collection of all routes planned by the user.
+        ///   Gets the collection of all routes planned by the user.
         /// </summary>
         public ReadOnlyObservableCollection<Route> Routes { get; private set; }
 
+        private readonly ObservableCollection<Route> _routes;
+        private const string RoutesProperty = "Routes";
+
         /// <summary>
-        /// Gets the collection of all trips planned by the user.
+        ///   Gets the collection of all trips planned by the user.
         /// </summary>
         public ReadOnlyObservableCollection<Trip> Trips { get; private set; }
 
+        private readonly ObservableCollection<Trip> _trips;
+        private const string TripsProperty = "Trips";
+
         /// <summary>
-        /// Gets the unit system that is currently in use.
+        ///   Gets the unit system that is currently in use.
         /// </summary>
         public ObservableValue<Units> Unit { get; private set; }
 
+        private const string UnitProperty = "Unit";
+
+        /// <summary>
+        ///   Gets a dictionary that contains available place icon enums mapping to their display names.
+        /// </summary>
         public Dictionary<PlaceIcon, string> PlaceIconMap
         {
             get { return _placeIconMap; }
         }
 
+        private static readonly Dictionary<PlaceIcon, string> _placeIconMap;
+
+        /// <summary>
+        ///   Gets a dictionary that contains available element color enums mapping to their display names.
+        /// </summary>
         public Dictionary<ElementColor, string> ElementColorMap
         {
             get { return _elementColorMap; }
         }
+
+        private static readonly Dictionary<ElementColor, string> _elementColorMap;
 
         #endregion
 
@@ -123,9 +172,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
         #region Public Methods
 
         /// <summary>
-        /// Adds a new place.
+        ///   Adds a new place.
         /// </summary>
-        /// <param name="location">The location of the place.</param>
+        /// <param name="location"> The location of the place. </param>
         public Place AddNewPlace(Location location)
         {
             var p = new Place(location);
@@ -138,9 +187,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Removes the existing place.
+        ///   Removes the existing place.
         /// </summary>
-        /// <param name="place">The place to be removed.</param>
+        /// <param name="place"> The place to be removed. </param>
         public void RemovePlace(Place place)
         {
             var connectedRouteIds = place.ConnectedRouteIds;
@@ -150,16 +199,16 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Removes the place specified by the id.
+        ///   Removes the place specified by the id.
         /// </summary>
-        /// <param name="id">The id of the place to be removed.</param>
+        /// <param name="id"> The id of the place to be removed. </param>
         public void RemovePlace(Guid id)
         {
             _places.FirstOrDefault(p => p.Id == id).UseIfNotNull(p => _places.Remove(p));
         }
 
         /// <summary>
-        /// Removes the specified route.
+        ///   Removes the specified route.
         /// </summary>
         public void RemoveRoute(Route route)
         {
@@ -169,7 +218,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Removes all places.
+        ///   Removes all places.
         /// </summary>
         public void ClearPlaces()
         {
@@ -177,7 +226,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Removes all search results.
+        ///   Removes all search results.
         /// </summary>
         public void ClearSearchResults()
         {
@@ -187,10 +236,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Gets information of the specified <see cref="Travlexer.Data.Place"/>.
+        ///   Gets information of the specified <see cref="Travlexer.Data.Place" />.
         /// </summary>
-        /// <param name="place">The place to get the information for.</param>
-        /// <param name="callback">The callback to be executed after this process is finished.</param>
+        /// <param name="place"> The place to get the information for. </param>
+        /// <param name="callback"> The callback to be executed after this process is finished. </param>
         public void GetPlaceInformation(Place place, Action<CallbackEventArgs> callback = null)
         {
             place.DataState = DataStates.Busy;
@@ -219,10 +268,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Gets information of the specified <see cref="Travlexer.Data.Place"/>.
+        ///   Gets information of the specified <see cref="Travlexer.Data.Place" />.
         /// </summary>
-        /// <param name="location">The geo-location to get the information for.</param>
-        /// <param name="callback">The callback to be executed after this process is finished.</param>
+        /// <param name="location"> The geo-location to get the information for. </param>
+        /// <param name="callback"> The callback to be executed after this process is finished. </param>
         public void GetAddress(Location location, Action<CallbackEventArgs<string>> callback = null)
         {
             ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>, string>(
@@ -236,10 +285,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Gets the details for the specified place by its reference key.
+        ///   Gets the details for the specified place by its reference key.
         /// </summary>
-        /// <param name="place">The place to get the details for.</param>
-        /// <param name="callback">The callback to be executed after the process is finished.</param>
+        /// <param name="place"> The place to get the details for. </param>
+        /// <param name="callback"> The callback to be executed after the process is finished. </param>
         public void GetPlaceDetails(Place place, Action<CallbackEventArgs> callback = null)
         {
             if (place.Reference == null)
@@ -273,10 +322,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Gets place details by its reference key.
+        ///   Gets place details by its reference key.
         /// </summary>
-        /// <param name="reference">The reference key to the place.</param>
-        /// <param name="callback">The callback to be executed when this process is finished.</param>
+        /// <param name="reference"> The reference key to the place. </param>
+        /// <param name="callback"> The callback to be executed when this process is finished. </param>
         public void GetPlaceDetailsForSearch(string reference, Action<CallbackEventArgs<Place>> callback = null)
         {
             ProcessCall<Response<Codify.GoogleMaps.Entities.Place>, Codify.GoogleMaps.Entities.Place, Place>(
@@ -293,11 +342,11 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Searches for places that matches the input.
+        ///   Searches for places that matches the input.
         /// </summary>
-        /// <param name="baseLocation">The geo-coordinate around which to retrieve place information.</param>
-        /// <param name="input">The input to search places.</param>
-        /// <param name="callback">The callback to execute after the process is finished.</param>
+        /// <param name="baseLocation"> The geo-coordinate around which to retrieve place information. </param>
+        /// <param name="input"> The input to search places. </param>
+        /// <param name="callback"> The callback to execute after the process is finished. </param>
         public void Search(Location baseLocation, string input, Action<CallbackEventArgs<List<Place>>> callback = null)
         {
             ProcessCall<ListResponse<Codify.GoogleMaps.Entities.Place>, List<Codify.GoogleMaps.Entities.Place>, List<Place>>(
@@ -335,9 +384,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                             ClearSearchResults();
                             var place = r.Result[0].ToPlace();
                             if (string.IsNullOrEmpty(place.Name))
-                            {
                                 place.Name = defaultSearchName;
-                            }
                             place.IsSearchResult = true;
                             place.DataState = DataStates.Finished;
                             _places.Add(place);
@@ -348,11 +395,11 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Gets the suggestions based on the input and center location.
+        ///   Gets the suggestions based on the input and center location.
         /// </summary>
-        /// <param name="location">The center location to bias the suggestion result.</param>
-        /// <param name="input">The input to suggest base on.</param>
-        /// <param name="callback">The callback to execute after the process is finished.</param>
+        /// <param name="location"> The center location to bias the suggestion result. </param>
+        /// <param name="input"> The input to suggest base on. </param>
+        /// <param name="callback"> The callback to execute after the process is finished. </param>
         public void GetSuggestions(Location location, string input, Action<CallbackEventArgs<List<SearchSuggestion>>> callback = null)
         {
             ProcessCall<AutoCompleteResponse, List<Suggestion>, List<SearchSuggestion>>(
@@ -362,7 +409,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Cancels the current get suggestions operation if there is any.
+        ///   Cancels the current get suggestions operation if there is any.
         /// </summary>
         public void CancelGetSuggestions()
         {
@@ -370,13 +417,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Finds the route between the depart location and arrive location.
+        ///   Finds the route between the depart location and arrive location.
         /// </summary>
-        /// <param name="departure">The depart location.</param>
-        /// <param name="arrival">The arrive location.</param>
-        /// <param name="mode">The travel mode for the route.</param>
-        /// <param name="method">The routing method for the route.</param>
-        /// <param name="callback">The callback to execute after the process is finished.</param>
+        /// <param name="departure"> The depart location. </param>
+        /// <param name="arrival"> The arrive location. </param>
+        /// <param name="mode"> The travel mode for the route. </param>
+        /// <param name="method"> The routing method for the route. </param>
+        /// <param name="callback"> The callback to execute after the process is finished. </param>
         public void GetRoute(string departure, string arrival, TravelMode mode, RouteMethod method, Action<CallbackEventArgs<Route>> callback = null)
         {
             ProcessCall<RoutesResponse, List<Codify.GoogleMaps.Entities.Route>, Route>(
@@ -393,7 +440,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
                             _routes.Add(route);
                             return route;
                         }
-
                     }
                     return existingRoute;
                 },
@@ -401,7 +447,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Clears all routes.
+        ///   Clears all routes.
         /// </summary>
         public void ClearRoutes()
         {
@@ -409,7 +455,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Saves the data context to the storage provided by <see cref="_storageProvider"/>.
+        ///   Saves the data context to the storage provided by <see cref="_storageProvider" />.
         /// </summary>
         public void SaveContext()
         {
@@ -426,15 +472,15 @@ namespace Travlexer.WindowsPhone.Infrastructure
             _storageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
 
             // Save map overlays.
-            Layer[] overlays = MapOverlays.ToArray();
+            var overlays = MapOverlays.ToArray();
             _storageProvider.SaveSetting(MapOverlayProperty, overlays);
 
             // Save places.
-            byte[] placeBytes = _binarySerializer.Serialize(_places.ToArray());
+            var placeBytes = _binarySerializer.Serialize(_places.ToArray());
             _storageProvider.SaveSetting(PlacesProperty, placeBytes);
 
             // Save routes.
-            byte[] routeBytes = _binarySerializer.Serialize(_routes.ToArray());
+            var routeBytes = _binarySerializer.Serialize(_routes.ToArray());
             _storageProvider.SaveSetting(RoutesProperty, routeBytes);
 
             // Save route method.
@@ -442,105 +488,99 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
             // Save travel mode.
             _storageProvider.SaveSetting(TravelModeProperty, TravelMode.Value);
+
+            // Save selected place ID.
+            _storageProvider.SaveSetting(SelectedPlaceProperty, SelectedPlace.Value.UseIfNotNull(p => p.Id));
+
+            // Save selected route ID.
+            _storageProvider.SaveSetting(SelectedRouteProperty, SelectedRoute.Value.UseIfNotNull(r => r.Id));
         }
 
         /// <summary>
-        /// Loads the data context from the storage provided by <see cref="_storageProvider"/>.
+        ///   Loads the data context from the storage provided by <see cref="_storageProvider" />.
         /// </summary>
         public void LoadContext()
         {
             // Load map center.
             Location mapCenter;
             if (_storageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
-            {
                 MapCenter.Value = mapCenter.ToGeoCoordinate();
-            }
 
             // Load map zoom level.
             double mapZoomLevel;
             if (_storageProvider.TryGetSetting(MapZoomLevelProperty, out mapZoomLevel))
-            {
                 MapZoomLevel.Value = mapZoomLevel;
-            }
 
             // Load search input.
             string searchInput;
             if (_storageProvider.TryGetSetting(SearchInputProperty, out searchInput))
-            {
                 SearchInput.Value = searchInput;
-            }
 
             // Load map base layer.
             Layer mapBaseLayer;
             if (_storageProvider.TryGetSetting(MapBaseLayerProperty, out mapBaseLayer))
-            {
                 MapBaseLayer.Value = mapBaseLayer;
-            }
 
             // Load map overlays.
             Layer[] overlays;
             if (_storageProvider.TryGetSetting(MapOverlayProperty, out overlays))
-            {
                 overlays.ForEach(MapOverlays.Add);
-            }
 
             // Load places.
             byte[] placeBytes;
             Place[] places;
             if (_storageProvider.TryGetSetting(PlacesProperty, out placeBytes) && _binarySerializer.TryDeserialize(placeBytes, out places))
-            {
                 _places.AddRange(places);
-            }
 
             // Load routes.
             byte[] routeBytes;
             Route[] routes;
             if (_storageProvider.TryGetSetting(RoutesProperty, out routeBytes) && _binarySerializer.TryDeserialize(routeBytes, out routes))
-            {
                 _routes.AddRange(routes);
-            }
 
             // Load route method.
             RouteMethod method;
             if (_storageProvider.TryGetSetting(RouteMethodProperty, out method))
-            {
                 RouteMethod.Value = method;
-            }
 
             // Load travel mode.
             TravelMode mode;
             if (_storageProvider.TryGetSetting(RouteMethodProperty, out mode))
-            {
                 TravelMode.Value = mode;
-            }
+
+            // Load selected place.
+            Guid selectedPlaceId;
+            if (_storageProvider.TryGetSetting(SelectedPlaceProperty, out selectedPlaceId) && !_places.IsNullOrEmpty())
+                SelectedPlace.Value = _places.FirstOrDefault(p => p.Id == selectedPlaceId);
+
+            // Load selected route.
+            Guid selectedRouteId;
+            if (_storageProvider.TryGetSetting(SelectedPlaceProperty, out selectedRouteId) && !_routes.IsNullOrEmpty())
+                SelectedRoute.Value = _routes.FirstOrDefault(r => r.Id == selectedRouteId);
         }
 
         /// <summary>
-        /// Toggles the specified map overlay.
+        ///   Toggles the specified map overlay.
         /// </summary>
         public void ToggleMapOverlay(Layer layer)
         {
             if (MapOverlays.Contains(layer))
-            {
                 MapOverlays.Remove(layer);
-            }
             else
-            {
                 MapOverlays.Add(layer);
-            }
         }
 
         /// <summary>
-        /// Removes the specified trip.
+        ///   Removes the specified trip.
         /// </summary>
-        /// <param name="trip">The trip to be removed.</param>
+        /// <param name="trip"> The trip to be removed. </param>
         public void RemoveTrip(Trip trip)
         {
             _trips.Remove(trip);
         }
 
         /// <summary>
-        /// Removes all trips.
+        ///   Removes all trips.
         /// </summary>
         public void ClearTrips()
         {
@@ -548,7 +588,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        /// Removes all personal places.
+        ///   Removes all personal places.
         /// </summary>
         public void ClearPersonalPlaces()
         {
@@ -567,38 +607,32 @@ namespace Travlexer.WindowsPhone.Infrastructure
             where TResult : class
         {
             callAction(_googleMapsClient, r =>
-                                          {
-                                              if (r.ResponseStatus == ResponseStatus.Aborted)
-                                              {
-                                                  callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Cancelled));
-                                                  return;
-                                              }
-                                              TResponse data = null;
-                                              TResult result;
-                                              if (r.StatusCode != HttpStatusCode.OK ||
-                                                  (data = r.Data) == null ||
-                                                  data.Status != StatusCodes.OK ||
-                                                  (result = data.Result) == null ||
-                                                  (result is IList && ((IList)result).Count == 0))
-                                              {
-                                                  Exception exception = r.ErrorException;
-                                                  if (exception != null)
-                                                  {
-                                                      callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.ServiceException, exception));
-                                                  }
-                                                  else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
-                                                  {
-                                                      callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Unknown));
-                                                  }
-                                                  else
-                                                  {
-                                                      callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.EmptyResult));
-                                                  }
-                                                  return;
-                                              }
-                                              processSuccessfulResponse.ExecuteIfNotNull(r.Data);
-                                              callback.ExecuteIfNotNull(new CallbackEventArgs());
-                                          });
+            {
+                if (r.ResponseStatus == ResponseStatus.Aborted)
+                {
+                    callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Cancelled));
+                    return;
+                }
+                TResponse data = null;
+                TResult result;
+                if (r.StatusCode != HttpStatusCode.OK ||
+                    (data = r.Data) == null ||
+                    data.Status != StatusCodes.OK ||
+                    (result = data.Result) == null ||
+                    (result is IList && ((IList)result).Count == 0))
+                {
+                    var exception = r.ErrorException;
+                    if (exception != null)
+                        callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.ServiceException, exception));
+                    else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
+                        callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Unknown));
+                    else
+                        callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.EmptyResult));
+                    return;
+                }
+                processSuccessfulResponse.ExecuteIfNotNull(r.Data);
+                callback.ExecuteIfNotNull(new CallbackEventArgs());
+            });
         }
 
         private void ProcessCall<TResponse, TResult, TCallback>(Action<IGoogleMapsClient, Action<RestResponse<TResponse>>> callAction, Func<TResponse, TCallback> processSuccessfulResponse = null, Action<CallbackEventArgs<TCallback>> callback = null)
@@ -606,38 +640,32 @@ namespace Travlexer.WindowsPhone.Infrastructure
             where TResult : class
         {
             callAction(_googleMapsClient, r =>
-                                          {
-                                              if (r.ResponseStatus == ResponseStatus.Aborted)
-                                              {
-                                                  callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
-                                                  return;
-                                              }
-                                              TResponse data = null;
-                                              TResult result;
-                                              if (r.StatusCode != HttpStatusCode.OK ||
-                                                  (data = r.Data) == null ||
-                                                  data.Status != StatusCodes.OK ||
-                                                  (result = data.Result) == null ||
-                                                  (result is IList && ((IList)result).Count == 0))
-                                              {
-                                                  Exception exception = r.ErrorException;
-                                                  if (exception != null)
-                                                  {
-                                                      callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.ServiceException, exception));
-                                                  }
-                                                  else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
-                                                  {
-                                                      callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Unknown));
-                                                  }
-                                                  else
-                                                  {
-                                                      callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.EmptyResult));
-                                                  }
-                                                  return;
-                                              }
-                                              TCallback callbackResult = processSuccessfulResponse.ExecuteIfNotNull(data);
-                                              callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(callbackResult));
-                                          });
+            {
+                if (r.ResponseStatus == ResponseStatus.Aborted)
+                {
+                    callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
+                    return;
+                }
+                TResponse data = null;
+                TResult result;
+                if (r.StatusCode != HttpStatusCode.OK ||
+                    (data = r.Data) == null ||
+                    data.Status != StatusCodes.OK ||
+                    (result = data.Result) == null ||
+                    (result is IList && ((IList)result).Count == 0))
+                {
+                    var exception = r.ErrorException;
+                    if (exception != null)
+                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.ServiceException, exception));
+                    else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
+                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Unknown));
+                    else
+                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.EmptyResult));
+                    return;
+                }
+                var callbackResult = processSuccessfulResponse.ExecuteIfNotNull(data);
+                callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(callbackResult));
+            });
         }
 
         #endregion
@@ -648,34 +676,32 @@ namespace Travlexer.WindowsPhone.Infrastructure
         static DataContext()
         {
             _placeIconMap = new Dictionary<PlaceIcon, string>
-                            {
-                                {PlaceIcon.General, "general"},
-                                {PlaceIcon.Recreation, "recreation"},
-                                {PlaceIcon.Drink, "bar and pub"},
-                                {PlaceIcon.Fuel, "fuel and service station"},
-                                {PlaceIcon.Vehicle, "aotomotive"},
-                                {PlaceIcon.Shop, "shop"},
-                                {PlaceIcon.Property, "property and house"},
-                                {PlaceIcon.Restaurant, "restaurant"},
-                                {PlaceIcon.Airport, "airport"},
-                                {PlaceIcon.PublicTransport, "public transport"},
-                                {PlaceIcon.Information, "information"},
-                                {PlaceIcon.Internet, "internet"},
-                                {PlaceIcon.MoneyExchange, "money exchange"},
-                                {PlaceIcon.Ferry, "ferry"},
-                                {PlaceIcon.Casino, "casino"},
-                            };
+            {
+                {PlaceIcon.General, "general"},
+                {PlaceIcon.Recreation, "recreation"},
+                {PlaceIcon.Drink, "bar and pub"},
+                {PlaceIcon.Fuel, "fuel and service station"},
+                {PlaceIcon.Vehicle, "aotomotive"},
+                {PlaceIcon.Shop, "shop"},
+                {PlaceIcon.Property, "property and house"},
+                {PlaceIcon.Restaurant, "restaurant"},
+                {PlaceIcon.Airport, "airport"},
+                {PlaceIcon.PublicTransport, "public transport"},
+                {PlaceIcon.Information, "information"},
+                {PlaceIcon.Internet, "internet"},
+                {PlaceIcon.MoneyExchange, "money exchange"},
+                {PlaceIcon.Ferry, "ferry"},
+                {PlaceIcon.Casino, "casino"},
+            };
             _placeIconMap = _placeIconMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
             _elementColorMap = new Dictionary<ElementColor, string>();
             foreach (var field in typeof(ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
-            {
                 _elementColorMap.Add((ElementColor)field.GetValue(null), field.Name.ToLower());
-            }
             _elementColorMap = _elementColorMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataContext"/> class.
+        ///   Initializes a new instance of the <see cref="DataContext" /> class.
         /// </summary>
         public DataContext(IStorage storageProvider, ISerializer<byte[]> binerySerializer, IGoogleMapsClient googleMapsClient)
         {
@@ -691,6 +717,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             TravelMode = new ObservableValue<TravelMode>();
             Unit = new ObservableValue<Units>();
             SelectedPlace = new ObservableValue<Place>();
+            SelectedRoute = new ObservableValue<Route>();
 
             MapOverlays = new ObservableCollection<Layer>();
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
