@@ -22,7 +22,8 @@
                                   mc:Ignorable="d"
                                   d:DesignHeight="768"
                                   d:DesignWidth="480"
-                                  d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}">
+                                  d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}"
+                                  shell:SystemTray.Opacity="{StaticResource OpacityShell}">
     <phone:PhoneApplicationPage.Resources>
         <ScaleTransform x:Key="TileScale" />
         <!--This style is used in code behind, do not remove-->
@@ -66,9 +67,6 @@
             </StackPanel>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
-    <shell:SystemTray.Opacity>
-        <StaticResource ResourceKey="OpacityShell" />
-    </shell:SystemTray.Opacity>
     <i:Interaction.Triggers>
         <i:EventTrigger>
             <i:InvokeCommandAction Command="{Binding CommandActivate, Mode=OneTime}" />
@@ -579,7 +577,7 @@
                                                   Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                                   StrokeEndLineCap="Round"
                                                   StrokeStartLineCap="Round"
-                                                  StrokeThickness="8" />
+                                                  StrokeThickness="{StaticResource MapPolylineStrokeThickness}" />
                             <!--<Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
 											  Stroke="{StaticResource PhoneForegroundBrush}"
 											  StrokeThickness="4"

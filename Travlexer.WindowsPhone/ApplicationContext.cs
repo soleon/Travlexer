@@ -31,6 +31,8 @@ namespace Travlexer.WindowsPhone
         /// </summary>
         public static bool IsNetworkAvailable { get; private set; }
 
+        public static INavigationService NavigationService { get; set; }
+
         public static IDataContext Data { get; set; }
 
         public static IConfigurationContext Configuration { get; set; }
@@ -78,6 +80,7 @@ namespace Travlexer.WindowsPhone
             // Initialize contexts.
             Data = kernel.Get<IDataContext>();
             Configuration = kernel.Get<IConfigurationContext>();
+            NavigationService = kernel.Get<INavigationService>();
         }
 
         public static void LoadContext()

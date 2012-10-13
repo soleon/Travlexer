@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Codify.Commands;
-using Codify.Extensions;
 using Codify.ViewModels;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Infrastructure;
@@ -24,15 +23,26 @@ namespace Travlexer.WindowsPhone.ViewModels
             _data = data;
             var route = Data = _data.SelectedRoute.Value;
 
-            _data.Places.ForEach(
-                p =>
+            MapViewLocations = route.Points;
+
+            byte foundPlacesCount = 0;
+            foreach (var p in data.Places)
+            {
+                if (p.Id == route.DeparturePlaceId)
                 {
-                    if (p.Id == route.DeparturePlaceId) DeparturePlace = p;
-                    else if (p.Id == route.ArrivalPlaceId) ArrivalPlace = p;
-                });
+                    DeparturePlace = p;
+                    foundPlacesCount++;
+                }
+                else if (p.Id == route.ArrivalPlaceId)
+                {
+                    ArrivalPlace = p;
+                    foundPlacesCount++;
+                }
+                if (foundPlacesCount == 2) break;
+            }
 
             uint index = 1;
-            Steps = route.Steps.Select(step => new RouteStepSummaryViewModel(index++, step));
+            Steps = route.Steps.Select(step => new RouteStepSummaryViewModel(index++, step)).ToArray();
 
             CommandGoToStep = new DelegateCommand<RouteStep>(step => SelectedStep = step);
         }
@@ -47,7 +57,11 @@ namespace Travlexer.WindowsPhone.ViewModels
         public RouteStep SelectedStep
         {
             get { return _selectedStep; }
-            set { SetValue(ref _selectedStep, value, SelectedStepProperty); }
+            set
+            {
+                if (!SetValue(ref _selectedStep, value, SelectedStepProperty) || value == null) return;
+                MapViewLocations = new[] { value.StartLocation, value.EndLocation };
+            }
         }
 
         private RouteStep _selectedStep;
@@ -66,6 +80,15 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             get { return Data.Duration.ToDurationText(); }
         }
+
+        public IEnumerable<Location> MapViewLocations
+        {
+            get { return _mapViewLocations; }
+            set { SetValue(ref _mapViewLocations, value, MapviewLocationsProperty); }
+        }
+
+        private IEnumerable<Location> _mapViewLocations;
+        internal const string MapviewLocationsProperty = "MapViewLocations";
 
         #endregion
 
