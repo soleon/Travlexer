@@ -591,25 +591,12 @@
                         </Grid.RenderTransform>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="LoadStates">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition GeneratedDuration="0"
-                                                      To="Drop">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0:0:0.3"
-                                                             To="0"
-                                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                                             Storyboard.TargetName="Root"
-                                                             From="-800" />
-                                        </Storyboard>
-                                    </VisualTransition>
-                                </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Drop">
                                     <Storyboard>
-                                        <DoubleAnimation Duration="0"
+                                        <DoubleAnimation Duration="0:0:0.3"
                                                          To="0"
                                                          Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                                         Storyboard.TargetName="Root"
-                                                         d:IsOptimized="True" />
+                                                         Storyboard.TargetName="Root" />
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
