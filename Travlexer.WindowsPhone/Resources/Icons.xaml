@@ -356,4 +356,11 @@
                   Style="{StaticResource IconPathBase}" />
         </Imaging:UIBitmap.Content>
     </ImageBrush>
+    <ImageBrush x:Key="BrushIconDownUp"
+                Stretch="None">
+        <Imaging:UIBitmap.Content>
+            <Path Data="M5,4.99999 L9,4.99999 L9,21.75 L14,16 L14,22.5 L7,30 L0,22.5 L0,16 L5,21.75 z M19,0 L26,7.49999 L26,14 L21,8.24999 L21,25 L17,25 L17,8.24999 L12,14 L12,7.49999 z"
+                  Style="{StaticResource IconPathBase}" />
+        </Imaging:UIBitmap.Content>
+    </ImageBrush>
 </ResourceDictionary>

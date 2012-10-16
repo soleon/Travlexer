@@ -143,6 +143,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandRoute = new DelegateCommand(OnRoute);
             CommandActivate = new DelegateCommand(OnActivate);
             CommandDeactivate = new DelegateCommand(OnDeactivate);
+            CommandSwapRouteLocations = new DelegateCommand(OnSwapRouteLocations);
 
             // Initialise geo-coordinate watcher.
             _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
@@ -444,12 +445,26 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// <summary>
         ///   Gets the departure location.
         /// </summary>
-        public RouteLocation DepartureLocation { get; private set; }
+        public RouteLocation DepartureLocation
+        {
+            get { return _departureLocation; }
+            private set { SetValue(ref _departureLocation, value, DepartureLocationProperty); }
+        }
+
+        private RouteLocation _departureLocation;
+        private const string DepartureLocationProperty = "DepartureLocation";
 
         /// <summary>
         ///   Gets the arrival location.
         /// </summary>
-        public RouteLocation ArrivalLocation { get; private set; }
+        public RouteLocation ArrivalLocation
+        {
+            get { return _arrivalLocation; }
+            private set { SetValue(ref _arrivalLocation, value, ArrivalLocationProperty); }
+        }
+
+        private RouteLocation _arrivalLocation;
+        private const string ArrivalLocationProperty = "ArrivalLocation";
 
         /// <summary>
         ///   Gets the application bar button items sources.
@@ -605,10 +620,19 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public DelegateCommand CommandDeactivate { get; private set; }
 
+        public DelegateCommand CommandSwapRouteLocations { get; private set; }
+
         #endregion
 
 
         #region Event Handling
+
+        private void OnSwapRouteLocations()
+        {
+            var temp = DepartureLocation;
+            DepartureLocation = ArrivalLocation;
+            ArrivalLocation = temp;
+        }
 
         /// <summary>
         ///   Called when <see cref="CommandGoToDefaultState" />.

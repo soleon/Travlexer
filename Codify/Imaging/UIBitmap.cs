@@ -27,18 +27,13 @@ namespace Codify.Imaging
 
 		private static void OnContentChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (!(sender is ImageBrush))
-			{
-				throw new InvalidOperationException("UIBitmap.Content can only be attached to an ImageBrush.");
-			}
-			var brush = (ImageBrush) sender;
-			var element = (UIElement) e.NewValue;
-			if (element == null)
-			{
-				return;
-			}
+		    if (!(sender is ImageBrush))
+		        throw new InvalidOperationException("UIBitmap.Content can only be attached to an ImageBrush.");
+		    var brush = (ImageBrush) sender;
+			var element = e.NewValue as UIElement;
+		    if (element == null) return;
 
-			brush.ImageSource = new WriteableBitmap(element, null);
+		    brush.ImageSource = new WriteableBitmap(element, null);
 		}
 
 		#endregion

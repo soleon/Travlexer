@@ -562,7 +562,7 @@
                 </Grid>
             </Maps:Pushpin>
             <Maps:MapLayer x:Name="RoutesLayer"
-                           Opacity="0.695"
+                           Opacity="0.7"
                            CodifyControls:PanelExtension.ItemsSource="{Binding Routes}">
                 <CodifyControls:PanelExtension.ItemTemplate>
                     <DataTemplate>
@@ -617,12 +617,12 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <Grid>
-                            <Rectangle Style="{StaticResource IconRectangleStyle}"
-                                       Fill="{Binding Data.Icon, Converter={StaticResource PlaceIconToBrushConverter}}"
-                                       Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}" />
-                            <Rectangle Style="{StaticResource IconRectangleStyle}"
-                                        Fill="{StaticResource BrushIconSearch}"
-                                        Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}" />
+                                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                           Fill="{Binding Data.Icon, Converter={StaticResource PlaceIconToBrushConverter}}"
+                                           Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}" />
+                                <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                           Fill="{StaticResource BrushIconSearch}"
+                                           Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}" />
                             </Grid>
                         </Maps:Pushpin>
                     </DataTemplate>
@@ -917,9 +917,8 @@
                     <CompositeTransform TranslateY="-300" />
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -951,6 +950,12 @@
                     <Rectangle Style="{StaticResource IconRectangleStyle}"
                                Fill="{StaticResource BrushIconCurrentLocation}" />
                 </Controls:CircleButton>
+                <Button Grid.RowSpan="2"
+                        Style="{StaticResource EmptyButton}"
+                        Command="{Binding CommandSwapRouteLocations}">
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconDownUp}" />
+                </Button>
                 <TextBlock Grid.Row="1"
                            Margin="12,0,0,0"
                            Text="To:"
