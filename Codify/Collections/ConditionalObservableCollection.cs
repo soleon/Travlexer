@@ -243,9 +243,9 @@ namespace Codify.Collections
                     var previousItem = default(T);
                     for (var i = index - 1; i >= 0; i--)
                     {
-                        var itm = source[i];
-                        if (!_filter(itm)) continue;
-                        previousItem = item;
+                        var currentItem = source[i];
+                        if (!_filter(currentItem)) continue;
+                        previousItem = currentItem;
                         break;
                     }
 
