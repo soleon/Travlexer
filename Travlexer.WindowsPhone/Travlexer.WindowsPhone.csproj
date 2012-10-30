@@ -82,6 +82,7 @@
     <Compile Include="Controls\Icons\Slash.cs" />
     <Compile Include="Controls\MapPolyline.cs" />
     <Compile Include="Controls\PushpinContent.cs" />
+    <Compile Include="Controls\Utility.cs" />
     <Compile Include="Converters\ElementColorKeyValueConverter.cs" />
     <Compile Include="Converters\LocationGeoCoordinateConverter.cs" />
     <Compile Include="Converters\LocationListToLocationCollectionConverter.cs" />

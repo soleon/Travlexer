@@ -3,5 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=mscorlib">
     <System:Double x:Key="IconDimension">28</System:Double>
 	<System:Double x:Key="IconContainerDimension">48</System:Double>
-	<System:Double x:Key="MapPolylineStrokeThickness">8</System:Double>
+	<System:Double x:Key="MapPolylineOuterStrokeThickness">8</System:Double>
+    <System:Double x:Key="MapPolylineInnerStrokeThickness">3</System:Double>
 </ResourceDictionary>

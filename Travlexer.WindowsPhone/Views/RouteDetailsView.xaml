@@ -75,7 +75,7 @@
                                           Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                           StrokeEndLineCap="Round"
                                           StrokeStartLineCap="Round"
-                                          StrokeThickness="{StaticResource MapPolylineStrokeThickness}"
+                                          StrokeThickness="{StaticResource MapPolylineOuterStrokeThickness}"
                                           x:Name="RoutePolyline" />
                     <Maps:MapItemsControl ItemsSource="{Binding Steps}">
                         <Maps:MapItemsControl.ItemTemplate>
