@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Media;
 using Codify.Extensions;
@@ -8,14 +9,14 @@ namespace Travlexer.WindowsPhone.Controls
 {
     public class MapPolyline : Microsoft.Phone.Controls.Maps.MapPolyline
     {
-        private bool _isLoaded;
+        private bool _isLoaded, _isUsingReduction;
 
         public MapPolyline()
         {
             Loaded += (s, e) =>
             {
                 _isLoaded = true;
-                UpdateLocations();
+                if(_isUsingReduction) UpdateLocations();
             };
             Unloaded += (s, e) => _isLoaded = false;
         }
@@ -82,7 +83,7 @@ namespace Travlexer.WindowsPhone.Controls
         /// </summary>
         private void OnZoomLevelChanged()
         {
-            if (Locations.IsNullOrEmpty()) return;
+            if (!_isUsingReduction || Locations.IsNullOrEmpty()) return;
             UpdateLocations();
         }
 
@@ -111,8 +112,13 @@ namespace Travlexer.WindowsPhone.Controls
         /// </summary>
         private void OnLocationsChanged(LocationCollection newValue)
         {
-            if (ZoomLevel.Equals(double.MinValue)) return;
-            UpdateLocations();
+            _isUsingReduction = newValue != null && newValue.Count > 3000;
+            if (_isUsingReduction)
+            {
+                if (ZoomLevel.Equals(double.MinValue)) return;
+                UpdateLocations();
+            }
+            else base.Locations = newValue;
         }
 
         #endregion
