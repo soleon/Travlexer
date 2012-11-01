@@ -17,6 +17,14 @@
                             d:DesignHeight="768"
                             Style="{StaticResource PageDefault}"
                             d:DataContext="{Binding RouteDetailsViewModel, Source={StaticResource DesignTime}}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger>
+            <i:InvokeCommandAction Command="{Binding CommandStartGeoWatcher, Mode=OneTime}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding CommandStopGeoWatcher, Mode=OneTime}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <controls:Pivot Title="ROUTE DETAILS"
                     Name="Pivot">
         <controls:PivotItem Header="itinerary">
@@ -32,7 +40,9 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding Index}"
                                            VerticalAlignment="Center"
-                                           FontFamily="{StaticResource PhoneFontFamilyLight}" />
+                                           FontFamily="{StaticResource PhoneFontFamilyLight}"
+										   FontSize="{StaticResource PhoneFontSizeLarge}"
+										   Margin="{StaticResource PhoneHorizontalMargin}" />
                                 <TextBlock TextWrapping="Wrap"
                                            Grid.Column="1"
                                            Margin="{StaticResource PhoneHorizontalMargin}">
@@ -40,6 +50,9 @@
                                          FontSize="{StaticResource PhoneFontSizeMedium}" />
                                     <LineBreak />
                                     <Run Text="{Binding Distance}"
+                                         Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
+                                    <Run Text=" in " />
+                                    <Run Text="{Binding Duration}"
                                          Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
                                 </TextBlock>
                                 <Controls:CircleButton Grid.Column="2"
@@ -61,7 +74,9 @@
             <Maps:Map CopyrightVisibility="Collapsed"
                       CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
                       LogoVisibility="Collapsed"
-                      x:Name="Map">
+                      x:Name="Map"
+                      AnimationLevel="UserInput"
+                      ZoomBarVisibility="Visible">
                 <Maps:Map.Mode>
                     <Core:MercatorMode />
                 </Maps:Map.Mode>
@@ -75,8 +90,21 @@
                                           Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                           StrokeEndLineCap="Round"
                                           StrokeStartLineCap="Round"
-                                          StrokeThickness="{StaticResource MapPolylineOuterStrokeThickness}"
-                                          x:Name="RoutePolyline" />
+                                          StrokeThickness="{StaticResource MapPolylineInnerStrokeThickness}"
+                                          x:Name="RoutePolyline"
+                                          ZoomLevel="{Binding ZoomLevel, ElementName=Map}"/>
+                    <Maps:Pushpin IsHitTestVisible="False"
+                                  Location="{Binding CurrentLocation}"
+                                  PositionOrigin="Center"
+                                  Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
+                        <Maps:Pushpin.Template>
+                            <ControlTemplate TargetType="Maps:Pushpin">
+                                <Rectangle Height="30"
+                                           Width="30"
+                                           Fill="{StaticResource BrushIconCurrentLocationBlack}" />
+                            </ControlTemplate>
+                        </Maps:Pushpin.Template>
+                    </Maps:Pushpin>
                     <Maps:MapItemsControl ItemsSource="{Binding Steps}">
                         <Maps:MapItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -91,7 +119,7 @@
                                                     VerticalAlignment="Center"
                                                     HorizontalAlignment="Center"
                                                     Background="{StaticResource PhoneBackgroundBrush}"
-                                                    CornerRadius="100" Width="22" Height="22">
+                                                    CornerRadius="11" Width="22" Height="22">
                                                 <TextBlock Text="{Binding Index}"
                                                            FontWeight="Bold"
                                                            HorizontalAlignment="Center"
@@ -133,39 +161,41 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconDepart}" />
+                           Fill="{StaticResource BrushIconDepart}" Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Column="1"
                            Margin="{StaticResource PhoneMargin}"
                            TextWrapping="Wrap">
-                    <Run Text="{Binding DeparturePlace.Name}" />
+                    <Run Text="{Binding DeparturePlace.Name}" FontSize="{StaticResource PhoneFontSizeLarge}" />
                     <LineBreak />
                     <Run Text="{Binding DeparturePlace.Address}" />
                 </TextBlock>
                 <Rectangle Grid.Row="1"
                            Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconArrive}" />
+                           Fill="{StaticResource BrushIconArrive}" Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Column="1"
                            Grid.Row="1"
                            Margin="{StaticResource PhoneMargin}"
                            TextWrapping="Wrap">
-                    <Run Text="{Binding ArrivalPlace.Name}" />
+                    <Run Text="{Binding ArrivalPlace.Name}" FontSize="{StaticResource PhoneFontSizeLarge}"  />
                     <LineBreak />
                     <Run Text="{Binding ArrivalPlace.Address}" />
                 </TextBlock>
                 <Rectangle Grid.Row="2"
                            Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconRoad}" />
+                           Fill="{StaticResource BrushIconRoad}" Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="1"
                            Text="{Binding Distance}"
-                           Margin="{StaticResource PhoneMargin}" />
+                           Margin="{StaticResource PhoneMargin}"
+						   FontSize="{StaticResource PhoneFontSizeLarge}"  />
                 <Rectangle Grid.Row="3"
                            Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconClock}" />
+                           Fill="{StaticResource BrushIconClock}" Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Row="3"
                            Grid.Column="1"
                            Text="{Binding Duration}"
-                           Margin="{StaticResource PhoneMargin}" />
+                           Margin="{StaticResource PhoneMargin}"
+						   FontSize="{StaticResource PhoneFontSizeLarge}"  />
             </Grid>
         </controls:PivotItem>
     </controls:Pivot>

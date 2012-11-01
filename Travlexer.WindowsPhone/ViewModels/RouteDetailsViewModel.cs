@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Device.Location;
 using System.Linq;
 using Codify.Commands;
 using Codify.ViewModels;
@@ -12,7 +14,8 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Private Fields
 
         private readonly IDataContext _data;
-
+        private readonly GeoCoordinateWatcher _geoWatcher;
+        
         #endregion
 
 
@@ -45,6 +48,30 @@ namespace Travlexer.WindowsPhone.ViewModels
             Steps = route.Steps.Select(step => new RouteStepSummaryViewModel(index++, step)).ToArray();
 
             CommandGoToStep = new DelegateCommand<RouteStep>(step => SelectedStep = step);
+            
+#if DEBUG
+            if (DesignerProperties.IsInDesignTool) return;
+#endif
+            // Initialise geo-coordinate watcher.
+            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
+            _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
+            CommandStartGeoWatcher = new DelegateCommand(_geoWatcher.Start);
+            CommandStopGeoWatcher = new DelegateCommand(_geoWatcher.Stop);
+        }
+
+        #endregion
+
+
+        #region Event Handling
+
+        /// <summary>
+        ///   Called when <see cref="GeoCoordinateWatcher.PositionChanged" /> event is raised.
+        /// </summary>
+        private void OnGeoWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            var location = e.Position.Location;
+            if (location.IsUnknown) return;
+            CurrentLocation = location;
         }
 
         #endregion
@@ -90,12 +117,31 @@ namespace Travlexer.WindowsPhone.ViewModels
         private IEnumerable<Location> _mapViewLocations;
         internal const string MapviewLocationsProperty = "MapViewLocations";
 
+        public GeoCoordinate CurrentLocation
+        {
+            get { return _currentLocation; }
+            set { SetValue(ref _currentLocation, value, CurrentLocationProperty); }
+        }
+
+        private GeoCoordinate _currentLocation;
+        private const string CurrentLocationProperty = "CurrentLocation";
+
         #endregion
 
 
         #region Commands
 
         public DelegateCommand<RouteStep> CommandGoToStep { get; private set; }
+
+        /// <summary>
+        ///   Gets the command that starts geo coordinate watcher.
+        /// </summary>
+        public DelegateCommand CommandStartGeoWatcher { get; private set; }
+
+        /// <summary>
+        ///   Gets the command that stops geo coordinate watcher.
+        /// </summary>
+        public DelegateCommand CommandStopGeoWatcher { get; private set; }
 
         #endregion
     }

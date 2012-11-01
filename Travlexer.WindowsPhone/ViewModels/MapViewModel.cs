@@ -121,8 +121,6 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandUpdatePlace = new DelegateCommand<PlaceViewModel>(OnUpdatePlace);
             CommandStopTrackingCurrentLocation = new DelegateCommand(OnStopTrackingCurrentLocation);
             CommandGoToDefaultState = new DelegateCommand(OnGoToDefaultState);
-            CommandStartGeoWatcher = new DelegateCommand(() => _geoWatcher.Start());
-            CommandStopGeoWatcher = new DelegateCommand(() => _geoWatcher.Stop());
             CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation.ToLocalLocation()), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
             CommandZoomIn = new DelegateCommand(() =>
             {
@@ -144,11 +142,6 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandActivate = new DelegateCommand(OnActivate);
             CommandDeactivate = new DelegateCommand(OnDeactivate);
             CommandSwapRouteLocations = new DelegateCommand(OnSwapRouteLocations);
-
-            // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
-            _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
-
 
             // Initialise application bar button and menu items sources.
             InitializeAppBarButtonSources();
@@ -177,6 +170,16 @@ namespace Travlexer.WindowsPhone.ViewModels
                     ZoomLevel.Value = 15;
                 }
             }
+
+#if DEBUG
+            if (DesignerProperties.IsInDesignTool) return;
+#endif
+
+            // Initialise geo-coordinate watcher.
+            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
+            _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
+            CommandStartGeoWatcher = new DelegateCommand(_geoWatcher.Start);
+            CommandStopGeoWatcher = new DelegateCommand(_geoWatcher.Stop);
         }
 
         #endregion
@@ -778,7 +781,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     return;
                 }
                 IsTrackingCurrentLocation.Value = false;
-                SearchSucceeded.ExecuteIfNotNull(new List<Place> { args.Result });
+                SearchSucceeded.ExecuteIfNotNull(new List<Place> {args.Result});
             });
 
             ResetSearchSuggestions();
@@ -819,11 +822,9 @@ namespace Travlexer.WindowsPhone.ViewModels
             Center.Value = location;
 
             // This is to determine whether this is the first current location update.
-            // The first update should set the zoom level to 15.
-            if (oldCurrentLocation == null)
-            {
+            // The first update should set the zoom level to 15 if the current zoom level is less than that.
+            if (oldCurrentLocation == null && ZoomLevel.Value < 15D)
                 ZoomLevel.Value = 15;
-            }
         }
 
         /// <summary>
@@ -1175,7 +1176,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     {
                         IconUri = new Uri("/Assets/Information.png", UriKind.Relative),
                         Text = "details",
-                        Command = new DelegateCommand(()=>_navigation.Navigate<RouteDetailsViewModel>())
+                        Command = new DelegateCommand(() => _navigation.Navigate<RouteDetailsViewModel>())
                     },
                     new AppBarButtonViewModel
                     {

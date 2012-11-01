@@ -175,6 +175,24 @@ namespace Travlexer.Data
 
         private Collection<Guid> _connectedRouteIds;
 
+        public DateTime? ArrivalTime
+        {
+            get { return _arrivalTime ?? DateTime.Now; }
+            set { SetValue(ref _arrivalTime, value, ArrivalTimeProperty); }
+        }
+
+        private DateTime? _arrivalTime;
+        private const string ArrivalTimeProperty = "ArrivalTime";
+
+        public DateTime? DepartureTime
+        {
+            get { return _departureTime ?? DateTime.Now; }
+            set { SetValue(ref _departureTime, value, DepartureTimeProperty); }
+        }
+
+        private DateTime? _departureTime;
+        private const string DepartureTimeProperty = "DepartureTime";
+
         #endregion
     }
 }

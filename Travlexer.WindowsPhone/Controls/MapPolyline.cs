@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Windows;
 using System.Windows.Media;
 using Codify.Extensions;
@@ -16,7 +15,7 @@ namespace Travlexer.WindowsPhone.Controls
             Loaded += (s, e) =>
             {
                 _isLoaded = true;
-                if(_isUsingReduction) UpdateLocations();
+                if (_isUsingReduction) UpdateLocations();
             };
             Unloaded += (s, e) => _isLoaded = false;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -27,6 +28,10 @@ namespace Codify.Imaging
 
 		private static void OnContentChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
 		{
+#if DEBUG
+            if (DesignerProperties.IsInDesignTool) return;
+#endif
+
 		    if (!(sender is ImageBrush))
 		        throw new InvalidOperationException("UIBitmap.Content can only be attached to an ImageBrush.");
 		    var brush = (ImageBrush) sender;

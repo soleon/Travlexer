@@ -10,10 +10,13 @@ namespace Travlexer.WindowsPhone.ViewModels
             Index = index;
             Data = step;
             Distance = step.Distance.ToDistanceText();
+            Duration = step.Duration.ToDurationText();
         }
 
         public uint Index { get; private set; }
 
         public string Distance { get; private set; }
+
+        public string Duration { get; private set; }
     }
 }

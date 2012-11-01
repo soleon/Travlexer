@@ -154,6 +154,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                         routeSteps.Add(new RouteStep
                         {
                             Distance = step.Distance.Value,
+                            Duration = step.Duration.Value,
                             Instruction = XmlTagRegex.Replace(DivTagRegex.Replace(step.HtmlInstructions, Environment.NewLine), string.Empty),
                             StartLocation = step.StartLocation.ToLocalLocation(),
                             EndLocation = step.EndLocation.ToLocalLocation()
