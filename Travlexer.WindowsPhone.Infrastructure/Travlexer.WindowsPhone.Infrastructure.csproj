@@ -42,8 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
-    <Reference Include="RestSharp.WindowsPhone">
-      <HintPath>..\Libraries\RestSharp.WindowsPhone.dll</HintPath>
+    <Reference Include="RestSharp.WindowsPhone, Version=104.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RestSharp.104.1\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="System.Device" />
     <Reference Include="System.Windows" />
@@ -70,16 +71,14 @@
       <Project>{8534BCF0-F61A-46E8-8ADE-F9841F9594FE}</Project>
       <Name>Codify.GoogleMaps</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Codify\Codify.csproj">
-      <Project>{D410E698-3733-4558-9844-761EAAC04BAF}</Project>
-      <Name>Codify</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Travlexer.Data\Travlexer.Data.csproj">
       <Project>{E47E5806-0122-4651-A8D0-5D5EB012F9A4}</Project>
       <Name>Travlexer.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions />

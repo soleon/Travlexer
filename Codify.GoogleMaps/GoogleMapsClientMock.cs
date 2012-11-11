@@ -351,7 +351,7 @@ namespace Codify.GoogleMaps
 
 		#region Public Methods
 
-		public void GetPlaces(LatLng location, Action<RestResponse<ListResponse<Place>>> callback)
+        public void GetPlaces(LatLng location, Action<IRestResponse<ListResponse<Place>>> callback)
 		{
 			var result = new RestResponse<ListResponse<Place>>
 			{
@@ -361,22 +361,22 @@ namespace Codify.GoogleMaps
 			callback(result);
 		}
 
-		public void GetPlaces(string address, Action<RestResponse<ListResponse<Place>>> callback = null)
+        public void GetPlaces(string address, Action<IRestResponse<ListResponse<Place>>> callback = null)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void GetPlaceDetails(string reference, Action<RestResponse<Response<Place>>> callback = null)
+        public void GetPlaceDetails(string reference, Action<IRestResponse<Response<Place>>> callback = null)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void GetSuggestions(LatLng center, string input, Action<RestResponse<AutoCompleteResponse>> callback = null)
+        public void GetSuggestions(LatLng center, string input, Action<IRestResponse<AutoCompleteResponse>> callback = null)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null)
+        public void Search(LatLng center, string input, Action<IRestResponse<ListResponse<Place>>> callback = null)
 		{
 			throw new NotImplementedException();
 		}
@@ -386,7 +386,7 @@ namespace Codify.GoogleMaps
 
 		}
 
-	    public void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Units unit, Action<RestResponse<RoutesResponse>> callback)
+        public void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Units unit, Action<IRestResponse<RoutesResponse>> callback)
 	    {
 	        var result = new RestResponse<RoutesResponse>
 	        {

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Silverlight-Serializer</id>
+    <version>2.0.0.0</version>
+    <title>Silverlight-Serializer (Unofficial)</title>
+    <authors>Mike Talbot,  Jake Ginnivan</authors>
+    <owners>Mike Talbot,  Jake Ginnivan</owners>
+    <projectUrl>http://whydoidoit.com/silverlight-serializer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A binary, reflection based serializer for Silverlight, WP7 and .NET, written in C#. This NuGet package is an unofficial fork containing SL, WP7 &amp; .NET libraries.</description>
+    <summary>A binary, reflection based serializer for Silverlight, WP7 and .NET, written in C#. This NuGet package is an unofficial fork containing SL, WP7 &amp; .NET libraries.</summary>
+    <tags>wp7 silverlight .net binary serialisation</tags>
+  </metadata>
+</package>

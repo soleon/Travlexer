@@ -7,7 +7,8 @@
 	<Converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
 	<CoreConverters:BooleanConverter x:Key="BooleanConverter" />
 	<CoreConverters:VisibilityConverter x:Key="VisibilityConverter" />
-	<Converters:RouteMethodKeyValueIconConverter x:Key="RouteMethodKeyValueIconConverter" />
+    <CoreConverters:LocalDateTimeConverter x:Key="LocalDateTimeConverter" />
+    <Converters:RouteMethodKeyValueIconConverter x:Key="RouteMethodKeyValueIconConverter" />
 	<Converters:RouteModeKeyValueIconConverter x:Key="RouteModeKeyValueIconConverter" />
 	<Converters:LocationCollectionToLocationCollectionConverter x:Key="LocationCollectionToLocationCollectionConverter" />
     <Converters:PlaceIconKeyValueConverter x:Key="PlaceIconKeyValueConverter" />

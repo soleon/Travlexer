@@ -54,6 +54,7 @@
     <Compile Include="Controls\ItemsControlExtension.cs" />
     <Compile Include="Controls\PanelExtension.cs" />
     <Compile Include="Behaviors\CancelGestureEventBehavior.cs" />
+    <Compile Include="Converters\LocalDateTimeConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DesignTime.cs" />
     <Compile Include="Imaging\UIBitmap.cs" />

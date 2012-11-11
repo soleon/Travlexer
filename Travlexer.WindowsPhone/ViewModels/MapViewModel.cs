@@ -161,15 +161,6 @@ namespace Travlexer.WindowsPhone.ViewModels
                 IsTrackingCurrentLocation.Value = true;
             }
 
-            // Try centering on current location if available.
-            if (IsTrackingCurrentLocation.Value)
-            {
-                if (!_geoWatcher.Position.Location.IsUnknown)
-                {
-                    Center.Value = _geoWatcher.Position.Location;
-                    ZoomLevel.Value = 15;
-                }
-            }
 
 #if DEBUG
             if (DesignerProperties.IsInDesignTool) return;
@@ -180,6 +171,16 @@ namespace Travlexer.WindowsPhone.ViewModels
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
             CommandStartGeoWatcher = new DelegateCommand(_geoWatcher.Start);
             CommandStopGeoWatcher = new DelegateCommand(_geoWatcher.Stop);
+
+            // Try centering on current location if available.
+            if (IsTrackingCurrentLocation.Value)
+            {
+                if (!_geoWatcher.Position.Location.IsUnknown)
+                {
+                    Center.Value = _geoWatcher.Position.Location;
+                    ZoomLevel.Value = 15;
+                }
+            }
         }
 
         #endregion

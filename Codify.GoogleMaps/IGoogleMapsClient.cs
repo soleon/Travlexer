@@ -11,21 +11,21 @@ namespace Codify.GoogleMaps
 		/// </summary>
 		/// <param name="location">The geo-location to match for places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void GetPlaces(LatLng location, Action<RestResponse<ListResponse<Place>>> callback = null);
+        void GetPlaces(LatLng location, Action<IRestResponse<ListResponse<Place>>> callback = null);
 
 		/// <summary>
 		/// Gets the places that match the address.
 		/// </summary>
 		/// <param name="address">The address to match for places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void GetPlaces(string address, Action<RestResponse<ListResponse<Place>>> callback = null);
+        void GetPlaces(string address, Action<IRestResponse<ListResponse<Place>>> callback = null);
 
 		/// <summary>
 		/// Gets the place details.
 		/// </summary>
 		/// <param name="reference">The reference key of the place.</param>
 		/// <param name="callback">The callback to be executed after the process is finished.</param>
-		void GetPlaceDetails(string reference, Action<RestResponse<Response<Place>>> callback = null);
+        void GetPlaceDetails(string reference, Action<IRestResponse<Response<Place>>> callback = null);
 
 		/// <summary>
 		/// Gets the suggestions based on the input.
@@ -33,7 +33,7 @@ namespace Codify.GoogleMaps
 		/// <param name="center">The geo-coordinate of where the suggestions will be based on.</param>
 		/// <param name="input">The input to populate the suggestions.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void GetSuggestions(LatLng center, string input, Action<RestResponse<AutoCompleteResponse>> callback = null);
+        void GetSuggestions(LatLng center, string input, Action<IRestResponse<AutoCompleteResponse>> callback = null);
 
 		/// <summary>
 		/// Searches for places that matches the input.
@@ -41,7 +41,7 @@ namespace Codify.GoogleMaps
 		/// <param name="center">The geo-coordinate around which to retrieve place information.</param>
 		/// <param name="input">The input to search places.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void Search(LatLng center, string input, Action<RestResponse<ListResponse<Place>>> callback = null);
+        void Search(LatLng center, string input, Action<IRestResponse<ListResponse<Place>>> callback = null);
 
 		/// <summary>
 		/// Cancels the current get suggestions operation if there is any.
@@ -57,6 +57,6 @@ namespace Codify.GoogleMaps
 		/// <param name="method">The routing method.</param>
 		/// <param name="unit">The unit to use in displaying the routing information.</param>
 		/// <param name="callback">The callback to execute after the process is finished.</param>
-		void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Units unit, Action<RestResponse<RoutesResponse>> callback);
+        void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Units unit, Action<IRestResponse<RoutesResponse>> callback);
 	}
 }

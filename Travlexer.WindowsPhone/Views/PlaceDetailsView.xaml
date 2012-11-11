@@ -271,9 +271,9 @@
                                    FontSize="{StaticResource PhoneFontSizeLarge}"
                                    Margin="{StaticResource PhoneHorizontalMargin}" />
                         <toolkit:DatePicker Grid.Column="1"
-                                            Value="{Binding Data.DepartureTime}" />
+                                            Value="{Binding Data.DepartureTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
                         <toolkit:TimePicker Grid.Column="2"
-                                            Value="{Binding Data.DepartureTime}" />
+                                            Value="{Binding Data.DepartureTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -286,9 +286,9 @@
                                    FontSize="{StaticResource PhoneFontSizeLarge}"
                                    Margin="{StaticResource PhoneHorizontalMargin}" />
                         <toolkit:DatePicker Grid.Column="1"
-                                            Value="{Binding Data.ArrivalTime}" />
+                                            Value="{Binding Data.ArrivalTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
                         <toolkit:TimePicker Grid.Column="2"
-                                            Value="{Binding Data.ArrivalTime}" />
+                                            Value="{Binding Data.ArrivalTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
                     </Grid>
                     <Grid>
                         <TextBox x:Name="NotesTextBox"

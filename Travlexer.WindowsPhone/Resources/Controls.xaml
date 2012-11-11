@@ -6,11 +6,11 @@
                     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                     xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
                     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                     xmlns:Codify="clr-namespace:Codify;assembly=Codify"
                     xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
                     xmlns:Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
+                    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
                     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                     mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>

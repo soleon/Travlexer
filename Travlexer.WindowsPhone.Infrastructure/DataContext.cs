@@ -602,7 +602,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
         #region Private Methods
 
-        private void ProcessCall<TResponse, TResult>(Action<IGoogleMapsClient, Action<RestResponse<TResponse>>> callAction, Action<TResponse> processSuccessfulResponse = null, Action<CallbackEventArgs> callback = null)
+        private void ProcessCall<TResponse, TResult>(Action<IGoogleMapsClient, Action<IRestResponse<TResponse>>> callAction, Action<TResponse> processSuccessfulResponse = null, Action<CallbackEventArgs> callback = null)
             where TResponse : class, IResponse<TResult>
             where TResult : class
         {
@@ -635,7 +635,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             });
         }
 
-        private void ProcessCall<TResponse, TResult, TCallback>(Action<IGoogleMapsClient, Action<RestResponse<TResponse>>> callAction, Func<TResponse, TCallback> processSuccessfulResponse = null, Action<CallbackEventArgs<TCallback>> callback = null)
+        private void ProcessCall<TResponse, TResult, TCallback>(Action<IGoogleMapsClient, Action<IRestResponse<TResponse>>> callAction, Func<TResponse, TCallback> processSuccessfulResponse = null, Action<CallbackEventArgs<TCallback>> callback = null)
             where TResponse : class, IResponse<TResult>
             where TResult : class
         {
