@@ -20,7 +20,7 @@ namespace Travlexer.WindowsPhone.Views
             _pinSelectedSearchResultButton = new ApplicationBarIconButton
                                              {
                                                  IconUri = new Uri("\\Assets\\AddPlace.png", UriKind.Relative),
-                                                 Text = "mark as pin"
+                                                 Text = "mark personal"
                                              };
             _pinSelectedSearchResultButton.SetBinding(ApplicationBarIconButton.CommandProperty, new Binding("CommandPinSelectedSearchResult") {Mode = BindingMode.OneTime});
 
