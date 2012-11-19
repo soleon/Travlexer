@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -80,15 +81,15 @@ namespace Codify.Controls
 
 		private static PanelExtension GetExtension(DependencyObject obj)
 		{
-			return (PanelExtension)obj.GetValue(_extensionProperty);
+			return (PanelExtension)obj.GetValue(ExtensionProperty);
 		}
 
 		private static void SetExtension(DependencyObject obj, PanelExtension value)
 		{
-			obj.SetValue(_extensionProperty, value);
+			obj.SetValue(ExtensionProperty, value);
 		}
 
-		private static readonly DependencyProperty _extensionProperty = DependencyProperty.RegisterAttached(
+		private static readonly DependencyProperty ExtensionProperty = DependencyProperty.RegisterAttached(
 			"Extension",
 			typeof(PanelExtension),
 			typeof(PanelExtension),
@@ -291,6 +292,9 @@ namespace Codify.Controls
 		/// <param name="items">The items.</param>
 		private void AddItems(IEnumerable items)
 		{
+#if DEBUG
+		    if (DesignerProperties.IsInDesignTool) return;
+#endif
 			if (items == null)
 			{
 				return;
