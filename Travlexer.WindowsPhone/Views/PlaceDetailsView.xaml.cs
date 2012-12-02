@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using Codify;
 using Codify.Attributes;
@@ -19,12 +18,7 @@ namespace Travlexer.WindowsPhone.Views
 
         private void SelectAllOnTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            var textBox = sender as TextBox;
-            if (textBox == null)
-            {
-                throw new ArgumentException("Sender must be a TextBox.", "sender");
-            }
-            textBox.SelectAll();
+            Dispatcher.BeginInvoke(() => ((TextBox) sender).SelectAll());
         }
 
         protected override void OnDataContextChanged(object oldValue, object newValue)
