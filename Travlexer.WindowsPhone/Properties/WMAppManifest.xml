@@ -9,13 +9,12 @@
        RuntimeType="Silverlight"
        Version="1.0.0.0"
        Genre="apps.normal"
-       Author="Travelexer.WindowsPhone author"
+       Author="Leon Zhou"
        Description="Run your travel plan so flexible, like you have never experienced before."
-       Publisher="Travlexer">
+       Publisher="SoLeon Innovative"
+       BitsPerPixel="16">
     <IconPath IsRelative="true"
-              IsResource="false">
-      Assets\AppIcon.png
-    </IconPath>
+              IsResource="false">Assets\AppIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES" />
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />
@@ -41,11 +40,10 @@
                     TaskName="_default">
         <TemplateType5>
           <BackgroundImageURI IsRelative="true"
-                              IsResource="false">
-            Assets\AppTile.png
-          </BackgroundImageURI>
+                              IsResource="false">Assets\AppTile.png</BackgroundImageURI>
           <Count>0</Count>
-          <Title></Title>
+          <Title>
+          </Title>
         </TemplateType5>
       </PrimaryToken>
     </Tokens>
