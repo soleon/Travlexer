@@ -127,9 +127,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
             return (RouteMethod) method;
         }
 
-        public static Codify.GoogleMaps.Entities.Units ToGoogleUnits(this Units unit)
+        public static Units ToGoogleUnits(this UnitSystems unit)
         {
-            return (Codify.GoogleMaps.Entities.Units) unit;
+            return (Units) unit;
         }
 
         public static Route ToLocalRoute(this Codify.GoogleMaps.Entities.Route route)

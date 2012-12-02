@@ -7,12 +7,12 @@ namespace Codify.Serialization
         #region Public Methods
 
         /// <summary>
-        /// Deserializes the specified source to <see cref="TTarget"/>.
+        ///     Deserializes the specified source to <see cref="TTarget" />.
         /// </summary>
         /// <typeparam name="TTarget">The type of the target.</typeparam>
         /// <param name="source">The source to deserialize.</param>
         /// <returns>
-        /// The deserialized object as <see cref="TTarget"/>.
+        ///     The deserialized object as <see cref="TTarget" />.
         /// </returns>
         public TTarget Deserialize<TTarget>(string source) where TTarget : class
         {
@@ -20,12 +20,12 @@ namespace Codify.Serialization
         }
 
         /// <summary>
-        /// Serializes the specified target into <see cref="string"/>.
+        ///     Serializes the specified target into <see cref="string" />.
         /// </summary>
         /// <typeparam name="TTarget">The type of the target.</typeparam>
         /// <param name="target">The target to serialize.</param>
         /// <returns>
-        /// The serialized representation of the target as <see cref="string"/>.
+        ///     The serialized representation of the target as <see cref="string" />.
         /// </returns>
         public string Serialize<TTarget>(TTarget target) where TTarget : class
         {
@@ -33,13 +33,15 @@ namespace Codify.Serialization
         }
 
         /// <summary>
-        /// Tries to deserialize the source object to <see cref="TTarget"/>.
+        ///     Tries to deserialize the source object to <see cref="TTarget" />.
         /// </summary>
         /// <typeparam name="TTarget">The type of the target.</typeparam>
         /// <param name="source">The source to deserialize.</param>
-        /// <param name="output">The deserialized object as <see cref="TTarget"/> if deserialization is successful.</param>
+        /// <param name="output">
+        ///     The deserialized object as <see cref="TTarget" /> if deserialization is successful.
+        /// </param>
         /// <returns>
-        ///   <c>true</c> if the deserialization process is successful, otherwise, <c>false</c>.
+        ///     <c>true</c> if the deserialization process is successful, otherwise, <c>false</c>.
         /// </returns>
         public virtual bool TryDeserialize<TTarget>(string source, out TTarget output) where TTarget : class
         {
@@ -55,13 +57,15 @@ namespace Codify.Serialization
         }
 
         /// <summary>
-        /// Tries to serialize the target into <see cref="T:System.String"/>.
+        ///     Tries to serialize the target into <see cref="T:System.String" />.
         /// </summary>
         /// <typeparam name="TTarget">The type of the target.</typeparam>
         /// <param name="target">The target to be serialized.</param>
-        /// <param name="output">The serialized representation of the source as <see cref="T:System.String"/> if serialization is successful.</param>
+        /// <param name="output">
+        ///     The serialized representation of the source as <see cref="T:System.String" /> if serialization is successful.
+        /// </param>
         /// <returns>
-        ///   <c>true</c> if the serialization process is successful, otherwise, <c>false</c>.
+        ///     <c>true</c> if the serialization process is successful, otherwise, <c>false</c>.
         /// </returns>
         public virtual bool TrySerialize<TTarget>(TTarget target, out string output) where TTarget : class
         {

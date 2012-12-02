@@ -6,12 +6,12 @@ using System.Linq;
 namespace Codify.Extensions
 {
     /// <summary>
-    ///   Contains extensions for enumerable objects.
+    ///     Contains extensions for enumerable objects.
     /// </summary>
     public static class EnumerationExtensions
     {
         /// <summary>
-        ///   Determines whether the specified enumerable is null or empty.
+        ///     Determines whether the specified enumerable is null or empty.
         /// </summary>
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {
@@ -19,12 +19,16 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Performs the specified action on each element of the <see cref="enumerable" /> .
+        ///     Performs the specified action on each element of the <see cref="enumerable" /> .
         /// </summary>
         /// <typeparam name="T"> Type of the elements in the enumerable. </typeparam>
         /// <param name="enumerable"> The enuerable to perform the action on. </param>
-        /// <param name="actions"> The list of <see cref="Action{T}" /> delegates to perform on each element of the <see
-        ///    cref="enumerable" /> . </param>
+        /// <param name="actions">
+        ///     The list of <see cref="Action{T}" /> delegates to perform on each element of the
+        ///     <see
+        ///         cref="enumerable" />
+        ///     .
+        /// </param>
         public static void ForEach<T>(this IEnumerable<T> enumerable, params Action<T>[] actions)
         {
             foreach (var item in enumerable)
@@ -33,11 +37,15 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Performs the specified action on each element of the <see cref="enumerable" /> .
+        ///     Performs the specified action on each element of the <see cref="enumerable" /> .
         /// </summary>
         /// <param name="enumerable"> The enuerable to perform the action on. </param>
-        /// <param name="actions"> The list of <see cref="Action{T}" /> delegates to perform on each element of the <see
-        ///    cref="enumerable" /> . </param>
+        /// <param name="actions">
+        ///     The list of <see cref="Action{T}" /> delegates to perform on each element of the
+        ///     <see
+        ///         cref="enumerable" />
+        ///     .
+        /// </param>
         public static void ForEach(this IEnumerable enumerable, params Action<object>[] actions)
         {
             foreach (var item in enumerable)
@@ -46,7 +54,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Adds multiple items to a list.
+        ///     Adds multiple items to a list.
         /// </summary>
         /// <param name="list"> The list to add the items. </param>
         /// <param name="items"> The items to be added. </param>
@@ -56,7 +64,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Removes multiple items from a list.
+        ///     Removes multiple items from a list.
         /// </summary>
         /// <param name="list"> The list to remove the items. </param>
         /// <param name="items"> The items to be removed. </param>
@@ -66,7 +74,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Adds multiple items to a collection.
+        ///     Adds multiple items to a collection.
         /// </summary>
         /// <typeparam name="T"> The type of the elements in the collection. </typeparam>
         /// <param name="collection"> The collection to add the items. </param>
@@ -77,7 +85,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Removes multiple items to a collection.
+        ///     Removes multiple items to a collection.
         /// </summary>
         /// <typeparam name="T"> The type of the elements in the collection. </typeparam>
         /// <param name="collection"> The collection to remove the items. </param>
@@ -88,7 +96,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Adds multiple key value pairs to a dictionary.
+        ///     Adds multiple key value pairs to a dictionary.
         /// </summary>
         /// <typeparam name="TKey"> The type of the key. </typeparam>
         /// <typeparam name="TValue"> The type of the value. </typeparam>
@@ -100,7 +108,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Removes multiple key value pairs from a dictionary.
+        ///     Removes multiple key value pairs from a dictionary.
         /// </summary>
         /// <typeparam name="TKey"> The type of the key. </typeparam>
         /// <typeparam name="TValue"> The type of the value. </typeparam>
@@ -112,7 +120,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Inserts an itme in a list according to the specified compare function.
+        ///     Inserts an itme in a list according to the specified compare function.
         /// </summary>
         /// <typeparam name="T"> The type of the items in the list. </typeparam>
         /// <param name="list"> The list to insert the item. </param>
@@ -126,7 +134,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        ///   Determines the index of the specified item in a list according to the given compare function.
+        ///     Determines the index of the specified item in a list according to the given compare function.
         /// </summary>
         /// <typeparam name="T"> The type of the items in the list. </typeparam>
         /// <param name="list"> The list to insert the item. </param>
@@ -145,7 +153,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        /// Appends the item if index is larger than the last item in the list, ignores the item if index is less than 0, otherwise, inserts the item at the index.
+        ///     Appends the item if index is larger than the last item in the list, ignores the item if index is less than 0, otherwise, inserts the item at the index.
         /// </summary>
         /// <param name="list">The list to insert the item.</param>
         /// <param name="index">The intended index to insert the item.</param>

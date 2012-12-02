@@ -4,12 +4,12 @@ using Codify.Entities;
 namespace Travlexer.Data
 {
     /// <summary>
-    /// A trip is a collection of routes.
+    ///     A trip is a collection of routes.
     /// </summary>
     public class Trip : NotifyableEntity
     {
         /// <summary>
-        /// Gets or sets the name of this trip.
+        ///     Gets or sets the name of this trip.
         /// </summary>
         public string Name
         {
@@ -21,7 +21,7 @@ namespace Travlexer.Data
         private const string NameProperty = "Name";
 
         /// <summary>
-        /// Gets or sets the routes in this trip.
+        ///     Gets or sets the routes in this trip.
         /// </summary>
         public ObservableCollection<Route> Routes { get; set; }
     }

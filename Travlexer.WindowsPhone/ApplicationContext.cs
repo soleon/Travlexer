@@ -27,7 +27,7 @@ namespace Travlexer.WindowsPhone
         #region Public Properties
 
         /// <summary>
-        ///   Gets a value indicating whether the network is available.
+        ///     Gets a value indicating whether the network is available.
         /// </summary>
         public static bool IsNetworkAvailable { get; private set; }
 
@@ -53,9 +53,11 @@ namespace Travlexer.WindowsPhone
         #region Public Methods
 
         /// <summary>
-        ///   Initializes the application context for use through out the entire application life time.
+        ///     Initializes the application context for use through out the entire application life time.
         /// </summary>
-        /// <param name="frame"> The <see cref="T:Microsoft.Phone.Controls.PhoneApplicationFrame" /> of the current application. </param>
+        /// <param name="frame">
+        ///     The <see cref="T:Microsoft.Phone.Controls.PhoneApplicationFrame" /> of the current application.
+        /// </param>
         public static void Initialize(PhoneApplicationFrame frame)
         {
             // Initialize Ioc container.
@@ -72,9 +74,11 @@ namespace Travlexer.WindowsPhone
         }
 
         /// <summary>
-        ///   Initializes the application context for use through out the entire application life time.
+        ///     Initializes the application context for use through out the entire application life time.
         /// </summary>
-        /// <param name="kernel"> An <see cref="T:Ninject.IKernel" /> that contains necessary configuration to initialize the application context. </param>
+        /// <param name="kernel">
+        ///     An <see cref="T:Ninject.IKernel" /> that contains necessary configuration to initialize the application context.
+        /// </param>
         public static void Initialize(IKernel kernel)
         {
             // Initialize contexts.

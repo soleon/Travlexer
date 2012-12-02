@@ -18,7 +18,7 @@ namespace Travlexer.WindowsPhone.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is KeyValuePair<ElementColor, string>)) return null;
-            return ((KeyValuePair<ElementColor, string>)value).Key;
+            return ((KeyValuePair<ElementColor, string>) value).Key;
         }
     }
 }

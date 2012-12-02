@@ -910,7 +910,8 @@
                     <CompositeTransform TranslateY="-300" />
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MinHeight="0" />
+                    <RowDefinition Height="Auto"
+                                   MinHeight="0" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>

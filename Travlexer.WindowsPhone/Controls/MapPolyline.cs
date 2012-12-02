@@ -40,7 +40,7 @@ namespace Travlexer.WindowsPhone.Controls
         }
 
         /// <summary>
-        ///   Defines the <see cref="Stroke" /> dependency property.
+        ///     Defines the <see cref="Stroke" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
             "Stroke",
@@ -50,7 +50,7 @@ namespace Travlexer.WindowsPhone.Controls
             );
 
         /// <summary>
-        ///   Called when <see cref="Stroke" /> changes.
+        ///     Called when <see cref="Stroke" /> changes.
         /// </summary>
         private void OnStrokeChanged(Brush newValue)
         {
@@ -69,7 +69,7 @@ namespace Travlexer.WindowsPhone.Controls
         }
 
         /// <summary>
-        ///   Defines the <see cref="ZoomLevel" /> dependency property.
+        ///     Defines the <see cref="ZoomLevel" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty ZoomLevelProperty = DependencyProperty.Register(
             "ZoomLevel",
@@ -78,7 +78,7 @@ namespace Travlexer.WindowsPhone.Controls
             new PropertyMetadata(double.MinValue, (s, e) => ((MapPolyline) s).OnZoomLevelChanged()));
 
         /// <summary>
-        ///   Called when <see cref="ZoomLevel" /> changes.
+        ///     Called when <see cref="ZoomLevel" /> changes.
         /// </summary>
         private void OnZoomLevelChanged()
         {
@@ -98,7 +98,7 @@ namespace Travlexer.WindowsPhone.Controls
         }
 
         /// <summary>
-        ///   Defines the <see cref="Locations" /> dependency property.
+        ///     Defines the <see cref="Locations" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty LocationsProperty = DependencyProperty.Register(
             "Locations",
@@ -107,7 +107,7 @@ namespace Travlexer.WindowsPhone.Controls
             new PropertyMetadata(default(LocationCollection), (s, e) => ((MapPolyline) s).OnLocationsChanged((LocationCollection) e.NewValue)));
 
         /// <summary>
-        ///   Called when <see cref="Locations" /> changes.
+        ///     Called when <see cref="Locations" /> changes.
         /// </summary>
         private void OnLocationsChanged(LocationCollection newValue)
         {

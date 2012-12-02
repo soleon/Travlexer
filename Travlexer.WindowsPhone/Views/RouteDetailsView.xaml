@@ -41,8 +41,8 @@
                                 <TextBlock Text="{Binding Index}"
                                            VerticalAlignment="Center"
                                            FontFamily="{StaticResource PhoneFontFamilyLight}"
-										   FontSize="{StaticResource PhoneFontSizeLarge}"
-										   Margin="{StaticResource PhoneHorizontalMargin}" />
+                                           FontSize="{StaticResource PhoneFontSizeLarge}"
+                                           Margin="{StaticResource PhoneHorizontalMargin}" />
                                 <TextBlock TextWrapping="Wrap"
                                            Grid.Column="1"
                                            Margin="{StaticResource PhoneHorizontalMargin}">
@@ -92,7 +92,7 @@
                                           StrokeStartLineCap="Round"
                                           StrokeThickness="{StaticResource MapPolylineInnerStrokeThickness}"
                                           x:Name="RoutePolyline"
-                                          ZoomLevel="{Binding ZoomLevel, ElementName=Map}"/>
+                                          ZoomLevel="{Binding ZoomLevel, ElementName=Map}" />
                     <Maps:Pushpin IsHitTestVisible="False"
                                   Location="{Binding CurrentLocation}"
                                   PositionOrigin="Center"
@@ -119,7 +119,9 @@
                                                     VerticalAlignment="Center"
                                                     HorizontalAlignment="Center"
                                                     Background="{StaticResource PhoneBackgroundBrush}"
-                                                    CornerRadius="11" Width="22" Height="22">
+                                                    CornerRadius="11"
+                                                    Width="22"
+                                                    Height="22">
                                                 <TextBlock Text="{Binding Index}"
                                                            FontWeight="Bold"
                                                            HorizontalAlignment="Center"
@@ -161,41 +163,47 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconDepart}" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           Fill="{StaticResource BrushIconDepart}"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Column="1"
                            Margin="{StaticResource PhoneMargin}"
                            TextWrapping="Wrap">
-                    <Run Text="{Binding DeparturePlace.Name}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                    <Run Text="{Binding DeparturePlace.Name}"
+                         FontSize="{StaticResource PhoneFontSizeLarge}" />
                     <LineBreak />
                     <Run Text="{Binding DeparturePlace.Address}" />
                 </TextBlock>
                 <Rectangle Grid.Row="1"
                            Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconArrive}" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           Fill="{StaticResource BrushIconArrive}"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Column="1"
                            Grid.Row="1"
                            Margin="{StaticResource PhoneMargin}"
                            TextWrapping="Wrap">
-                    <Run Text="{Binding ArrivalPlace.Name}" FontSize="{StaticResource PhoneFontSizeLarge}"  />
+                    <Run Text="{Binding ArrivalPlace.Name}"
+                         FontSize="{StaticResource PhoneFontSizeLarge}" />
                     <LineBreak />
                     <Run Text="{Binding ArrivalPlace.Address}" />
                 </TextBlock>
                 <Rectangle Grid.Row="2"
                            Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconRoad}" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           Fill="{StaticResource BrushIconRoad}"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Row="2"
                            Grid.Column="1"
                            Text="{Binding Distance}"
                            Margin="{StaticResource PhoneMargin}"
-						   FontSize="{StaticResource PhoneFontSizeLarge}"  />
+                           FontSize="{StaticResource PhoneFontSizeLarge}" />
                 <Rectangle Grid.Row="3"
                            Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconClock}" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           Fill="{StaticResource BrushIconClock}"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBlock Grid.Row="3"
                            Grid.Column="1"
                            Text="{Binding Duration}"
                            Margin="{StaticResource PhoneMargin}"
-						   FontSize="{StaticResource PhoneFontSizeLarge}"  />
+                           FontSize="{StaticResource PhoneFontSizeLarge}" />
             </Grid>
         </controls:PivotItem>
     </controls:Pivot>

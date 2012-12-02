@@ -6,12 +6,12 @@ using Codify.Commands;
 namespace Codify.Extensions
 {
     /// <summary>
-    /// Contains extensions for delegate types.
+    ///     Contains extensions for delegate types.
     /// </summary>
     public static class DelegateExtensions
     {
         /// <summary>
-        /// Executes the specified action if not null.
+        ///     Executes the specified action if not null.
         /// </summary>
         /// <param name="target">The target action to be executed.</param>
         public static void ExecuteIfNotNull(this Action target)
@@ -20,30 +20,34 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        /// Executes the event handler if not null.
+        ///     Executes the event handler if not null.
         /// </summary>
         /// <param name="handler">The handler to be executed.</param>
         /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
+        /// </param>
         public static void ExecuteIfNotNull(this EventHandler handler, object sender, EventArgs e)
         {
             handler.UseIfNotNull(h => h(sender, e));
         }
 
         /// <summary>
-        /// Executes the event handler if not null.
+        ///     Executes the event handler if not null.
         /// </summary>
         /// <typeparam name="TEventArgs">The type of the event args.</typeparam>
         /// <param name="handler">The handler to be executed.</param>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">
+        ///     The <see cref="System.EventArgs" /> instance containing the event data.
+        /// </param>
         public static void ExecuteIfNotNull<TEventArgs>(this EventHandler<TEventArgs> handler, object sender, TEventArgs e) where TEventArgs : EventArgs
         {
             handler.UseIfNotNull(h => h(sender, e));
         }
 
         /// <summary>
-        /// Executes the specified action if not null.
+        ///     Executes the specified action if not null.
         /// </summary>
         /// <typeparam name="T">Typr of the parameter of the action.</typeparam>
         /// <param name="action">The action to be executed.</param>
@@ -54,7 +58,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        /// Executes if not null.
+        ///     Executes if not null.
         /// </summary>
         /// <typeparam name="T1">The type of the first parameter of the action.</typeparam>
         /// <typeparam name="T2">The type of the second parameter fo the action.</typeparam>
@@ -67,18 +71,20 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        /// Executes the event handler if not null.
+        ///     Executes the event handler if not null.
         /// </summary>
         /// <param name="handler">The handler to be executed.</param>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="args">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="args">
+        ///     The <see cref="System.ComponentModel.PropertyChangedEventArgs" /> instance containing the event data.
+        /// </param>
         public static void ExecuteIfNotNull(this PropertyChangedEventHandler handler, object sender, PropertyChangedEventArgs args)
         {
             handler.UseIfNotNull(h => h(sender, args));
         }
 
         /// <summary>
-        /// Executes the command if not null.
+        ///     Executes the command if not null.
         /// </summary>
         /// <typeparam name="TParam">The type of the parameter.</typeparam>
         /// <param name="command">The command to be executed.</param>
@@ -89,7 +95,7 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        /// Executes the command if not null.
+        ///     Executes the command if not null.
         /// </summary>
         /// <param name="command">The command to be executed.</param>
         /// <param name="parameter">The parameter to be passed to the command.</param>
@@ -99,33 +105,43 @@ namespace Codify.Extensions
         }
 
         /// <summary>
-        /// Executes the function if not null.
+        ///     Executes the function if not null.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="function">The function to be executed.</param>
         /// <param name="defaultResult">Optional. The default result to be returned if the function is null.</param>
-        /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
+        /// <returns>
+        ///     A value of type <see cref="TResult" /> produced by the specified <see cref="function" />, or the value of
+        ///     <see
+        ///         cref="defaultResult" />
+        ///     if it is specified, or the system default value for type <see cref="TResult" />.
+        /// </returns>
         public static TResult ExecuteIfNotNull<TResult>(this Func<TResult> function, TResult defaultResult = default(TResult))
         {
             return function.UseIfNotNull(f => f(), defaultResult);
         }
 
         /// <summary>
-        /// Executes the function if not null.
+        ///     Executes the function if not null.
         /// </summary>
         /// <typeparam name="T">The type of the first parameter of the function.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="function">The function to be executed.</param>
         /// <param name="param">The first parameter of the function.</param>
         /// <param name="defaultResult">Optional. The default result to be returned if the function is null.</param>
-        /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
+        /// <returns>
+        ///     A value of type <see cref="TResult" /> produced by the specified <see cref="function" />, or the value of
+        ///     <see
+        ///         cref="defaultResult" />
+        ///     if it is specified, or the system default value for type <see cref="TResult" />.
+        /// </returns>
         public static TResult ExecuteIfNotNull<T, TResult>(this Func<T, TResult> function, T param, TResult defaultResult = default(TResult))
         {
             return function.UseIfNotNull(f => f(param), defaultResult);
         }
 
         /// <summary>
-        /// Executes the function if not null.
+        ///     Executes the function if not null.
         /// </summary>
         /// <typeparam name="T1">The type of the first parameter of the function.</typeparam>
         /// <typeparam name="T2">The type of the first parameter of the function.</typeparam>
@@ -134,14 +150,19 @@ namespace Codify.Extensions
         /// <param name="param1">The first parameter of the function.</param>
         /// <param name="param2">The second parameter of the function.</param>
         /// <param name="defaultResult">Optional. The default result to be returned if the function is null.</param>
-        /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
+        /// <returns>
+        ///     A value of type <see cref="TResult" /> produced by the specified <see cref="function" />, or the value of
+        ///     <see
+        ///         cref="defaultResult" />
+        ///     if it is specified, or the system default value for type <see cref="TResult" />.
+        /// </returns>
         public static TResult ExecuteIfNotNull<T1, T2, TResult>(this Func<T1, T2, TResult> function, T1 param1, T2 param2, TResult defaultResult = default(TResult))
         {
             return function.UseIfNotNull(f => f(param1, param2), defaultResult);
         }
 
         /// <summary>
-        /// Executes the function if not null.
+        ///     Executes the function if not null.
         /// </summary>
         /// <typeparam name="T1">The type of the first parameter of the function.</typeparam>
         /// <typeparam name="T2">The type of the second parameter of the function.</typeparam>
@@ -154,7 +175,12 @@ namespace Codify.Extensions
         /// <param name="param3">The thrid parameter of the function.</param>
         /// <param name="param4">The forth parameter of the function.</param>
         /// <param name="defaultResult">Optional. The default result to be returned if the function is null.</param>
-        /// <returns>A value of type <see cref="TResult"/> produced by the specified <see cref="function"/>, or the value of <see cref="defaultResult"/> if it is specified, or the system default value for type <see cref="TResult"/>.</returns>
+        /// <returns>
+        ///     A value of type <see cref="TResult" /> produced by the specified <see cref="function" />, or the value of
+        ///     <see
+        ///         cref="defaultResult" />
+        ///     if it is specified, or the system default value for type <see cref="TResult" />.
+        /// </returns>
         public static TResult ExecuteIfNotNull<T1, T2, T3, T4, TResult>(this Func<T1, T2, T3, T4, TResult> function, T1 param1, T2 param2, T3 param3, T4 param4, TResult defaultResult = default(TResult))
         {
             return function.UseIfNotNull(f => f(param1, param2, param3, param4), defaultResult);

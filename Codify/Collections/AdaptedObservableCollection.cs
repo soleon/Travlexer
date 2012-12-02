@@ -7,7 +7,7 @@ using Codify.Extensions;
 namespace Codify.Collections
 {
     /// <summary>
-    ///   A read only observable collection that synchronises to a source collection of a different item type.
+    ///     A read only observable collection that synchronises to a source collection of a different item type.
     /// </summary>
     /// <typeparam name="TSource"> The type of the items in the source collection. </typeparam>
     /// <typeparam name="TTarget"> The type of the items in this collection. </typeparam>
@@ -16,12 +16,12 @@ namespace Codify.Collections
         #region Private Members
 
         /// <summary>
-        ///   A reference to the function used to wrap source items.
+        ///     A reference to the function used to wrap source items.
         /// </summary>
         private readonly Func<TSource, TTarget> _converter;
 
         /// <summary>
-        ///   An internal list that keep track of the exact source items that maps 1 to 1 to target items in this collection.
+        ///     An internal list that keep track of the exact source items that maps 1 to 1 to target items in this collection.
         /// </summary>
         private readonly ConditionalObservableCollection<TSource> _conditionalSourceCollection;
 
@@ -31,11 +31,17 @@ namespace Codify.Collections
         #region Constructors
 
         /// <summary>
-        ///   Creates a new instance of <see cref="AdaptedObservableCollection{TSource, TTarget}" /> .
+        ///     Creates a new instance of <see cref="AdaptedObservableCollection{TSource, TTarget}" /> .
         /// </summary>
-        /// <param name="converter"> The function used to convert <see cref="TSource" /> items to <see cref="TTarget" /> items. </param>
-        /// <param name="source"> The observable collection of <see cref="TSource" /> items. </param>
-        /// <param name="filter"> The function used to filter <see cref="TSource" /> items. </param>
+        /// <param name="converter">
+        ///     The function used to convert <see cref="TSource" /> items to <see cref="TTarget" /> items.
+        /// </param>
+        /// <param name="source">
+        ///     The observable collection of <see cref="TSource" /> items.
+        /// </param>
+        /// <param name="filter">
+        ///     The function used to filter <see cref="TSource" /> items.
+        /// </param>
         /// <param name="comparer"> The comparer function to determine the order of the items in this collection. This function compares two specified TSource objects and returns an integer that indicates their relationship to one another in the sort order. Return less than 0 for object A is less than object B, 0 for object A equals to object B, greater than 0 for object A is greater than object B. </param>
         public AdaptedObservableCollection(Func<TSource, TTarget> converter, Func<TSource, bool> filter = null, Func<TSource, TSource, int> comparer = null, INotifyCollectionChanged source = null)
         {
@@ -53,7 +59,7 @@ namespace Codify.Collections
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets the source collection to bind to.
+        ///     Gets or sets the source collection to bind to.
         /// </summary>
         public INotifyCollectionChanged Source
         {
@@ -62,7 +68,7 @@ namespace Codify.Collections
         }
 
         /// <summary>
-        ///   Clears existing items and stops synchronising with the current <see cref="Source" /> collection.
+        ///     Clears existing items and stops synchronising with the current <see cref="Source" /> collection.
         /// </summary>
         public void Dispose()
         {
@@ -75,7 +81,7 @@ namespace Codify.Collections
         #region Public Methods
 
         /// <summary>
-        ///   Forces a refresh of this collection.
+        ///     Forces a refresh of this collection.
         /// </summary>
         public void Refresh()
         {

@@ -3,7 +3,7 @@ using System;
 namespace Travlexer.Data
 {
     /// <summary>
-    /// Extension methods for data entities.
+    ///     Extension methods for data entities.
     /// </summary>
     public static class DataExtensions
     {
@@ -25,7 +25,7 @@ namespace Travlexer.Data
             };
 
         /// <summary>
-        /// Gets a random color from the available <see cref="ElementColor"/> values.
+        ///     Gets a random color from the available <see cref="ElementColor" /> values.
         /// </summary>
         public static ElementColor GetRandomElementColor()
         {

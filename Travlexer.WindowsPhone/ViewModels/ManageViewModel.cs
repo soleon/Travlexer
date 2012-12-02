@@ -33,9 +33,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             var places = data.Places;
 
             Routes = new AdaptedObservableCollection<Route, RouteSummaryViewModel>(route => new RouteSummaryViewModel(route), source: _data.Routes);
-            Trips = new AdaptedObservableCollection<Trip, CheckableViewModel<Trip>>(trip => new CheckableViewModel<Trip> { Data = trip }, source: _data.Trips);
-            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
-            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> { Data = place }, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            PersonalPlaces = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => !place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
+            SearchResults = new AdaptedObservableCollection<Place, CheckableViewModel<Place>>(place => new CheckableViewModel<Place> {Data = place}, place => place.IsSearchResult, (p1, p2) => String.CompareOrdinal(p1.Name, p2.Name), places);
 
             CommandDeleteSelectedItems = new DelegateCommand(OnDeleteSelectedItems);
             CommandSelectAllItems = new DelegateCommand(OnSelectAllItems);
@@ -60,7 +59,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Event Handling
 
         /// <summary>
-        /// Captures navigate back event from this view model to perform some disposal actions.
+        ///     Captures navigate back event from this view model to perform some disposal actions.
         /// </summary>
         private void OnNavigating(object sender, NavigatingCancelEventArgs e)
         {
@@ -73,7 +72,6 @@ namespace Travlexer.WindowsPhone.ViewModels
                 // Dispose all necessary data here.
                 _navigationService.Navigating -= OnNavigating;
                 Routes.Dispose();
-                Trips.Dispose();
                 PersonalPlaces.Dispose();
                 SearchResults.Dispose();
             }
@@ -82,7 +80,6 @@ namespace Travlexer.WindowsPhone.ViewModels
                 // When the sender is not this view model, then we are navigating back from somewhere else to this view model.
                 // Refresh all necessary data here.
                 Routes.Refresh();
-                Trips.Refresh();
                 PersonalPlaces.Refresh();
                 SearchResults.Refresh();
             }
@@ -113,10 +110,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             switch (_selectedManagementSection)
             {
-                case ManagementSection.Trips:
-                    foreach (var trip in Trips)
-                        trip.IsChecked = false;
-                    break;
                 case ManagementSection.Routes:
                     foreach (var route in Routes)
                         route.IsChecked = false;
@@ -138,10 +131,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             switch (_selectedManagementSection)
             {
-                case ManagementSection.Trips:
-                    foreach (var trip in Trips)
-                        trip.IsChecked = true;
-                    break;
                 case ManagementSection.Routes:
                     foreach (var route in Routes)
                         route.IsChecked = true;
@@ -163,28 +152,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             switch (_selectedManagementSection)
             {
-                case ManagementSection.Trips:
-                    if (Trips.All(t => !t.IsChecked) ||
-                        MessageBox.Show("This will remove all selected trips including all routes and places in these trips. Do you want to continue?", "Remove Trips", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
-                        return;
-
-                    var selectedTrips = Trips.Where(tripVm => tripVm.IsChecked).Select(tripVm => tripVm.Data).ToArray();
-                    for (var i = selectedTrips.Length - 1; i >= 0; i--)
-                    {
-                        var trip = selectedTrips[i];
-                        var routes = trip.Routes;
-                        for (var j = routes.Count - 1; j >= 0; j--)
-                        {
-                            var route = routes[j];
-                            var id = route.DeparturePlaceId;
-                            if (id != Guid.Empty) _data.RemovePlace(route.DeparturePlaceId);
-                            id = route.ArrivalPlaceId;
-                            if (id != Guid.Empty) _data.RemovePlace(route.ArrivalPlaceId);
-                            _data.RemoveRoute(route);
-                        }
-                        _data.RemoveTrip(trip);
-                    }
-                    break;
                 case ManagementSection.Routes:
                     if (Routes.All(r => !r.IsChecked) ||
                         MessageBox.Show("This will remove all selected routes. Do you want to continue?", "Remove Routes", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
@@ -231,8 +198,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Public Properties
 
         public AdaptedObservableCollection<Route, RouteSummaryViewModel> Routes { get; private set; }
-
-        public AdaptedObservableCollection<Trip, CheckableViewModel<Trip>> Trips { get; private set; }
 
         public AdaptedObservableCollection<Place, CheckableViewModel<Place>> PersonalPlaces { get; private set; }
 

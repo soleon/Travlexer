@@ -5,37 +5,37 @@ using System.Windows.Interactivity;
 
 namespace Codify.Behaviors
 {
-	public class RealTimeBindingBehavior : Behavior<TextBox>
-	{
-		#region Private Members
+    public class RealTimeBindingBehavior : Behavior<TextBox>
+    {
+        #region Private Members
 
-		private TextBox _textBox;
-		private BindingExpression _expression;
+        private TextBox _textBox;
+        private BindingExpression _expression;
 
-		#endregion
+        #endregion
 
 
-		#region Event Handling
+        #region Event Handling
 
-		protected override void OnAttached()
-		{
-			_textBox = AssociatedObject;
-			if (_textBox != null)
-			{
-				_textBox.KeyUp += OnAssociatedTextBoxKeyUp;
-				_expression = _textBox.GetBindingExpression(TextBox.TextProperty);
-			}
-			base.OnAttached();
-		}
+        protected override void OnAttached()
+        {
+            _textBox = AssociatedObject;
+            if (_textBox != null)
+            {
+                _textBox.KeyUp += OnAssociatedTextBoxKeyUp;
+                _expression = _textBox.GetBindingExpression(TextBox.TextProperty);
+            }
+            base.OnAttached();
+        }
 
-		private void OnAssociatedTextBoxKeyUp(object sender, KeyEventArgs keyEventArgs)
-		{
-			if (_expression != null)
-			{
-				_expression.UpdateSource();
-			}
-		}
+        private void OnAssociatedTextBoxKeyUp(object sender, KeyEventArgs keyEventArgs)
+        {
+            if (_expression != null)
+            {
+                _expression.UpdateSource();
+            }
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

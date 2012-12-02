@@ -4,7 +4,7 @@ using Codify.Entities;
 namespace Codify.ViewModels
 {
     /// <summary>
-    /// Represents a view model that requires a parent view model.
+    ///     Represents a view model that requires a parent view model.
     /// </summary>
     /// <typeparam name="TParent">The type of the parent.</typeparam>
     public abstract class ViewModelBase<TParent> : NotifyableEntity, IDisposable where TParent : class
@@ -13,7 +13,7 @@ namespace Codify.ViewModels
         private TParent _parent;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewModelBase{TParent}"/> class.
+        ///     Initializes a new instance of the <see cref="ViewModelBase{TParent}" /> class.
         /// </summary>
         /// <param name="parent">The logical parent view model that owns this view model.</param>
         protected ViewModelBase(TParent parent = default(TParent))
@@ -22,7 +22,7 @@ namespace Codify.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets the logical parent view model that owns this view model.
+        ///     Gets or sets the logical parent view model that owns this view model.
         /// </summary>
         public TParent Parent
         {

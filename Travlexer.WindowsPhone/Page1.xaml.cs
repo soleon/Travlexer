@@ -2,11 +2,11 @@
 
 namespace Travlexer.WindowsPhone
 {
-	public partial class Page1 : PhoneApplicationPage
-	{
-		public Page1()
-		{
-			InitializeComponent();
-		}
-	}
+    public partial class Page1 : PhoneApplicationPage
+    {
+        public Page1()
+        {
+            InitializeComponent();
+        }
+    }
 }

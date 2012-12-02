@@ -1,7 +1,7 @@
 namespace Travlexer.Data
 {
     /// <summary>
-    ///   Defines the available colors for a <see cref="Place" /> .
+    ///     Defines the available colors for a <see cref="Place" /> .
     /// </summary>
     public enum ElementColor : byte
     {

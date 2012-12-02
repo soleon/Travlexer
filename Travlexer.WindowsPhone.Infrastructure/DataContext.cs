@@ -39,7 +39,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         #region Public Events
 
         /// <summary>
-        /// Occurs when <see cref="Places"/> collection is changed.
+        ///     Occurs when <see cref="Places" /> collection is changed.
         /// </summary>
         public event NotifyCollectionChangedEventHandler PlacesCollectionChanged
         {
@@ -53,7 +53,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         #region Public Properties
 
         /// <summary>
-        ///   Gets the collection that contains all user pins.
+        ///     Gets the collection that contains all user pins.
         /// </summary>
         public ReadOnlyObservableCollection<Place> Places { get; private set; }
 
@@ -61,70 +61,70 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private const string PlacesProperty = "Places";
 
         /// <summary>
-        ///   Gets or sets the selected place.
+        ///     Gets or sets the selected place.
         /// </summary>
         public ObservableValue<Place> SelectedPlace { get; set; }
 
         private const string SelectedPlaceProperty = "SelectedPlace";
 
         /// <summary>
-        /// Gets or sets the selected route.
+        ///     Gets or sets the selected route.
         /// </summary>
         public ObservableValue<Route> SelectedRoute { get; set; }
 
         private const string SelectedRouteProperty = "SelectedRoute";
 
         /// <summary>
-        ///   Gets or sets the map center geo-location.
+        ///     Gets or sets the map center geo-location.
         /// </summary>
         public ObservableValue<GeoCoordinate> MapCenter { get; private set; }
 
         private const string MapCenterProperty = "MapCenter";
 
         /// <summary>
-        ///   Gets or sets the map zoom level.
+        ///     Gets or sets the map zoom level.
         /// </summary>
         public ObservableValue<double> MapZoomLevel { get; private set; }
 
         private const string MapZoomLevelProperty = "MapZoomLevel";
 
         /// <summary>
-        ///   Gets or sets the search input.
+        ///     Gets or sets the search input.
         /// </summary>
         public ObservableValue<string> SearchInput { get; private set; }
 
         private const string SearchInputProperty = "SearchInput";
 
         /// <summary>
-        ///   Gets the route method.
+        ///     Gets the route method.
         /// </summary>
         public ObservableValue<RouteMethod> RouteMethod { get; private set; }
 
         private const string RouteMethodProperty = "RouteMethod";
 
         /// <summary>
-        ///   Gets the route mode.
+        ///     Gets the route mode.
         /// </summary>
         public ObservableValue<TravelMode> TravelMode { get; private set; }
 
         private const string TravelModeProperty = "TravelMode";
 
         /// <summary>
-        ///   Gets or sets the map base layer.
+        ///     Gets or sets the map base layer.
         /// </summary>
         public ObservableValue<Layer> MapBaseLayer { get; private set; }
 
         private const string MapBaseLayerProperty = "MapBaseLayer";
 
         /// <summary>
-        ///   Gets the map overlays.
+        ///     Gets the map overlays.
         /// </summary>
         public ObservableCollection<Layer> MapOverlays { get; private set; }
 
         private const string MapOverlayProperty = "MapOverlay";
 
         /// <summary>
-        ///   Gets the collection of all routes planned by the user.
+        ///     Gets the collection of all routes planned by the user.
         /// </summary>
         public ReadOnlyObservableCollection<Route> Routes { get; private set; }
 
@@ -132,39 +132,39 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private const string RoutesProperty = "Routes";
 
         /// <summary>
-        ///   Gets the collection of all trips planned by the user.
+        ///     Gets the unit system that is currently in use.
         /// </summary>
-        public ReadOnlyObservableCollection<Trip> Trips { get; private set; }
+        public ObservableValue<UnitSystems> UnitSystem { get; private set; }
 
-        private readonly ObservableCollection<Trip> _trips;
-        private const string TripsProperty = "Trips";
+        private const string UnitSystemProperty = "UnitSystem";
 
         /// <summary>
-        ///   Gets the unit system that is currently in use.
+        ///     Gets the last ran version.
         /// </summary>
-        public ObservableValue<Units> Unit { get; private set; }
+        public Version LastRanVersion { get; private set; }
 
-        private const string UnitProperty = "Unit";
+        private const string LastRanVersionProperty = "LastRanVersion";
+
 
         /// <summary>
-        ///   Gets a dictionary that contains available place icon enums mapping to their display names.
+        ///     Gets a dictionary that contains available place icon enums mapping to their display names.
         /// </summary>
         public Dictionary<PlaceIcon, string> PlaceIconMap
         {
-            get { return _placeIconMap; }
+            get { return StaticPlaceIconMap; }
         }
 
-        private static readonly Dictionary<PlaceIcon, string> _placeIconMap;
+        private static readonly Dictionary<PlaceIcon, string> StaticPlaceIconMap;
 
         /// <summary>
-        ///   Gets a dictionary that contains available element color enums mapping to their display names.
+        ///     Gets a dictionary that contains available element color enums mapping to their display names.
         /// </summary>
         public Dictionary<ElementColor, string> ElementColorMap
         {
-            get { return _elementColorMap; }
+            get { return StaticElementColorMap; }
         }
 
-        private static readonly Dictionary<ElementColor, string> _elementColorMap;
+        private static readonly Dictionary<ElementColor, string> StaticElementColorMap;
 
         #endregion
 
@@ -172,7 +172,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         #region Public Methods
 
         /// <summary>
-        ///   Adds a new place.
+        ///     Adds a new place.
         /// </summary>
         /// <param name="location"> The location of the place. </param>
         public Place AddNewPlace(Location location)
@@ -187,7 +187,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Removes the existing place.
+        ///     Removes the existing place.
         /// </summary>
         /// <param name="place"> The place to be removed. </param>
         public void RemovePlace(Place place)
@@ -199,7 +199,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Removes the place specified by the id.
+        ///     Removes the place specified by the id.
         /// </summary>
         /// <param name="id"> The id of the place to be removed. </param>
         public void RemovePlace(Guid id)
@@ -208,7 +208,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Removes the specified route.
+        ///     Removes the specified route.
         /// </summary>
         public void RemoveRoute(Route route)
         {
@@ -218,7 +218,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Removes all places.
+        ///     Removes all places.
         /// </summary>
         public void ClearPlaces()
         {
@@ -226,7 +226,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Removes all search results.
+        ///     Removes all search results.
         /// </summary>
         public void ClearSearchResults()
         {
@@ -236,7 +236,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Gets information of the specified <see cref="Travlexer.Data.Place" />.
+        ///     Gets information of the specified <see cref="Travlexer.Data.Place" />.
         /// </summary>
         /// <param name="place"> The place to get the information for. </param>
         /// <param name="callback"> The callback to be executed after this process is finished. </param>
@@ -268,7 +268,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Gets information of the specified <see cref="Travlexer.Data.Place" />.
+        ///     Gets information of the specified <see cref="Travlexer.Data.Place" />.
         /// </summary>
         /// <param name="location"> The geo-location to get the information for. </param>
         /// <param name="callback"> The callback to be executed after this process is finished. </param>
@@ -285,7 +285,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Gets the details for the specified place by its reference key.
+        ///     Gets the details for the specified place by its reference key.
         /// </summary>
         /// <param name="place"> The place to get the details for. </param>
         /// <param name="callback"> The callback to be executed after the process is finished. </param>
@@ -322,7 +322,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Gets place details by its reference key.
+        ///     Gets place details by its reference key.
         /// </summary>
         /// <param name="reference"> The reference key to the place. </param>
         /// <param name="callback"> The callback to be executed when this process is finished. </param>
@@ -342,7 +342,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Searches for places that matches the input.
+        ///     Searches for places that matches the input.
         /// </summary>
         /// <param name="baseLocation"> The geo-coordinate around which to retrieve place information. </param>
         /// <param name="input"> The input to search places. </param>
@@ -388,14 +388,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
                             place.IsSearchResult = true;
                             place.DataState = DataStates.Finished;
                             _places.Add(place);
-                            return new List<Place> { place };
+                            return new List<Place> {place};
                         },
                         callback);
                 });
         }
 
         /// <summary>
-        ///   Gets the suggestions based on the input and center location.
+        ///     Gets the suggestions based on the input and center location.
         /// </summary>
         /// <param name="location"> The center location to bias the suggestion result. </param>
         /// <param name="input"> The input to suggest base on. </param>
@@ -409,7 +409,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Cancels the current get suggestions operation if there is any.
+        ///     Cancels the current get suggestions operation if there is any.
         /// </summary>
         public void CancelGetSuggestions()
         {
@@ -417,7 +417,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Finds the route between the depart location and arrive location.
+        ///     Finds the route between the depart location and arrive location.
         /// </summary>
         /// <param name="departure"> The depart location. </param>
         /// <param name="arrival"> The arrive location. </param>
@@ -427,7 +427,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public void GetRoute(string departure, string arrival, TravelMode mode, RouteMethod method, Action<CallbackEventArgs<Route>> callback = null)
         {
             ProcessCall<RoutesResponse, List<Codify.GoogleMaps.Entities.Route>, Route>(
-                (c, r) => c.GetDirections(departure, arrival, mode.ToGoogleTravelMode(), method.ToGoogleRouteMethod(), Unit.Value.ToGoogleUnits(), r),
+                (c, r) => c.GetDirections(departure, arrival, mode.ToGoogleTravelMode(), method.ToGoogleRouteMethod(), UnitSystem.Value.ToGoogleUnits(), r),
                 response =>
                 {
                     var googleRoute = response.Result.FirstOrDefault();
@@ -447,7 +447,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Clears all routes.
+        ///     Clears all routes.
         /// </summary>
         public void ClearRoutes()
         {
@@ -455,7 +455,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Saves the data context to the storage provided by <see cref="_storageProvider" />.
+        ///     Saves the data context to the storage provided by <see cref="_storageProvider" />.
         /// </summary>
         public void SaveContext()
         {
@@ -494,10 +494,16 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
             // Save selected route ID.
             _storageProvider.SaveSetting(SelectedRouteProperty, SelectedRoute.Value.UseIfNotNull(r => r.Id));
+
+            // Save last ran version.
+            _storageProvider.SaveSetting(LastRanVersionProperty, new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version.ToString());
+
+            // Save unit system.
+            _storageProvider.SaveSetting(UnitSystemProperty, UnitSystem.Value);
         }
 
         /// <summary>
-        ///   Loads the data context from the storage provided by <see cref="_storageProvider" />.
+        ///     Loads the data context from the storage provided by <see cref="_storageProvider" />.
         /// </summary>
         public void LoadContext()
         {
@@ -557,10 +563,20 @@ namespace Travlexer.WindowsPhone.Infrastructure
             Guid selectedRouteId;
             if (_storageProvider.TryGetSetting(SelectedPlaceProperty, out selectedRouteId) && !_routes.IsNullOrEmpty())
                 SelectedRoute.Value = _routes.FirstOrDefault(r => r.Id == selectedRouteId);
+
+            // Load Last ran version.
+            string lastRanVersion;
+            if (_storageProvider.TryGetSetting(LastRanVersionProperty, out lastRanVersion))
+                LastRanVersion = new Version(lastRanVersion);
+
+            // Load unit system.
+            UnitSystems unitSystem;
+            if (_storageProvider.TryGetSetting(UnitSystemProperty, out unitSystem))
+                UnitSystem.Value = unitSystem;
         }
 
         /// <summary>
-        ///   Toggles the specified map overlay.
+        ///     Toggles the specified map overlay.
         /// </summary>
         public void ToggleMapOverlay(Layer layer)
         {
@@ -571,24 +587,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         /// <summary>
-        ///   Removes the specified trip.
-        /// </summary>
-        /// <param name="trip"> The trip to be removed. </param>
-        public void RemoveTrip(Trip trip)
-        {
-            _trips.Remove(trip);
-        }
-
-        /// <summary>
-        ///   Removes all trips.
-        /// </summary>
-        public void ClearTrips()
-        {
-            _trips.Clear();
-        }
-
-        /// <summary>
-        ///   Removes all personal places.
+        ///     Removes all personal places.
         /// </summary>
         public void ClearPersonalPlaces()
         {
@@ -619,7 +618,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                     (data = r.Data) == null ||
                     data.Status != StatusCodes.OK ||
                     (result = data.Result) == null ||
-                    (result is IList && ((IList)result).Count == 0))
+                    (result is IList && ((IList) result).Count == 0))
                 {
                     var exception = r.ErrorException;
                     if (exception != null)
@@ -652,7 +651,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                     (data = r.Data) == null ||
                     data.Status != StatusCodes.OK ||
                     (result = data.Result) == null ||
-                    (result is IList && ((IList)result).Count == 0))
+                    (result is IList && ((IList) result).Count == 0))
                 {
                     var exception = r.ErrorException;
                     if (exception != null)
@@ -675,7 +674,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
         static DataContext()
         {
-            _placeIconMap = new Dictionary<PlaceIcon, string>
+            StaticPlaceIconMap = new Dictionary<PlaceIcon, string>
             {
                 {PlaceIcon.General, "general"},
                 {PlaceIcon.Recreation, "recreation"},
@@ -693,15 +692,15 @@ namespace Travlexer.WindowsPhone.Infrastructure
                 {PlaceIcon.Ferry, "ferry"},
                 {PlaceIcon.Casino, "casino"},
             };
-            _placeIconMap = _placeIconMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-            _elementColorMap = new Dictionary<ElementColor, string>();
-            foreach (var field in typeof(ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
-                _elementColorMap.Add((ElementColor)field.GetValue(null), field.Name.ToLower());
-            _elementColorMap = _elementColorMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+            StaticPlaceIconMap = StaticPlaceIconMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+            StaticElementColorMap = new Dictionary<ElementColor, string>();
+            foreach (var field in typeof (ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
+                StaticElementColorMap.Add((ElementColor) field.GetValue(null), field.Name.ToLower());
+            StaticElementColorMap = StaticElementColorMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="DataContext" /> class.
+        ///     Initializes a new instance of the <see cref="DataContext" /> class.
         /// </summary>
         public DataContext(IStorage storageProvider, ISerializer<byte[]> binerySerializer, IGoogleMapsClient googleMapsClient)
         {
@@ -715,14 +714,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
             SearchInput = new ObservableValue<string>();
             RouteMethod = new ObservableValue<RouteMethod>();
             TravelMode = new ObservableValue<TravelMode>();
-            Unit = new ObservableValue<Units>();
+            UnitSystem = new ObservableValue<UnitSystems>();
             SelectedPlace = new ObservableValue<Place>();
             SelectedRoute = new ObservableValue<Route>();
 
             MapOverlays = new ObservableCollection<Layer>();
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
             Routes = new ReadOnlyObservableCollection<Route>(_routes = new ObservableCollection<Route>());
-            Trips = new ReadOnlyObservableCollection<Trip>(_trips = new ObservableCollection<Trip>());
         }
 
         #endregion

@@ -1,4 +1,4 @@
 namespace Travlexer.WindowsPhone.ViewModels
 {
-	public class AppBarMenuItemViewModel : AppBarItemViewModel { }
+    public class AppBarMenuItemViewModel : AppBarItemViewModel {}
 }

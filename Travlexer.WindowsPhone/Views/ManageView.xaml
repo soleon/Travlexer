@@ -4,9 +4,9 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
-                            xmlns:ViewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
-                            xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
-                            xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
+                            xmlns:viewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
+                            xmlns:shellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
+                            xmlns:travelexerControls="clr-namespace:Travlexer.WindowsPhone.Controls"
                             x:Class="Travlexer.WindowsPhone.Views.ManageView"
                             mc:Ignorable="d"
                             d:DesignHeight="768"
@@ -16,7 +16,7 @@
                             Name="Page">
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="GoButtonStyle"
-               TargetType="Controls:CircleButton"
+               TargetType="travelexerControls:CircleButton"
                BasedOn="{StaticResource CircleButtonDefaultStyle}">
             <Setter Property="Grid.Column"
                     Value="2" />
@@ -55,12 +55,12 @@
                              FontSize="{StaticResource PhoneFontSizeSmall}" />
                     </TextBlock>
                 </Button>
-                <Controls:CircleButton Command="{Binding DataContext.CommandGoToPlace, ElementName=Page}"
-                                       CommandParameter="{Binding Data}"
-                                       Style="{StaticResource GoButtonStyle}">
+                <travelexerControls:CircleButton Command="{Binding DataContext.CommandGoToPlace, ElementName=Page}"
+                                                 CommandParameter="{Binding Data}"
+                                                 Style="{StaticResource GoButtonStyle}">
                     <Rectangle Fill="{StaticResource BrushIconRightArrow}"
                                Style="{StaticResource IconRectangleStyle}" />
-                </Controls:CircleButton>
+                </travelexerControls:CircleButton>
             </Grid>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
@@ -68,21 +68,21 @@
                     Name="ManagementPivot"
                     SelectionChanged="OnManagementPivotSelectionChanged">
         <controls:PivotItem Header="pins"
-                            ViewModels:DataExtensions.ManagementSection="PersonalPlaces">
+                            viewModels:DataExtensions.ManagementSection="PersonalPlaces">
             <ScrollViewer>
                 <ItemsControl ItemsSource="{Binding PersonalPlaces}"
                               ItemTemplate="{StaticResource PlaceItemDataTemplate}" />
             </ScrollViewer>
         </controls:PivotItem>
         <controls:PivotItem Header="search results"
-                            ViewModels:DataExtensions.ManagementSection="SearchResults">
+                            viewModels:DataExtensions.ManagementSection="SearchResults">
             <ScrollViewer>
                 <ItemsControl ItemsSource="{Binding SearchResults}"
                               ItemTemplate="{StaticResource PlaceItemDataTemplate}" />
             </ScrollViewer>
         </controls:PivotItem>
         <controls:PivotItem Header="routes"
-                            ViewModels:DataExtensions.ManagementSection="Routes">
+                            viewModels:DataExtensions.ManagementSection="Routes">
             <ScrollViewer>
                 <ItemsControl ItemsSource="{Binding Routes}">
                     <ItemsControl.ItemTemplate>
@@ -140,19 +140,19 @@
             </ScrollViewer>
         </controls:PivotItem>
     </controls:Pivot>
-    <ShellExtension:ApplicationBar.ApplicationBar>
-        <ShellExtension:ApplicationBar x:Name="AppBar">
-            <ShellExtension:ApplicationBar.Buttons>
-                <ShellExtension:ApplicationBarIconButton IconUri="\Assets\CheckList.png"
-                                                         Text="all"
+    <shellExtension:ApplicationBar.ApplicationBar>
+        <shellExtension:ApplicationBar x:Name="AppBar">
+            <shellExtension:ApplicationBar.Buttons>
+                <shellExtension:ApplicationBarIconButton IconUri="\Assets\CheckList.png"
+                                                         Text="select all"
                                                          Command="{Binding CommandSelectAllItems}" />
-                <ShellExtension:ApplicationBarIconButton IconUri="\Assets\List.png"
-                                                         Text="none"
+                <shellExtension:ApplicationBarIconButton IconUri="\Assets\List.png"
+                                                         Text="select none"
                                                          Command="{Binding CommandClearSelection}" />
-                <ShellExtension:ApplicationBarIconButton IconUri="\Assets\Delete.png"
+                <shellExtension:ApplicationBarIconButton IconUri="\Assets\Delete.png"
                                                          Text="delete"
                                                          Command="{Binding CommandDeleteSelectedItems}" />
-            </ShellExtension:ApplicationBar.Buttons>
-        </ShellExtension:ApplicationBar>
-    </ShellExtension:ApplicationBar.ApplicationBar>
+            </shellExtension:ApplicationBar.Buttons>
+        </shellExtension:ApplicationBar>
+    </shellExtension:ApplicationBar.ApplicationBar>
 </phone:PhoneApplicationPage>

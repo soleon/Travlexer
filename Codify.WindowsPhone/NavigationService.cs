@@ -52,11 +52,11 @@ namespace Codify.WindowsPhone
                 var assemblyName = assembly.FullName;
                 assemblyName = assemblyName.Substring(0, assemblyName.IndexOf(",", StringComparison.Ordinal));
                 var viewType = assembly.GetTypes()
-                    .FirstOrDefault(t =>
-                    {
-                        var attr = Attribute.GetCustomAttribute(t, typeof (ViewModelTypeAttribute)) as ViewModelTypeAttribute;
-                        return attr != null && attr.Type == viewModelType;
-                    });
+                                       .FirstOrDefault(t =>
+                                       {
+                                           var attr = Attribute.GetCustomAttribute(t, typeof (ViewModelTypeAttribute)) as ViewModelTypeAttribute;
+                                           return attr != null && attr.Type == viewModelType;
+                                       });
                 if (viewType == null || viewType.FullName == null)
                 {
                     throw new InvalidOperationException("Navigation failed. There is no view decorated with ViewModelTypeAttribute that maps to " + viewModelType + ".");
@@ -101,7 +101,7 @@ namespace Codify.WindowsPhone
         #region Public Events
 
         /// <summary>
-        ///   This event is raised when the hardware Back button is pressed.
+        ///     This event is raised when the hardware Back button is pressed.
         /// </summary>
         public event EventHandler<CancelEventArgs> BackKeyPress
         {
@@ -110,7 +110,7 @@ namespace Codify.WindowsPhone
         }
 
         /// <summary>
-        ///   This event is raised during a Microsoft.Phone.Controls.PhoneApplicationFrame.RemoveBackEntry operation or during a normal back navigation after the System.Windows.Navigation.NavigationService.Navigated event has been raised.
+        ///     This event is raised during a Microsoft.Phone.Controls.PhoneApplicationFrame.RemoveBackEntry operation or during a normal back navigation after the System.Windows.Navigation.NavigationService.Navigated event has been raised.
         /// </summary>
         public event EventHandler<JournalEntryRemovedEventArgs> JournalEntryRemoved
         {
@@ -119,7 +119,7 @@ namespace Codify.WindowsPhone
         }
 
         /// <summary>
-        ///   This event is raised when the shell chrome is covering the frame.
+        ///     This event is raised when the shell chrome is covering the frame.
         /// </summary>
         public event EventHandler<ObscuredEventArgs> Obscured
         {
@@ -128,7 +128,7 @@ namespace Codify.WindowsPhone
         }
 
         /// <summary>
-        ///   Raised when the Orientation property has changed.
+        ///     Raised when the Orientation property has changed.
         /// </summary>
         public event EventHandler<OrientationChangedEventArgs> OrientationChanged
         {
@@ -137,7 +137,7 @@ namespace Codify.WindowsPhone
         }
 
         /// <summary>
-        ///   This event is raised when the shell chrome is no longer covering the frame.
+        ///     This event is raised when the shell chrome is no longer covering the frame.
         /// </summary>
         public event EventHandler Unobscured
         {
@@ -146,7 +146,7 @@ namespace Codify.WindowsPhone
         }
 
         /// <summary>
-        ///   Occurs when a new navigation is requested.
+        ///     Occurs when a new navigation is requested.
         /// </summary>
         public event NavigatingCancelEventHandler Navigating;
 

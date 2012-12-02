@@ -2,19 +2,19 @@ using Microsoft.Phone.Shell;
 
 namespace Codify.WindowsPhone.ShellExtension
 {
-	public class ApplicationBarMenuItem : ApplicationBarItemBase<IApplicationBarMenuItem>
-	{
-		#region Constructors
+    public class ApplicationBarMenuItem : ApplicationBarItemBase<IApplicationBarMenuItem>
+    {
+        #region Constructors
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ApplicationBarMenuItem"/> class.
-		/// </summary>
-		public ApplicationBarMenuItem()
-		{
-			Item = new Microsoft.Phone.Shell.ApplicationBarMenuItem();
-			Item.Click += OnExecuteCommand;
-		}
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ApplicationBarMenuItem" /> class.
+        /// </summary>
+        public ApplicationBarMenuItem()
+        {
+            Item = new Microsoft.Phone.Shell.ApplicationBarMenuItem();
+            Item.Click += OnExecuteCommand;
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

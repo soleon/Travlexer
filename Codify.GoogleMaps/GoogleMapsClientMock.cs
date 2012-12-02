@@ -6,11 +6,11 @@ using RestSharp;
 
 namespace Codify.GoogleMaps
 {
-	public class GoogleMapsClientMock : IGoogleMapsClient
-	{
-		#region Constants
+    public class GoogleMapsClientMock : IGoogleMapsClient
+    {
+        #region Constants
 
-		private const string GeocodeResponse = @"
+        private const string GeocodeResponse = @"
 {
    'results' : [
 	  {
@@ -203,7 +203,7 @@ namespace Codify.GoogleMaps
 }
 ";
 
-	    private const string RoutesResponse = @"
+        private const string RoutesResponse = @"
 {
    'routes' : [
       {
@@ -346,56 +346,54 @@ namespace Codify.GoogleMaps
    'status' : 'OK'
 }
 ";
-		#endregion
+
+        #endregion
 
 
-		#region Public Methods
+        #region Public Methods
 
         public void GetPlaces(LatLng location, Action<IRestResponse<ListResponse<Place>>> callback)
-		{
-			var result = new RestResponse<ListResponse<Place>>
-			{
-				StatusCode = HttpStatusCode.OK,
-				Data = JsonConvert.DeserializeObject<ListResponse<Place>>(GeocodeResponse)
-			};
-			callback(result);
-		}
+        {
+            var result = new RestResponse<ListResponse<Place>>
+            {
+                StatusCode = HttpStatusCode.OK,
+                Data = JsonConvert.DeserializeObject<ListResponse<Place>>(GeocodeResponse)
+            };
+            callback(result);
+        }
 
         public void GetPlaces(string address, Action<IRestResponse<ListResponse<Place>>> callback = null)
-		{
-			throw new NotImplementedException();
-		}
+        {
+            throw new NotImplementedException();
+        }
 
         public void GetPlaceDetails(string reference, Action<IRestResponse<Response<Place>>> callback = null)
-		{
-			throw new NotImplementedException();
-		}
+        {
+            throw new NotImplementedException();
+        }
 
         public void GetSuggestions(LatLng center, string input, Action<IRestResponse<AutoCompleteResponse>> callback = null)
-		{
-			throw new NotImplementedException();
-		}
+        {
+            throw new NotImplementedException();
+        }
 
         public void Search(LatLng center, string input, Action<IRestResponse<ListResponse<Place>>> callback = null)
-		{
-			throw new NotImplementedException();
-		}
+        {
+            throw new NotImplementedException();
+        }
 
-		public void CancelGetSuggestions()
-		{
-
-		}
+        public void CancelGetSuggestions() {}
 
         public void GetDirections(string origin, string destination, TravelMode mode, RouteMethod method, Units unit, Action<IRestResponse<RoutesResponse>> callback)
-	    {
-	        var result = new RestResponse<RoutesResponse>
-	        {
-	            StatusCode = HttpStatusCode.OK,
-	            Data = JsonConvert.DeserializeObject<RoutesResponse>(RoutesResponse)
-	        };
-	        callback(result);
-	    }
+        {
+            var result = new RestResponse<RoutesResponse>
+            {
+                StatusCode = HttpStatusCode.OK,
+                Data = JsonConvert.DeserializeObject<RoutesResponse>(RoutesResponse)
+            };
+            callback(result);
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

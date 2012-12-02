@@ -18,10 +18,10 @@ namespace Travlexer.WindowsPhone.Views
             InitializeComponent();
 
             _pinSelectedSearchResultButton = new ApplicationBarIconButton
-                                             {
-                                                 IconUri = new Uri("\\Assets\\AddPlace.png", UriKind.Relative),
-                                                 Text = "mark personal"
-                                             };
+            {
+                IconUri = new Uri("\\Assets\\AddPlace.png", UriKind.Relative),
+                Text = "pin search"
+            };
             _pinSelectedSearchResultButton.SetBinding(ApplicationBarIconButton.CommandProperty, new Binding("CommandPinSelectedSearchResult") {Mode = BindingMode.OneTime});
 
             SetBinding(SelectedManagementSectionProperty, new Binding("SelectedManagementSection") {Mode = BindingMode.TwoWay});

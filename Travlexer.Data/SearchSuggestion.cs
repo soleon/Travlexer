@@ -1,10 +1,10 @@
 namespace Travlexer.Data
 {
-	public class SearchSuggestion
-	{
-		public string Description { get; set; }
+    public class SearchSuggestion
+    {
+        public string Description { get; set; }
 
-		public string Reference { get; set; }
+        public string Reference { get; set; }
 
         //public static implicit operator SearchSuggestion(Suggestion suggestion)
         //{
@@ -18,5 +18,5 @@ namespace Travlexer.Data
         //        Reference = suggestion.Reference
         //    };
         //}
-	}
+    }
 }

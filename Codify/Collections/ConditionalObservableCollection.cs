@@ -9,7 +9,7 @@ using Codify.Extensions;
 namespace Codify.Collections
 {
     /// <summary>
-    ///   A read only observable collection that conditionally synchronises to a source <see cref="INotifyCollectionChanged" /> collection.
+    ///     A read only observable collection that conditionally synchronises to a source <see cref="INotifyCollectionChanged" /> collection.
     /// </summary>
     /// <typeparam name="T"> The type of items in the collection. </typeparam>
     public class ConditionalObservableCollection<T> : ObservableCollection<T>, IDisposable
@@ -17,7 +17,7 @@ namespace Codify.Collections
         #region Private Fields
 
         /// <summary>
-        ///   A reference to the function used to determine if the source item passes the condition.
+        ///     A reference to the function used to determine if the source item passes the condition.
         /// </summary>
         private readonly Func<T, bool> _filter;
 
@@ -27,7 +27,7 @@ namespace Codify.Collections
         #region Constructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="ConditionalObservableCollection{T}" /> class that conditionally synchronises with the source collection.
+        ///     Initializes a new instance of the <see cref="ConditionalObservableCollection{T}" /> class that conditionally synchronises with the source collection.
         /// </summary>
         /// <param name="filter"> The filter function to determine which items to sync from the source collection. </param>
         /// <param name="comparer"> The comparer function to determine the order of the items in this collection. This function compares two specified TSource objects and returns an integer that indicates their relationship to one another in the sort order. Return less than 0 for object A is less than object B, 0 for object A equals to object B, greater than 0 for object A is greater than object B. </param>
@@ -45,7 +45,7 @@ namespace Codify.Collections
         #region Public Properties
 
         /// <summary>
-        ///   Gets or sets the source collection to bind to.
+        ///     Gets or sets the source collection to bind to.
         /// </summary>
         public INotifyCollectionChanged Source
         {
@@ -68,7 +68,7 @@ namespace Codify.Collections
         private INotifyCollectionChanged _source;
 
         /// <summary>
-        ///   Gets or sets the function used to determine the order of the items in this collection.
+        ///     Gets or sets the function used to determine the order of the items in this collection.
         /// </summary>
         public Func<T, T, int> Comparer
         {
@@ -94,16 +94,16 @@ namespace Codify.Collections
         #region Public Methods
 
         /// <summary>
-        /// Forces a refresh of this collection.
+        ///     Forces a refresh of this collection.
         /// </summary>
         public void Refresh()
         {
             OnSourceReset();
-            OnSourceItemsAdded((IEnumerable)_source);
+            OnSourceItemsAdded((IEnumerable) _source);
         }
 
         /// <summary>
-        /// Clears existing items and stops synchronising with the current <see cref="Source"/> collection.
+        ///     Clears existing items and stops synchronising with the current <see cref="Source" /> collection.
         /// </summary>
         public void Dispose()
         {
@@ -116,9 +116,11 @@ namespace Codify.Collections
         #region Private Methods
 
         /// <summary>
-        ///   Determines if the given item meets the condition of this collection.
+        ///     Determines if the given item meets the condition of this collection.
         /// </summary>
-        /// <returns> <c>true</c> if filter passes or does not exist, otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if filter passes or does not exist, otherwise <c>false</c> .
+        /// </returns>
         private bool IsValidItem(T sourceItem)
         {
             return _filter == null || _filter(sourceItem);
@@ -163,7 +165,7 @@ namespace Codify.Collections
         #region Event Handling
 
         /// <summary>
-        ///   Called when the source is changed.
+        ///     Called when the source is changed.
         /// </summary>
         /// <param name="oldSource"> The old source value. </param>
         /// <param name="newSource"> The new source value. </param>
@@ -179,14 +181,14 @@ namespace Codify.Collections
             if (newSource == null) return;
 
             // Sync immediately
-            OnSourceItemsAdded((IEnumerable)newSource);
+            OnSourceItemsAdded((IEnumerable) newSource);
 
             // Bind new source collection
             newSource.CollectionChanged += OnSourceItemCollectionChanged;
         }
 
         /// <summary>
-        ///   Called when the source items have changed
+        ///     Called when the source items have changed
         /// </summary>
         /// <param name="sender"> </param>
         /// <param name="e"> </param>
@@ -203,7 +205,7 @@ namespace Codify.Collections
                     break;
 
                 case NotifyCollectionChangedAction.Replace:
-                    OnSourceItemReplaced((T)e.OldItems[0], (T)e.NewItems[0]);
+                    OnSourceItemReplaced((T) e.OldItems[0], (T) e.NewItems[0]);
                     break;
 
                 case NotifyCollectionChangedAction.Reset:
@@ -213,7 +215,7 @@ namespace Codify.Collections
         }
 
         /// <summary>
-        ///   Called when a collection of items is added in the source collection.
+        ///     Called when a collection of items is added in the source collection.
         /// </summary>
         /// <param name="items"> The new items. </param>
         private void OnSourceItemsAdded(IEnumerable items)
@@ -231,7 +233,7 @@ namespace Codify.Collections
                 // If there is no comparer function specified, we need to determine the index of this new item in this collection.
 
                 // Cast source collection to IList<TSource>, because the IndexOf method is required.
-                var source = (IList<T>)_source;
+                var source = (IList<T>) _source;
 
                 // Get the index of the source item in the source collection.
                 var index = source.IndexOf(item);
@@ -263,7 +265,7 @@ namespace Codify.Collections
 
 
         /// <summary>
-        ///   Called when items are removed from the source collection.
+        ///     Called when items are removed from the source collection.
         /// </summary>
         /// <param name="items"> The removed source items. </param>
         private void OnSourceItemsRemoved(IEnumerable items)
@@ -273,7 +275,7 @@ namespace Codify.Collections
         }
 
         /// <summary>
-        ///   Called when an item is replaced in the source collection.
+        ///     Called when an item is replaced in the source collection.
         /// </summary>
         /// <param name="oldItem"> The old source item. </param>
         /// <param name="newItem"> The new source item. </param>
@@ -302,7 +304,7 @@ namespace Codify.Collections
         }
 
         /// <summary>
-        ///   Called when the source collection is reset.
+        ///     Called when the source collection is reset.
         /// </summary>
         private void OnSourceReset()
         {

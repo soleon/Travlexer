@@ -7,7 +7,7 @@ namespace Codify.ViewModels
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataViewModel{TData, TParent}"/> class.
+        ///     Initializes a new instance of the <see cref="DataViewModel{TData, TParent}" /> class.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="parent">The logical parent view model that owns this view model.</param>
@@ -27,7 +27,7 @@ namespace Codify.ViewModels
         #region Public Properties
 
         /// <summary>
-        /// Gets the object that contains essential data of this <see cref="IViewModel{TParent}"/>.
+        ///     Gets the object that contains essential data of this <see cref="IViewModel{TParent}" />.
         /// </summary>
         public TData Data { get; private set; }
 

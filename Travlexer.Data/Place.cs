@@ -17,7 +17,7 @@ namespace Travlexer.Data
         #region Constructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Place" /> class.
+        ///     Initializes a new instance of the <see cref="Place" /> class.
         /// </summary>
         /// <param name="location"> The geographical location of this pin. </param>
         /// <param name="id"> The ID of this place. </param>
@@ -35,11 +35,11 @@ namespace Travlexer.Data
 
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Place" /> class.
+        ///     Initializes a new instance of the <see cref="Place" /> class.
         /// </summary>
         /// <remarks>
-        ///   This parmeterless constructor is only intended for serialization purpose.
-        ///   Do not use this constructor in code.
+        ///     This parmeterless constructor is only intended for serialization purpose.
+        ///     Do not use this constructor in code.
         /// </remarks>
         public Place() {}
 

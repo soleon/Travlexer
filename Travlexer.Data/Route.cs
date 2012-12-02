@@ -10,7 +10,7 @@ namespace Travlexer.Data
         #region Constructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="Route" /> class.
+        ///     Initializes a new instance of the <see cref="Route" /> class.
         /// </summary>
         public Route()
         {
@@ -24,7 +24,7 @@ namespace Travlexer.Data
 
         public Collection<Location> Points { get; set; }
 
-        public Collection<RouteStep> Steps { get; set; } 
+        public Collection<RouteStep> Steps { get; set; }
 
         public RouteMethod Method { get; set; }
 
@@ -37,12 +37,12 @@ namespace Travlexer.Data
         public Guid Id { get; set; }
 
         /// <summary>
-        ///   Gets or sets the distance in meters.
+        ///     Gets or sets the distance in meters.
         /// </summary>
         public int Distance { get; set; }
 
         /// <summary>
-        ///   Gets or sets the duration in seconds.
+        ///     Gets or sets the duration in seconds.
         /// </summary>
         public int Duration { get; set; }
 

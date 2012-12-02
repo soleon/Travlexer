@@ -7,7 +7,7 @@ namespace Travlexer.WindowsPhone.Controls
     internal static class Utility
     {
         /// <summary>
-        ///   Uses the Douglas Peucker algorithim to reduce the number of points.
+        ///     Uses the Douglas Peucker algorithim to reduce the number of points.
         /// </summary>
         internal static T DouglasPeuckerReduction<T>(T points, Double tolerance) where T : class, IList<GeoCoordinate>, new()
         {
@@ -56,7 +56,7 @@ namespace Travlexer.WindowsPhone.Controls
         }
 
         /// <summary>
-        ///   The distance of a point from a line made from point1 and point2.
+        ///     The distance of a point from a line made from point1 and point2.
         /// </summary>
         private static Double PerpendicularDistance(GeoCoordinate point1, GeoCoordinate point2, GeoCoordinate point)
         {

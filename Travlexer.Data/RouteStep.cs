@@ -5,7 +5,7 @@ namespace Travlexer.Data
         public int Distance { get; set; }
 
         /// <summary>
-        ///   Gets or sets the duration in seconds.
+        ///     Gets or sets the duration in seconds.
         /// </summary>
         public int Duration { get; set; }
 

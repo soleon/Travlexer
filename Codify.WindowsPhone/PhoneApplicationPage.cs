@@ -4,39 +4,40 @@ using Microsoft.Phone.Tasks;
 
 namespace Codify.WindowsPhone
 {
-	public class PhoneApplicationPage : Microsoft.Phone.Controls.PhoneApplicationPage
-	{
-		#region DataContext
+    public class PhoneApplicationPage : Microsoft.Phone.Controls.PhoneApplicationPage
+    {
+        #region DataContext
 
-		public new object DataContext
-		{
-			get { return GetValue(DataContextProperty); }
-			set { SetValue(DataContextProperty, value); }
-		}
+        public new object DataContext
+        {
+            get { return GetValue(DataContextProperty); }
+            set { SetValue(DataContextProperty, value); }
+        }
 
-		/// <summary>
-		/// Defines the <see cref="DataContext"/> dependency property.
-		/// </summary>
-		public new static readonly DependencyProperty DataContextProperty = DependencyProperty.Register(
-			"DataContext",
-			typeof (object),
-			typeof(PhoneApplicationPage),
-			new PropertyMetadata(default(object), (s, e) => ((PhoneApplicationPage)s).OnDataContextChanged(e.OldValue, e.NewValue)));
+        /// <summary>
+        ///     Defines the <see cref="DataContext" /> dependency property.
+        /// </summary>
+        public new static readonly DependencyProperty DataContextProperty = DependencyProperty.Register(
+            "DataContext",
+            typeof (object),
+            typeof (PhoneApplicationPage),
+            new PropertyMetadata(default(object), (s, e) => ((PhoneApplicationPage) s).OnDataContextChanged(e.OldValue, e.NewValue)));
 
-		/// <summary>
-		/// Called when <see cref="DataContext"/> changes.
-		/// </summary>
-		protected virtual void OnDataContextChanged(object oldValue, object newValue)
-		{
-			base.DataContext = newValue;
-		}
+        /// <summary>
+        ///     Called when <see cref="DataContext" /> changes.
+        /// </summary>
+        protected virtual void OnDataContextChanged(object oldValue, object newValue)
+        {
+            base.DataContext = newValue;
+        }
 
-		#endregion
-	}
+        #endregion
+    }
+
     public static class Utilities
     {
         /// <summary>
-        /// Opens the URL in a <see cref="T:Microsoft.Phone.Tasks.WebBrowserTask"/>.
+        ///     Opens the URL in a <see cref="T:Microsoft.Phone.Tasks.WebBrowserTask" />.
         /// </summary>
         /// <param name="url">The URL to open in the browser task.</param>
         public static void OpenUrl(string url)
@@ -44,7 +45,7 @@ namespace Codify.WindowsPhone
             Uri uri;
             if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri))
             {
-                new WebBrowserTask { Uri = uri }.Show();
+                new WebBrowserTask {Uri = uri}.Show();
             }
             else
             {

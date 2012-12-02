@@ -156,23 +156,28 @@
                 </Grid.RowDefinitions>
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
                            Fill="{StaticResource BrushIconHome}"
-                           VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           VerticalAlignment="Center"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
                            Grid.Row="1"
                            Fill="{StaticResource BrushIconCoordinate}"
-                           VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           VerticalAlignment="Center"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
                            Grid.Row="2"
                            Fill="{StaticResource BrushIconGlobe}"
-                           VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           VerticalAlignment="Center"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
                            Grid.Row="3"
                            Fill="{StaticResource BrushIconPhone}"
-                           VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           VerticalAlignment="Center"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <Rectangle Style="{StaticResource IconRectangleStyle}"
                            Grid.Row="4"
                            Fill="{StaticResource BrushIconStar}"
-                           VerticalAlignment="Center" Margin="{StaticResource PhoneHorizontalMargin}" />
+                           VerticalAlignment="Center"
+                           Margin="{StaticResource PhoneHorizontalMargin}" />
                 <TextBox Style="{StaticResource TextBoxStyle}"
                          x:Name="Address"
                          Grid.Column="1"

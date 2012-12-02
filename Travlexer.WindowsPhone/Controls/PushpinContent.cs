@@ -1,31 +1,29 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Codify;
 using Codify.WindowsPhone;
-using Microsoft.Phone.Tasks;
 using Travlexer.Data;
 
 namespace Travlexer.WindowsPhone.Controls
 {
     /// <summary>
-    ///   Represents a pushpin on a map.
+    ///     Represents a pushpin on a map.
     /// </summary>
     [TemplateVisualState(GroupName = GROUP_VisualStates, Name = STATE_Expanded)]
     [TemplateVisualState(GroupName = GROUP_VisualStates, Name = STATE_Collapsed)]
     [TemplateVisualState(GroupName = GROUP_LoadStates, Name = STATE_Loaded)]
     [TemplateVisualState(GroupName = GROUP_LoadStates, Name = STATE_Loading)]
     [TemplateVisualState(GroupName = GROUP_LoadStates, Name = STATE_Error)]
-    [TemplatePart(Name = PART_Content, Type = typeof(Panel))]
-    [TemplatePart(Name = PART_SearchResultIndicator, Type = typeof(Control))]
-    [TemplatePart(Name = PART_Title, Type = typeof(TextBlock))]
-    [TemplatePart(Name = PART_Address, Type = typeof(TextBlock))]
-    [TemplatePart(Name = PART_GeoCoordinate, Type = typeof(TextBlock))]
-    [TemplatePart(Name = PART_WorkingText, Type = typeof(TextBlock))]
-    [TemplatePart(Name = PART_WebSite, Type = typeof(HyperlinkButton))]
-    [TemplatePart(Name = PART_ContactNumber, Type = typeof(HyperlinkButton))]
+    [TemplatePart(Name = PART_Content, Type = typeof (Panel))]
+    [TemplatePart(Name = PART_SearchResultIndicator, Type = typeof (Control))]
+    [TemplatePart(Name = PART_Title, Type = typeof (TextBlock))]
+    [TemplatePart(Name = PART_Address, Type = typeof (TextBlock))]
+    [TemplatePart(Name = PART_GeoCoordinate, Type = typeof (TextBlock))]
+    [TemplatePart(Name = PART_WorkingText, Type = typeof (TextBlock))]
+    [TemplatePart(Name = PART_WebSite, Type = typeof (HyperlinkButton))]
+    [TemplatePart(Name = PART_ContactNumber, Type = typeof (HyperlinkButton))]
     public class PushpinContent : Control
     {
         #region Constants
@@ -63,11 +61,11 @@ namespace Travlexer.WindowsPhone.Controls
         #region Constructors
 
         /// <summary>
-        ///   Initializes a new instance of the <see cref="PushpinContent" /> class.
+        ///     Initializes a new instance of the <see cref="PushpinContent" /> class.
         /// </summary>
         public PushpinContent()
         {
-            DefaultStyleKey = typeof(PushpinContent);
+            DefaultStyleKey = typeof (PushpinContent);
 #if DEBUG
             if (!DesignerProperties.IsInDesignTool)
             {
@@ -91,14 +89,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public ICommand CommandRefresh
         {
-            get { return (ICommand)GetValue(CommandRefreshProperty); }
+            get { return (ICommand) GetValue(CommandRefreshProperty); }
             set { SetValue(CommandRefreshProperty, value); }
         }
 
         public static readonly DependencyProperty CommandRefreshProperty = DependencyProperty.Register(
             "CommandRefresh",
-            typeof(ICommand),
-            typeof(PushpinContent),
+            typeof (ICommand),
+            typeof (PushpinContent),
             null);
 
         public object CommandRefreshParameter
@@ -109,8 +107,8 @@ namespace Travlexer.WindowsPhone.Controls
 
         public static readonly DependencyProperty CommandRefreshParameterProperty = DependencyProperty.Register(
             "CommandRefreshParameter",
-            typeof(object),
-            typeof(PushpinContent),
+            typeof (object),
+            typeof (PushpinContent),
             null);
 
         #endregion
@@ -123,14 +121,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public ExpansionStates VisualState
         {
-            get { return (ExpansionStates)GetValue(VisualStateProperty); }
+            get { return (ExpansionStates) GetValue(VisualStateProperty); }
             set { SetValue(VisualStateProperty, value); }
         }
 
         public static readonly DependencyProperty VisualStateProperty = DependencyProperty.Register(
             "VisualState",
-            typeof(ExpansionStates),
-            typeof(PushpinContent),
+            typeof (ExpansionStates),
+            typeof (PushpinContent),
             new PropertyMetadata(default(ExpansionStates), OnVisualStateChanged));
 
         #endregion
@@ -140,14 +138,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public DataStates WorkingState
         {
-            get { return (DataStates)GetValue(WorkingStateProperty); }
+            get { return (DataStates) GetValue(WorkingStateProperty); }
             set { SetValue(WorkingStateProperty, value); }
         }
 
         public static readonly DependencyProperty WorkingStateProperty = DependencyProperty.Register(
             "DataState",
-            typeof(DataStates),
-            typeof(PushpinContent),
+            typeof (DataStates),
+            typeof (PushpinContent),
             new PropertyMetadata(default(DataStates), OnWorkingStateChanged));
 
         #endregion
@@ -157,14 +155,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public string Title
         {
-            get { return (string)GetValue(TitleProperty); }
+            get { return (string) GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
         }
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title",
-            typeof(string),
-            typeof(PushpinContent),
+            typeof (string),
+            typeof (PushpinContent),
             null);
 
         #endregion
@@ -174,14 +172,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public string Address
         {
-            get { return (string)GetValue(AddressProperty); }
+            get { return (string) GetValue(AddressProperty); }
             set { SetValue(AddressProperty, value); }
         }
 
         public static readonly DependencyProperty AddressProperty = DependencyProperty.Register(
             "Address",
-            typeof(string),
-            typeof(PushpinContent),
+            typeof (string),
+            typeof (PushpinContent),
             null);
 
         #endregion
@@ -191,14 +189,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public PlaceIcon Icon
         {
-            get { return (PlaceIcon)GetValue(IconProperty); }
+            get { return (PlaceIcon) GetValue(IconProperty); }
             set { SetValue(IconProperty, value); }
         }
 
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
             "Icon",
-            typeof(PlaceIcon),
-            typeof(PushpinContent),
+            typeof (PlaceIcon),
+            typeof (PushpinContent),
             new PropertyMetadata(default(PlaceIcon)));
 
         #endregion
@@ -208,14 +206,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public bool IsSearchResult
         {
-            get { return (bool)GetValue(IsSearchResultProperty); }
+            get { return (bool) GetValue(IsSearchResultProperty); }
             set { SetValue(IsSearchResultProperty, value); }
         }
 
         public static readonly DependencyProperty IsSearchResultProperty = DependencyProperty.Register(
             "IsSearchResult",
-            typeof(bool),
-            typeof(PushpinContent),
+            typeof (bool),
+            typeof (PushpinContent),
             new PropertyMetadata(false));
 
         #endregion
@@ -225,14 +223,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public string ContactNumber
         {
-            get { return (string)GetValue(ContactNumberProperty); }
+            get { return (string) GetValue(ContactNumberProperty); }
             set { SetValue(ContactNumberProperty, value); }
         }
 
         public static readonly DependencyProperty ContactNumberProperty = DependencyProperty.Register(
             "ContactNumber",
-            typeof(string),
-            typeof(PushpinContent),
+            typeof (string),
+            typeof (PushpinContent),
             null);
 
         #endregion
@@ -242,14 +240,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public string WebSite
         {
-            get { return (string)GetValue(WebSiteProperty); }
+            get { return (string) GetValue(WebSiteProperty); }
             set { SetValue(WebSiteProperty, value); }
         }
 
         public static readonly DependencyProperty WebSiteProperty = DependencyProperty.Register(
             "WebSite",
-            typeof(string),
-            typeof(PushpinContent),
+            typeof (string),
+            typeof (PushpinContent),
             null);
 
         #endregion
@@ -259,14 +257,14 @@ namespace Travlexer.WindowsPhone.Controls
 
         public string Rating
         {
-            get { return (string)GetValue(RatingProperty); }
+            get { return (string) GetValue(RatingProperty); }
             set { SetValue(RatingProperty, value); }
         }
 
         public static readonly DependencyProperty RatingProperty = DependencyProperty.Register(
             "Rating",
-            typeof(string),
-            typeof(PushpinContent),
+            typeof (string),
+            typeof (PushpinContent),
             null);
 
         #endregion
@@ -299,13 +297,13 @@ namespace Travlexer.WindowsPhone.Controls
 
         private static void OnVisualStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var content = (PushpinContent)d;
+            var content = (PushpinContent) d;
             VisualStateManager.GoToState(content, content.VisualState.ToString(), true);
         }
 
         private static void OnWorkingStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var content = (PushpinContent)sender;
+            var content = (PushpinContent) sender;
             VisualStateManager.GoToState(content, content.WorkingState.ToString(), true);
         }
 

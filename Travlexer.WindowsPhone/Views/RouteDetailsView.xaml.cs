@@ -18,7 +18,8 @@ namespace Travlexer.WindowsPhone.Views
             InitializeComponent();
             SetBinding(MapViewLocationsProperty, new Binding(RouteDetailsViewModel.MapviewLocationsProperty));
         }
-        
+
+
         #region MapViewLocations
 
         public IEnumerable<Location> MapViewLocations
@@ -28,7 +29,7 @@ namespace Travlexer.WindowsPhone.Views
         }
 
         /// <summary>
-        ///   Defines the <see cref="MapViewLocations" /> dependency property.
+        ///     Defines the <see cref="MapViewLocations" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty MapViewLocationsProperty = DependencyProperty.Register(
             "MapViewLocations",
@@ -37,7 +38,7 @@ namespace Travlexer.WindowsPhone.Views
             new PropertyMetadata(default(IEnumerable<Location>), (s, e) => ((RouteDetailsView) s).OnMapViewLocationsChanged((IEnumerable<Location>) e.NewValue)));
 
         /// <summary>
-        ///   Called when <see cref="MapViewLocations" /> changes.
+        ///     Called when <see cref="MapViewLocations" /> changes.
         /// </summary>
         private void OnMapViewLocationsChanged(IEnumerable<Location> newValue)
         {
@@ -45,6 +46,7 @@ namespace Travlexer.WindowsPhone.Views
         }
 
         #endregion
+
 
         private void GoToStepButtonClick(object sender, RoutedEventArgs e)
         {

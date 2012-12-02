@@ -4,7 +4,6 @@ namespace Travlexer.WindowsPhone.ViewModels
     {
         PersonalPlaces = 0,
         SearchResults,
-        Routes,
-        Trips
+        Routes
     }
 }

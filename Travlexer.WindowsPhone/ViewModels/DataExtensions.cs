@@ -11,7 +11,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public static ManagementSection GetManagementSection(DependencyObject obj)
         {
             if (obj == null) throw new ArgumentNullException("obj", "Unable to get management section on null dependency object");
-            return (ManagementSection)obj.GetValue(ManagementSectionProperty);
+            return (ManagementSection) obj.GetValue(ManagementSectionProperty);
         }
 
         public static void SetManagementSection(DependencyObject obj, ManagementSection value)
@@ -22,8 +22,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public static readonly DependencyProperty ManagementSectionProperty = DependencyProperty.RegisterAttached(
             "ManagementSection",
-            typeof(ManagementSection),
-            typeof(DataExtensions),
+            typeof (ManagementSection),
+            typeof (DataExtensions),
             null);
 
         #endregion
@@ -32,18 +32,18 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Extensions Methods
 
         /// <summary>
-        ///   Parse distance integer value in meters to the most appropriate string for display purpose.
+        ///     Parse distance integer value in meters to the most appropriate string for display purpose.
         /// </summary>
         /// <param name="value"> The distance integer value in meters. </param>
         /// <returns> A string that represents the distance integer value in a readable format according to the current app settings. </returns>
         public static string ToDistanceText(this int value)
         {
             if (value < 1000) return value + (value > 1 ? " meters" : " meter");
-            return ((double)value / 1000).ToString("f1", CultureInfo.CurrentCulture) + " km";
+            return ((double) value/1000).ToString("f1", CultureInfo.CurrentCulture) + " km";
         }
 
         /// <summary>
-        ///   Parse duration integer value in seconds to the most appropriate string for display purpose.
+        ///     Parse duration integer value in seconds to the most appropriate string for display purpose.
         /// </summary>
         /// <param name="value"> The duration integer value in seconds. </param>
         /// <returns> A string that represents the duration integer value in a readable format according to the current app settings. </returns>

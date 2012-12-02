@@ -15,7 +15,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private readonly IDataContext _data;
         private readonly GeoCoordinateWatcher _geoWatcher;
-        
+
         #endregion
 
 
@@ -48,12 +48,12 @@ namespace Travlexer.WindowsPhone.ViewModels
             Steps = route.Steps.Select(step => new RouteStepSummaryViewModel(index++, step)).ToArray();
 
             CommandGoToStep = new DelegateCommand<RouteStep>(step => SelectedStep = step);
-            
+
 #if DEBUG
             if (DesignerProperties.IsInDesignTool) return;
 #endif
             // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 10D };
+            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
             CommandStartGeoWatcher = new DelegateCommand(_geoWatcher.Start);
             CommandStopGeoWatcher = new DelegateCommand(_geoWatcher.Stop);
@@ -65,7 +65,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Event Handling
 
         /// <summary>
-        ///   Called when <see cref="GeoCoordinateWatcher.PositionChanged" /> event is raised.
+        ///     Called when <see cref="GeoCoordinateWatcher.PositionChanged" /> event is raised.
         /// </summary>
         private void OnGeoWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
@@ -87,7 +87,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             set
             {
                 if (!SetValue(ref _selectedStep, value, SelectedStepProperty) || value == null) return;
-                MapViewLocations = new[] { value.StartLocation, value.EndLocation };
+                MapViewLocations = new[] {value.StartLocation, value.EndLocation};
             }
         }
 
@@ -134,12 +134,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand<RouteStep> CommandGoToStep { get; private set; }
 
         /// <summary>
-        ///   Gets the command that starts geo coordinate watcher.
+        ///     Gets the command that starts geo coordinate watcher.
         /// </summary>
         public DelegateCommand CommandStartGeoWatcher { get; private set; }
 
         /// <summary>
-        ///   Gets the command that stops geo coordinate watcher.
+        ///     Gets the command that stops geo coordinate watcher.
         /// </summary>
         public DelegateCommand CommandStopGeoWatcher { get; private set; }
 

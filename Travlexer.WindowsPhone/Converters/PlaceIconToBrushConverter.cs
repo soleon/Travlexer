@@ -23,39 +23,39 @@ namespace Travlexer.WindowsPhone.Converters
             {
                 _resources = Application.Current.Resources;
             }
-            var icon = (PlaceIcon)value;
+            var icon = (PlaceIcon) value;
             switch (icon)
             {
                 case PlaceIcon.Recreation:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconGolf"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconGolf"]);
                 case PlaceIcon.Vehicle:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconCar"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconCar"]);
                 case PlaceIcon.Drink:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconDrink"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconDrink"]);
                 case PlaceIcon.Fuel:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconFuel"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconFuel"]);
                 case PlaceIcon.Property:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconHome"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconHome"]);
                 case PlaceIcon.Restaurant:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconRestaurant"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconRestaurant"]);
                 case PlaceIcon.Shop:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconShoppingCart"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconShoppingCart"]);
                 case PlaceIcon.Airport:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconAirplane"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconAirplane"]);
                 case PlaceIcon.PublicTransport:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconTrain"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconTrain"]);
                 case PlaceIcon.Information:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconInformation"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconInformation"]);
                 case PlaceIcon.MoneyExchange:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconMoney"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconMoney"]);
                 case PlaceIcon.Internet:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconWifi"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconWifi"]);
                 case PlaceIcon.Ferry:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconAnchor"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconAnchor"]);
                 case PlaceIcon.Casino:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconDice"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconDice"]);
                 default:
-                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush)_resources["BrushIconPlace"]);
+                    return IconBrushMap.ContainsKey(icon) ? IconBrushMap[icon] : (IconBrushMap[icon] = (ImageBrush) _resources["BrushIconPlace"]);
             }
         }
 

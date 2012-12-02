@@ -6,7 +6,10 @@ using System.Windows.Interactivity;
 namespace Codify.Triggers
 {
     /// <summary>
-    /// Executes a collection of actions when the <see cref="Application.RootVisual"/> raises any <see cref="FrameworkElement.MouseLeftButtonDown"/> activity.
+    ///     Executes a collection of actions when the <see cref="Application.RootVisual" /> raises any
+    ///     <see
+    ///         cref="FrameworkElement.MouseLeftButtonDown" />
+    ///     activity.
     /// </summary>
     [Description("Executes a collection of action when the Application.RootVisual raises any MouseLeftButtonDown activity.")]
     public class ElementMouseButtonActivityTrigger : TriggerBase<FrameworkElement>
@@ -14,12 +17,12 @@ namespace Codify.Triggers
         #region Private Members
 
         /// <summary>
-        /// Determines if all required handlers are attached.
+        ///     Determines if all required handlers are attached.
         /// </summary>
         private bool _isAttached;
 
         /// <summary>
-        /// Determines if the mouse activity is local to the <see cref="TriggerBase{T}.AssociatedObject"/>.
+        ///     Determines if the mouse activity is local to the <see cref="TriggerBase{T}.AssociatedObject" />.
         /// </summary>
         private bool _isLocal;
 
@@ -28,18 +31,21 @@ namespace Codify.Triggers
 
         #region Public Properties
 
+
         #region CanTrigger
+
         public bool CanTrigger
         {
-            get { return (bool)GetValue(CanTriggerProperty); }
+            get { return (bool) GetValue(CanTriggerProperty); }
             set { SetValue(CanTriggerProperty, value); }
         }
 
         public static readonly DependencyProperty CanTriggerProperty = DependencyProperty.Register(
             "CanTrigger",
-            typeof(bool),
-            typeof(ElementMouseButtonActivityTrigger),
+            typeof (bool),
+            typeof (ElementMouseButtonActivityTrigger),
             new PropertyMetadata(true));
+
         #endregion
 
 
@@ -47,20 +53,21 @@ namespace Codify.Triggers
 
         public FrameworkElement Element
         {
-            get { return (FrameworkElement)GetValue(ElementProperty); }
+            get { return (FrameworkElement) GetValue(ElementProperty); }
             set { SetValue(ElementProperty, value); }
         }
 
         /// <summary>
-        /// Defines the <see cref="Element"/> dependency property.
+        ///     Defines the <see cref="Element" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty ElementProperty = DependencyProperty.Register(
             "Element",
-            typeof(FrameworkElement),
-            typeof(ElementMouseButtonActivityTrigger),
-            new PropertyMetadata(default(FrameworkElement), (s, e) => ((ElementMouseButtonActivityTrigger)s).OnElementChanged((FrameworkElement)e.OldValue, (FrameworkElement)e.NewValue)));
+            typeof (FrameworkElement),
+            typeof (ElementMouseButtonActivityTrigger),
+            new PropertyMetadata(default(FrameworkElement), (s, e) => ((ElementMouseButtonActivityTrigger) s).OnElementChanged((FrameworkElement) e.OldValue, (FrameworkElement) e.NewValue)));
 
         #endregion
+
 
         #endregion
 
@@ -68,7 +75,7 @@ namespace Codify.Triggers
         #region Private Methods
 
         /// <summary>
-        /// Ensures all required handlers are attached.
+        ///     Ensures all required handlers are attached.
         /// </summary>
         private void Attach(UIElement element)
         {
@@ -128,7 +135,7 @@ namespace Codify.Triggers
         #region Event Handling
 
         /// <summary>
-        /// Called when <see cref="Element"/> changes.
+        ///     Called when <see cref="Element" /> changes.
         /// </summary>
         private void OnElementChanged(UIElement oldValue, UIElement newValue)
         {
@@ -137,7 +144,7 @@ namespace Codify.Triggers
         }
 
         /// <summary>
-        /// Called after the trigger is attached to an AssociatedObject.
+        ///     Called after the trigger is attached to an AssociatedObject.
         /// </summary>
         protected override void OnAttached()
         {
@@ -147,7 +154,7 @@ namespace Codify.Triggers
         }
 
         /// <summary>
-        /// Called when the trigger is being detached from its AssociatedObject, but before it has actually occurred.
+        ///     Called when the trigger is being detached from its AssociatedObject, but before it has actually occurred.
         /// </summary>
         protected override void OnDetaching()
         {
@@ -156,7 +163,7 @@ namespace Codify.Triggers
         }
 
         /// <summary>
-        /// Called when the left mouse button is down on top of the <see cref="TriggerBase{T}.AssociatedObject"/>.
+        ///     Called when the left mouse button is down on top of the <see cref="TriggerBase{T}.AssociatedObject" />.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -166,7 +173,7 @@ namespace Codify.Triggers
         }
 
         /// <summary>
-        /// Called when the left mouse button is down on top of the <see cref="Application.RootVisual"/>.
+        ///     Called when the left mouse button is down on top of the <see cref="Application.RootVisual" />.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
