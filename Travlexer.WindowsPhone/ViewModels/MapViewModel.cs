@@ -31,6 +31,9 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Constants
 
         private const string CurrentLocationString = "Current Location";
+        private const double MaxZoomLevel = 21D;
+        private const double MinZoomLevel = 1D;
+        private const double ZoomStep = 1D;
 
         #endregion
 
@@ -124,13 +127,13 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandAddCurrentPlace = new DelegateCommand(() => OnAddPlace(CurrentLocation.ToLocalLocation()), () => CurrentLocation != null && !CurrentLocation.IsUnknown);
             CommandZoomIn = new DelegateCommand(() =>
             {
-                if (ZoomLevel.Value < 20D)
-                    ZoomLevel.Value = Math.Min(ZoomLevel.Value += 1D, 20D);
+                if (ZoomLevel.Value < MaxZoomLevel)
+                    ZoomLevel.Value = Math.Min(ZoomLevel.Value += ZoomStep, MaxZoomLevel);
             });
             CommandZoomOut = new DelegateCommand(() =>
             {
-                if (ZoomLevel.Value > 1D)
-                    ZoomLevel.Value = Math.Max(ZoomLevel.Value -= 1D, 1D);
+                if (ZoomLevel.Value > MinZoomLevel)
+                    ZoomLevel.Value = Math.Max(ZoomLevel.Value -= ZoomStep, MinZoomLevel);
             });
             CommandShowStreetLayer = new DelegateCommand(() => _data.MapBaseLayer.Value = Layer.Street);
             CommandShowSatelliteHybridLayer = new DelegateCommand(() => _data.MapBaseLayer.Value = Layer.SatelliteHybrid);
