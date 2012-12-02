@@ -145,6 +145,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
         private const string LastRanVersionProperty = "LastRanVersion";
 
+        /// <summary>
+        ///     Gets a value indicates that if map animation should be used.
+        /// </summary>
+        public ObservableValue<bool> UseMapAnimation { get; private set; }
+
+        private const string UseMapAnimationProperty = "UseMapAnimation";
+
 
         /// <summary>
         ///     Gets a dictionary that contains available place icon enums mapping to their display names.
@@ -500,6 +507,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
             // Save unit system.
             _storageProvider.SaveSetting(UnitSystemProperty, UnitSystem.Value);
+
+            // Save use map animation flag.
+            _storageProvider.SaveSetting(UseMapAnimationProperty, UseMapAnimation.Value);
         }
 
         /// <summary>
@@ -573,6 +583,11 @@ namespace Travlexer.WindowsPhone.Infrastructure
             UnitSystems unitSystem;
             if (_storageProvider.TryGetSetting(UnitSystemProperty, out unitSystem))
                 UnitSystem.Value = unitSystem;
+
+            // Load use map animation flag.
+            bool useMapAnimation;
+            if (_storageProvider.TryGetSetting(UseMapAnimationProperty, out useMapAnimation))
+                UseMapAnimation.Value = useMapAnimation;
         }
 
         /// <summary>
@@ -640,6 +655,11 @@ namespace Travlexer.WindowsPhone.Infrastructure
         {
             callAction(_googleMapsClient, r =>
             {
+                if (r == null)
+                {
+                    callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
+                    return;
+                }
                 if (r.ResponseStatus == ResponseStatus.Aborted)
                 {
                     callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
@@ -717,6 +737,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             UnitSystem = new ObservableValue<UnitSystems>();
             SelectedPlace = new ObservableValue<Place>();
             SelectedRoute = new ObservableValue<Route>();
+            UseMapAnimation = new ObservableValue<bool>();
 
             MapOverlays = new ObservableCollection<Layer>();
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());

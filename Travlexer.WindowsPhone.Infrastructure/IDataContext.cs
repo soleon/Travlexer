@@ -88,6 +88,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
         Version LastRanVersion { get; }
 
         /// <summary>
+        ///     Gets a value indicates that if map animation should be used.
+        /// </summary>
+        ObservableValue<bool> UseMapAnimation { get; }
+
+
+        /// <summary>
         ///     Adds a new place.
         /// </summary>
         /// <param name="location">The location of the place.</param>

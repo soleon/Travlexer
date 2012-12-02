@@ -99,6 +99,7 @@
       <DependentUpon>Page1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\AppBarButtonViewModel.cs" />
     <Compile Include="ViewModels\AppBarItemViewModel.cs" />
     <Compile Include="ViewModels\AppBarMenuItemViewModel.cs" />
@@ -125,6 +126,9 @@
     </Compile>
     <Compile Include="Views\RouteDetailsView.xaml.cs">
       <DependentUpon>RouteDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Page Include="Page1.xaml">
       <SubType>Designer</SubType>
@@ -167,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RouteDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

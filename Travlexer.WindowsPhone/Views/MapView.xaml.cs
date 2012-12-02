@@ -117,6 +117,8 @@ namespace Travlexer.WindowsPhone.Views
                     RegisterOfflineModeEventListeners();
                 };
             }
+
+            Loaded += (s, e) => Map.AnimationLevel = ApplicationContext.Data.UseMapAnimation.Value ? AnimationLevel.Full : AnimationLevel.UserInput;
         }
 
         #endregion

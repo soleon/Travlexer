@@ -16,6 +16,7 @@ using Codify.GoogleMaps.Controls;
 using Codify.Services;
 using Codify.Threading;
 using Codify.WindowsPhone;
+using Microsoft.Expression.Interactivity.Core;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Converters;
 using Travlexer.WindowsPhone.Infrastructure;
@@ -512,7 +513,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private bool _isAppBarVisible = true;
         private const string IsAppBarVisibleProperty = "IsAppBarVisible";
-
+        
         #endregion
 
 
@@ -1235,6 +1236,11 @@ namespace Travlexer.WindowsPhone.ViewModels
                 {
                     Text = "clear routes",
                     Command = new DelegateCommand(OnClearRoutes)
+                },
+                new AppBarMenuItemViewModel
+                {
+                    Text = "settings",
+                    Command = new ActionCommand(() => _navigation.Navigate<SettingsViewModel>())
                 }
             };
             _searchResultSelectedMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>

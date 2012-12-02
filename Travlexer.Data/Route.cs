@@ -41,10 +41,14 @@ namespace Travlexer.Data
         /// </summary>
         public int Distance { get; set; }
 
+        public string DistanceText { get; set; }
+
         /// <summary>
         ///     Gets or sets the duration in seconds.
         /// </summary>
         public int Duration { get; set; }
+
+        public string DurationText { get; set; }
 
         public string Name
         {

@@ -1,23 +1,23 @@
-﻿<CodifyPhone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.MapView"
+﻿<codifyPhone:PhoneApplicationPage x:Class="Travlexer.WindowsPhone.Views.MapView"
                                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                                  xmlns:Behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
-                                  xmlns:Codify="clr-namespace:Codify;assembly=Codify.Core"
-                                  xmlns:CodifyControls="clr-namespace:Codify.Controls;assembly=Codify"
-                                  xmlns:CodifyPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
-                                  xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
-                                  xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
+                                  xmlns:behaviors="clr-namespace:Codify.Behaviors;assembly=Codify"
+                                  xmlns:codify="clr-namespace:Codify;assembly=Codify.Core"
+                                  xmlns:codifyControls="clr-namespace:Codify.Controls;assembly=Codify"
+                                  xmlns:codifyPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
+                                  xmlns:controls="clr-namespace:Travlexer.WindowsPhone.Controls"
+                                  xmlns:core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
                                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                   xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
-                                  xmlns:GoogleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
+                                  xmlns:googleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
                                   xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-                                  xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+                                  xmlns:maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                   xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
                                   xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-                                  xmlns:ShellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
+                                  xmlns:shellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-                                  xmlns:Triggers="clr-namespace:Codify.Triggers;assembly=Codify"
+                                  xmlns:triggers="clr-namespace:Codify.Triggers;assembly=Codify"
                                   Style="{StaticResource PageDefault}"
                                   mc:Ignorable="d"
                                   d:DesignHeight="768"
@@ -28,7 +28,7 @@
         <ScaleTransform x:Key="TileScale" />
         <!--This style is used in code behind, do not remove-->
         <Style x:Key="TilePushpin"
-               TargetType="Maps:Pushpin">
+               TargetType="maps:Pushpin">
             <Setter Property="UseLayoutRounding"
                     Value="False" />
             <Setter Property="Width"
@@ -43,7 +43,7 @@
                     Value="BitmapCache" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Maps:Pushpin">
+                    <ControlTemplate TargetType="maps:Pushpin">
                         <Rectangle Height="256"
                                    Width="256"
                                    Fill="{TemplateBinding Background}" />
@@ -238,7 +238,7 @@
                                                        Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
                             <DiscreteObjectKeyFrame KeyTime="0">
                                 <DiscreteObjectKeyFrame.Value>
-                                    <Codify:ExpansionStates>Expanded</Codify:ExpansionStates>
+                                    <codify:ExpansionStates>Expanded</codify:ExpansionStates>
                                 </DiscreteObjectKeyFrame.Value>
                             </DiscreteObjectKeyFrame>
                         </ObjectAnimationUsingKeyFrames>
@@ -473,13 +473,12 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <Maps:Map x:Name="Map"
+        <maps:Map x:Name="Map"
                   Center="{Binding Center.Value, Mode=TwoWay}"
                   CopyrightVisibility="Collapsed"
                   CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
                   LogoVisibility="Collapsed"
-                  ZoomLevel="{Binding ZoomLevel.Value, Mode=TwoWay}"
-                  AnimationLevel="UserInput">
+                  ZoomLevel="{Binding ZoomLevel.Value, Mode=TwoWay}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MapPan">
                     <i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
@@ -497,37 +496,37 @@
             <toolkit:GestureService.GestureListener>
                 <toolkit:GestureListener PinchStarted="OnMapPinchStarted" />
             </toolkit:GestureService.GestureListener>
-            <Maps:Map.Mode>
-                <Core:MercatorMode />
-            </Maps:Map.Mode>
-            <Maps:MapLayer Visibility="{Binding IsOnline.Value, Converter={StaticResource VisibilityConverter}}">
-                <Maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
-                    <Maps:MapTileLayer.TileSources>
-                        <GoogleMapsControls:TileSource Layer="Street" />
-                    </Maps:MapTileLayer.TileSources>
-                </Maps:MapTileLayer>
-                <Maps:MapTileLayer Visibility="{Binding IsSatelliteHybridLayerVisible}">
-                    <Maps:MapTileLayer.TileSources>
-                        <GoogleMapsControls:TileSource Layer="SatelliteHybrid" />
-                    </Maps:MapTileLayer.TileSources>
-                </Maps:MapTileLayer>
-                <Maps:MapTileLayer Visibility="{Binding IsTrafficLayerVisible}">
-                    <Maps:MapTileLayer.TileSources>
-                        <GoogleMapsControls:TileSource Layer="TrafficOverlay" />
-                    </Maps:MapTileLayer.TileSources>
-                </Maps:MapTileLayer>
-                <Maps:MapTileLayer Visibility="{Binding IsTransitLayerVisible}">
-                    <Maps:MapTileLayer.TileSources>
-                        <GoogleMapsControls:TileSource Layer="TransitOverlay" />
-                    </Maps:MapTileLayer.TileSources>
-                </Maps:MapTileLayer>
-            </Maps:MapLayer>
-            <Maps:MapLayer Visibility="{Binding IsOnline.Value, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
-                <Maps:MapLayer x:Name="OfflineValidLayer">
-                    <Maps:MapLayer x:Name="OfflineBaseLayer" />
-                    <Maps:MapLayer x:Name="OfflineTransitLayer"
+            <maps:Map.Mode>
+                <core:MercatorMode />
+            </maps:Map.Mode>
+            <maps:MapLayer Visibility="{Binding IsOnline.Value, Converter={StaticResource VisibilityConverter}}">
+                <maps:MapTileLayer Visibility="{Binding IsStreetLayerVisible}">
+                    <maps:MapTileLayer.TileSources>
+                        <googleMapsControls:TileSource Layer="Street" />
+                    </maps:MapTileLayer.TileSources>
+                </maps:MapTileLayer>
+                <maps:MapTileLayer Visibility="{Binding IsSatelliteHybridLayerVisible}">
+                    <maps:MapTileLayer.TileSources>
+                        <googleMapsControls:TileSource Layer="SatelliteHybrid" />
+                    </maps:MapTileLayer.TileSources>
+                </maps:MapTileLayer>
+                <maps:MapTileLayer Visibility="{Binding IsTrafficLayerVisible}">
+                    <maps:MapTileLayer.TileSources>
+                        <googleMapsControls:TileSource Layer="TrafficOverlay" />
+                    </maps:MapTileLayer.TileSources>
+                </maps:MapTileLayer>
+                <maps:MapTileLayer Visibility="{Binding IsTransitLayerVisible}">
+                    <maps:MapTileLayer.TileSources>
+                        <googleMapsControls:TileSource Layer="TransitOverlay" />
+                    </maps:MapTileLayer.TileSources>
+                </maps:MapTileLayer>
+            </maps:MapLayer>
+            <maps:MapLayer Visibility="{Binding IsOnline.Value, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
+                <maps:MapLayer x:Name="OfflineValidLayer">
+                    <maps:MapLayer x:Name="OfflineBaseLayer" />
+                    <maps:MapLayer x:Name="OfflineTransitLayer"
                                    Visibility="{Binding IsTransitLayerVisible}" />
-                </Maps:MapLayer>
+                </maps:MapLayer>
                 <TextBlock x:Name="OfflineInvalidLayer"
                            FontSize="{StaticResource PhoneFontSizeMedium}"
                            Foreground="#FF3B3B3B"
@@ -539,17 +538,17 @@
                     <LineBreak />
                     <Run Text="at this zoom level" />
                 </TextBlock>
-            </Maps:MapLayer>
-            <Maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
+            </maps:MapLayer>
+            <maps:Pushpin IsHitTestVisible="{Binding DragPushpin, ConverterParameter=reverse, Converter={StaticResource BooleanConverter}}"
                           Location="{Binding CurrentLocation}"
                           PositionOrigin="Center"
                           Template="{x:Null}"
                           Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
                 <i:Interaction.Triggers>
-                    <Triggers:EventTrigger EventName="Tap"
+                    <triggers:EventTrigger EventName="Tap"
                                            IsHandled="True">
                         <i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}" />
-                    </Triggers:EventTrigger>
+                    </triggers:EventTrigger>
                 </i:Interaction.Triggers>
                 <Grid>
                     <Ellipse Height="40"
@@ -561,13 +560,13 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center" />
                 </Grid>
-            </Maps:Pushpin>
-            <Maps:MapLayer x:Name="RoutesLayer"
+            </maps:Pushpin>
+            <maps:MapLayer x:Name="RoutesLayer"
                            Opacity="0.7"
-                           CodifyControls:PanelExtension.ItemsSource="{Binding Routes}">
-                <CodifyControls:PanelExtension.ItemTemplate>
+                           codifyControls:PanelExtension.ItemsSource="{Binding Routes}">
+                <codifyControls:PanelExtension.ItemTemplate>
                     <DataTemplate>
-                        <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
+                        <controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
                                               Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                               StrokeEndLineCap="Round"
                                               StrokeStartLineCap="Round"
@@ -580,19 +579,19 @@
                                                            CommandParameter="{Binding}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                        </Controls:MapPolyline>
+                        </controls:MapPolyline>
                     </DataTemplate>
-                </CodifyControls:PanelExtension.ItemTemplate>
-            </Maps:MapLayer>
-            <Maps:MapLayer x:Name="PushpinsLayer"
-                           CodifyControls:PanelExtension.ItemsSource="{Binding Pushpins}"
-                           CodifyControls:PanelExtension.Delay="0:0:0.1">
+                </codifyControls:PanelExtension.ItemTemplate>
+            </maps:MapLayer>
+            <maps:MapLayer x:Name="PushpinsLayer"
+                           codifyControls:PanelExtension.ItemsSource="{Binding Pushpins}"
+                           codifyControls:PanelExtension.Delay="0:0:0.1">
                 <i:Interaction.Behaviors>
-                    <Behaviors:CancelGestureEventBehavior />
+                    <behaviors:CancelGestureEventBehavior />
                 </i:Interaction.Behaviors>
-                <CodifyControls:PanelExtension.ItemTemplate>
+                <codifyControls:PanelExtension.ItemTemplate>
                     <DataTemplate>
-                        <Maps:Pushpin x:Name="Pushpin"
+                        <maps:Pushpin x:Name="Pushpin"
                                       Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                       Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
                                       PositionOrigin="BottomCenter">
@@ -621,20 +620,20 @@
                                            Fill="{StaticResource BrushIconSearch}"
                                            Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}" />
                             </Grid>
-                        </Maps:Pushpin>
+                        </maps:Pushpin>
                     </DataTemplate>
-                </CodifyControls:PanelExtension.ItemTemplate>
-            </Maps:MapLayer>
-            <Maps:MapLayer x:Name="SelectedRouteLayer"
+                </codifyControls:PanelExtension.ItemTemplate>
+            </maps:MapLayer>
+            <maps:MapLayer x:Name="SelectedRouteLayer"
                            Visibility="Collapsed">
                 <i:Interaction.Behaviors>
-                    <Behaviors:CancelGestureEventBehavior />
+                    <behaviors:CancelGestureEventBehavior />
                 </i:Interaction.Behaviors>
                 <Rectangle x:Name="SelectedRouteBackground"
                            Fill="{StaticResource BrushSemiTransparentBackground}"
                            IsHitTestVisible="False"
                            Opacity="0" />
-                <Controls:MapPolyline DataContext="{Binding SelectedRoute, Mode=OneWay}"
+                <controls:MapPolyline DataContext="{Binding SelectedRoute, Mode=OneWay}"
                                       Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
                                       Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                       StrokeEndLineCap="Round"
@@ -642,24 +641,24 @@
                                       StrokeThickness="{StaticResource MapPolylineOuterStrokeThickness}"
                                       ZoomLevel="{Binding Parent.ZoomLevel.Value}">
                     <i:Interaction.Triggers>
-                        <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedRouteLayer}"
+                        <triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SelectedRouteLayer}"
                                                                     Element="{Binding ElementName=Map}">
                             <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}" />
-                        </Triggers:ElementMouseButtonActivityTrigger>
+                        </triggers:ElementMouseButtonActivityTrigger>
                     </i:Interaction.Triggers>
 
-                </Controls:MapPolyline>
-            </Maps:MapLayer>
-            <Maps:MapLayer x:Name="SelectedPushpinLayer"
+                </controls:MapPolyline>
+            </maps:MapLayer>
+            <maps:MapLayer x:Name="SelectedPushpinLayer"
                            Visibility="Collapsed">
                 <i:Interaction.Behaviors>
-                    <Behaviors:CancelGestureEventBehavior />
+                    <behaviors:CancelGestureEventBehavior />
                 </i:Interaction.Behaviors>
                 <Rectangle x:Name="SelectedPushpinBackground"
                            Fill="{StaticResource BrushSemiTransparentBackground}"
                            IsHitTestVisible="False"
                            Opacity="0" />
-                <Maps:Pushpin x:Name="SelectedPushpin"
+                <maps:Pushpin x:Name="SelectedPushpin"
                               Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                               DataContext="{Binding SelectedPushpin}"
                               Location="{Binding Data.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
@@ -671,16 +670,16 @@
                         <i:EventTrigger EventName="Tap">
                             <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}" />
                         </i:EventTrigger>
-                        <Triggers:ElementMouseButtonActivityTrigger Element="{Binding ElementName=Map}">
+                        <triggers:ElementMouseButtonActivityTrigger Element="{Binding ElementName=Map}">
                             <i:InvokeCommandAction Command="{Binding Parent.CommandGoToDefaultState, Mode=OneTime}" />
-                        </Triggers:ElementMouseButtonActivityTrigger>
+                        </triggers:ElementMouseButtonActivityTrigger>
                         <i:EventTrigger>
                             <ec:GoToStateAction StateName="Drop"
                                                 TargetName="SelectedPushpin"
                                                 UseTransitions="False" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <Controls:PushpinContent x:Name="SelectedPushpinContent"
+                    <controls:PushpinContent x:Name="SelectedPushpinContent"
                                              Address="{Binding Data.Address}"
                                              CommandRefresh="{Binding Parent.CommandUpdatePlace, Mode=OneTime}"
                                              CommandRefreshParameter="{Binding}"
@@ -692,9 +691,9 @@
                                              VisualState="Collapsed"
                                              WebSite="{Binding Data.WebSite}"
                                              WorkingState="{Binding Data.DataState}" />
-                </Maps:Pushpin>
-            </Maps:MapLayer>
-            <Maps:Pushpin x:Name="DragPushpin"
+                </maps:Pushpin>
+            </maps:MapLayer>
+            <maps:Pushpin x:Name="DragPushpin"
                           Background="{Binding Color, Converter={StaticResource ElementColorToBrushConverter}}"
                           DataContext="{Binding DragPushpin.Data}"
                           IsHitTestVisible="False"
@@ -708,14 +707,14 @@
                                             UseTransitions="False" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-                <Maps:Pushpin.RenderTransform>
+                <maps:Pushpin.RenderTransform>
                     <CompositeTransform />
-                </Maps:Pushpin.RenderTransform>
+                </maps:Pushpin.RenderTransform>
                 <Rectangle Height="32"
                            Width="32"
                            Fill="{Binding Icon, Converter={StaticResource PlaceIconToBrushConverter}}" />
-            </Maps:Pushpin>
-        </Maps:Map>
+            </maps:Pushpin>
+        </maps:Map>
         <Border x:Name="Toolbar"
                 Height="108"
                 Margin="10,0,0,0"
@@ -727,13 +726,13 @@
                 Opacity="{StaticResource OpacityShell}"
                 VerticalAlignment="Center">
             <i:Interaction.Behaviors>
-                <Behaviors:CancelGestureEventBehavior />
+                <behaviors:CancelGestureEventBehavior />
             </i:Interaction.Behaviors>
             <StackPanel>
-                <Controls:CircleButton Click="OnCaptureScreen">
+                <controls:CircleButton Click="OnCaptureScreen">
                     <Rectangle Style="{StaticResource IconRectangleStyle}"
                                Fill="{StaticResource BrushIconCamera}" />
-                </Controls:CircleButton>
+                </controls:CircleButton>
                 <Button Style="{StaticResource EmptyButton}"
                         x:Name="ExpandButton"
                         Height="40"
@@ -752,68 +751,68 @@
                 <StackPanel x:Name="ExpandedPanel"
                             Orientation="Vertical"
                             Visibility="Collapsed">
-                    <Controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}">
+                    <controls:CircleButton Command="{Binding CommandZoomIn, Mode=OneTime}">
                         <Rectangle Style="{StaticResource IconRectangleStyle}"
                                    Fill="{StaticResource BrushIconPlus}" />
-                    </Controls:CircleButton>
-                    <Controls:CircleButton Margin="0,10,0,0"
+                    </controls:CircleButton>
+                    <controls:CircleButton Margin="0,10,0,0"
                                            Command="{Binding CommandZoomOut, Mode=OneTime}">
                         <Rectangle Style="{StaticResource IconRectangleStyle}"
                                    Fill="{StaticResource BrushIconMinus}" />
-                    </Controls:CircleButton>
+                    </controls:CircleButton>
                     <Rectangle Height="35"
                                Fill="{StaticResource BrushIconEllipsis}" />
-                    <Controls:CircleButton Caption="street"
+                    <controls:CircleButton Caption="street"
                                            Command="{Binding CommandShowSatelliteHybridLayer, Mode=OneTime}"
                                            Visibility="{Binding IsStreetLayerVisible, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
-                        <Controls:CircleButton.Background>
+                        <controls:CircleButton.Background>
                             <ImageBrush ImageSource="/Assets/StreetView.png"
                                         Stretch="None" />
-                        </Controls:CircleButton.Background>
-                    </Controls:CircleButton>
-                    <Controls:CircleButton Caption="satellite"
+                        </controls:CircleButton.Background>
+                    </controls:CircleButton>
+                    <controls:CircleButton Caption="satellite"
                                            Command="{Binding CommandShowStreetLayer, Mode=OneTime}"
                                            Visibility="{Binding IsSatelliteHybridLayerVisible, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
-                        <Controls:CircleButton.Background>
+                        <controls:CircleButton.Background>
                             <ImageBrush ImageSource="/Assets/SatelliteView.png"
                                         Stretch="None" />
-                        </Controls:CircleButton.Background>
-                    </Controls:CircleButton>
-                    <Controls:CircleToggleButton Margin="0,10,0,0"
+                        </controls:CircleButton.Background>
+                    </controls:CircleButton>
+                    <controls:CircleToggleButton Margin="0,10,0,0"
                                                  Caption="traffic"
                                                  Command="{Binding CommandToggleMapOverlay, Mode=OneTime}"
                                                  IsChecked="{Binding IsTrafficLayerVisible, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                                                  IsEnabled="{Binding IsOnline.Value, Converter={StaticResource BooleanConverter}}">
-                        <Controls:CircleToggleButton.CommandParameter>
-                            <GoogleMapsControls:Layer>TrafficOverlay</GoogleMapsControls:Layer>
-                        </Controls:CircleToggleButton.CommandParameter>
+                        <controls:CircleToggleButton.CommandParameter>
+                            <googleMapsControls:Layer>TrafficOverlay</googleMapsControls:Layer>
+                        </controls:CircleToggleButton.CommandParameter>
                         <Rectangle Style="{StaticResource IconRectangleStyle}"
                                    Fill="{StaticResource BrushIconTraffic}" />
-                    </Controls:CircleToggleButton>
-                    <Controls:CircleToggleButton Margin="0,10,0,0"
+                    </controls:CircleToggleButton>
+                    <controls:CircleToggleButton Margin="0,10,0,0"
                                                  Caption="transit"
                                                  Command="{Binding CommandToggleMapOverlay, Mode=OneTime}"
                                                  IsChecked="{Binding IsTransitLayerVisible, Converter={StaticResource BooleanConverter}, Mode=OneWay}">
-                        <Controls:CircleToggleButton.CommandParameter>
-                            <GoogleMapsControls:Layer>TransitOverlay</GoogleMapsControls:Layer>
-                        </Controls:CircleToggleButton.CommandParameter>
+                        <controls:CircleToggleButton.CommandParameter>
+                            <googleMapsControls:Layer>TransitOverlay</googleMapsControls:Layer>
+                        </controls:CircleToggleButton.CommandParameter>
                         <Rectangle Style="{StaticResource IconRectangleStyle}"
                                    Fill="{StaticResource BrushIconTrain}" />
-                    </Controls:CircleToggleButton>
+                    </controls:CircleToggleButton>
                     <Rectangle Height="35"
                                Fill="{StaticResource BrushIconEllipsis}" />
-                    <Controls:CircleToggleButton Caption="network"
+                    <controls:CircleToggleButton Caption="network"
                                                  IsChecked="{Binding IsOnline.Value, Mode=TwoWay}">
                         <Rectangle Style="{StaticResource IconRectangleStyle}"
                                    Fill="{StaticResource BrushIconWifi}" />
-                    </Controls:CircleToggleButton>
+                    </controls:CircleToggleButton>
                 </StackPanel>
             </StackPanel>
         </Border>
         <Grid x:Name="SearchPanel"
               Visibility="Collapsed">
             <i:Interaction.Behaviors>
-                <Behaviors:CancelGestureEventBehavior />
+                <behaviors:CancelGestureEventBehavior />
             </i:Interaction.Behaviors>
             <Rectangle x:Name="SearchBackground"
                        Fill="{StaticResource BrushSemiTransparentBackground}"
@@ -824,10 +823,10 @@
                   Background="{StaticResource PhoneChromeBrush}"
                   VerticalAlignment="Top">
                 <i:Interaction.Triggers>
-                    <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SearchPanel}"
+                    <triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=SearchPanel}"
                                                                 Element="{Binding ElementName=Map}">
                         <i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
-                    </Triggers:ElementMouseButtonActivityTrigger>
+                    </triggers:ElementMouseButtonActivityTrigger>
                 </i:Interaction.Triggers>
                 <Grid.RenderTransform>
                     <CompositeTransform TranslateY="-52" />
@@ -836,7 +835,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Controls:AutoCompleteBox x:Name="SearchBox"
+                <controls:AutoCompleteBox x:Name="SearchBox"
                                           Height="76"
                                           Margin="-12"
                                           FilterMode="None"
@@ -846,27 +845,27 @@
                                           SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
                                           Text="{Binding SearchInput.Value, Mode=TwoWay}"
                                           ValueMemberBinding="{Binding Description}">
-                    <Controls:AutoCompleteBox.InputScope>
+                    <controls:AutoCompleteBox.InputScope>
                         <InputScope>
                             <InputScopeName NameValue="Search" />
                         </InputScope>
-                    </Controls:AutoCompleteBox.InputScope>
+                    </controls:AutoCompleteBox.InputScope>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Populating">
                             <i:InvokeCommandAction Command="{Binding CommandGetSuggestions}" />
                         </i:EventTrigger>
-                        <Triggers:KeyPressTrigger CanTrigger="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
+                        <triggers:KeyPressTrigger CanTrigger="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
                                                   Key="Enter">
                             <i:InvokeCommandAction Command="{Binding CommandSearch, Mode=OneTime}" />
-                        </Triggers:KeyPressTrigger>
+                        </triggers:KeyPressTrigger>
                     </i:Interaction.Triggers>
-                    <Controls:AutoCompleteBox.ItemTemplate>
+                    <controls:AutoCompleteBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Margin="{StaticResource PhoneVerticalMargin}"
                                        Text="{Binding Description}" />
                         </DataTemplate>
-                    </Controls:AutoCompleteBox.ItemTemplate>
-                </Controls:AutoCompleteBox>
+                    </controls:AutoCompleteBox.ItemTemplate>
+                </controls:AutoCompleteBox>
                 <Button Grid.Column="1"
                         Command="{Binding CommandSearch, Mode=OneTime}"
                         IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
@@ -886,7 +885,7 @@
         <Grid x:Name="RoutePanel"
               Visibility="Collapsed">
             <i:Interaction.Behaviors>
-                <Behaviors:CancelGestureEventBehavior />
+                <behaviors:CancelGestureEventBehavior />
             </i:Interaction.Behaviors>
             <Rectangle x:Name="RouteBackground"
                        Fill="{StaticResource BrushSemiTransparentBackground}"
@@ -897,14 +896,14 @@
                   RenderTransformOrigin="0.5,0.5"
                   VerticalAlignment="Top">
                 <i:Interaction.Triggers>
-                    <Triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}"
+                    <triggers:ElementMouseButtonActivityTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}"
                                                                 Element="{Binding ElementName=Map}">
                         <i:InvokeCommandAction Command="{Binding CommandGoToDefaultState, Mode=OneTime}" />
-                    </Triggers:ElementMouseButtonActivityTrigger>
-                    <Triggers:KeyPressTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}"
+                    </triggers:ElementMouseButtonActivityTrigger>
+                    <triggers:KeyPressTrigger CanTrigger="{Binding Visibility, Converter={StaticResource BooleanConverter}, ElementName=RoutePanel}"
                                               Key="Enter">
                         <i:InvokeCommandAction Command="{Binding CommandRoute, Mode=OneTime}" />
-                    </Triggers:KeyPressTrigger>
+                    </triggers:KeyPressTrigger>
                 </i:Interaction.Triggers>
                 <Grid.RenderTransform>
                     <CompositeTransform TranslateY="-300" />
@@ -929,7 +928,7 @@
                          Text="{Binding DepartureLocation.Address, Mode=TwoWay}"
                          VerticalAlignment="Center">
                     <i:Interaction.Behaviors>
-                        <Behaviors:RealTimeBindingBehavior />
+                        <behaviors:RealTimeBindingBehavior />
                     </i:Interaction.Behaviors>
                     <TextBox.InputScope>
                         <InputScope>
@@ -937,13 +936,13 @@
                         </InputScope>
                     </TextBox.InputScope>
                 </TextBox>
-                <Controls:CircleButton Grid.Column="2"
+                <controls:CircleButton Grid.Column="2"
                                        Margin="0,0,12,0"
                                        Command="{Binding CommandSetDepartLocationToCurrentLocation, Mode=OneTime}"
                                        VerticalAlignment="Center">
                     <Rectangle Style="{StaticResource IconRectangleStyle}"
                                Fill="{StaticResource BrushIconCurrentLocation}" />
-                </Controls:CircleButton>
+                </controls:CircleButton>
                 <Button Grid.RowSpan="2"
                         Style="{StaticResource EmptyButton}"
                         Command="{Binding CommandSwapRouteLocations}">
@@ -961,7 +960,7 @@
                          Text="{Binding ArrivalLocation.Address, Mode=TwoWay}"
                          VerticalAlignment="Center">
                     <i:Interaction.Behaviors>
-                        <Behaviors:RealTimeBindingBehavior />
+                        <behaviors:RealTimeBindingBehavior />
                     </i:Interaction.Behaviors>
                     <TextBox.InputScope>
                         <InputScope>
@@ -969,14 +968,14 @@
                         </InputScope>
                     </TextBox.InputScope>
                 </TextBox>
-                <Controls:CircleButton Grid.Column="2"
+                <controls:CircleButton Grid.Column="2"
                                        Grid.Row="1"
                                        Margin="0,0,12,0"
                                        Command="{Binding CommandSetArriveLocationToCurrentLocation, Mode=OneWay}"
                                        VerticalAlignment="Center">
                     <Rectangle Style="{StaticResource IconRectangleStyle}"
                                Fill="{StaticResource BrushIconCurrentLocation}" />
-                </Controls:CircleButton>
+                </controls:CircleButton>
                 <Grid Grid.ColumnSpan="3"
                       Grid.Row="2">
                     <Grid.RowDefinitions>
@@ -1012,8 +1011,8 @@
             </Grid>
         </Grid>
     </Grid>
-    <ShellExtension:ApplicationBar.ApplicationBar>
-        <ShellExtension:ApplicationBar ButtonCommandMemberPath="Command"
+    <shellExtension:ApplicationBar.ApplicationBar>
+        <shellExtension:ApplicationBar ButtonCommandMemberPath="Command"
                                        ButtonIconUriMemberPath="IconUri"
                                        ButtonIsEnabledMemberPath="IsEnabled"
                                        ButtonItemsSource="{Binding SelectedAppBarButtonItemsSource}"
@@ -1024,5 +1023,5 @@
                                        MenuItemsSource="{Binding SelectedAppBarMenuItemsSource}"
                                        MenuItemTextMemberPath="Text"
                                        Opacity="{StaticResource OpacityShell}" />
-    </ShellExtension:ApplicationBar.ApplicationBar>
-</CodifyPhone:PhoneApplicationPage>
+    </shellExtension:ApplicationBar.ApplicationBar>
+</codifyPhone:PhoneApplicationPage>

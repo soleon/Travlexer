@@ -1,16 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:Converters="clr-namespace:Travlexer.WindowsPhone.Converters"
-                    xmlns:CoreConverters="clr-namespace:Codify.Converters;assembly=Codify">
-    <Converters:ElementColorToBrushConverter x:Key="ElementColorToBrushConverter" />
-    <Converters:PlaceIconToBrushConverter x:Key="PlaceIconToBrushConverter" />
-    <Converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
-    <CoreConverters:BooleanConverter x:Key="BooleanConverter" />
-    <CoreConverters:VisibilityConverter x:Key="VisibilityConverter" />
-    <CoreConverters:LocalDateTimeConverter x:Key="LocalDateTimeConverter" />
-    <Converters:RouteMethodKeyValueIconConverter x:Key="RouteMethodKeyValueIconConverter" />
-    <Converters:RouteModeKeyValueIconConverter x:Key="RouteModeKeyValueIconConverter" />
-    <Converters:LocationCollectionToLocationCollectionConverter x:Key="LocationCollectionToLocationCollectionConverter" />
-    <Converters:PlaceIconKeyValueConverter x:Key="PlaceIconKeyValueConverter" />
-    <Converters:ElementColorKeyValueConverter x:Key="ElementColorKeyValueConverter" />
+                    xmlns:converters="clr-namespace:Travlexer.WindowsPhone.Converters"
+                    xmlns:coreConverters="clr-namespace:Codify.Converters;assembly=Codify">
+    <converters:ElementColorToBrushConverter x:Key="ElementColorToBrushConverter" />
+    <converters:PlaceIconToBrushConverter x:Key="PlaceIconToBrushConverter" />
+    <converters:LocationGeoCoordinateConverter x:Key="LocationGeoCoordinateConverter" />
+    <coreConverters:BooleanConverter x:Key="BooleanConverter" />
+    <coreConverters:VisibilityConverter x:Key="VisibilityConverter" />
+    <coreConverters:LocalDateTimeConverter x:Key="LocalDateTimeConverter" />
+    <converters:RouteMethodKeyValueIconConverter x:Key="RouteMethodKeyValueIconConverter" />
+    <converters:RouteModeKeyValueIconConverter x:Key="RouteModeKeyValueIconConverter" />
+    <converters:LocationCollectionToLocationCollectionConverter x:Key="LocationCollectionToLocationCollectionConverter" />
+    <converters:PlaceIconKeyValueConverter x:Key="PlaceIconKeyValueConverter" />
+    <converters:ElementColorKeyValueConverter x:Key="ElementColorKeyValueConverter" />
 </ResourceDictionary>

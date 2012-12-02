@@ -100,12 +100,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public string Distance
         {
-            get { return Data.Distance.ToDistanceText(); }
+            get { return Data.DistanceText; }
         }
 
         public string Duration
         {
-            get { return Data.Duration.ToDurationText(); }
+            get { return Data.DurationText; }
         }
 
         public IEnumerable<Location> MapViewLocations

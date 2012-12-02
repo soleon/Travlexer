@@ -5,10 +5,10 @@
                             xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                            xmlns:Controls="clr-namespace:Travlexer.WindowsPhone.Controls"
-                            xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
-                            xmlns:Core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
-                            xmlns:GoogleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
+                            xmlns:localControls="clr-namespace:Travlexer.WindowsPhone.Controls"
+                            xmlns:maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+                            xmlns:core="clr-namespace:Microsoft.Phone.Controls.Maps.Core;assembly=Microsoft.Phone.Controls.Maps"
+                            xmlns:googleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
                             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                             xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
                             x:Class="Travlexer.WindowsPhone.Views.RouteDetailsView"
@@ -55,14 +55,14 @@
                                     <Run Text="{Binding Duration}"
                                          Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
                                 </TextBlock>
-                                <Controls:CircleButton Grid.Column="2"
+                                <localControls:CircleButton Grid.Column="2"
                                                        VerticalAlignment="Center"
                                                        Command="{Binding DataContext.CommandGoToStep, ElementName=Page}"
                                                        CommandParameter="{Binding Data}"
                                                        Click="GoToStepButtonClick">
                                     <Rectangle Style="{StaticResource IconRectangleStyle}"
                                                Fill="{StaticResource BrushIconRightArrow}" />
-                                </Controls:CircleButton>
+                                </localControls:CircleButton>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -71,49 +71,49 @@
         </controls:PivotItem>
         <controls:PivotItem Header="map"
                             x:Name="MapPivotItem">
-            <Maps:Map CopyrightVisibility="Collapsed"
+            <maps:Map CopyrightVisibility="Collapsed"
                       CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
                       LogoVisibility="Collapsed"
                       x:Name="Map"
                       AnimationLevel="UserInput"
                       ZoomBarVisibility="Visible">
-                <Maps:Map.Mode>
-                    <Core:MercatorMode />
-                </Maps:Map.Mode>
-                <Maps:MapLayer>
-                    <Maps:MapTileLayer>
-                        <Maps:MapTileLayer.TileSources>
-                            <GoogleMapsControls:TileSource Layer="Street" />
-                        </Maps:MapTileLayer.TileSources>
-                    </Maps:MapTileLayer>
-                    <Controls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
+                <maps:Map.Mode>
+                    <core:MercatorMode />
+                </maps:Map.Mode>
+                <maps:MapLayer>
+                    <maps:MapTileLayer>
+                        <maps:MapTileLayer.TileSources>
+                            <googleMapsControls:TileSource Layer="Street" />
+                        </maps:MapTileLayer.TileSources>
+                    </maps:MapTileLayer>
+                    <localControls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
                                           Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
                                           StrokeEndLineCap="Round"
                                           StrokeStartLineCap="Round"
                                           StrokeThickness="{StaticResource MapPolylineInnerStrokeThickness}"
                                           x:Name="RoutePolyline"
                                           ZoomLevel="{Binding ZoomLevel, ElementName=Map}" />
-                    <Maps:Pushpin IsHitTestVisible="False"
+                    <maps:Pushpin IsHitTestVisible="False"
                                   Location="{Binding CurrentLocation}"
                                   PositionOrigin="Center"
                                   Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
-                        <Maps:Pushpin.Template>
-                            <ControlTemplate TargetType="Maps:Pushpin">
+                        <maps:Pushpin.Template>
+                            <ControlTemplate TargetType="maps:Pushpin">
                                 <Rectangle Height="30"
                                            Width="30"
                                            Fill="{StaticResource BrushIconCurrentLocationBlack}" />
                             </ControlTemplate>
-                        </Maps:Pushpin.Template>
-                    </Maps:Pushpin>
-                    <Maps:MapItemsControl ItemsSource="{Binding Steps}">
-                        <Maps:MapItemsControl.ItemTemplate>
+                        </maps:Pushpin.Template>
+                    </maps:Pushpin>
+                    <maps:MapItemsControl ItemsSource="{Binding Steps}">
+                        <maps:MapItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Maps:Pushpin Location="{Binding Data.StartLocation, Converter={StaticResource LocationGeoCoordinateConverter}}"
+                                <maps:Pushpin Location="{Binding Data.StartLocation, Converter={StaticResource LocationGeoCoordinateConverter}}"
                                               Style="{x:Null}"
                                               Content="{Binding Index}"
                                               PositionOrigin="Center">
-                                    <Maps:Pushpin.Template>
-                                        <ControlTemplate TargetType="Maps:Pushpin">
+                                    <maps:Pushpin.Template>
+                                        <ControlTemplate TargetType="maps:Pushpin">
                                             <Border BorderBrush="{Binding Stroke, ElementName=RoutePolyline}"
                                                     BorderThickness="{StaticResource PhoneBorderThickness}"
                                                     VerticalAlignment="Center"
@@ -129,12 +129,12 @@
                                                            FontSize="12" />
                                             </Border>
                                         </ControlTemplate>
-                                    </Maps:Pushpin.Template>
-                                </Maps:Pushpin>
+                                    </maps:Pushpin.Template>
+                                </maps:Pushpin>
                             </DataTemplate>
-                        </Maps:MapItemsControl.ItemTemplate>
-                    </Maps:MapItemsControl>
-                    <Maps:Pushpin Location="{Binding ArrivalPlace.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
+                        </maps:MapItemsControl.ItemTemplate>
+                    </maps:MapItemsControl>
+                    <maps:Pushpin Location="{Binding ArrivalPlace.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
                                   Name="Pushpin"
                                   PositionOrigin="BottomCenter">
                         <i:Interaction.Triggers>
@@ -145,9 +145,9 @@
                         </i:Interaction.Triggers>
                         <Rectangle Style="{StaticResource IconRectangleStyle}"
                                    Fill="{StaticResource BrushIconGoal}" />
-                    </Maps:Pushpin>
-                </Maps:MapLayer>
-            </Maps:Map>
+                    </maps:Pushpin>
+                </maps:MapLayer>
+            </maps:Map>
         </controls:PivotItem>
         <controls:PivotItem Header="summary">
             <Grid>

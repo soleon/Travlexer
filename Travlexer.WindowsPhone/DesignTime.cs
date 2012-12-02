@@ -112,6 +112,9 @@ namespace Travlexer.WindowsPhone
 
         private RouteDetailsViewModel _routeDetailsViewModel;
 
+        public SettingsViewModel Settings { get { return _settings ?? (_settings = _kernel.Get<SettingsViewModel>()); } }
+        private SettingsViewModel _settings;
+
         private void Initialize()
         {
             if (_kernel != null) return;

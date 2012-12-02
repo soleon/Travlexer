@@ -142,7 +142,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
             {
                 var leg = legs[0];
                 newRoute.Distance = leg.Distance.Value;
+                newRoute.DistanceText = leg.Distance.Text;
                 newRoute.Duration = leg.Duration.Value;
+                newRoute.DurationText = leg.Duration.Text;
+
                 var steps = leg.Steps;
                 if (!steps.IsNullOrEmpty())
                 {
@@ -154,7 +157,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
                         routeSteps.Add(new RouteStep
                         {
                             Distance = step.Distance.Value,
+                            DistanceText = step.Distance.Text,
                             Duration = step.Duration.Value,
+                            DurationText = step.Duration.Text,
                             Instruction = XmlTagRegex.Replace(DivTagRegex.Replace(step.HtmlInstructions, Environment.NewLine), string.Empty),
                             StartLocation = step.StartLocation.ToLocalLocation(),
                             EndLocation = step.EndLocation.ToLocalLocation()

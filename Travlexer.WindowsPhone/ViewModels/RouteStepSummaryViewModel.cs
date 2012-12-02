@@ -9,8 +9,8 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             Index = index;
             Data = step;
-            Distance = step.Distance.ToDistanceText();
-            Duration = step.Duration.ToDurationText();
+            Distance = step.DistanceText;
+            Duration = step.DurationText;
         }
 
         public uint Index { get; private set; }
