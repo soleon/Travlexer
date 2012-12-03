@@ -53,10 +53,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             if (DesignerProperties.IsInDesignTool) return;
 #endif
             // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
+            _geoWatcher = ApplicationContext.GeoCoordinateWatcher;
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
-            CommandStartGeoWatcher = new DelegateCommand(_geoWatcher.Start);
-            CommandStopGeoWatcher = new DelegateCommand(_geoWatcher.Stop);
         }
 
         #endregion
@@ -100,12 +98,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public string Distance
         {
-            get { return Data.DistanceText; }
+            get { return Data.Distance.ToDistanceText(); }
         }
 
         public string Duration
         {
-            get { return Data.DurationText; }
+            get { return Data.Duration.ToDurationText(); }
         }
 
         public IEnumerable<Location> MapViewLocations
@@ -132,16 +130,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Commands
 
         public DelegateCommand<RouteStep> CommandGoToStep { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that starts geo coordinate watcher.
-        /// </summary>
-        public DelegateCommand CommandStartGeoWatcher { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that stops geo coordinate watcher.
-        /// </summary>
-        public DelegateCommand CommandStopGeoWatcher { get; private set; }
 
         #endregion
     }

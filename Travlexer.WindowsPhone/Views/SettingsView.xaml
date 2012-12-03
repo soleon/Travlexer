@@ -5,14 +5,44 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+                            xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
                             Style="{StaticResource PageDefault}"
                             d:DataContext="{Binding Settings, Source={StaticResource DesignTime}}"
                             mc:Ignorable="d">
-    <StackPanel>
-        <toolkit:ToggleSwitch IsChecked="{Binding UseMapAnimation.Value, Mode=TwoWay}"
-                              Header="Use Map Animation"/>
-        <toolkit:ListPicker Header="Unit System"
-                            ItemsSource="{Binding UnitSystems}"
-                            SelectedItem="{Binding SelectedUnitSystem.Value, Mode=TwoWay}"/>
-    </StackPanel>
+    <controls:Pivot Title="SETTINGS">
+        <controls:PivotItem Header="settings">
+            <StackPanel>
+                <toolkit:ListPicker Header="Unit system"
+                                    ItemsSource="{Binding UnitSystems}"
+                                    SelectedItem="{Binding SelectedUnitSystem.Value, Mode=TwoWay}" />
+                <toolkit:ToggleSwitch IsChecked="{Binding UseMapAnimation.Value, Mode=TwoWay}"
+                                      Header="Use map animation" />
+                <toolkit:ToggleSwitch Header="Use location service"
+                                      IsChecked="{Binding UseLocationService.Value, Mode=TwoWay}" />
+                <toolkit:ToggleSwitch Header="Prevent screen lock"
+                                      IsChecked="{Binding PreventScreenLock.Value,Mode=TwoWay}" />
+            </StackPanel>
+        </controls:PivotItem>
+        <controls:PivotItem Header="about">
+            <RichTextBox>
+                <Paragraph>
+                    <Run Text="Version: " />
+                    <Run Text="{Binding AppVersion}" />
+                    <LineBreak />
+                    <Run Text="Written by: " />
+                    <Run Text="Leon Zhou" />
+                    <LineBreak />
+                    <Run Text="Contact: " />
+                    <Hyperlink Command="{Binding CommandSendEmail}">
+                        codifying@gmail.com
+                    </Hyperlink>
+                    <LineBreak />
+                    <Run Text="Tech blog: " />
+                    <Hyperlink Command="{Binding CommandNavigateToWebSite}">
+                        codifying.wordpress.com
+                    </Hyperlink>
+                </Paragraph>
+            </RichTextBox>
+        </controls:PivotItem>
+    </controls:Pivot>
 </phone:PhoneApplicationPage>

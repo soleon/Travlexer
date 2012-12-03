@@ -486,12 +486,6 @@
                 <i:EventTrigger EventName="DoubleTap">
                     <i:InvokeCommandAction Command="{Binding CommandStopTrackingCurrentLocation, Mode=OneTime}" />
                 </i:EventTrigger>
-                <i:EventTrigger EventName="Loaded">
-                    <i:InvokeCommandAction Command="{Binding CommandStartGeoWatcher, Mode=OneTime}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="Unloaded">
-                    <i:InvokeCommandAction Command="{Binding CommandStopGeoWatcher, Mode=OneTime}" />
-                </i:EventTrigger>
             </i:Interaction.Triggers>
             <toolkit:GestureService.GestureListener>
                 <toolkit:GestureListener PinchStarted="OnMapPinchStarted" />

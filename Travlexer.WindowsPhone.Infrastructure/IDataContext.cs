@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
+using System.Reflection;
 using Codify.Entities;
 using Codify.GoogleMaps.Controls;
 using Codify.Services;
@@ -91,6 +92,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
         ///     Gets a value indicates that if map animation should be used.
         /// </summary>
         ObservableValue<bool> UseMapAnimation { get; }
+
+        ObservableValue<bool> UseLocationService { get; }
+
+        ObservableValue<bool> PreventScreenLock { get; }
+        
+        Version AppVersion { get; }
 
 
         /// <summary>

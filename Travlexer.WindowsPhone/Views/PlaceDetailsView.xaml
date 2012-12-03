@@ -1,6 +1,6 @@
-﻿<CodifyPhone:PhoneApplicationPage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<codifyPhone:PhoneApplicationPage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                                  xmlns:CodifyPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
+                                  xmlns:codifyPhone="clr-namespace:Codify.WindowsPhone;assembly=Codify.WindowsPhone"
                                   xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
                                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,7 +15,7 @@
         <Binding Path="PlaceDetailsViewModel"
                  Source="{StaticResource DesignTime}" />
     </d:DesignProperties.DataContext>
-    <CodifyPhone:PhoneApplicationPage.Resources>
+    <codifyPhone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="PlaceIconFullModeItemTemplate">
             <Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
                 <Grid.ColumnDefinitions>
@@ -85,10 +85,10 @@
                            d:LayoutOverrides="Width, Height" />
             </Grid>
         </DataTemplate>
-    </CodifyPhone:PhoneApplicationPage.Resources>
-    <CodifyPhone:PhoneApplicationPage.Style>
+    </codifyPhone:PhoneApplicationPage.Resources>
+    <codifyPhone:PhoneApplicationPage.Style>
         <StaticResource ResourceKey="PageDefault" />
-    </CodifyPhone:PhoneApplicationPage.Style>
+    </codifyPhone:PhoneApplicationPage.Style>
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
                                  IsVisible="True" />
@@ -314,4 +314,4 @@
             </Grid>
         </controls:PivotItem>
     </controls:Pivot>
-</CodifyPhone:PhoneApplicationPage>
+</codifyPhone:PhoneApplicationPage>

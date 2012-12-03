@@ -7,7 +7,7 @@ namespace Codify.ViewModels
         #region Public Properties
 
         /// <summary>
-        ///     Gets the object that contains essential data of this view model.
+        ///     Gets or sets the object that contains essential data of this view model.
         /// </summary>
         public T Data { get; set; }
 

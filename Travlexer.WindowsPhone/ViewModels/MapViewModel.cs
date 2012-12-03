@@ -169,10 +169,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 #endif
 
             // Initialise geo-coordinate watcher.
-            _geoWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
+            _geoWatcher = ApplicationContext.GeoCoordinateWatcher;
             _geoWatcher.PositionChanged += OnGeoWatcherPositionChanged;
-            CommandStartGeoWatcher = new DelegateCommand(_geoWatcher.Start);
-            CommandStopGeoWatcher = new DelegateCommand(_geoWatcher.Stop);
 
             // Try centering on current location if available.
             if (IsTrackingCurrentLocation.Value)
@@ -184,453 +182,6 @@ namespace Travlexer.WindowsPhone.ViewModels
                 }
             }
         }
-
-        #endregion
-
-
-        #region Public Properties
-
-        /// <summary>
-        ///     Gets the collection of all user pins.
-        /// </summary>
-        public AdaptedObservableCollection<Place, PlaceViewModel> Pushpins { get; private set; }
-
-        /// <summary>
-        ///     Gets or sets the selected place.
-        /// </summary>
-        public PlaceViewModel SelectedPushpin
-        {
-            get { return _selectedPushpin; }
-            set
-            {
-                if (!SetValue(ref _selectedPushpin, value, SelectedPushpinProperty))
-                {
-                    return;
-                }
-                if (value == null)
-                {
-                    VisualState.Value = VisualStates.Default;
-                }
-                else
-                {
-                    DragPushpin = null;
-                    var place = value.Data;
-                    Center.Value = place.Location.ToGeoCoordinate();
-                    if (place.DataState != DataStates.Finished)
-                    {
-                        OnUpdatePlace(value);
-                    }
-
-                    VisualState.Value = VisualStates.PushpinSelected;
-                }
-                _data.SelectedPlace.Value = value == null ? null : value.Data;
-            }
-        }
-
-        private PlaceViewModel _selectedPushpin;
-        private const string SelectedPushpinProperty = "SelectedPushpin";
-
-        /// <summary>
-        ///     Gets all routes planned by the user.
-        /// </summary>
-        public AdaptedObservableCollection<Route, RouteViewModel> Routes { get; private set; }
-
-        /// <summary>
-        ///     Gets or sets the selected route.
-        /// </summary>
-        public RouteViewModel SelectedRoute
-        {
-            get { return _selectedRoute; }
-            set
-            {
-                if (!SetValue(ref _selectedRoute, value, SelectedRouteProperty)) return;
-                _data.SelectedRoute.Value = value == null ? null : value.Data;
-                VisualState.Value = value == null ? VisualStates.Default : VisualStates.RouteSelected;
-            }
-        }
-
-        private RouteViewModel _selectedRoute;
-        private const string SelectedRouteProperty = "SelectedRoute";
-
-        /// <summary>
-        ///     Gets or sets the pushpin that's been dragged.
-        /// </summary>
-        public PlaceViewModel DragPushpin
-        {
-            get { return _dragPushpin; }
-            set
-            {
-                if (!SetValue(ref _dragPushpin, value, DragPushpinProperty))
-                {
-                    return;
-                }
-                if (value == null)
-                {
-                    VisualState.Value = VisualStates.Default;
-                }
-                else
-                {
-                    SelectedPushpin = null;
-                    VisualState.Value = VisualStates.Drag;
-                    IsTrackingCurrentLocation.Value = false;
-                }
-            }
-        }
-
-        private PlaceViewModel _dragPushpin;
-        private const string DragPushpinProperty = "DragPushpin";
-
-        public GeoCoordinate CurrentLocation
-        {
-            get { return _currentLocation; }
-            set { SetValue(ref _currentLocation, value, CurrentLocationProperty); }
-        }
-
-        private GeoCoordinate _currentLocation;
-        private const string CurrentLocationProperty = "CurrentLocation";
-
-        /// <summary>
-        ///     Gets or sets the map center geo-coordination.
-        /// </summary>
-        public ObservableValue<GeoCoordinate> Center
-        {
-            get { return _data.MapCenter; }
-        }
-
-        /// <summary>
-        ///     Gets or sets the zoom level of the map.
-        /// </summary>
-        public ObservableValue<double> ZoomLevel
-        {
-            get { return _data.MapZoomLevel; }
-        }
-
-        /// <summary>
-        ///     Gets the suggestions based on the <see cref="SearchInput" />.
-        /// </summary>
-        public ReadOnlyObservableCollection<SearchSuggestion> Suggestions { get; private set; }
-
-        private readonly ObservableCollection<SearchSuggestion> _suggestions = new ObservableCollection<SearchSuggestion>();
-
-        /// <summary>
-        ///     Gets or sets the selected <see cref="Travlexer.Data.SearchSuggestion" />.
-        /// </summary>
-        public SearchSuggestion SelectedSuggestion
-        {
-            get { return _selectedSuggestion; }
-            set
-            {
-                if (SetValue(ref _selectedSuggestion, value, SelectedSuggestionProperty) && value != null)
-                {
-                    OnSuggestionSelected();
-                }
-            }
-        }
-
-        private SearchSuggestion _selectedSuggestion;
-        private const string SelectedSuggestionProperty = "SelectedSuggestion";
-
-        /// <summary>
-        ///     Gets or sets the search input.
-        /// </summary>
-        public ObservableValue<string> SearchInput
-        {
-            get { return _data.SearchInput; }
-        }
-
-        /// <summary>
-        ///     Gets the visual state of the view.
-        /// </summary>
-        public ObservableValue<VisualStates> VisualState { get; private set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether the map is tracking current location.
-        /// </summary>
-        public ObservableValue<bool> IsTrackingCurrentLocation
-        {
-            get { return _configuration.IsTrackingCurrentLocation; }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether this instance is busy.
-        /// </summary>
-        /// <value>
-        ///     <c>true</c> if this instance is busy; otherwise, <c>false</c> .
-        /// </value>
-        public ObservableValue<bool> IsBusy
-        {
-            get { return _configuration.IsBusy; }
-        }
-
-        /// <summary>
-        ///     Gets the visibility of online street layer.
-        /// </summary>
-        public Visibility IsStreetLayerVisible
-        {
-            get { return _data.MapBaseLayer.Value == Layer.Street ? Visibility.Visible : Visibility.Collapsed; }
-        }
-
-        private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
-
-        /// <summary>
-        ///     Gets the visibility of online satellite hybrid layer.
-        /// </summary>
-        public Visibility IsSatelliteHybridLayerVisible
-        {
-            get { return _data.MapBaseLayer.Value == Layer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
-        }
-
-        private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
-
-        /// <summary>
-        ///     Gets the visibility of online traffic layer.
-        /// </summary>
-        public Visibility IsTrafficLayerVisible
-        {
-            get { return _data.MapOverlays.Contains(Layer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
-        }
-
-        private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
-
-        /// <summary>
-        ///     Gets the visibility of online transit layer.
-        /// </summary>
-        public Visibility IsTransitLayerVisible
-        {
-            get { return _data.MapOverlays.Contains(Layer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
-        }
-
-        private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
-
-        /// <summary>
-        ///     Gets the state of the toolbar.
-        /// </summary>
-        public ObservableValue<ExpansionStates> ToolbarState
-        {
-            get { return _configuration.ToolbarState; }
-        }
-
-        /// <summary>
-        ///     Gets the value indicates if the application is working in offline mode.
-        /// </summary>
-        public ObservableValue<bool> IsOnline
-        {
-            get { return _configuration.IsOnline; }
-        }
-
-        /// <summary>
-        ///     Gets the available route modes.
-        /// </summary>
-        public List<KeyValueIcon<TravelMode, string, ImageBrush>> TravelModes
-        {
-            get { return RouteModeKeyValueIconConverter.TravelModes; }
-        }
-
-        /// <summary>
-        ///     Gets the selected route mode.
-        /// </summary>
-        public ObservableValue<TravelMode> SelectedTravelMode
-        {
-            get { return _data.TravelMode; }
-        }
-
-        /// <summary>
-        ///     Gets the available route methods.
-        /// </summary>
-        public List<KeyValueIcon<RouteMethod, string, ImageBrush>> RouteMethods
-        {
-            get { return RouteMethodKeyValueIconConverter.RouteMethods; }
-        }
-
-        /// <summary>
-        ///     Gets the selected route method.
-        /// </summary>
-        public ObservableValue<RouteMethod> SelectedRouteMethod
-        {
-            get { return _data.RouteMethod; }
-        }
-
-        /// <summary>
-        ///     Gets the departure location.
-        /// </summary>
-        public RouteLocation DepartureLocation
-        {
-            get { return _departureLocation; }
-            private set { SetValue(ref _departureLocation, value, DepartureLocationProperty); }
-        }
-
-        private RouteLocation _departureLocation;
-        private const string DepartureLocationProperty = "DepartureLocation";
-
-        /// <summary>
-        ///     Gets the arrival location.
-        /// </summary>
-        public RouteLocation ArrivalLocation
-        {
-            get { return _arrivalLocation; }
-            private set { SetValue(ref _arrivalLocation, value, ArrivalLocationProperty); }
-        }
-
-        private RouteLocation _arrivalLocation;
-        private const string ArrivalLocationProperty = "ArrivalLocation";
-
-        /// <summary>
-        ///     Gets the application bar button items sources.
-        /// </summary>
-        public ObservableCollection<AppBarButtonViewModel>[] AppBarButtonItemsSources { get; private set; }
-
-        public ObservableCollection<AppBarMenuItemViewModel>[] AppBarMenuItemsSources { get; private set; }
-
-        /// <summary>
-        ///     Gets the selected app bar button items source.
-        /// </summary>
-        public ObservableCollection<AppBarButtonViewModel> SelectedAppBarButtonItemsSource
-        {
-            get { return _selectedAppBarButtonItemsSource; }
-            private set { SetValue(ref _selectedAppBarButtonItemsSource, value, SelectedAppBarButtonItemsSourceProperty); }
-        }
-
-        private ObservableCollection<AppBarButtonViewModel> _selectedAppBarButtonItemsSource;
-        private const string SelectedAppBarButtonItemsSourceProperty = "SelectedAppBarButtonItemsSource";
-
-        public ObservableCollection<AppBarMenuItemViewModel> SelectedAppBarMenuItemsSource
-        {
-            get { return _selectedAppBarMenuItemsSource; }
-            private set { SetValue(ref _selectedAppBarMenuItemsSource, value, SelectedAppBarMenuItemsSourceProperty); }
-        }
-
-        private ObservableCollection<AppBarMenuItemViewModel> _selectedAppBarMenuItemsSource;
-        private const string SelectedAppBarMenuItemsSourceProperty = "SelectedAppBarMenuItemsSource";
-
-        /// <summary>
-        ///     Gets a value indicating whether this the application bar is visible.
-        /// </summary>
-        public bool IsAppBarVisible
-        {
-            get { return _isAppBarVisible; }
-            private set { SetValue(ref _isAppBarVisible, value, IsAppBarVisibleProperty); }
-        }
-
-        private bool _isAppBarVisible = true;
-        private const string IsAppBarVisibleProperty = "IsAppBarVisible";
-        
-        #endregion
-
-
-        #region Commands
-
-        /// <summary>
-        ///     Gets the command that adds a user pin.
-        /// </summary>
-        public DelegateCommand<Location> CommandAddPlace { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that toggles the pushpin content state.
-        /// </summary>
-        public DelegateCommand<PlaceViewModel> CommandSelectPushpin { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that toggles the pushpin content state.
-        /// </summary>
-        public DelegateCommand<RouteViewModel> CommandSelectRoute { get; private set; }
-
-        /// <summary>
-        ///     Gets the command deletes a user pin.
-        /// </summary>
-        public DelegateCommand<PlaceViewModel> CommandDeletePlace { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that gets suggestions that based on the <see cref="SearchInput" />.
-        /// </summary>
-        public DelegateCommand CommandGetSuggestions { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that performs the search based on the <see cref="SearchInput" />.
-        /// </summary>
-        public DelegateCommand CommandSearch { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that stops tracking current location.
-        /// </summary>
-        public DelegateCommand CommandStopTrackingCurrentLocation { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that sets the <see cref="VisualState" /> to <see cref="VisualStates.Default" />.
-        /// </summary>
-        public DelegateCommand CommandGoToDefaultState { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that updates the information of a given place.
-        /// </summary>
-        public DelegateCommand<PlaceViewModel> CommandUpdatePlace { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that starts geo coordinate watcher.
-        /// </summary>
-        public DelegateCommand CommandStartGeoWatcher { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that stops geo coordinate watcher.
-        /// </summary>
-        public DelegateCommand CommandStopGeoWatcher { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that adds a place at the <see cref="CurrentLocation" />.
-        /// </summary>
-        public DelegateCommand CommandAddCurrentPlace { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that zooms in the map.
-        /// </summary>
-        public DelegateCommand CommandZoomIn { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that zooms out the map.
-        /// </summary>
-        public DelegateCommand CommandZoomOut { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that shows the street layer.
-        /// </summary>
-        public DelegateCommand CommandShowStreetLayer { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that shows the satellite hybrid layer.
-        /// </summary>
-        public DelegateCommand CommandShowSatelliteHybridLayer { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that toggles traffic layer.
-        /// </summary>
-        public DelegateCommand<Layer> CommandToggleMapOverlay { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that toggles the <see cref="ToolbarState" />.
-        /// </summary>
-        public DelegateCommand CommandToggleToolbar { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that sets depart location to current location.
-        /// </summary>
-        public DelegateCommand CommandSetDepartLocationToCurrentLocation { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that sets arrive location to current location.
-        /// </summary>
-        public DelegateCommand CommandSetArriveLocationToCurrentLocation { get; private set; }
-
-        /// <summary>
-        ///     Gets the command that finds a route.
-        /// </summary>
-        public DelegateCommand CommandRoute { get; private set; }
-
-        public DelegateCommand CommandActivate { get; private set; }
-
-        public DelegateCommand CommandDeactivate { get; private set; }
-
-        public DelegateCommand CommandSwapRouteLocations { get; private set; }
-
-        #endregion
 
 
         #region Event Handling
@@ -1129,6 +680,444 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             _navigation.BackKeyPress += OnBackKeyPress;
         }
+
+        #endregion
+
+
+        #endregion
+
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets the collection of all user pins.
+        /// </summary>
+        public AdaptedObservableCollection<Place, PlaceViewModel> Pushpins { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the selected place.
+        /// </summary>
+        public PlaceViewModel SelectedPushpin
+        {
+            get { return _selectedPushpin; }
+            set
+            {
+                if (!SetValue(ref _selectedPushpin, value, SelectedPushpinProperty))
+                {
+                    return;
+                }
+                if (value == null)
+                {
+                    VisualState.Value = VisualStates.Default;
+                }
+                else
+                {
+                    DragPushpin = null;
+                    var place = value.Data;
+                    Center.Value = place.Location.ToGeoCoordinate();
+                    if (place.DataState != DataStates.Finished)
+                    {
+                        OnUpdatePlace(value);
+                    }
+
+                    VisualState.Value = VisualStates.PushpinSelected;
+                }
+                _data.SelectedPlace.Value = value == null ? null : value.Data;
+            }
+        }
+
+        private PlaceViewModel _selectedPushpin;
+        private const string SelectedPushpinProperty = "SelectedPushpin";
+
+        /// <summary>
+        ///     Gets all routes planned by the user.
+        /// </summary>
+        public AdaptedObservableCollection<Route, RouteViewModel> Routes { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets the selected route.
+        /// </summary>
+        public RouteViewModel SelectedRoute
+        {
+            get { return _selectedRoute; }
+            set
+            {
+                if (!SetValue(ref _selectedRoute, value, SelectedRouteProperty)) return;
+                _data.SelectedRoute.Value = value == null ? null : value.Data;
+                VisualState.Value = value == null ? VisualStates.Default : VisualStates.RouteSelected;
+            }
+        }
+
+        private RouteViewModel _selectedRoute;
+        private const string SelectedRouteProperty = "SelectedRoute";
+
+        /// <summary>
+        ///     Gets or sets the pushpin that's been dragged.
+        /// </summary>
+        public PlaceViewModel DragPushpin
+        {
+            get { return _dragPushpin; }
+            set
+            {
+                if (!SetValue(ref _dragPushpin, value, DragPushpinProperty))
+                {
+                    return;
+                }
+                if (value == null)
+                {
+                    VisualState.Value = VisualStates.Default;
+                }
+                else
+                {
+                    SelectedPushpin = null;
+                    VisualState.Value = VisualStates.Drag;
+                    IsTrackingCurrentLocation.Value = false;
+                }
+            }
+        }
+
+        private PlaceViewModel _dragPushpin;
+        private const string DragPushpinProperty = "DragPushpin";
+
+        public GeoCoordinate CurrentLocation
+        {
+            get { return _currentLocation; }
+            set { SetValue(ref _currentLocation, value, CurrentLocationProperty); }
+        }
+
+        private GeoCoordinate _currentLocation;
+        private const string CurrentLocationProperty = "CurrentLocation";
+
+        /// <summary>
+        ///     Gets or sets the map center geo-coordination.
+        /// </summary>
+        public ObservableValue<GeoCoordinate> Center
+        {
+            get { return _data.MapCenter; }
+        }
+
+        /// <summary>
+        ///     Gets or sets the zoom level of the map.
+        /// </summary>
+        public ObservableValue<double> ZoomLevel
+        {
+            get { return _data.MapZoomLevel; }
+        }
+
+        /// <summary>
+        ///     Gets the suggestions based on the <see cref="SearchInput" />.
+        /// </summary>
+        public ReadOnlyObservableCollection<SearchSuggestion> Suggestions { get; private set; }
+
+        private readonly ObservableCollection<SearchSuggestion> _suggestions = new ObservableCollection<SearchSuggestion>();
+
+        /// <summary>
+        ///     Gets or sets the selected <see cref="Travlexer.Data.SearchSuggestion" />.
+        /// </summary>
+        public SearchSuggestion SelectedSuggestion
+        {
+            get { return _selectedSuggestion; }
+            set
+            {
+                if (SetValue(ref _selectedSuggestion, value, SelectedSuggestionProperty) && value != null)
+                {
+                    OnSuggestionSelected();
+                }
+            }
+        }
+
+        private SearchSuggestion _selectedSuggestion;
+        private const string SelectedSuggestionProperty = "SelectedSuggestion";
+
+        /// <summary>
+        ///     Gets or sets the search input.
+        /// </summary>
+        public ObservableValue<string> SearchInput
+        {
+            get { return _data.SearchInput; }
+        }
+
+        /// <summary>
+        ///     Gets the visual state of the view.
+        /// </summary>
+        public ObservableValue<VisualStates> VisualState { get; private set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether the map is tracking current location.
+        /// </summary>
+        public ObservableValue<bool> IsTrackingCurrentLocation
+        {
+            get { return _configuration.IsTrackingCurrentLocation; }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether this instance is busy.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if this instance is busy; otherwise, <c>false</c> .
+        /// </value>
+        public ObservableValue<bool> IsBusy
+        {
+            get { return _configuration.IsBusy; }
+        }
+
+        /// <summary>
+        ///     Gets the visibility of online street layer.
+        /// </summary>
+        public Visibility IsStreetLayerVisible
+        {
+            get { return _data.MapBaseLayer.Value == Layer.Street ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        private const string IsStreetLayerVisibleProperty = "IsStreetLayerVisible";
+
+        /// <summary>
+        ///     Gets the visibility of online satellite hybrid layer.
+        /// </summary>
+        public Visibility IsSatelliteHybridLayerVisible
+        {
+            get { return _data.MapBaseLayer.Value == Layer.SatelliteHybrid ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        private const string IsSatelliteHybridLayerVisibleProperty = "IsSatelliteHybridLayerVisible";
+
+        /// <summary>
+        ///     Gets the visibility of online traffic layer.
+        /// </summary>
+        public Visibility IsTrafficLayerVisible
+        {
+            get { return _data.MapOverlays.Contains(Layer.TrafficOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        private const string IsTrafficLayerVisibleProperty = "IsTrafficLayerVisible";
+
+        /// <summary>
+        ///     Gets the visibility of online transit layer.
+        /// </summary>
+        public Visibility IsTransitLayerVisible
+        {
+            get { return _data.MapOverlays.Contains(Layer.TransitOverlay) ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        private const string IsTransitLayerVisibleProperty = "IsTransitLayerVisible";
+
+        /// <summary>
+        ///     Gets the state of the toolbar.
+        /// </summary>
+        public ObservableValue<ExpansionStates> ToolbarState
+        {
+            get { return _configuration.ToolbarState; }
+        }
+
+        /// <summary>
+        ///     Gets the value indicates if the application is working in offline mode.
+        /// </summary>
+        public ObservableValue<bool> IsOnline
+        {
+            get { return _configuration.IsOnline; }
+        }
+
+        /// <summary>
+        ///     Gets the available route modes.
+        /// </summary>
+        public List<KeyValueIcon<TravelMode, string, ImageBrush>> TravelModes
+        {
+            get { return RouteModeKeyValueIconConverter.TravelModes; }
+        }
+
+        /// <summary>
+        ///     Gets the selected route mode.
+        /// </summary>
+        public ObservableValue<TravelMode> SelectedTravelMode
+        {
+            get { return _data.TravelMode; }
+        }
+
+        /// <summary>
+        ///     Gets the available route methods.
+        /// </summary>
+        public List<KeyValueIcon<RouteMethod, string, ImageBrush>> RouteMethods
+        {
+            get { return RouteMethodKeyValueIconConverter.RouteMethods; }
+        }
+
+        /// <summary>
+        ///     Gets the selected route method.
+        /// </summary>
+        public ObservableValue<RouteMethod> SelectedRouteMethod
+        {
+            get { return _data.RouteMethod; }
+        }
+
+        /// <summary>
+        ///     Gets the departure location.
+        /// </summary>
+        public RouteLocation DepartureLocation
+        {
+            get { return _departureLocation; }
+            private set { SetValue(ref _departureLocation, value, DepartureLocationProperty); }
+        }
+
+        private RouteLocation _departureLocation;
+        private const string DepartureLocationProperty = "DepartureLocation";
+
+        /// <summary>
+        ///     Gets the arrival location.
+        /// </summary>
+        public RouteLocation ArrivalLocation
+        {
+            get { return _arrivalLocation; }
+            private set { SetValue(ref _arrivalLocation, value, ArrivalLocationProperty); }
+        }
+
+        private RouteLocation _arrivalLocation;
+        private const string ArrivalLocationProperty = "ArrivalLocation";
+
+        /// <summary>
+        ///     Gets the application bar button items sources.
+        /// </summary>
+        public ObservableCollection<AppBarButtonViewModel>[] AppBarButtonItemsSources { get; private set; }
+
+        public ObservableCollection<AppBarMenuItemViewModel>[] AppBarMenuItemsSources { get; private set; }
+
+        /// <summary>
+        ///     Gets the selected app bar button items source.
+        /// </summary>
+        public ObservableCollection<AppBarButtonViewModel> SelectedAppBarButtonItemsSource
+        {
+            get { return _selectedAppBarButtonItemsSource; }
+            private set { SetValue(ref _selectedAppBarButtonItemsSource, value, SelectedAppBarButtonItemsSourceProperty); }
+        }
+
+        private ObservableCollection<AppBarButtonViewModel> _selectedAppBarButtonItemsSource;
+        private const string SelectedAppBarButtonItemsSourceProperty = "SelectedAppBarButtonItemsSource";
+
+        public ObservableCollection<AppBarMenuItemViewModel> SelectedAppBarMenuItemsSource
+        {
+            get { return _selectedAppBarMenuItemsSource; }
+            private set { SetValue(ref _selectedAppBarMenuItemsSource, value, SelectedAppBarMenuItemsSourceProperty); }
+        }
+
+        private ObservableCollection<AppBarMenuItemViewModel> _selectedAppBarMenuItemsSource;
+        private const string SelectedAppBarMenuItemsSourceProperty = "SelectedAppBarMenuItemsSource";
+
+        /// <summary>
+        ///     Gets a value indicating whether this the application bar is visible.
+        /// </summary>
+        public bool IsAppBarVisible
+        {
+            get { return _isAppBarVisible; }
+            private set { SetValue(ref _isAppBarVisible, value, IsAppBarVisibleProperty); }
+        }
+
+        private bool _isAppBarVisible = true;
+        private const string IsAppBarVisibleProperty = "IsAppBarVisible";
+
+        #endregion
+
+
+        #region Commands
+
+        /// <summary>
+        ///     Gets the command that adds a user pin.
+        /// </summary>
+        public DelegateCommand<Location> CommandAddPlace { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that toggles the pushpin content state.
+        /// </summary>
+        public DelegateCommand<PlaceViewModel> CommandSelectPushpin { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that toggles the pushpin content state.
+        /// </summary>
+        public DelegateCommand<RouteViewModel> CommandSelectRoute { get; private set; }
+
+        /// <summary>
+        ///     Gets the command deletes a user pin.
+        /// </summary>
+        public DelegateCommand<PlaceViewModel> CommandDeletePlace { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that gets suggestions that based on the <see cref="SearchInput" />.
+        /// </summary>
+        public DelegateCommand CommandGetSuggestions { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that performs the search based on the <see cref="SearchInput" />.
+        /// </summary>
+        public DelegateCommand CommandSearch { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that stops tracking current location.
+        /// </summary>
+        public DelegateCommand CommandStopTrackingCurrentLocation { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that sets the <see cref="VisualState" /> to <see cref="VisualStates.Default" />.
+        /// </summary>
+        public DelegateCommand CommandGoToDefaultState { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that updates the information of a given place.
+        /// </summary>
+        public DelegateCommand<PlaceViewModel> CommandUpdatePlace { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that adds a place at the <see cref="CurrentLocation" />.
+        /// </summary>
+        public DelegateCommand CommandAddCurrentPlace { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that zooms in the map.
+        /// </summary>
+        public DelegateCommand CommandZoomIn { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that zooms out the map.
+        /// </summary>
+        public DelegateCommand CommandZoomOut { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that shows the street layer.
+        /// </summary>
+        public DelegateCommand CommandShowStreetLayer { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that shows the satellite hybrid layer.
+        /// </summary>
+        public DelegateCommand CommandShowSatelliteHybridLayer { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that toggles traffic layer.
+        /// </summary>
+        public DelegateCommand<Layer> CommandToggleMapOverlay { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that toggles the <see cref="ToolbarState" />.
+        /// </summary>
+        public DelegateCommand CommandToggleToolbar { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that sets depart location to current location.
+        /// </summary>
+        public DelegateCommand CommandSetDepartLocationToCurrentLocation { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that sets arrive location to current location.
+        /// </summary>
+        public DelegateCommand CommandSetArriveLocationToCurrentLocation { get; private set; }
+
+        /// <summary>
+        ///     Gets the command that finds a route.
+        /// </summary>
+        public DelegateCommand CommandRoute { get; private set; }
+
+        public DelegateCommand CommandActivate { get; private set; }
+
+        public DelegateCommand CommandDeactivate { get; private set; }
+
+        public DelegateCommand CommandSwapRouteLocations { get; private set; }
 
         #endregion
 

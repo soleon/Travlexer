@@ -52,6 +52,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
         #region Public Properties
 
+        public Version AppVersion { get; set; }
+
         /// <summary>
         ///     Gets the collection that contains all user pins.
         /// </summary>
@@ -151,6 +153,14 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public ObservableValue<bool> UseMapAnimation { get; private set; }
 
         private const string UseMapAnimationProperty = "UseMapAnimation";
+
+        public ObservableValue<bool> UseLocationService { get; private set; }
+
+        private const string UseLocationServiceProperty = "UseLocationService";
+
+        public ObservableValue<bool> PreventScreenLock { get; private set; }
+        
+        private const string PreventScreenLockProperty = "PreventScreenLock";
 
 
         /// <summary>
@@ -466,50 +476,25 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// </summary>
         public void SaveContext()
         {
-            // Save map center.
             _storageProvider.SaveSetting(MapCenterProperty, MapCenter.Value.ToLocalLocation());
-
-            // Save map zoom level.
             _storageProvider.SaveSetting(MapZoomLevelProperty, MapZoomLevel.Value);
-
-            // Save search input.
             _storageProvider.SaveSetting(SearchInputProperty, SearchInput.Value);
-
-            // Save map base layer.
             _storageProvider.SaveSetting(MapBaseLayerProperty, MapBaseLayer.Value);
-
-            // Save map overlays.
             var overlays = MapOverlays.ToArray();
             _storageProvider.SaveSetting(MapOverlayProperty, overlays);
-
-            // Save places.
             var placeBytes = _binarySerializer.Serialize(_places.ToArray());
             _storageProvider.SaveSetting(PlacesProperty, placeBytes);
-
-            // Save routes.
             var routeBytes = _binarySerializer.Serialize(_routes.ToArray());
             _storageProvider.SaveSetting(RoutesProperty, routeBytes);
-
-            // Save route method.
             _storageProvider.SaveSetting(RouteMethodProperty, RouteMethod.Value);
-
-            // Save travel mode.
             _storageProvider.SaveSetting(TravelModeProperty, TravelMode.Value);
-
-            // Save selected place ID.
             _storageProvider.SaveSetting(SelectedPlaceProperty, SelectedPlace.Value.UseIfNotNull(p => p.Id));
-
-            // Save selected route ID.
             _storageProvider.SaveSetting(SelectedRouteProperty, SelectedRoute.Value.UseIfNotNull(r => r.Id));
-
-            // Save last ran version.
-            _storageProvider.SaveSetting(LastRanVersionProperty, new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version.ToString());
-
-            // Save unit system.
+            _storageProvider.SaveSetting(LastRanVersionProperty, AppVersion.ToString());
             _storageProvider.SaveSetting(UnitSystemProperty, UnitSystem.Value);
-
-            // Save use map animation flag.
             _storageProvider.SaveSetting(UseMapAnimationProperty, UseMapAnimation.Value);
+            _storageProvider.SaveSetting(UseLocationServiceProperty, UseLocationService.Value);
+            _storageProvider.SaveSetting(PreventScreenLockProperty, PreventScreenLock.Value);
         }
 
         /// <summary>
@@ -517,77 +502,67 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// </summary>
         public void LoadContext()
         {
-            // Load map center.
+            string tempString;
+            byte[] tempBytes;
+            bool tempBool;
+            Guid tempGuid;
+            double tempDouble;
+
             Location mapCenter;
             if (_storageProvider.TryGetSetting(MapCenterProperty, out mapCenter))
                 MapCenter.Value = mapCenter.ToGeoCoordinate();
 
-            // Load map zoom level.
-            double mapZoomLevel;
-            if (_storageProvider.TryGetSetting(MapZoomLevelProperty, out mapZoomLevel))
-                MapZoomLevel.Value = mapZoomLevel;
+            if (_storageProvider.TryGetSetting(MapZoomLevelProperty, out tempDouble))
+                MapZoomLevel.Value = tempDouble;
 
-            // Load search input.
-            string searchInput;
-            if (_storageProvider.TryGetSetting(SearchInputProperty, out searchInput))
-                SearchInput.Value = searchInput;
+            if (_storageProvider.TryGetSetting(SearchInputProperty, out tempString))
+                SearchInput.Value = tempString;
 
-            // Load map base layer.
             Layer mapBaseLayer;
             if (_storageProvider.TryGetSetting(MapBaseLayerProperty, out mapBaseLayer))
                 MapBaseLayer.Value = mapBaseLayer;
 
-            // Load map overlays.
             Layer[] overlays;
             if (_storageProvider.TryGetSetting(MapOverlayProperty, out overlays))
                 overlays.ForEach(MapOverlays.Add);
 
-            // Load places.
-            byte[] placeBytes;
             Place[] places;
-            if (_storageProvider.TryGetSetting(PlacesProperty, out placeBytes) && _binarySerializer.TryDeserialize(placeBytes, out places))
+            if (_storageProvider.TryGetSetting(PlacesProperty, out tempBytes) && _binarySerializer.TryDeserialize(tempBytes, out places))
                 _places.AddRange(places);
 
-            // Load routes.
-            byte[] routeBytes;
             Route[] routes;
-            if (_storageProvider.TryGetSetting(RoutesProperty, out routeBytes) && _binarySerializer.TryDeserialize(routeBytes, out routes))
+            if (_storageProvider.TryGetSetting(RoutesProperty, out tempBytes) && _binarySerializer.TryDeserialize(tempBytes, out routes))
                 _routes.AddRange(routes);
 
-            // Load route method.
             RouteMethod method;
             if (_storageProvider.TryGetSetting(RouteMethodProperty, out method))
                 RouteMethod.Value = method;
 
-            // Load travel mode.
             TravelMode mode;
             if (_storageProvider.TryGetSetting(RouteMethodProperty, out mode))
                 TravelMode.Value = mode;
 
-            // Load selected place.
-            Guid selectedPlaceId;
-            if (_storageProvider.TryGetSetting(SelectedPlaceProperty, out selectedPlaceId) && !_places.IsNullOrEmpty())
-                SelectedPlace.Value = _places.FirstOrDefault(p => p.Id == selectedPlaceId);
+            if (_storageProvider.TryGetSetting(SelectedPlaceProperty, out tempGuid) && !_places.IsNullOrEmpty())
+                SelectedPlace.Value = _places.FirstOrDefault(p => p.Id == tempGuid);
 
-            // Load selected route.
-            Guid selectedRouteId;
-            if (_storageProvider.TryGetSetting(SelectedPlaceProperty, out selectedRouteId) && !_routes.IsNullOrEmpty())
-                SelectedRoute.Value = _routes.FirstOrDefault(r => r.Id == selectedRouteId);
+            if (_storageProvider.TryGetSetting(SelectedPlaceProperty, out tempGuid) && !_routes.IsNullOrEmpty())
+                SelectedRoute.Value = _routes.FirstOrDefault(r => r.Id == tempGuid);
 
-            // Load Last ran version.
-            string lastRanVersion;
-            if (_storageProvider.TryGetSetting(LastRanVersionProperty, out lastRanVersion))
-                LastRanVersion = new Version(lastRanVersion);
+            if (_storageProvider.TryGetSetting(LastRanVersionProperty, out tempString))
+                LastRanVersion = new Version(tempString);
 
-            // Load unit system.
             UnitSystems unitSystem;
             if (_storageProvider.TryGetSetting(UnitSystemProperty, out unitSystem))
                 UnitSystem.Value = unitSystem;
 
-            // Load use map animation flag.
-            bool useMapAnimation;
-            if (_storageProvider.TryGetSetting(UseMapAnimationProperty, out useMapAnimation))
-                UseMapAnimation.Value = useMapAnimation;
+            if (_storageProvider.TryGetSetting(UseMapAnimationProperty, out tempBool))
+                UseMapAnimation.Value = tempBool;
+
+            if (_storageProvider.TryGetSetting(UseLocationServiceProperty, out tempBool))
+                UseLocationService.Value = tempBool;
+
+            if (_storageProvider.TryGetSetting(PreventScreenLockProperty, out tempBool))
+                PreventScreenLock.Value = tempBool;
         }
 
         /// <summary>
@@ -738,6 +713,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
             SelectedPlace = new ObservableValue<Place>();
             SelectedRoute = new ObservableValue<Route>();
             UseMapAnimation = new ObservableValue<bool>();
+            UseLocationService = new ObservableValue<bool>();
+            PreventScreenLock = new ObservableValue<bool>();
 
             MapOverlays = new ObservableCollection<Layer>();
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());

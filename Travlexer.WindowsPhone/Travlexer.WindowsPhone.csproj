@@ -194,6 +194,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AddPlace.png" />
+    <Content Include="Assets\AppIcon.png" />
+    <Content Include="Assets\AppTile.png" />
     <Content Include="Assets\Arrive.png" />
     <Content Include="Assets\Delete.png" />
     <Content Include="Assets\CurrentLocation.png" />
@@ -205,12 +207,6 @@
     <Content Include="Assets\Route.png" />
     <Content Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />
-    <Content Include="Assets\AppIcon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\AppTile.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\StreetView.png" />
     <Content Include="SplashScreenImage.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />

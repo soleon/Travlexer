@@ -22,12 +22,12 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public string Distance
         {
-            get { return Data.DistanceText; }
+            get { return Data.Distance.ToDistanceText(); }
         }
 
         public string Duration
         {
-            get { return Data.DurationText; }
+            get { return Data.Duration.ToDurationText(); }
         }
     }
 }

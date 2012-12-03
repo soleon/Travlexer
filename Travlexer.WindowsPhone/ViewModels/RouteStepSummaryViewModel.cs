@@ -9,14 +9,18 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             Index = index;
             Data = step;
-            Distance = step.DistanceText;
-            Duration = step.DurationText;
         }
 
         public uint Index { get; private set; }
 
-        public string Distance { get; private set; }
+        public string Distance
+        {
+            get { return Data.Distance.ToDistanceText(); }
+        }
 
-        public string Duration { get; private set; }
+        public string Duration
+        {
+            get { return Data.Duration.ToDurationText(); }
+        }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Device.Location;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using Codify.Entities;
 using Codify.GoogleMaps;
 using Codify.Serialization;
 using Codify.Storage;
 using Codify.WindowsPhone;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using Ninject;
 using Travlexer.WindowsPhone.Infrastructure;
 
@@ -13,17 +16,6 @@ namespace Travlexer.WindowsPhone
 {
     public static class ApplicationContext
     {
-        #region Constructors
-
-        static ApplicationContext()
-        {
-            IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
-            NetworkChange.NetworkAddressChanged += OnNetworkChanged;
-        }
-
-        #endregion
-
-
         #region Public Properties
 
         /// <summary>
@@ -31,21 +23,13 @@ namespace Travlexer.WindowsPhone
         /// </summary>
         public static bool IsNetworkAvailable { get; private set; }
 
-        public static INavigationService NavigationService { get; set; }
+        public static INavigationService NavigationService { get; private set; }
 
-        public static IDataContext Data { get; set; }
+        public static IDataContext Data { get; private set; }
 
-        public static IConfigurationContext Configuration { get; set; }
+        public static IConfigurationContext Configuration { get; private set; }
 
-        #endregion
-
-
-        #region Event Handling
-
-        private static void OnNetworkChanged(object sender, EventArgs e)
-        {
-            IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
-        }
+        public static GeoCoordinateWatcher GeoCoordinateWatcher { get; private set; }
 
         #endregion
 
@@ -71,6 +55,22 @@ namespace Travlexer.WindowsPhone
             kernel.Bind<IDataContext>().To<DataContext>().InSingletonScope();
             kernel.Bind<IConfigurationContext>().To<ConfigurationContext>().InSingletonScope();
             Initialize(kernel);
+
+            // Initialize event handlers and other properties.
+            GeoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
+
+            ((DataContext) Data).AppVersion = new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version;
+
+            Data.PreventScreenLock.ValueChanged += (old, @new) => { PhoneApplicationService.Current.ApplicationIdleDetectionMode = @new ? IdleDetectionMode.Disabled : IdleDetectionMode.Enabled; };
+
+            Data.UseLocationService.ValueChanged += (old, @new) =>
+            {
+                if (@new) GeoCoordinateWatcher.Start();
+                else GeoCoordinateWatcher.Stop();
+            };
+
+            IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
+            NetworkChange.NetworkAddressChanged += (s, e) => IsNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
         }
 
         /// <summary>

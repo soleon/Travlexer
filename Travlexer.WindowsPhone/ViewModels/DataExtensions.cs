@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Windows;
+using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
@@ -38,8 +39,20 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// <returns> A string that represents the distance integer value in a readable format according to the current app settings. </returns>
         public static string ToDistanceText(this int value)
         {
-            if (value < 1000) return value + (value > 1 ? " meters" : " meter");
-            return ((double) value/1000).ToString("f1", CultureInfo.CurrentCulture) + " km";
+            switch (ApplicationContext.Data.UnitSystem.Value)
+            {
+                case UnitSystems.Metric:
+                    if (value < 1000) return value + (value > 1 ? " meters" : " meter");
+                    return ((double) value/1000).ToString("f1", CultureInfo.CurrentCulture) + " km";
+                case UnitSystems.Imperial:
+
+                    var yards = value*0.9144D;
+                    var miles = yards/1760D;
+                    if (miles < 0.5) return yards.ToString("f1", CultureInfo.CurrentCulture) + (yards > 1 ? " yards" : " yard");
+                    return miles.ToString("f1", CultureInfo.CurrentCulture) + " mi";
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
@@ -49,10 +62,10 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// <returns> A string that represents the duration integer value in a readable format according to the current app settings. </returns>
         public static string ToDurationText(this int value)
         {
-            var timeSpan = TimeSpan.FromSeconds(value);
-            var days = timeSpan.Days;
-            var hours = timeSpan.Hours;
-            var minutes = timeSpan.Minutes;
+            var duration = TimeSpan.FromSeconds(value);
+            var days = duration.Days;
+            var hours = duration.Hours;
+            var minutes = duration.Minutes;
 
             if (days > 0) return days + " d " + hours + " hr " + minutes + " min";
             if (hours > 0) return hours + " hr " + minutes + " min";
