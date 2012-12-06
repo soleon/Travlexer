@@ -4,8 +4,6 @@
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                            xmlns:Travlexer_WindowsPhone_Controls_Icons="clr-namespace:Travlexer.WindowsPhone.Controls.Icons"
-                            xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
                             x:Class="Travlexer.WindowsPhone.Page1"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -16,43 +14,38 @@
                             d:DesignHeight="768"
                             d:DesignWidth="480"
                             shell:SystemTray.IsVisible="True">
-    <Grid Background="#FFEFEBE2" UseLayoutRounding="False">
-		<Path Stretch="Fill" Fill="White" Data="M44.8276,32.1839 C44.8276,35.9929 41.7398,39.0805 37.931,39.0805 L31.0345,39.0805 L31.0345,56.3218 C31.0345,58.2262 32.5784,59.7701 34.4828,59.7701 L100,59.7701 L97.7011,68.9655 L28.7356,68.9655 C24.9267,68.9655 21.8391,65.8779 21.8391,62.069 L21.8391,39.0805 L0,39.0805 L4.02299,29.8851 L32.1839,29.8851 C34.0883,29.8851 35.6322,28.3411 35.6322,26.4368 L35.6322,1.72414 L44.8276,0 L44.8276,32.1839 z" Margin="190,334,190,365.035" UseLayoutRounding="False"/>
-    	<Path Stretch="Fill" Fill="#FFDADADA" Data="M5.74713,0 L11.4942,11.4942 L6.89655,11.4942 L6.89655,16.0919 L4.5977,16.0919 L4.5977,11.4942 L0,11.4942 L5.74713,0 z" Margin="195.701,375.471,272.805,376.437" UseLayoutRounding="False"/>
-    	<Path Stretch="Fill" Fill="#FFBED9A6" Data="M5.74712,0 L11.4942,11.4942 L6.89655,11.4942 L6.89655,16.0919 L4.5977,16.0919 L4.5977,11.4942 L0,11.4942 L5.74712,0 z" Margin="257.816,356.989,210.69,394.919" UseLayoutRounding="False"/>
-    	<Path Stretch="Fill" Fill="#FFDADADA" Data="M0,27.5862 C10.9133,3.57678 19.2361,16.4085 25.9524,0 L35.9519,0 C27.9416,18.5055 19.5683,9.38597 8.98069,29.7535 L0,27.5862 z" Margin="250.804,403.77,193.244,334.477" UseLayoutRounding="False" RenderTransformOrigin="0.5,0.5">
-    		<Path.RenderTransform>
-    			<CompositeTransform ScaleX="-1"/>
-    		</Path.RenderTransform>
-    	</Path>
-    	<Path Stretch="Fill" Fill="#FFDADADA" Data="M0.150254,32.1839 C-0.998943,22.9882 4.74818,22.9882 7.0468,11.4941 C9.34565,2.29887 15.093,-2.3E-05 17.3916,0 C18.1592,0 19.5709,1.85595 22.6427,3.56278 C20.1371,5.21735 18.6503,7.60972 17.3919,12.6436 C15.093,21.8391 9.34565,18.3908 9.34565,32.1839 C9.34565,43.9954 13.1388,45.1174 14.2286,54.0227 L5.58358,54.0227 C7.74014,41.745 0.150254,43.9984 0.150254,32.1839 z" Margin="245.022,338.598,212.335,375.379" UseLayoutRounding="False"/>
-    	<Path Stretch="Fill" Fill="#FFBED9A6" Data="M5.74713,0 L11.4943,11.4943 L6.89655,11.4943 L6.89655,16.092 L4.5977,16.092 L4.5977,11.4943 L0,11.4943 L5.74713,0 z" Margin="271.609,366.184,196.897,385.724" UseLayoutRounding="False" d:IsHidden="True"/>
-    	<Path Stretch="Fill" Fill="#FFDADADA" Data="M5.74713,0 L11.4943,11.4942 L6.89655,11.4942 L6.89655,16.0919 L4.5977,16.0919 L4.5977,11.4942 L0,11.4942 L5.74713,0 z" Margin="211.839,345.494,256.667,406.414" UseLayoutRounding="False"/>
-    	<Path Stretch="Fill" Fill="#FFBED9A6" Data="M5.74712,0 L11.4943,11.4941 L6.89655,11.4941 L6.89655,16.0918 L4.5977,16.0918 L4.5977,11.4941 L0,11.4941 L5.74712,0 z" Margin="237.126,340.897,231.379,411.011" UseLayoutRounding="False" d:IsHidden="True"/>
-    	<Path Stretch="Fill" Fill="#FFBED9A6" Data="M5.74713,0 L11.4943,11.4942 L6.89655,11.4942 L6.89655,16.0919 L4.5977,16.0919 L4.5977,11.4942 L1E-06,11.4942 L5.74713,0 z" Margin="232.529,370.782,235.977,381.126" UseLayoutRounding="False" d:IsHidden="True"/>
-    	<Path Stretch="Fill" Fill="#FFBED9A6" Data="M5.74712,0 L11.4942,11.494 L6.89655,11.494 L6.89655,16.0917 L4.5977,16.0917 L4.5977,11.494 L0,11.494 L5.74712,0 z" Margin="262.414,375.38,206.092,376.528" UseLayoutRounding="False" d:IsHidden="True"/>
-    	<Path Stretch="Fill" Fill="#FFDADADA" Data="M5.74712,0 L11.4943,11.4943 L6.89655,11.4943 L6.89655,16.092 L4.5977,16.092 L4.5977,11.4943 L0,11.4943 L5.74712,0 z" Margin="200.345,393.77,268.161,358.138" UseLayoutRounding="False"/>
-    	<Path Stretch="Fill" Fill="#FFBED9A6" Data="M5.74712,0 L11.4943,11.4943 L6.89655,11.4943 L6.89655,16.0919 L4.5977,16.0919 L4.5977,11.4943 L0,11.4943 L5.74712,0 z" Margin="214.138,405.264,254.368,346.644" UseLayoutRounding="False" d:IsHidden="True"/>
-    	<Path Stretch="Fill" Fill="#FFBED9A6" Data="M5.74713,0 L11.4943,11.4942 L6.89655,11.4942 L6.89655,16.0919 L4.5977,16.0919 L4.5977,11.4942 L0,11.4942 L5.74713,0 z" Margin="253.218,409.862,215.287,342.046" UseLayoutRounding="False" d:IsHidden="True"/>
-    	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40,-21,0,0" UseLayoutRounding="False" RenderTransformOrigin="0.5,0.5">
-    		<StackPanel.RenderTransform>
-    			<CompositeTransform ScaleX="0.7" ScaleY="0.7"/>
-    		</StackPanel.RenderTransform>
-    		<Border
-    			BorderThickness="3" Background="White" UseLayoutRounding="False">
-    			<Border.BorderBrush>
-    				<SolidColorBrush Color="#FFEFEBE2"/>
-    			</Border.BorderBrush>
-    			<Path Data="M90.925,28.696L82.728,7.529C81.195,3.477,77.845,0.029,71.505,0h-11.56H40.188H28.427  c-6.311,0.029-9.661,3.477-11.222,7.529L9.006,28.696C5.751,29.116-0.01,32.941,0,40.187v26.951h7.999v8.603  c-0.02,10.606,14.989,10.48,14.985,0v-8.603H50h26.948v8.603c0.033,10.48,15.042,10.606,15.052,0v-8.603h8V40.187  C99.975,32.941,94.21,29.116,90.925,28.696z M15.727,50.874c-3.834,0.011-6.938-3.187-6.922-7.12  c-0.016-3.96,3.088-7.161,6.922-7.128c3.822-0.033,6.926,3.168,6.921,7.128C22.653,47.687,19.548,50.884,15.727,50.874z M50,28.497  h-0.067H17.541l6.182-16.668c0.746-2.366,1.904-4.059,4.639-4.1h21.571H50H71.64c2.693,0.041,3.854,1.733,4.636,4.1l6.183,16.668H50  z M84.274,50.874c-3.861,0.011-6.967-3.187-6.988-7.12c0.021-3.96,3.127-7.161,6.988-7.128c3.795-0.033,6.898,3.168,6.922,7.128  C91.172,47.687,88.069,50.884,84.274,50.874z" Fill="#FFEFEBE2" Stretch="Uniform" Width="28" Height="28" Margin="10" UseLayoutRounding="False"/>
-    		</Border>
-    		<Path Data="M0,1 L12.5,25 L25,1"
-    			HorizontalAlignment="Center"
-    			StrokeThickness="3"
-    			UseLayoutRounding="False" Fill="White" Height="28" Margin="3,-4,0,0" >
-    			<Path.Stroke>
-    				<SolidColorBrush Color="#FFEFEBE2"/>
-    			</Path.Stroke>
-    		</Path>
-    	</StackPanel>
-	</Grid>
+    <Grid Background="{StaticResource PhoneAccentBrush}">
+        <Path Fill="{StaticResource PhoneForegroundBrush}"
+              Data="M44.8276,32.1837 C44.8276,35.9926 41.7398,39.0802 37.931,39.0802 L31.0345,39.0802 L31.0345,56.3214 C31.0345,58.2257 32.5784,59.7696 34.4828,59.7696 L100,59.7696 L97.7011,68.965 L28.7356,68.965 C24.9267,68.965 21.8391,65.8774 21.8391,62.0685 L21.8391,39.0802 L0,39.0802 L4.02299,29.8849 L32.1839,29.8849 C34.0883,29.8849 35.6322,28.3409 35.6322,26.4366 L35.6322,1.72413 L44.8276,0 L44.8276,32.1837 z M11.448,41.471 L17.195,52.9653 L12.5974,52.9653 L12.5974,57.563 L10.2986,57.563 L10.2986,52.9653 L5.701,52.9653 L11.448,41.471 z M96.756,97.3558 C85.8427,73.3467 77.5198,86.1782 70.8035,69.77 L60.804,69.77 C68.8143,88.2752 77.1876,79.1558 87.7753,99.523 L96.756,97.3558 z M55.1723,36.7821 C54.023,27.5863 59.7702,27.5863 62.0689,16.0922 C64.3678,6.89688 70.1152,4.59797 72.4138,4.59799 C73.1814,4.59799 74.5932,6.45395 77.665,8.16079 C75.1594,9.81537 73.6726,12.2078 72.4141,17.2417 C70.1152,26.4372 64.3678,22.9889 64.3678,36.7821 C64.3678,48.5936 68.161,49.7157 69.2508,58.621 L60.6057,58.621 C62.7622,46.3432 55.1723,48.5966 55.1723,36.7821 z M27.586,11.494 L33.333,22.9883 L28.7354,22.9883 L28.7354,27.586 L26.4366,27.586 L26.4366,22.9883 L21.839,22.9883 L27.586,11.494 z M16.092,59.77 L21.839,71.2643 L17.2414,71.2643 L17.2414,75.862 L14.9426,75.862 L14.9426,71.2643 L10.345,71.2643 L16.092,59.77 z" />
+        <Border BorderThickness="3"
+                Background="{StaticResource PhoneForegroundBrush}"
+                BorderBrush="{StaticResource PhoneAccentBrush}"
+                RenderTransformOrigin="0.5,0.5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="38,5,0,0">
+            <Border.RenderTransform>
+                <CompositeTransform ScaleY="0.7"
+                                    ScaleX="0.7" />
+            </Border.RenderTransform>
+            <Path Data="M90.925,28.696L82.728,7.529C81.195,3.477,77.845,0.029,71.505,0h-11.56H40.188H28.427  c-6.311,0.029-9.661,3.477-11.222,7.529L9.006,28.696C5.751,29.116-0.01,32.941,0,40.187v26.951h7.999v8.603  c-0.02,10.606,14.989,10.48,14.985,0v-8.603H50h26.948v8.603c0.033,10.48,15.042,10.606,15.052,0v-8.603h8V40.187  C99.975,32.941,94.21,29.116,90.925,28.696z M15.727,50.874c-3.834,0.011-6.938-3.187-6.922-7.12  c-0.016-3.96,3.088-7.161,6.922-7.128c3.822-0.033,6.926,3.168,6.921,7.128C22.653,47.687,19.548,50.884,15.727,50.874z M50,28.497  h-0.067H17.541l6.182-16.668c0.746-2.366,1.904-4.059,4.639-4.1h21.571H50H71.64c2.693,0.041,3.854,1.733,4.636,4.1l6.183,16.668H50  z M84.274,50.874c-3.861,0.011-6.967-3.187-6.988-7.12c0.021-3.96,3.127-7.161,6.988-7.128c3.795-0.033,6.898,3.168,6.922,7.128  C91.172,47.687,88.069,50.884,84.274,50.874z"
+                  Fill="{StaticResource PhoneAccentBrush}"
+                  Stretch="Uniform"
+                  Width="28"
+                  Height="28"
+                  Margin="10" />
+        </Border>
+        <Path Data="M0,1 L12.5,25 L25,1"
+              HorizontalAlignment="Left"
+              StrokeThickness="3"
+              Fill="{StaticResource PhoneForegroundBrush}"
+              Stroke="{StaticResource PhoneAccentBrush}"
+              VerticalAlignment="Top"
+              Margin="56.155,47.961,0,0">
+            <Path.RenderTransform>
+                <CompositeTransform ScaleY="0.7"
+                                    ScaleX="0.7" />
+            </Path.RenderTransform>
+        </Path>
+    </Grid>
 </phone:PhoneApplicationPage>

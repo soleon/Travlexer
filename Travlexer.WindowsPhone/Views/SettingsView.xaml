@@ -24,25 +24,75 @@
             </StackPanel>
         </controls:PivotItem>
         <controls:PivotItem Header="about">
-            <RichTextBox>
-                <Paragraph>
-                    <Run Text="Version: " />
-                    <Run Text="{Binding AppVersion}" />
-                    <LineBreak />
-                    <Run Text="Written by: " />
-                    <Run Text="Leon Zhou" />
-                    <LineBreak />
-                    <Run Text="Contact: " />
-                    <Hyperlink Command="{Binding CommandSendEmail}">
-                        codifying@gmail.com
-                    </Hyperlink>
-                    <LineBreak />
-                    <Run Text="Tech blog: " />
-                    <Hyperlink Command="{Binding CommandNavigateToWebSite}">
-                        codifying.wordpress.com
-                    </Hyperlink>
-                </Paragraph>
-            </RichTextBox>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal"
+                            Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
+                    <Border Background="{StaticResource PhoneAccentBrush}">
+                        <Grid Margin="10">
+                            <Path Fill="{StaticResource PhoneForegroundBrush}"
+                                  Data="M44.8276,32.1837 C44.8276,35.9926 41.7398,39.0802 37.931,39.0802 L31.0345,39.0802 L31.0345,56.3214 C31.0345,58.2257 32.5784,59.7696 34.4828,59.7696 L100,59.7696 L97.7011,68.965 L28.7356,68.965 C24.9267,68.965 21.8391,65.8774 21.8391,62.0685 L21.8391,39.0802 L0,39.0802 L4.02299,29.8849 L32.1839,29.8849 C34.0883,29.8849 35.6322,28.3409 35.6322,26.4366 L35.6322,1.72413 L44.8276,0 L44.8276,32.1837 z M11.448,41.471 L17.195,52.9653 L12.5974,52.9653 L12.5974,57.563 L10.2986,57.563 L10.2986,52.9653 L5.701,52.9653 L11.448,41.471 z M96.756,97.3558 C85.8427,73.3467 77.5198,86.1782 70.8035,69.77 L60.804,69.77 C68.8143,88.2752 77.1876,79.1558 87.7753,99.523 L96.756,97.3558 z M55.1723,36.7821 C54.023,27.5863 59.7702,27.5863 62.0689,16.0922 C64.3678,6.89688 70.1152,4.59797 72.4138,4.59799 C73.1814,4.59799 74.5932,6.45395 77.665,8.16079 C75.1594,9.81537 73.6726,12.2078 72.4141,17.2417 C70.1152,26.4372 64.3678,22.9889 64.3678,36.7821 C64.3678,48.5936 68.161,49.7157 69.2508,58.621 L60.6057,58.621 C62.7622,46.3432 55.1723,48.5966 55.1723,36.7821 z M27.586,11.494 L33.333,22.9883 L28.7354,22.9883 L28.7354,27.586 L26.4366,27.586 L26.4366,22.9883 L21.839,22.9883 L27.586,11.494 z M16.092,59.77 L21.839,71.2643 L17.2414,71.2643 L17.2414,75.862 L14.9426,75.862 L14.9426,71.2643 L10.345,71.2643 L16.092,59.77 z" />
+                            <Border BorderThickness="3"
+                                    Background="{StaticResource PhoneForegroundBrush}"
+                                    BorderBrush="{StaticResource PhoneAccentBrush}"
+                                    RenderTransformOrigin="0.5,0.5"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Margin="38,5,0,0">
+                                <Border.RenderTransform>
+                                    <CompositeTransform ScaleY="0.7"
+                                                        ScaleX="0.7" />
+                                </Border.RenderTransform>
+                                <Path Data="M90.925,28.696L82.728,7.529C81.195,3.477,77.845,0.029,71.505,0h-11.56H40.188H28.427  c-6.311,0.029-9.661,3.477-11.222,7.529L9.006,28.696C5.751,29.116-0.01,32.941,0,40.187v26.951h7.999v8.603  c-0.02,10.606,14.989,10.48,14.985,0v-8.603H50h26.948v8.603c0.033,10.48,15.042,10.606,15.052,0v-8.603h8V40.187  C99.975,32.941,94.21,29.116,90.925,28.696z M15.727,50.874c-3.834,0.011-6.938-3.187-6.922-7.12  c-0.016-3.96,3.088-7.161,6.922-7.128c3.822-0.033,6.926,3.168,6.921,7.128C22.653,47.687,19.548,50.884,15.727,50.874z M50,28.497  h-0.067H17.541l6.182-16.668c0.746-2.366,1.904-4.059,4.639-4.1h21.571H50H71.64c2.693,0.041,3.854,1.733,4.636,4.1l6.183,16.668H50  z M84.274,50.874c-3.861,0.011-6.967-3.187-6.988-7.12c0.021-3.96,3.127-7.161,6.988-7.128c3.795-0.033,6.898,3.168,6.922,7.128  C91.172,47.687,88.069,50.884,84.274,50.874z"
+                                      Fill="{StaticResource PhoneAccentBrush}"
+                                      Stretch="Uniform"
+                                      Width="28"
+                                      Height="28"
+                                      Margin="10" />
+                            </Border>
+                            <Path Data="M0,1 L12.5,25 L25,1"
+                                  HorizontalAlignment="Left"
+                                  StrokeThickness="3"
+                                  Fill="{StaticResource PhoneForegroundBrush}"
+                                  Stroke="{StaticResource PhoneAccentBrush}"
+                                  VerticalAlignment="Top"
+                                  Margin="56.155,47.961,0,0">
+                                <Path.RenderTransform>
+                                    <CompositeTransform ScaleY="0.7"
+                                                        ScaleX="0.7" />
+                                </Path.RenderTransform>
+                            </Path>
+                        </Grid>
+                    </Border>
+                    <TextBlock Margin="20,-20,0,0">
+                        <Run Text="triplexer"
+                             FontFamily="{StaticResource PhoneFontFamilyLight}"
+                             FontSize="{StaticResource PhoneFontSizeExtraExtraLarge}" />
+                        <LineBreak />
+                        <Run Text="your ultimate trip planner"
+                             FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
+                    </TextBlock>
+                </StackPanel>
+                <RichTextBox FontSize="{StaticResource PhoneFontSizeMediumLarge}"
+                             Padding="{StaticResource PhoneVerticalMargin}">
+                    <Paragraph>
+                        <Run Text="Version: " />
+                        <Run Text="{Binding AppVersion}" />
+                        <LineBreak />
+                        <Run Text="Written by: " />
+                        <Run Text="Leon Zhou" />
+                        <LineBreak />
+                        <Run Text="Contact: " />
+                        <Hyperlink Command="{Binding CommandSendEmail}">
+                            <Run Text="codifying@gmail.com" />
+                        </Hyperlink>
+                        <LineBreak />
+                        <Run Text="Tech blog: " />
+                        <Hyperlink Command="{Binding CommandNavigateToWebSite}">
+                            <Run Text="codifying.wordpress.com" />
+                        </Hyperlink>
+                    </Paragraph>
+                </RichTextBox>
+            </StackPanel>
         </controls:PivotItem>
     </controls:Pivot>
 </phone:PhoneApplicationPage>
