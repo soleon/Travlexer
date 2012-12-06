@@ -371,7 +371,7 @@
                                              Storyboard.TargetProperty="(FrameworkElement.Height)"
                                              Duration="0:0:0.3"
                                              EasingFunction="{StaticResource EasingQuinticOut}"
-                                             To="580" />
+                                             To="480" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
                                                            Storyboard.TargetProperty="(UIElement.Visibility)">
                                 <DiscreteObjectKeyFrame KeyTime="0">
@@ -414,7 +414,7 @@
                         <DoubleAnimation Storyboard.TargetName="Toolbar"
                                          Storyboard.TargetProperty="(FrameworkElement.Height)"
                                          Duration="0"
-                                         To="580"
+                                         To="480"
                                          d:IsOptimized="True" />
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
                                                        Storyboard.TargetProperty="(UIElement.Visibility)">
@@ -794,9 +794,11 @@
                                    Fill="{StaticResource BrushIconTrain}" />
                     </controls:CircleToggleButton>
                     <Rectangle Height="35"
-                               Fill="{StaticResource BrushIconEllipsis}" />
+                               Fill="{StaticResource BrushIconEllipsis}"
+                               Visibility="Collapsed" />
                     <controls:CircleToggleButton Caption="network"
-                                                 IsChecked="{Binding IsOnline.Value, Mode=TwoWay}">
+                                                 IsChecked="{Binding IsOnline.Value, Mode=TwoWay}"
+                                                 Visibility="Collapsed">
                         <Rectangle Style="{StaticResource IconRectangleStyle}"
                                    Fill="{StaticResource BrushIconWifi}" />
                     </controls:CircleToggleButton>

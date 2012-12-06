@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 
 namespace Travlexer.WindowsPhone
 {
@@ -96,20 +97,25 @@ namespace Travlexer.WindowsPhone
 
         private void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
-            if (Debugger.IsAttached)
-            {
-                // An unhandled exception has occurred; break into the debugger
-                Debugger.Break();
-            }
+            if (Debugger.IsAttached) Debugger.Break();
             else
             {
-#if DEBUG
                 var n = Environment.NewLine;
-                var debug =
-                    e.ExceptionObject.Message + n + n +
-                    RootFrame.CurrentSource + n + e.ExceptionObject.StackTrace;
-                MessageBox.Show(debug);
-#endif
+                var n2 = n + n;
+                if (MessageBox.Show("The application has encountered an error, we apologize for any inconvenience." + n2 + "Do you want to report this error via email?", "Oops...", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    var ex = e.ExceptionObject;
+                    new EmailComposeTask
+                    {
+                        Body = "Exception: " + ex + n2 +
+                               "Message: " + e.ExceptionObject.Message + n2 +
+                               "OS: " + Environment.OSVersion + n2 +
+                               "Location: " + RootFrame.CurrentSource + n2 +
+                               "Trace:" + n + e.ExceptionObject.StackTrace,
+                        Subject = "Triplexer " + ApplicationContext.Data.AppVersion + " error report",
+                        To = "codifying@gmail.com"
+                    }.Show();
+                }
             }
         }
 
@@ -152,6 +158,10 @@ namespace Travlexer.WindowsPhone
         {
             // Remove this handler since it is no longer needed
             RootFrame.Navigated -= OnCompleteInitializePhoneApplication;
+
+            // App store policy requirement: ask user if location service is allowed at least once.
+            if (ApplicationContext.Data.LastRanVersion == null)
+                ApplicationContext.Data.UseLocationService.Value = MessageBox.Show("In order to display your location and provide optimal user experience, we need access to your current location. Your location information will not be stored or shared, and you can always disable this feature in the settings page. Do you want to enable access to location service?", "Location Service", MessageBoxButton.OKCancel) == MessageBoxResult.OK;
         }
 
         #endregion
