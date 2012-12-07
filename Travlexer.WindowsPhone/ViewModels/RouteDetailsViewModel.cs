@@ -77,6 +77,11 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         #region Public Properties
 
+        public Dictionary<ElementColor, string> RouteColors
+        {
+            get { return ApplicationContext.Data.ElementColorMap; }
+        }
+
         public IEnumerable<RouteStepSummaryViewModel> Steps { get; private set; }
 
         public RouteStep SelectedStep
@@ -85,7 +90,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             set
             {
                 if (!SetValue(ref _selectedStep, value, SelectedStepProperty) || value == null) return;
-                MapViewLocations = new[] {value.StartLocation, value.EndLocation};
+                MapViewLocations = new[] {value.StartLocation};
             }
         }
 

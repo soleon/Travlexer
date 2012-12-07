@@ -2,7 +2,6 @@
 using System.Device.Location;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Windows;
 using Codify.Entities;
 using Codify.GoogleMaps;
 using Codify.Serialization;

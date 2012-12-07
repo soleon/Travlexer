@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using Codify;
 using Codify.Commands;
-using Codify.Extensions;
 using Codify.ViewModels;
 using Codify.WindowsPhone;
 using Travlexer.Data;
+using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone.ViewModels
 {
@@ -14,18 +11,14 @@ namespace Travlexer.WindowsPhone.ViewModels
     {
         #region Constructor
 
-        public PlaceDetailsViewModel()
+        public PlaceDetailsViewModel(IDataContext data)
         {
-            Data = ApplicationContext.Data.SelectedPlace.Value;
-            Data.PropertyChanged -= OnDataPropertyChanged;
-            Data.PropertyChanged += OnDataPropertyChanged;
+            Data = data.SelectedPlace.Value;
 
             CommandUpdatePlaceInfo = new DelegateCommand(() => ApplicationContext.Data.GetPlaceDetails(Data));
-            CommandNavigateToUrl = new DelegateCommand<string>(Utilities.OpenUrl);
-            CommandCallNumber = new DelegateCommand<string>(number => Utilities.CallPhoneNumber(Data.Name, number));
+            CommandNavigateToUrl = new DelegateCommand<string>(PhoneTasks.OpenUrl);
+            CommandCallNumber = new DelegateCommand<string>(number => PhoneTasks.CallPhoneNumber(Data.Name, number));
             CommandMarkAsPin = new DelegateCommand(() => Data.IsSearchResult = false);
-
-            IsBusy = Data.DataState == DataStates.Busy;
         }
 
         #endregion
@@ -36,6 +29,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand CommandUpdatePlaceInfo { get; private set; }
         public DelegateCommand<string> CommandNavigateToUrl { get; private set; }
         public DelegateCommand<string> CommandCallNumber { get; private set; }
+        public DelegateCommand CommandMarkAsPin { get; private set; }
 
         #endregion
 
@@ -51,37 +45,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             get { return ApplicationContext.Data.ElementColorMap; }
         }
-
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            private set { SetValue(ref _isBusy, value, IsBusyProperty); }
-        }
-
-        public DelegateCommand CommandMarkAsPin { get; private set; }
-
-        private bool _isBusy;
-        private const string IsBusyProperty = "IsBusy";
-
-        #endregion
-
-
-        #region Event Handling
-
-        private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName != Place.DataStateProperty) return;
-            var dataState = Data.DataState;
-            DataStateChanged.ExecuteIfNotNull(dataState);
-            IsBusy = dataState == DataStates.Busy;
-        }
-
-        #endregion
-
-
-        #region Public Events
-
-        public event Action<DataStates> DataStateChanged;
 
         #endregion
     }

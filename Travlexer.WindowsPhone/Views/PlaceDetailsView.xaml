@@ -6,15 +6,13 @@
                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                   xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+                                  xmlns:controls1="clr-namespace:Travlexer.WindowsPhone.Controls"
                                   x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
                                   x:Name="Page"
                                   mc:Ignorable="d"
                                   d:DesignHeight="768"
-                                  d:DesignWidth="480">
-    <d:DesignProperties.DataContext>
-        <Binding Path="PlaceDetailsViewModel"
-                 Source="{StaticResource DesignTime}" />
-    </d:DesignProperties.DataContext>
+                                  d:DesignWidth="480"
+                                  d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
     <codifyPhone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="PlaceIconFullModeItemTemplate">
             <Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
@@ -93,225 +91,235 @@
         <shell:ProgressIndicator IsIndeterminate="{Binding IsBusy}"
                                  IsVisible="True" />
     </shell:SystemTray.ProgressIndicator>
-    <controls:Pivot>
-        <controls:Pivot.Title>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="SEARCH RESULT: "
-                           Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}" />
-                <TextBlock Text="{Binding Data.Name}" />
-            </StackPanel>
-        </controls:Pivot.Title>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="DataStateGroup">
-                <VisualState x:Name="None" />
-                <VisualState x:Name="Busy">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BusyText"
-                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Visible</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Storyboard.TargetName="Address"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         Duration="0"
-                                         To="0"
-                                         d:IsOptimized="True" />
-                    </Storyboard>
-                </VisualState>
-                <VisualState x:Name="Error">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorButton"
-                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Visible</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Storyboard.TargetName="Address"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         Duration="0"
-                                         To="0"
-                                         d:IsOptimized="True" />
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        <controls:PivotItem Header="information">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="0.532*" />
-                </Grid.RowDefinitions>
-                <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconHome}"
-                           VerticalAlignment="Center"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Grid.Row="1"
-                           Fill="{StaticResource BrushIconCoordinate}"
-                           VerticalAlignment="Center"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Grid.Row="2"
-                           Fill="{StaticResource BrushIconGlobe}"
-                           VerticalAlignment="Center"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Grid.Row="3"
-                           Fill="{StaticResource BrushIconPhone}"
-                           VerticalAlignment="Center"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Grid.Row="4"
-                           Fill="{StaticResource BrushIconStar}"
-                           VerticalAlignment="Center"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <TextBox Style="{StaticResource TextBoxStyle}"
-                         x:Name="Address"
-                         Grid.Column="1"
-                         GotFocus="SelectAllOnTextBoxGotFocus"
-                         IsReadOnly="True"
-                         Text="{Binding Data.Address, Mode=TwoWay}"
-                         TextWrapping="Wrap"
-                         d:LayoutOverrides="Height" />
-                <TextBlock x:Name="BusyText"
-                           Grid.Column="1"
-                           Margin="{StaticResource PhoneHorizontalMargin}"
-                           Foreground="{StaticResource PhoneDisabledBrush}"
-                           Text="Looking up this place..."
-                           VerticalAlignment="Center"
-                           Visibility="Collapsed"
-                           FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
-                <HyperlinkButton x:Name="ErrorButton"
-                                 Grid.Column="1"
-                                 Margin="{StaticResource PhoneHorizontalMargin}"
-                                 Command="{Binding CommandUpdatePlaceInfo}"
-                                 Content="No information found, tap to refresh"
-                                 Visibility="Collapsed" />
-                <TextBox Style="{StaticResource TextBoxStyle}"
-                         Grid.Column="1"
-                         Grid.Row="1"
-                         GotFocus="SelectAllOnTextBoxGotFocus"
-                         IsReadOnly="True"
-                         Text="{Binding Data.Location, Mode=TwoWay}"
-                         TextWrapping="Wrap"
-                         d:LayoutOverrides="Height" />
-                <HyperlinkButton Grid.Column="1"
-                                 Grid.Row="2"
-                                 Margin="{StaticResource PhoneMargin}"
-                                 Content="{Binding Data.WebSite, TargetNullValue=No website found}"
-                                 IsEnabled="{Binding Data.WebSite, Converter={StaticResource BooleanConverter}}"
-                                 d:LayoutOverrides="Height"
-                                 Command="{Binding CommandNavigateToUrl}"
-                                 CommandParameter="{Binding Data.WebSite}" />
-                <HyperlinkButton Grid.Column="1"
-                                 Grid.Row="3"
-                                 Margin="{StaticResource PhoneMargin}"
-                                 Content="{Binding Data.ContactNumber, TargetNullValue=No contact number found}"
-                                 IsEnabled="{Binding Data.ContactNumber, Converter={StaticResource BooleanConverter}}"
-                                 Command="{Binding CommandCallNumber}"
-                                 CommandParameter="{Binding Data.ContactNumber}" />
-                <TextBox Style="{StaticResource TextBoxStyle}"
-                         Grid.Column="1"
-                         Grid.Row="4"
-                         IsEnabled="{Binding Data.Rating, Converter={StaticResource BooleanConverter}}"
-                         IsHitTestVisible="False"
-                         IsReadOnly="True"
-                         Text="{Binding Data.Rating, StringFormat=Rating: \{0\}, TargetNullValue=No rating found}"
-                         d:LayoutOverrides="Height" />
-            </Grid>
-        </controls:PivotItem>
-        <controls:PivotItem Header="personalize">
-            <Grid>
-                <RichTextBox IsReadOnly="True"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Center"
-                             TextAlignment="Center"
-                             FontFamily="{StaticResource PhoneFontFamilyLight}"
-                             FontSize="{StaticResource PhoneFontSizeLarge}"
-                             Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}">
-                    <Paragraph>
-                        <Run Text="to customize this search result, " />
-                        <LineBreak />
-                        <Hyperlink Command="{Binding CommandMarkAsPin}">
-                            <Run Text="mark it as personal pin" />
-                        </Hyperlink>
-                        <Run Text=" ." />
-                    </Paragraph>
-                </RichTextBox>
-                <StackPanel Visibility="{Binding Data.IsSearchResult, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
-                    <TextBox GotFocus="SelectAllOnTextBoxGotFocus"
-                             InputScope="Text"
-                             Text="{Binding Data.Name, Mode=TwoWay}" />
-                    <toolkit:ListPicker FullModeHeader="change place icon"
-                                        FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}"
-                                        ItemsSource="{Binding PlaceIcons}"
-                                        ItemTemplate="{StaticResource PlaceIconItemTemplate}"
-                                        SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" />
-                    <toolkit:ListPicker FullModeHeader="change place color"
-                                        FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}"
-                                        ItemsSource="{Binding PlaceColors}"
-                                        ItemTemplate="{StaticResource PlaceColorItemTemplate}"
-                                        SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" />
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120" />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="depart"
-                                   VerticalAlignment="Center"
-                                   FontSize="{StaticResource PhoneFontSizeLarge}"
-                                   Margin="{StaticResource PhoneHorizontalMargin}" />
-                        <toolkit:DatePicker Grid.Column="1"
-                                            Value="{Binding Data.DepartureTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
-                        <toolkit:TimePicker Grid.Column="2"
-                                            Value="{Binding Data.DepartureTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
-                    </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120" />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="arrive"
-                                   VerticalAlignment="Center"
-                                   FontSize="{StaticResource PhoneFontSizeLarge}"
-                                   Margin="{StaticResource PhoneHorizontalMargin}" />
-                        <toolkit:DatePicker Grid.Column="1"
-                                            Value="{Binding Data.ArrivalTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
-                        <toolkit:TimePicker Grid.Column="2"
-                                            Value="{Binding Data.ArrivalTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
-                    </Grid>
-                    <Grid>
-                        <TextBox x:Name="NotesTextBox"
-                                 AcceptsReturn="True"
-                                 GotFocus="SelectAllOnTextBoxGotFocus"
-                                 InputScope="Text"
-                                 Text="{Binding Data.Notes, Mode=TwoWay}"
-                                 TextWrapping="Wrap"
-                                 Height="220" />
-                        <TextBlock FontStyle="Italic"
-                                   Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}"
-                                   IsHitTestVisible="False"
-                                   Text="Notes..."
-                                   Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox}"
-                                   Margin="22,16,0,0" />
-                    </Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <controls:Pivot>
+            <controls:Pivot.Title>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="SEARCH RESULT: "
+                               Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}" />
+                    <TextBlock Text="{Binding Data.Name}" />
                 </StackPanel>
-            </Grid>
-        </controls:PivotItem>
-    </controls:Pivot>
+            </controls:Pivot.Title>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="DataStateGroup">
+                    <VisualState x:Name="None" />
+                    <VisualState x:Name="Busy">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BusyText"
+                                                           Storyboard.TargetProperty="(UIElement.Visibility)">
+                                <DiscreteObjectKeyFrame KeyTime="0">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <Visibility>Visible</Visibility>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Storyboard.TargetName="Address"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             Duration="0"
+                                             To="0"
+                                             d:IsOptimized="True" />
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Error">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorButton"
+                                                           Storyboard.TargetProperty="(UIElement.Visibility)">
+                                <DiscreteObjectKeyFrame KeyTime="0">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <Visibility>Visible</Visibility>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Storyboard.TargetName="Address"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             Duration="0"
+                                             To="0"
+                                             d:IsOptimized="True" />
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <controls:PivotItem Header="information">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="0.532*" />
+                    </Grid.RowDefinitions>
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconHome}"
+                               VerticalAlignment="Center"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Grid.Row="1"
+                               Fill="{StaticResource BrushIconCoordinate}"
+                               VerticalAlignment="Center"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Grid.Row="2"
+                               Fill="{StaticResource BrushIconGlobe}"
+                               VerticalAlignment="Center"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Grid.Row="3"
+                               Fill="{StaticResource BrushIconPhone}"
+                               VerticalAlignment="Center"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Grid.Row="4"
+                               Fill="{StaticResource BrushIconStar}"
+                               VerticalAlignment="Center"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <TextBox Style="{StaticResource TextBoxStyle}"
+                             x:Name="Address"
+                             Grid.Column="1"
+                             GotFocus="SelectAllOnTextBoxGotFocus"
+                             IsReadOnly="True"
+                             Text="{Binding Data.Address, Mode=TwoWay}"
+                             TextWrapping="Wrap"
+                             d:LayoutOverrides="Height" />
+                    <TextBlock x:Name="BusyText"
+                               Grid.Column="1"
+                               Margin="{StaticResource PhoneHorizontalMargin}"
+                               Foreground="{StaticResource PhoneDisabledBrush}"
+                               Text="Looking up this place..."
+                               VerticalAlignment="Center"
+                               Visibility="Collapsed"
+                               FontSize="{StaticResource PhoneFontSizeMediumLarge}" />
+                    <HyperlinkButton x:Name="ErrorButton"
+                                     Grid.Column="1"
+                                     Margin="{StaticResource PhoneHorizontalMargin}"
+                                     Command="{Binding CommandUpdatePlaceInfo}"
+                                     Content="No information found, tap to refresh"
+                                     Visibility="Collapsed" />
+                    <TextBox Style="{StaticResource TextBoxStyle}"
+                             Grid.Column="1"
+                             Grid.Row="1"
+                             GotFocus="SelectAllOnTextBoxGotFocus"
+                             IsReadOnly="True"
+                             Text="{Binding Data.Location, Mode=TwoWay}"
+                             TextWrapping="Wrap"
+                             d:LayoutOverrides="Height" />
+                    <HyperlinkButton Grid.Column="1"
+                                     Grid.Row="2"
+                                     Margin="{StaticResource PhoneMargin}"
+                                     Content="{Binding Data.WebSite, TargetNullValue=No website found}"
+                                     IsEnabled="{Binding Data.WebSite, Converter={StaticResource BooleanConverter}}"
+                                     d:LayoutOverrides="Height"
+                                     Command="{Binding CommandNavigateToUrl}"
+                                     CommandParameter="{Binding Data.WebSite}" />
+                    <HyperlinkButton Grid.Column="1"
+                                     Grid.Row="3"
+                                     Margin="{StaticResource PhoneMargin}"
+                                     Content="{Binding Data.ContactNumber, TargetNullValue=No contact number found}"
+                                     IsEnabled="{Binding Data.ContactNumber, Converter={StaticResource BooleanConverter}}"
+                                     Command="{Binding CommandCallNumber}"
+                                     CommandParameter="{Binding Data.ContactNumber}" />
+                    <TextBox Style="{StaticResource TextBoxStyle}"
+                             Grid.Column="1"
+                             Grid.Row="4"
+                             IsEnabled="{Binding Data.Rating, Converter={StaticResource BooleanConverter}}"
+                             IsHitTestVisible="False"
+                             IsReadOnly="True"
+                             Text="{Binding Data.Rating, StringFormat=Rating: \{0\}, TargetNullValue=No rating found}"
+                             d:LayoutOverrides="Height" />
+                </Grid>
+            </controls:PivotItem>
+            <controls:PivotItem Header="personalize">
+                <Grid>
+                    <RichTextBox IsReadOnly="True"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Center"
+                                 TextAlignment="Center"
+                                 FontFamily="{StaticResource PhoneFontFamilyLight}"
+                                 FontSize="{StaticResource PhoneFontSizeLarge}"
+                                 Visibility="{Binding Data.IsSearchResult, Converter={StaticResource VisibilityConverter}}">
+                        <Paragraph>
+                            <Run Text="to customize this search result, " />
+                            <LineBreak />
+                            <Hyperlink Command="{Binding CommandMarkAsPin}">
+                                <Run Text="mark it as personal pin" />
+                            </Hyperlink>
+                            <Run Text=" ." />
+                        </Paragraph>
+                    </RichTextBox>
+                    <ScrollViewer Visibility="{Binding Data.IsSearchResult, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}}">
+                        <StackPanel>
+                            <TextBox GotFocus="SelectAllOnTextBoxGotFocus"
+                                     InputScope="Text"
+                                     Text="{Binding Data.Name, Mode=TwoWay}" />
+                            <toolkit:ListPicker FullModeHeader="change place icon"
+                                                FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}"
+                                                ItemsSource="{Binding PlaceIcons}"
+                                                ItemTemplate="{StaticResource PlaceIconItemTemplate}"
+                                                SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" />
+                            <toolkit:ListPicker FullModeHeader="change place color"
+                                                FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}"
+                                                ItemsSource="{Binding PlaceColors}"
+                                                ItemTemplate="{StaticResource PlaceColorItemTemplate}"
+                                                SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="depart"
+                                           VerticalAlignment="Center"
+                                           FontSize="{StaticResource PhoneFontSizeLarge}"
+                                           Margin="{StaticResource PhoneHorizontalMargin}" />
+                                <toolkit:DatePicker Grid.Column="1"
+                                                    Value="{Binding Data.DepartureTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
+                                <toolkit:TimePicker Grid.Column="2"
+                                                    Value="{Binding Data.DepartureTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="arrive"
+                                           VerticalAlignment="Center"
+                                           FontSize="{StaticResource PhoneFontSizeLarge}"
+                                           Margin="{StaticResource PhoneHorizontalMargin}" />
+                                <toolkit:DatePicker Grid.Column="1"
+                                                    Value="{Binding Data.ArrivalTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
+                                <toolkit:TimePicker Grid.Column="2"
+                                                    Value="{Binding Data.ArrivalTime, Mode=TwoWay, Converter={StaticResource LocalDateTimeConverter}}" />
+                            </Grid>
+                            <Grid>
+                                <TextBox x:Name="NotesTextBox"
+                                         x:FieldModifier="private"
+                                         AcceptsReturn="True"
+                                         InputScope="Text"
+                                         Text="{Binding Data.Notes, Mode=TwoWay}"
+                                         TextWrapping="Wrap"
+                                         GotFocus="SelectAllOnTextBoxGotFocus" />
+                                <TextBox Text="notes..."
+                                         BorderBrush="{x:Null}"
+                                         Foreground="{StaticResource PhoneTextBoxReadOnlyBrush}"
+                                         FontStyle="Italic"
+                                         IsHitTestVisible="False"
+                                         Background="{x:Null}"
+                                         Visibility="{Binding Text, ConverterParameter=reverse, Converter={StaticResource VisibilityConverter}, ElementName=NotesTextBox}" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </controls:PivotItem>
+        </controls:Pivot>
+        <controls1:AdControl Grid.Row="1" />
+    </Grid>
 </codifyPhone:PhoneApplicationPage>

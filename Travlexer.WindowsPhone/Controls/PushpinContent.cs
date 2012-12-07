@@ -283,13 +283,13 @@ namespace Travlexer.WindowsPhone.Controls
             _webSiteLink = GetTemplateChild(PART_WebSite) as HyperlinkButton;
             if (_webSiteLink != null)
             {
-                _webSiteLink.Click += (s, e) => Utilities.OpenUrl(WebSite);
+                _webSiteLink.Click += (s, e) => PhoneTasks.OpenUrl(WebSite);
             }
 
             _contactNumberLink = GetTemplateChild(PART_ContactNumber) as HyperlinkButton;
             if (_contactNumberLink != null)
             {
-                _contactNumberLink.Click += (s, e) => Utilities.CallPhoneNumber(Title, ContactNumber);
+                _contactNumberLink.Click += (s, e) => PhoneTasks.CallPhoneNumber(Title, ContactNumber);
             }
 
             base.OnApplyTemplate();

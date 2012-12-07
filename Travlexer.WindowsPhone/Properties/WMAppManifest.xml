@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{a81b2038-2ee0-4775-bac8-7676f963ddbd}" Title="Travlexer" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Leon Zhou" Description="Run your travel plan so flexible, like you have never experienced before." Publisher="SoLeon Innovative" BitsPerPixel="16">
+  <App xmlns="" ProductID="{a81b2038-2ee0-4775-bac8-7676f963ddbd}" Title="Triplexer" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Leon Zhou" Description="Run your travel plan so flexible, like you have never experienced before." Publisher="SoLeon Innovative" BitsPerPixel="16">
     <IconPath IsRelative="true" IsResource="false">Assets\AppIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES" />
@@ -26,7 +26,7 @@
         <TemplateType5>
           <BackgroundImageURI IsRelative="true" IsResource="false">Assets\AppTile.png</BackgroundImageURI>
           <Count>0</Count>
-          <Title>Travlexer</Title>
+          <Title>Triplexer</Title>
         </TemplateType5>
       </PrimaryToken>
     </Tokens>

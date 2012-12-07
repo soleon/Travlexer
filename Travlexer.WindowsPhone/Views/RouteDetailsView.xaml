@@ -11,192 +11,229 @@
                             xmlns:googleMapsControls="clr-namespace:Codify.GoogleMaps.Controls;assembly=Codify.GoogleMaps"
                             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                             xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+                            xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                             x:Class="Travlexer.WindowsPhone.Views.RouteDetailsView"
                             mc:Ignorable="d"
                             d:DesignWidth="480"
                             d:DesignHeight="768"
                             Style="{StaticResource PageDefault}"
                             d:DataContext="{Binding RouteDetailsViewModel, Source={StaticResource DesignTime}}">
-    <controls:Pivot Title="ROUTE DETAILS"
-                    Name="Pivot">
-        <controls:PivotItem Header="itinerary">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Steps}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="{StaticResource PhoneVerticalMargin}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Index}"
-                                           VerticalAlignment="Center"
-                                           FontFamily="{StaticResource PhoneFontFamilyLight}"
-                                           FontSize="{StaticResource PhoneFontSizeLarge}"
-                                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                                <TextBlock TextWrapping="Wrap"
-                                           Grid.Column="1"
-                                           Margin="{StaticResource PhoneHorizontalMargin}">
-                                    <Run Text="{Binding Data.Instruction}"
-                                         FontSize="{StaticResource PhoneFontSizeMedium}" />
-                                    <LineBreak />
-                                    <Run Text="{Binding Distance}"
-                                         Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
-                                    <Run Text=" in " />
-                                    <Run Text="{Binding Duration}"
-                                         Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
-                                </TextBlock>
-                                <localControls:CircleButton Grid.Column="2"
-                                                       VerticalAlignment="Center"
-                                                       Command="{Binding DataContext.CommandGoToStep, ElementName=Page}"
-                                                       CommandParameter="{Binding Data}"
-                                                       Click="GoToStepButtonClick">
-                                    <Rectangle Style="{StaticResource IconRectangleStyle}"
-                                               Fill="{StaticResource BrushIconRightArrow}" />
-                                </localControls:CircleButton>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </controls:PivotItem>
-        <controls:PivotItem Header="map"
-                            x:Name="MapPivotItem">
-            <maps:Map CopyrightVisibility="Collapsed"
-                      CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
-                      LogoVisibility="Collapsed"
-                      x:Name="Map"
-                      AnimationLevel="UserInput"
-                      ZoomBarVisibility="Visible">
-                <maps:Map.Mode>
-                    <core:MercatorMode />
-                </maps:Map.Mode>
-                <maps:MapLayer>
-                    <maps:MapTileLayer>
-                        <maps:MapTileLayer.TileSources>
-                            <googleMapsControls:TileSource Layer="Street" />
-                        </maps:MapTileLayer.TileSources>
-                    </maps:MapTileLayer>
-                    <localControls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
-                                          Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
-                                          StrokeEndLineCap="Round"
-                                          StrokeStartLineCap="Round"
-                                          StrokeThickness="{StaticResource MapPolylineInnerStrokeThickness}"
-                                          x:Name="RoutePolyline"
-                                          ZoomLevel="{Binding ZoomLevel, ElementName=Map}" />
-                    <maps:Pushpin IsHitTestVisible="False"
-                                  Location="{Binding CurrentLocation}"
-                                  PositionOrigin="Center"
-                                  Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
-                        <maps:Pushpin.Template>
-                            <ControlTemplate TargetType="maps:Pushpin">
-                                <Rectangle Height="30"
-                                           Width="30"
-                                           Fill="{StaticResource BrushIconCurrentLocationBlack}" />
-                            </ControlTemplate>
-                        </maps:Pushpin.Template>
-                    </maps:Pushpin>
-                    <maps:MapItemsControl ItemsSource="{Binding Steps}">
-                        <maps:MapItemsControl.ItemTemplate>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <controls:Pivot Title="ROUTE DETAILS"
+                        Name="Pivot">
+            <controls:PivotItem Header="itinerary">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Steps}">
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <maps:Pushpin Location="{Binding Data.StartLocation, Converter={StaticResource LocationGeoCoordinateConverter}}"
-                                              Style="{x:Null}"
-                                              Content="{Binding Index}"
-                                              PositionOrigin="Center">
-                                    <maps:Pushpin.Template>
-                                        <ControlTemplate TargetType="maps:Pushpin">
-                                            <Border BorderBrush="{Binding Stroke, ElementName=RoutePolyline}"
-                                                    BorderThickness="{StaticResource PhoneBorderThickness}"
-                                                    VerticalAlignment="Center"
-                                                    HorizontalAlignment="Center"
-                                                    Background="{StaticResource PhoneBackgroundBrush}"
-                                                    CornerRadius="11"
-                                                    Width="22"
-                                                    Height="22">
-                                                <TextBlock Text="{Binding Index}"
-                                                           FontWeight="Bold"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="12" />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </maps:Pushpin.Template>
-                                </maps:Pushpin>
+                                <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Index}"
+                                               VerticalAlignment="Center"
+                                               FontFamily="{StaticResource PhoneFontFamilyLight}"
+                                               FontSize="{StaticResource PhoneFontSizeLarge}"
+                                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                                    <TextBlock TextWrapping="Wrap"
+                                               Grid.Column="1"
+                                               Margin="{StaticResource PhoneHorizontalMargin}">
+                                        <Run Text="{Binding Data.Instruction}"
+                                             FontSize="{StaticResource PhoneFontSizeMedium}" />
+                                        <LineBreak />
+                                        <Run Text="{Binding Distance}"
+                                             Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
+                                        <Run Text=" in " />
+                                        <Run Text="{Binding Duration}"
+                                             Foreground="{Binding DataContext.Data.Color, Converter={StaticResource ElementColorToBrushConverter}, ElementName=Page}" />
+                                    </TextBlock>
+                                    <localControls:CircleButton Grid.Column="2"
+                                                                VerticalAlignment="Center"
+                                                                Command="{Binding DataContext.CommandGoToStep, ElementName=Page}"
+                                                                CommandParameter="{Binding Data}"
+                                                                Click="GoToStepButtonClick">
+                                        <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                                   Fill="{StaticResource BrushIconRightArrow}" />
+                                    </localControls:CircleButton>
+                                </Grid>
                             </DataTemplate>
-                        </maps:MapItemsControl.ItemTemplate>
-                    </maps:MapItemsControl>
-                    <maps:Pushpin Location="{Binding ArrivalPlace.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
-                                  Name="Pushpin"
-                                  PositionOrigin="BottomCenter">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger>
-                                <ec:GoToStateAction StateName="Drop"
-                                                    TargetObject="{Binding ElementName=Pushpin}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <Rectangle Style="{StaticResource IconRectangleStyle}"
-                                   Fill="{StaticResource BrushIconGoal}" />
-                    </maps:Pushpin>
-                </maps:MapLayer>
-            </maps:Map>
-        </controls:PivotItem>
-        <controls:PivotItem Header="summary">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Rectangle Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconDepart}"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <TextBlock Grid.Column="1"
-                           Margin="{StaticResource PhoneMargin}"
-                           TextWrapping="Wrap">
-                    <Run Text="{Binding DeparturePlace.Name}"
-                         FontSize="{StaticResource PhoneFontSizeLarge}" />
-                    <LineBreak />
-                    <Run Text="{Binding DeparturePlace.Address}" />
-                </TextBlock>
-                <Rectangle Grid.Row="1"
-                           Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconArrive}"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <TextBlock Grid.Column="1"
-                           Grid.Row="1"
-                           Margin="{StaticResource PhoneMargin}"
-                           TextWrapping="Wrap">
-                    <Run Text="{Binding ArrivalPlace.Name}"
-                         FontSize="{StaticResource PhoneFontSizeLarge}" />
-                    <LineBreak />
-                    <Run Text="{Binding ArrivalPlace.Address}" />
-                </TextBlock>
-                <Rectangle Grid.Row="2"
-                           Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconRoad}"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <TextBlock Grid.Row="2"
-                           Grid.Column="1"
-                           Text="{Binding Distance}"
-                           Margin="{StaticResource PhoneMargin}"
-                           FontSize="{StaticResource PhoneFontSizeLarge}" />
-                <Rectangle Grid.Row="3"
-                           Style="{StaticResource IconRectangleStyle}"
-                           Fill="{StaticResource BrushIconClock}"
-                           Margin="{StaticResource PhoneHorizontalMargin}" />
-                <TextBlock Grid.Row="3"
-                           Grid.Column="1"
-                           Text="{Binding Duration}"
-                           Margin="{StaticResource PhoneMargin}"
-                           FontSize="{StaticResource PhoneFontSizeLarge}" />
-            </Grid>
-        </controls:PivotItem>
-    </controls:Pivot>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </controls:PivotItem>
+            <controls:PivotItem Header="map"
+                                x:Name="MapPivotItem"
+                                x:FieldModifier="private">
+                <maps:Map CopyrightVisibility="Collapsed"
+                          CredentialsProvider="AiEEQMxcy4psQQEr7jujXL34vU9268zhPAWJRgDcHNpKdKwyP0TxZRiLOX6j2CMW"
+                          LogoVisibility="Collapsed"
+                          x:Name="Map"
+                          x:FieldModifier="private"
+                          ZoomBarVisibility="Visible">
+                    <maps:Map.Mode>
+                        <core:MercatorMode />
+                    </maps:Map.Mode>
+                    <maps:MapLayer>
+                        <maps:MapTileLayer>
+                            <maps:MapTileLayer.TileSources>
+                                <googleMapsControls:TileSource Layer="Street" />
+                            </maps:MapTileLayer.TileSources>
+                        </maps:MapTileLayer>
+                        <localControls:MapPolyline Locations="{Binding Data.Points, Converter={StaticResource LocationCollectionToLocationCollectionConverter}}"
+                                                   Stroke="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
+                                                   StrokeEndLineCap="Round"
+                                                   StrokeStartLineCap="Round"
+                                                   StrokeThickness="{StaticResource MapPolylineInnerStrokeThickness}"
+                                                   x:Name="RoutePolyline"
+                                                   ZoomLevel="{Binding ZoomLevel, ElementName=Map}" />
+                        <maps:Pushpin IsHitTestVisible="False"
+                                      Location="{Binding CurrentLocation}"
+                                      PositionOrigin="Center"
+                                      Visibility="{Binding CurrentLocation, Converter={StaticResource VisibilityConverter}}">
+                            <maps:Pushpin.Template>
+                                <ControlTemplate TargetType="maps:Pushpin">
+                                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                               Fill="{StaticResource BrushIconCurrentLocationBlack}" />
+                                </ControlTemplate>
+                            </maps:Pushpin.Template>
+                        </maps:Pushpin>
+                        <maps:MapItemsControl ItemsSource="{Binding Steps}">
+                            <maps:MapItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <maps:Pushpin Location="{Binding Data.StartLocation, Converter={StaticResource LocationGeoCoordinateConverter}}"
+                                                  Style="{x:Null}"
+                                                  Content="{Binding Index}"
+                                                  PositionOrigin="Center">
+                                        <maps:Pushpin.Template>
+                                            <ControlTemplate TargetType="maps:Pushpin">
+                                                <Border BorderBrush="{Binding Stroke, ElementName=RoutePolyline}"
+                                                        BorderThickness="{StaticResource PhoneBorderThickness}"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center"
+                                                        Background="{StaticResource PhoneBackgroundBrush}"
+                                                        CornerRadius="11"
+                                                        Width="22"
+                                                        Height="22">
+                                                    <TextBlock Text="{Binding Index}"
+                                                               FontWeight="Bold"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               FontSize="12" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </maps:Pushpin.Template>
+                                    </maps:Pushpin>
+                                </DataTemplate>
+                            </maps:MapItemsControl.ItemTemplate>
+                        </maps:MapItemsControl>
+                        <maps:Pushpin Location="{Binding ArrivalPlace.Location, Converter={StaticResource LocationGeoCoordinateConverter}}"
+                                      Name="Pushpin"
+                                      PositionOrigin="BottomCenter">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger>
+                                    <ec:GoToStateAction StateName="Drop"
+                                                        TargetObject="{Binding ElementName=Pushpin}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Rectangle Style="{StaticResource IconRectangleStyle}"
+                                       Fill="{StaticResource BrushIconGoal}" />
+                        </maps:Pushpin>
+                    </maps:MapLayer>
+                </maps:Map>
+            </controls:PivotItem>
+            <controls:PivotItem Header="summary">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconDepart}"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <TextBlock Grid.Column="1"
+                               Margin="{StaticResource PhoneMargin}"
+                               TextWrapping="Wrap">
+                        <Run Text="{Binding DeparturePlace.Name}"
+                             FontSize="{StaticResource PhoneFontSizeLarge}" />
+                        <LineBreak />
+                        <Run Text="{Binding DeparturePlace.Address}" />
+                    </TextBlock>
+                    <Rectangle Grid.Row="1"
+                               Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconArrive}"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <TextBlock Grid.Column="1"
+                               Grid.Row="1"
+                               Margin="{StaticResource PhoneMargin}"
+                               TextWrapping="Wrap">
+                        <Run Text="{Binding ArrivalPlace.Name}"
+                             FontSize="{StaticResource PhoneFontSizeLarge}" />
+                        <LineBreak />
+                        <Run Text="{Binding ArrivalPlace.Address}" />
+                    </TextBlock>
+                    <Rectangle Grid.Row="2"
+                               Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconRoad}"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="1"
+                               Text="{Binding Distance}"
+                               Margin="{StaticResource PhoneMargin}"
+                               FontSize="{StaticResource PhoneFontSizeLarge}" />
+                    <Rectangle Grid.Row="3"
+                               Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconClock}"
+                               Margin="{StaticResource PhoneHorizontalMargin}" />
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="1"
+                               Text="{Binding Duration}"
+                               Margin="{StaticResource PhoneMargin}"
+                               FontSize="{StaticResource PhoneFontSizeLarge}" />
+                    <Rectangle Grid.Row="4"
+                               Style="{StaticResource IconRectangleStyle}"
+                               Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
+                    <toolkit:ListPicker FullModeHeader="change place color"
+                                        ItemsSource="{Binding RouteColors}"
+                                        DisplayMemberPath="Value"
+                                        SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}"
+                                        Grid.Row="4"
+                                        Grid.Column="1">
+                        <toolkit:ListPicker.FullModeItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Rectangle Height="48"
+                                               Width="48"
+                                               Fill="{Binding Key, Converter={StaticResource ElementColorToBrushConverter}}" />
+                                    <TextBlock Grid.Column="1"
+                                               Margin="{StaticResource PhoneHorizontalMargin}"
+                                               FontFamily="{StaticResource PhoneFontFamilySemiLight}"
+                                               FontSize="{StaticResource PhoneFontSizeExtraLarge}"
+                                               Text="{Binding Value}"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </toolkit:ListPicker.FullModeItemTemplate>
+                    </toolkit:ListPicker>
+                </Grid>
+            </controls:PivotItem>
+        </controls:Pivot>
+        <localControls:AdControl Grid.Row="1" />
+    </Grid>
 </phone:PhoneApplicationPage>

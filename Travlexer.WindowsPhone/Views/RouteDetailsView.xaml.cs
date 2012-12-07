@@ -13,10 +13,13 @@ namespace Travlexer.WindowsPhone.Views
     [ViewModelType(typeof (RouteDetailsViewModel))]
     public partial class RouteDetailsView
     {
+        private const double CloseUpZoomLevel = 18D;
+
         public RouteDetailsView()
         {
             InitializeComponent();
             SetBinding(MapViewLocationsProperty, new Binding(RouteDetailsViewModel.MapviewLocationsProperty));
+            Loaded += (s, e) => Map.AnimationLevel = ApplicationContext.Data.UseMapAnimation.Value ? AnimationLevel.Full : AnimationLevel.UserInput;
         }
 
 
@@ -42,7 +45,13 @@ namespace Travlexer.WindowsPhone.Views
         /// </summary>
         private void OnMapViewLocationsChanged(IEnumerable<Location> newValue)
         {
-            Map.SetView(LocationRect.CreateLocationRect(newValue.Select(l => l.ToGeoCoordinate()).ToArray()));
+            var geoCoordinates = newValue.Select(l => l.ToGeoCoordinate()).ToArray();
+            if (geoCoordinates.Length == 1)
+            {
+                Map.Center = geoCoordinates[0];
+                Map.ZoomLevel = CloseUpZoomLevel;
+            }
+            else Map.SetView(LocationRect.CreateLocationRect(geoCoordinates));
         }
 
         #endregion

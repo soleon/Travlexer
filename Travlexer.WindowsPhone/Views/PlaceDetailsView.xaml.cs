@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Codify;
 using Codify.Attributes;
 using Travlexer.WindowsPhone.ViewModels;
@@ -9,11 +10,10 @@ namespace Travlexer.WindowsPhone.Views
     [ViewModelType(typeof (PlaceDetailsViewModel))]
     public partial class PlaceDetailsView
     {
-        private PlaceDetailsViewModel _dataContext;
-
         public PlaceDetailsView()
         {
             InitializeComponent();
+            SetBinding(DataStateProperty, new Binding("Data.DataState"));
         }
 
         private void SelectAllOnTextBoxGotFocus(object sender, RoutedEventArgs e)
@@ -21,22 +21,27 @@ namespace Travlexer.WindowsPhone.Views
             Dispatcher.BeginInvoke(() => ((TextBox) sender).SelectAll());
         }
 
-        protected override void OnDataContextChanged(object oldValue, object newValue)
+
+        #region DataState
+
+        public DataStates DataState
         {
-            var old = oldValue as PlaceDetailsViewModel;
-            if (old != null)
-            {
-                old.DataStateChanged -= OnDataStateChanged;
-            }
-            _dataContext = newValue as PlaceDetailsViewModel;
-            if (_dataContext != null)
-            {
-                _dataContext.DataStateChanged += OnDataStateChanged;
-                OnDataStateChanged(_dataContext.Data.DataState);
-            }
-            base.OnDataContextChanged(oldValue, newValue);
+            get { return (DataStates) GetValue(DataStateProperty); }
+            set { SetValue(DataStateProperty, value); }
         }
 
+        /// <summary>
+        ///     Defines the <see cref="DataState" /> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty DataStateProperty = DependencyProperty.Register(
+            "DataState",
+            typeof (DataStates),
+            typeof (PlaceDetailsView),
+            new PropertyMetadata(default(DataStates), (s, e) => ((PlaceDetailsView) s).OnDataStateChanged((DataStates) e.NewValue)));
+
+        /// <summary>
+        ///     Called when <see cref="DataState" /> changes.
+        /// </summary>
         private void OnDataStateChanged(DataStates state)
         {
             switch (state)
@@ -52,5 +57,7 @@ namespace Travlexer.WindowsPhone.Views
                     break;
             }
         }
+
+        #endregion
     }
 }

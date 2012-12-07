@@ -1,7 +1,7 @@
 ﻿using System;
 using Codify.Commands;
 using Codify.Entities;
-using Microsoft.Phone.Tasks;
+using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone.ViewModels
@@ -9,25 +9,14 @@ namespace Travlexer.WindowsPhone.ViewModels
     public class SettingsViewModel : NotifyableEntity
     {
         private static readonly UnitSystems[] StaticUnitSystems = new[] {Infrastructure.UnitSystems.Metric, Infrastructure.UnitSystems.Imperial};
-        
-        private readonly EmailComposeTask _emailComposeTask;
-        private readonly WebBrowserTask _webBrowserTask;
+
         private readonly IDataContext _data;
 
         public SettingsViewModel(IDataContext data)
         {
             _data = data;
-            _emailComposeTask = new EmailComposeTask
-            {
-                To = "codifying@gmail.com",
-                Subject = "About Travlexer"
-            };
-            _webBrowserTask = new WebBrowserTask
-            {
-                Uri = new Uri("http://codifying.wordpress.com", UriKind.Absolute)
-            };
-            CommandSendEmail = new DelegateCommand(_emailComposeTask.Show);
-            CommandNavigateToWebSite = new DelegateCommand(_webBrowserTask.Show);
+            CommandSendEmail = new DelegateCommand(() => PhoneTasks.SendEmail("codifying@gmail.com", "About Travlexer"));
+            CommandNavigateToWebSite = new DelegateCommand(() => PhoneTasks.OpenUrl("http://codifying.wordpress.com"));
         }
 
         public ObservableValue<bool> UseMapAnimation

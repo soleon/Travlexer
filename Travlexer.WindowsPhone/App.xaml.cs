@@ -100,18 +100,13 @@ namespace Travlexer.WindowsPhone
             if (Debugger.IsAttached) Debugger.Break();
             else
             {
-                var n = Environment.NewLine;
-                var n2 = n + n;
+                var n2 = Environment.NewLine + Environment.NewLine;
                 if (MessageBox.Show("The application has encountered an error, we apologize for any inconvenience." + n2 + "Do you want to report this error via email?", "Oops...", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
                     var ex = e.ExceptionObject;
                     new EmailComposeTask
                     {
-                        Body = "Exception: " + ex + n2 +
-                               "Message: " + e.ExceptionObject.Message + n2 +
-                               "OS: " + Environment.OSVersion + n2 +
-                               "Location: " + RootFrame.CurrentSource + n2 +
-                               "Trace:" + n + e.ExceptionObject.StackTrace,
+                        Body = ex + n2 + "OS: " + Environment.OSVersion + n2 + "Location: " + RootFrame.CurrentSource,
                         Subject = "Triplexer " + ApplicationContext.Data.AppVersion + " error report",
                         To = "codifying@gmail.com"
                     }.Show();

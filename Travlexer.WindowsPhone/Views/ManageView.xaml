@@ -64,82 +64,89 @@
             </Grid>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
-    <controls:Pivot Title="MANAGE"
-                    Name="ManagementPivot"
-                    SelectionChanged="OnManagementPivotSelectionChanged">
-        <controls:PivotItem Header="pins"
-                            viewModels:DataExtensions.ManagementSection="PersonalPlaces">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding PersonalPlaces}"
-                              ItemTemplate="{StaticResource PlaceItemDataTemplate}" />
-            </ScrollViewer>
-        </controls:PivotItem>
-        <controls:PivotItem Header="search results"
-                            viewModels:DataExtensions.ManagementSection="SearchResults">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding SearchResults}"
-                              ItemTemplate="{StaticResource PlaceItemDataTemplate}" />
-            </ScrollViewer>
-        </controls:PivotItem>
-        <controls:PivotItem Header="routes"
-                            viewModels:DataExtensions.ManagementSection="Routes">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Routes}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="{StaticResource PhoneVerticalMargin}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
-                                           Width="2"
-                                           HorizontalAlignment="Right" />
-                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                          Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
-                                <Button Style="{StaticResource ItemButtonStyle}"
-                                        Command="{Binding DataContext.CommandShowRouteDetails, ElementName=Page}"
-                                        CommandParameter="{Binding Data}">
-                                    <StackPanel>
-                                        <Grid>
-                                            <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
-                                            <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}"
-                                                       Margin="{StaticResource PhoneHorizontalMargin}"
-                                                       HorizontalAlignment="Right">
-                                                <Run Text="{Binding Distance}" />
-                                                <Run Text=" in "
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <controls:Pivot Title="MANAGE"
+                        Name="ManagementPivot"
+                        SelectionChanged="OnManagementPivotSelectionChanged">
+            <controls:PivotItem Header="pins"
+                                viewModels:DataExtensions.ManagementSection="PersonalPlaces">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding PersonalPlaces}"
+                                  ItemTemplate="{StaticResource PlaceItemDataTemplate}" />
+                </ScrollViewer>
+            </controls:PivotItem>
+            <controls:PivotItem Header="search results"
+                                viewModels:DataExtensions.ManagementSection="SearchResults">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding SearchResults}"
+                                  ItemTemplate="{StaticResource PlaceItemDataTemplate}" />
+                </ScrollViewer>
+            </controls:PivotItem>
+            <controls:PivotItem Header="routes"
+                                viewModels:DataExtensions.ManagementSection="Routes">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Routes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="{StaticResource PhoneVerticalMargin}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}"
+                                               Width="2"
+                                               HorizontalAlignment="Right" />
+                                    <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                              Background="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
+                                    <Button Style="{StaticResource ItemButtonStyle}"
+                                            Command="{Binding DataContext.CommandShowRouteDetails, ElementName=Page}"
+                                            CommandParameter="{Binding Data}">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Rectangle Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
+                                                <TextBlock FontSize="{StaticResource PhoneFontSizeSmall}"
+                                                           Margin="{StaticResource PhoneHorizontalMargin}"
+                                                           HorizontalAlignment="Right">
+                                                    <Run Text="{Binding Distance}" />
+                                                    <Run Text=" in "
+                                                         FontWeight="Bold" />
+                                                    <Run Text="{Binding Duration}" />
+                                                </TextBlock>
+                                            </Grid>
+                                            <TextBlock Margin="{StaticResource PhoneHorizontalMargin}">
+                                                <Run Text="{Binding DeparturePlace.Name}"
+                                                     FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                                <LineBreak />
+                                                <Run Text="{Binding DeparturePlace.Address}"
+                                                     Foreground="{StaticResource PhoneSubtleBrush}"
+                                                     FontSize="{StaticResource PhoneFontSizeSmall}" />
+                                                <LineBreak />
+                                                <Run Text="to"
+                                                     FontSize="{StaticResource PhoneFontSizeMediumLarge}"
                                                      FontWeight="Bold" />
-                                                <Run Text="{Binding Duration}" />
+                                                <LineBreak />
+                                                <Run Text="{Binding ArrivalPlace.Name}"
+                                                     FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                                <LineBreak />
+                                                <Run Text="{Binding ArrivalPlace.Address}"
+                                                     Foreground="{StaticResource PhoneSubtleBrush}"
+                                                     FontSize="{StaticResource PhoneFontSizeSmall}" />
                                             </TextBlock>
-                                        </Grid>
-                                        <TextBlock Margin="{StaticResource PhoneHorizontalMargin}">
-                                            <Run Text="{Binding DeparturePlace.Name}"
-                                                 FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                            <LineBreak />
-                                            <Run Text="{Binding DeparturePlace.Address}"
-                                                 Foreground="{StaticResource PhoneSubtleBrush}"
-                                                 FontSize="{StaticResource PhoneFontSizeSmall}" />
-                                            <LineBreak />
-                                            <Run Text="to"
-                                                 FontSize="{StaticResource PhoneFontSizeMediumLarge}"
-                                                 FontWeight="Bold" />
-                                            <LineBreak />
-                                            <Run Text="{Binding ArrivalPlace.Name}"
-                                                 FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                            <LineBreak />
-                                            <Run Text="{Binding ArrivalPlace.Address}"
-                                                 Foreground="{StaticResource PhoneSubtleBrush}"
-                                                 FontSize="{StaticResource PhoneFontSizeSmall}" />
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Button>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </controls:PivotItem>
-    </controls:Pivot>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </controls:PivotItem>
+        </controls:Pivot>
+        <travelexerControls:AdControl Grid.Row="1" />
+    </Grid>
     <shellExtension:ApplicationBar.ApplicationBar>
         <shellExtension:ApplicationBar x:Name="AppBar">
             <shellExtension:ApplicationBar.Buttons>

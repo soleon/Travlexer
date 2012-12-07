@@ -1,8 +1,6 @@
-﻿using Microsoft.Phone.Controls;
-
-namespace Travlexer.WindowsPhone
+﻿namespace Travlexer.WindowsPhone
 {
-    public partial class Page1 : PhoneApplicationPage
+    public partial class Page1
     {
         public Page1()
         {

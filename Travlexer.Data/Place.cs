@@ -165,7 +165,7 @@ namespace Travlexer.Data
         }
 
         private DataStates _dataState;
-        public const string DataStateProperty = "DataState";
+        private const string DataStateProperty = "DataState";
 
         public Collection<Guid> ConnectedRouteIds
         {
