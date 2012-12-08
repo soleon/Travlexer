@@ -159,7 +159,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private const string UseLocationServiceProperty = "UseLocationService";
 
         public ObservableValue<bool> PreventScreenLock { get; private set; }
-        
+
         private const string PreventScreenLockProperty = "PreventScreenLock";
 
 
@@ -466,8 +466,20 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// <summary>
         ///     Clears all routes.
         /// </summary>
-        public void ClearRoutes()
+        /// <param name="clearConnectedPlaces"></param>
+        public void ClearRoutes(bool clearConnectedPlaces = false)
         {
+            if (clearConnectedPlaces)
+                _routes.ForEach(r =>
+                {
+                    for (var i = _places.Count - 1; i >= 0; i--)
+                    {
+                        var p = _places[i];
+                        if (!p.IsSearchResult && p.ConnectedRouteIds.Any(id => id == r.Id))
+                            _places.RemoveAt(i);
+                    }
+                });
+            else _places.ForEach(p => p.ConnectedRouteIds.Clear());
             _routes.Clear();
         }
 

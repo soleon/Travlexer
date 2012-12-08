@@ -189,7 +189,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
         /// <summary>
         ///     Clears all routes.
         /// </summary>
-        void ClearRoutes();
+        /// <param name="clearConnectedPlaces"></param>
+        void ClearRoutes(bool clearConnectedPlaces = false);
 
         /// <summary>
         ///     Saves the data context.

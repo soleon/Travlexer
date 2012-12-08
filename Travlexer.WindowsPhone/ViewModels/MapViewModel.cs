@@ -543,6 +543,9 @@ namespace Travlexer.WindowsPhone.ViewModels
                 else
                 {
                     route.DeparturePlaceId = departureLocation.PlaceId;
+                    
+                    // Mark existing departure place as a personal pin.
+                    place.IsSearchResult = false;
                 }
                 place.ConnectedRouteIds.Add(route.Id);
 
@@ -565,6 +568,9 @@ namespace Travlexer.WindowsPhone.ViewModels
                 else
                 {
                     route.ArrivalPlaceId = arrivalLocation.PlaceId;
+
+                    // Mark existing arrival place as a person pin.
+                    place.IsSearchResult = false;
                 }
                 place.ConnectedRouteIds.Add(route.Id);
 
@@ -583,7 +589,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             }
             if (MessageBox.Show("This will clear all routes on the map. Do you want to continue?", "Clear Routes", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                _data.ClearRoutes();
+                _data.ClearRoutes(MessageBox.Show("Do you want to clear all connected pins too?", "Also Clear Pins?", MessageBoxButton.OKCancel) == MessageBoxResult.OK);
             }
         }
 
