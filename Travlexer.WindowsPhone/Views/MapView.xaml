@@ -922,7 +922,8 @@
                          Grid.Column="1"
                          GotFocus="OnTextBoxGotFocus"
                          Text="{Binding DepartureLocation.Address, Mode=TwoWay}"
-                         VerticalAlignment="Center">
+                         VerticalAlignment="Center"
+                         Height="72">
                     <i:Interaction.Behaviors>
                         <behaviors:RealTimeBindingBehavior />
                     </i:Interaction.Behaviors>
@@ -954,7 +955,8 @@
                          Grid.Row="1"
                          GotFocus="OnTextBoxGotFocus"
                          Text="{Binding ArrivalLocation.Address, Mode=TwoWay}"
-                         VerticalAlignment="Center">
+                         VerticalAlignment="Center"
+                         Height="72">
                     <i:Interaction.Behaviors>
                         <behaviors:RealTimeBindingBehavior />
                     </i:Interaction.Behaviors>
