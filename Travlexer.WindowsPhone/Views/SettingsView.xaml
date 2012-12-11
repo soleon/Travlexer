@@ -91,11 +91,13 @@
                             <Hyperlink Command="{Binding CommandSendEmail}">
                                 <Run Text="codifying@gmail.com" />
                             </Hyperlink>
+                            <!--
                             <LineBreak />
                             <Run Text="Tech blog: " />
                             <Hyperlink Command="{Binding CommandNavigateToWebSite}">
                                 <Run Text="codifying.wordpress.com" />
                             </Hyperlink>
+                            -->
                         </Paragraph>
                     </RichTextBox>
                 </StackPanel>
