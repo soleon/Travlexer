@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
 using Codify;
@@ -41,6 +42,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         #region Private Fields
 
+        private static readonly Regex RegexWhiteSpaces = new Regex("\\n+|(\\n\\r)+|\\s{2,}");
+        
         private readonly GeoCoordinateWatcher _geoWatcher;
         private readonly IDataContext _data;
         private readonly IConfigurationContext _configuration;
@@ -200,7 +203,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     MessageBox.Show("There was an error getting the contact's address. If this continues to happen, please report this problem in the settings page.", "Unable to get address", MessageBoxButton.OK);
                 else if (address != null)
                 {
-                    ArrivalLocation.Address = address;
+                    ArrivalLocation.Address = RegexWhiteSpaces.Replace(address, " ");
                     ArrivalLocation.PlaceId = Guid.Empty;
                 }
             });
@@ -214,7 +217,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     MessageBox.Show("There was an error getting the contact's address. If this continues to happen, please report this problem in the settings page.", "Unable to get address", MessageBoxButton.OK);
                 else if (address != null)
                 {
-                    DepartureLocation.Address = address;
+                    DepartureLocation.Address = RegexWhiteSpaces.Replace(address, " ");
                     DepartureLocation.PlaceId = Guid.Empty;
                 }
             });
@@ -227,7 +230,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                 if (error != null)
                     MessageBox.Show("There was an error getting the contact's address. If this continues to happen, please report this problem in the settings page.", "Unable to get address", MessageBoxButton.OK);
                 else if (address != null)
-                    SearchInput.Value = address;
+                    SearchInput.Value = RegexWhiteSpaces.Replace(address, " ");
             });
         }
 
