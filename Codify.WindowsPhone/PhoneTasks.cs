@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Codify.Extensions;
 using Microsoft.Phone.Tasks;
 
 namespace Codify.WindowsPhone
@@ -39,6 +40,75 @@ namespace Codify.WindowsPhone
                 Bcc = bcc,
                 CodePage = codePage
             }.Show();
+        }
+
+        public static void ShowMarketplaceReview()
+        {
+            new MarketplaceReviewTask().Show();
+        }
+
+        public static void SaveContact(
+            string company,
+            string firstName,
+            string homeAddressCity,
+            string homeaddressCountry,
+            string homeAddressState,
+            string homeAddressZipCode,
+            string homePhone,
+            string jobTitle,
+            string lastName,
+            string middleName,
+            string mobilePhone,
+            string nickname,
+            string notes,
+            string otherEmail,
+            string personalEmail,
+            string suffix,
+            string title,
+            string webSite,
+            string workAddressCity,
+            string workAddressCountry,
+            string workAddressState,
+            string workAddressStreet,
+            string workAddressZipCode,
+            string workEmail,
+            string workPhone)
+        {
+            new SaveContactTask
+            {
+                Company = company,
+                FirstName = firstName,
+                HomeAddressCity = homeAddressCity,
+                HomeAddressCountry = homeaddressCountry,
+                HomeAddressState = homeAddressState,
+                HomeAddressZipCode = homeAddressZipCode,
+                HomePhone = homePhone,
+                JobTitle = jobTitle,
+                LastName = lastName,
+                MiddleName = middleName,
+                MobilePhone = mobilePhone,
+                Nickname = nickname,
+                Notes = notes,
+                OtherEmail = otherEmail,
+                PersonalEmail = personalEmail,
+                Suffix = suffix,
+                Title = title,
+                Website = webSite,
+                WorkAddressCity = workAddressCity,
+                WorkAddressCountry = workAddressCountry,
+                WorkAddressState = workAddressState,
+                WorkAddressStreet = workAddressStreet,
+                WorkAddressZipCode = workAddressZipCode,
+                WorkEmail = workEmail,
+                WorkPhone = workPhone
+            }.Show();
+        }
+
+        public static void SelectContactAddress(Action<string, Exception> addressSelected)
+        {
+            var task = new AddressChooserTask();
+            task.Completed += (s, e) => addressSelected.ExecuteIfNotNull(e.Address, e.Error);
+            task.Show();
         }
     }
 }

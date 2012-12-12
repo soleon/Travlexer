@@ -210,6 +210,7 @@
     <Content Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />
     <Content Include="Assets\StreetView.png" />
+    <Content Include="Assets\ThumbsUp.png" />
     <Content Include="SplashScreenImage.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />

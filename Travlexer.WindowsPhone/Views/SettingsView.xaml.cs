@@ -1,4 +1,6 @@
-﻿using Codify.Attributes;
+﻿using System;
+using Codify.Attributes;
+using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.ViewModels;
 
 namespace Travlexer.WindowsPhone.Views
@@ -9,6 +11,11 @@ namespace Travlexer.WindowsPhone.Views
         public SettingsView()
         {
             InitializeComponent();
+        }
+
+        private void OnReviewButtonClick(object sender, EventArgs e)
+        {
+            PhoneTasks.ShowMarketplaceReview();
         }
     }
 }

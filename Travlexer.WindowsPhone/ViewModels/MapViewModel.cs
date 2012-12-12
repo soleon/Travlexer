@@ -146,6 +146,9 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandActivate = new DelegateCommand(OnActivate);
             CommandDeactivate = new DelegateCommand(OnDeactivate);
             CommandSwapRouteLocations = new DelegateCommand(OnSwapRouteLocations);
+            CommandSelectContactAddress = new DelegateCommand(OnSelectContactAddress);
+            CommandSelectDepartLocationFromContacts = new DelegateCommand(OnSelectDepartLocationFromContacts);
+            CommandSelectArriveLocationFromContacts = new DelegateCommand(OnSelectArriveLocationFromContacts);
 
             // Initialise application bar button and menu items sources.
             InitializeAppBarButtonSources();
@@ -184,7 +187,49 @@ namespace Travlexer.WindowsPhone.ViewModels
         }
 
 
+        #endregion
+
+
         #region Event Handling
+
+        private void OnSelectArriveLocationFromContacts()
+        {
+            PhoneTasks.SelectContactAddress((address, error) =>
+            {
+                if (error != null)
+                    MessageBox.Show("There was an error getting the contact's address. If this continues to happen, please report this problem in the settings page.", "Unable to get address", MessageBoxButton.OK);
+                else if (address != null)
+                {
+                    ArrivalLocation.Address = address;
+                    ArrivalLocation.PlaceId = Guid.Empty;
+                }
+            });
+        }
+
+        private void OnSelectDepartLocationFromContacts()
+        {
+            PhoneTasks.SelectContactAddress((address, error) =>
+            {
+                if (error != null)
+                    MessageBox.Show("There was an error getting the contact's address. If this continues to happen, please report this problem in the settings page.", "Unable to get address", MessageBoxButton.OK);
+                else if (address != null)
+                {
+                    DepartureLocation.Address = address;
+                    DepartureLocation.PlaceId = Guid.Empty;
+                }
+            });
+        }
+
+        private void OnSelectContactAddress()
+        {
+            PhoneTasks.SelectContactAddress((address, error) =>
+            {
+                if (error != null)
+                    MessageBox.Show("There was an error getting the contact's address. If this continues to happen, please report this problem in the settings page.", "Unable to get address", MessageBoxButton.OK);
+                else if (address != null)
+                    SearchInput.Value = address;
+            });
+        }
 
         private void OnSwapRouteLocations()
         {
@@ -690,9 +735,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         #endregion
 
 
-        #endregion
-
-
         #region Public Properties
 
         /// <summary>
@@ -1124,6 +1166,12 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand CommandDeactivate { get; private set; }
 
         public DelegateCommand CommandSwapRouteLocations { get; private set; }
+
+        public DelegateCommand CommandSelectContactAddress { get; private set; }
+
+        public DelegateCommand CommandSelectDepartLocationFromContacts { get; private set; }
+
+        public DelegateCommand CommandSelectArriveLocationFromContacts { get; private set; }
 
         #endregion
 

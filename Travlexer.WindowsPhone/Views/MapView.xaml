@@ -828,9 +828,17 @@
                     <CompositeTransform TranslateY="-52" />
                 </Grid.RenderTransform>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <Button Width="52"
+                        Height="52"
+                        Style="{StaticResource EmptyButton}"
+                        Command="{Binding CommandSelectContactAddress, Mode=OneTime}">
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconContacts}" />
+                </Button>
                 <controls:AutoCompleteBox x:Name="SearchBox"
                                           Height="76"
                                           Margin="-12"
@@ -840,7 +848,8 @@
                                           MinimumPrefixLength="3"
                                           SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
                                           Text="{Binding SearchInput.Value, Mode=TwoWay}"
-                                          ValueMemberBinding="{Binding Description}">
+                                          ValueMemberBinding="{Binding Description}"
+                                          Grid.Column="1">
                     <controls:AutoCompleteBox.InputScope>
                         <InputScope>
                             <InputScopeName NameValue="Search" />
@@ -862,7 +871,7 @@
                         </DataTemplate>
                     </controls:AutoCompleteBox.ItemTemplate>
                 </controls:AutoCompleteBox>
-                <Button Grid.Column="1"
+                <Button Grid.Column="2"
                         Command="{Binding CommandSearch, Mode=OneTime}"
                         IsHitTestVisible="{Binding SearchInput, Converter={StaticResource BooleanConverter}}"
                         Template="{x:Null}">
@@ -914,6 +923,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="12,0,0,0"
                            Text="From:"
@@ -933,13 +943,21 @@
                         </InputScope>
                     </TextBox.InputScope>
                 </TextBox>
-                <controls:CircleButton Grid.Column="2"
-                                       Margin="0,0,12,0"
-                                       Command="{Binding CommandSetDepartLocationToCurrentLocation, Mode=OneTime}"
-                                       VerticalAlignment="Center">
+                <Button Grid.Column="2"
+                        Command="{Binding CommandSetDepartLocationToCurrentLocation, Mode=OneTime}"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource EmptyButton}">
                     <Rectangle Style="{StaticResource IconRectangleStyle}"
                                Fill="{StaticResource BrushIconCurrentLocation}" />
-                </controls:CircleButton>
+                </Button>
+                <Button Grid.Column="3"
+                        Style="{StaticResource EmptyButton}"
+                        Command="{Binding CommandSelectDepartLocationFromContacts, Mode=OneTime}"
+                        VerticalAlignment="Center"
+                        Margin="{StaticResource PhoneHorizontalMargin}">
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconContacts}" />
+                </Button>
                 <Button Grid.RowSpan="2"
                         Style="{StaticResource EmptyButton}"
                         Command="{Binding CommandSwapRouteLocations}">
@@ -966,15 +984,24 @@
                         </InputScope>
                     </TextBox.InputScope>
                 </TextBox>
-                <controls:CircleButton Grid.Column="2"
-                                       Grid.Row="1"
-                                       Margin="0,0,12,0"
-                                       Command="{Binding CommandSetArriveLocationToCurrentLocation, Mode=OneWay}"
-                                       VerticalAlignment="Center">
+                <Button Grid.Column="2"
+                        Grid.Row="1"
+                        Command="{Binding CommandSetArriveLocationToCurrentLocation, Mode=OneWay}"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource EmptyButton}">
                     <Rectangle Style="{StaticResource IconRectangleStyle}"
                                Fill="{StaticResource BrushIconCurrentLocation}" />
-                </controls:CircleButton>
-                <Grid Grid.ColumnSpan="3"
+                </Button>
+                <Button Grid.Column="3"
+                        Grid.Row="1"
+                        Command="{Binding CommandSelectArriveLocationFromContacts, Mode=OneWay}"
+                        VerticalAlignment="Center"
+                        Margin="{StaticResource PhoneHorizontalMargin}"
+                        Style="{StaticResource EmptyButton}">
+                    <Rectangle Style="{StaticResource IconRectangleStyle}"
+                               Fill="{StaticResource BrushIconContacts}" />
+                </Button>
+                <Grid Grid.ColumnSpan="4"
                       Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition />

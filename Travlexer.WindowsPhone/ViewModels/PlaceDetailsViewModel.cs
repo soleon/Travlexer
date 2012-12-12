@@ -21,8 +21,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandMarkAsPin = new DelegateCommand(() => Data.IsSearchResult = false);
         }
 
-        #endregion
 
+        #endregion
 
         #region Commands
 
@@ -30,6 +30,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand<string> CommandNavigateToUrl { get; private set; }
         public DelegateCommand<string> CommandCallNumber { get; private set; }
         public DelegateCommand CommandMarkAsPin { get; private set; }
+        public DelegateCommand CommandAddContact { get; private set; }
 
         #endregion
 
@@ -45,6 +46,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             get { return ApplicationContext.Data.ElementColorMap; }
         }
+
 
         #endregion
     }
