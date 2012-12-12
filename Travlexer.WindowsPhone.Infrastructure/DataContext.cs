@@ -687,7 +687,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
                 {PlaceIcon.Recreation, "recreation"},
                 {PlaceIcon.Drink, "bar and pub"},
                 {PlaceIcon.Fuel, "fuel and service station"},
-                {PlaceIcon.Vehicle, "aotomotive"},
+                {PlaceIcon.Vehicle, "automotive"},
                 {PlaceIcon.Shop, "shop"},
                 {PlaceIcon.Property, "property and house"},
                 {PlaceIcon.Restaurant, "restaurant"},
