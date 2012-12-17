@@ -7,13 +7,19 @@
                                   xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                                   xmlns:controls1="clr-namespace:Travlexer.WindowsPhone.Controls"
-                                  xmlns:shellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
+                                  xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
                                   x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
                                   x:Name="Page"
                                   mc:Ignorable="d"
                                   d:DesignHeight="768"
-                                  d:DesignWidth="480"
-                                  d:DataContext="{Binding PlaceDetailsViewModel, Source={StaticResource DesignTime}}">
+                                  d:DesignWidth="480">
+    <d:DesignProperties.DataContext>
+        <Binding Path="PlaceDetailsViewModel">
+            <Binding.Source>
+                <windowsPhone:DesignTime />
+            </Binding.Source>
+        </Binding>
+    </d:DesignProperties.DataContext>
     <codifyPhone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="PlaceIconFullModeItemTemplate">
             <Grid Margin="{StaticResource PhoneTouchTargetLargeOverhang}">

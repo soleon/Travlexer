@@ -2,16 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    xmlns:WindowsPhone="clr-namespace:Travlexer.WindowsPhone"
-                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
                     mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Controls.xaml" />
         <ResourceDictionary Source="Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <System:Double x:Key="OpacityShell">0.9</System:Double>
+    <system:Double x:Key="OpacityShell">0.9</system:Double>
     <QuinticEase x:Key="EasingQuinticOut"
                  EasingMode="EaseOut" />
-    <WindowsPhone:DesignTime x:Key="DesignTime" />
-    <System:Double x:Key="OpacityDisabled">0.4</System:Double>
+    <system:Double x:Key="OpacityDisabled">0.4</system:Double>
 </ResourceDictionary>

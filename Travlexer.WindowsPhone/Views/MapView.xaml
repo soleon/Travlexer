@@ -18,12 +18,19 @@
                                   xmlns:shellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                                   xmlns:triggers="clr-namespace:Codify.Triggers;assembly=Codify"
+                                  xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
                                   Style="{StaticResource PageDefault}"
                                   mc:Ignorable="d"
                                   d:DesignHeight="768"
                                   d:DesignWidth="480"
-                                  d:DataContext="{Binding MapViewModel, Source={StaticResource DesignTime}}"
                                   shell:SystemTray.Opacity="{StaticResource OpacityShell}">
+    <d:DesignProperties.DataContext>
+        <Binding Path="MapViewModel">
+            <Binding.Source>
+                <windowsPhone:DesignTime />
+            </Binding.Source>
+        </Binding>
+    </d:DesignProperties.DataContext>
     <phone:PhoneApplicationPage.Resources>
         <ScaleTransform x:Key="TileScale" />
         <!--This style is used in code behind, do not remove-->

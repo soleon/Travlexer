@@ -7,13 +7,20 @@
                             xmlns:viewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
                             xmlns:shellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
                             xmlns:travelexerControls="clr-namespace:Travlexer.WindowsPhone.Controls"
+                            xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
                             x:Class="Travlexer.WindowsPhone.Views.ManageView"
                             mc:Ignorable="d"
                             d:DesignHeight="768"
                             d:DesignWidth="480"
                             Style="{StaticResource PageDefault}"
-                            d:DataContext="{Binding ManageViewModel, Source={StaticResource DesignTime}}"
                             Name="Page">
+    <d:DesignProperties.DataContext>
+        <Binding Path="ManageViewModel">
+            <Binding.Source>
+                <windowsPhone:DesignTime />
+            </Binding.Source>
+        </Binding>
+    </d:DesignProperties.DataContext>
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="GoButtonStyle"
                TargetType="travelexerControls:CircleButton"

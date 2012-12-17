@@ -1285,8 +1285,18 @@ namespace Travlexer.WindowsPhone.ViewModels
                 },
                 new AppBarMenuItemViewModel
                 {
-                    Text = "settings",
+                    Text = "settings...",
                     Command = new ActionCommand(() => _navigation.Navigate<SettingsViewModel>())
+                },
+                //new AppBarMenuItemViewModel
+                //{
+                //    Text = "help...",
+                //    Command = new ActionCommand(() => _navigation.Navigate<HelpViewModel>())
+                //},
+                new AppBarMenuItemViewModel
+                {
+                    Text = "app info...",
+                    Command = new ActionCommand(() => _navigation.Navigate<AppInfoViewModel>())
                 }
             };
             _searchResultSelectedMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>

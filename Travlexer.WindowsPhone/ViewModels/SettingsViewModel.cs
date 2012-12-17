@@ -1,5 +1,4 @@
-﻿using System;
-using Codify.Commands;
+﻿using Codify.Commands;
 using Codify.Entities;
 using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.Infrastructure;
@@ -12,11 +11,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private readonly IDataContext _data;
 
-        public SettingsViewModel(IDataContext data)
+        public SettingsViewModel()
         {
-            _data = data;
-            CommandSendEmail = new DelegateCommand(() => PhoneTasks.SendEmail("codifying@gmail.com", "About Travlexer"));
-            CommandNavigateToWebSite = new DelegateCommand(() => PhoneTasks.OpenUrl("http://codifying.wordpress.com"));
+            _data = ApplicationContext.Data;
         }
 
         public ObservableValue<bool> UseMapAnimation
@@ -43,14 +40,5 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             get { return _data.PreventScreenLock; }
         }
-
-        public Version AppVersion
-        {
-            get { return _data.AppVersion; }
-        }
-
-        public DelegateCommand CommandSendEmail { get; private set; }
-
-        public DelegateCommand CommandNavigateToWebSite { get; private set; }
     }
 }
