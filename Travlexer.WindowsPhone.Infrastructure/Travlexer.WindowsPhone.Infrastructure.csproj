@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationContext.cs" />
-    <Compile Include="ConversionExtensions.cs" />
+    <Compile Include="DataExtensions.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="IConfigurationContext.cs" />
     <Compile Include="IDataContext.cs" />

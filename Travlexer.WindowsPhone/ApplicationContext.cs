@@ -58,7 +58,7 @@ namespace Travlexer.WindowsPhone
 
             // Initialize event handlers and other properties.
             GeoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) {MovementThreshold = 10D};
-
+            
             ((DataContext) Data).AppVersion = new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version;
 
             Data.PreventScreenLock.ValueChanged += (old, @new) => { PhoneApplicationService.Current.ApplicationIdleDetectionMode = @new ? IdleDetectionMode.Disabled : IdleDetectionMode.Enabled; };

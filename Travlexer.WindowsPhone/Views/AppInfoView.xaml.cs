@@ -12,6 +12,7 @@ namespace Travlexer.WindowsPhone.Views
         {
             InitializeComponent();
         }
+
         private void OnReviewButtonClick(object sender, EventArgs e)
         {
             PhoneTasks.ShowMarketplaceReview();

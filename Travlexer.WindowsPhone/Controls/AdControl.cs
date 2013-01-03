@@ -1,30 +1,27 @@
-﻿using System.ComponentModel;
+﻿using System.Device.Location;
 
 namespace Travlexer.WindowsPhone.Controls
 {
-    public class AdControl : Microsoft.Advertising.Mobile.UI.AdControl
+    public class AdControl
+        //:
+        //MobFox.Ads.AdControl
+        //AdDuplex.AdControl
     {
-        public AdControl()
+        private void UpdateLocation(GeoCoordinate location)
         {
-            Height = 80;
-            ApplicationId =
-#if DEBUG
- "test_client" 
-#else
- "0831f66c-364b-4a71-b1ab-dde627efbb72"
-#endif
-;
-            AdUnitId =
-#if DEBUG
- "Image480_80"
-#else
- "108107"
-#endif
-;
-            if (DesignerProperties.IsInDesignTool) return;
-            var currentLocation = ApplicationContext.GeoCoordinateWatcher.Position.Location;
-            Latitude = currentLocation.Latitude;
-            Longitude = currentLocation.Longitude;
+            #region MobFox
+
+            //if (location.IsUnknown) return;
+            //var latitude = location.Latitude;
+            //var longitude = location.Longitude;
+            //if (Location == null) Location = new Location(latitude, longitude);
+            //else
+            //{
+            //    Location.Latitude = latitude;
+            //    Location.Longitude = longitude;
+            //}
+
+            #endregion
         }
     }
 }

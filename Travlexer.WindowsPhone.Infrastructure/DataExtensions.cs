@@ -14,7 +14,7 @@ using ViewPort = Travlexer.Data.ViewPort;
 
 namespace Travlexer.WindowsPhone.Infrastructure
 {
-    public static class ConversionExtensions
+    public static class DataExtensions
     {
         private static readonly Regex XmlTagRegex = new Regex("<[^>]+>");
         private static readonly Regex DivTagRegex = new Regex("<div[^>]*>");

@@ -8,6 +8,7 @@
                             xmlns:shellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
                             xmlns:travelexerControls="clr-namespace:Travlexer.WindowsPhone.Controls"
                             xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
+                            xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
                             x:Class="Travlexer.WindowsPhone.Views.ManageView"
                             mc:Ignorable="d"
                             d:DesignHeight="768"
@@ -41,7 +42,14 @@
                     Value="Stretch" />
         </Style>
         <DataTemplate x:Key="PlaceItemDataTemplate">
-            <Grid d:DataContext="{Binding CheckableViewModel, Source={StaticResource DesignTime}}">
+            <Grid>
+                <d:DesignProperties.DataContext>
+                    <Binding Path="CheckableViewModel">
+                        <Binding.Source>
+                            <windowsPhone:DesignTime />
+                        </Binding.Source>
+                    </Binding>
+                </d:DesignProperties.DataContext>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
@@ -152,7 +160,17 @@
                 </ScrollViewer>
             </controls:PivotItem>
         </controls:Pivot>
-        <travelexerControls:AdControl Grid.Row="1" />
+        <adMob:BannerAd Grid.Row="1"
+                        AdUnitID="a150e41c7f6d5e1"
+                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}">
+            <adMob:BannerAd.GpsLocation>
+                <Binding Path="GpsLocation">
+                    <Binding.Source>
+                        <travelexerControls:AdMobGpsLocationProvider />
+                    </Binding.Source>
+                </Binding>
+            </adMob:BannerAd.GpsLocation>
+        </adMob:BannerAd>
     </Grid>
     <shellExtension:ApplicationBar.ApplicationBar>
         <shellExtension:ApplicationBar x:Name="AppBar">

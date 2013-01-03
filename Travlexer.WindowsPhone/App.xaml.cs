@@ -98,11 +98,13 @@ namespace Travlexer.WindowsPhone
         private void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             if (Debugger.IsAttached) Debugger.Break();
-            else
+            try
             {
-                var n2 = Environment.NewLine + Environment.NewLine;
-                if (MessageBox.Show("The application has encountered an error, we apologize for any inconvenience." + n2 + "Do you want to report this error via email?", "Oops...", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                var uiDispatcher = RootVisual.Dispatcher;
+                var action = new Action(() =>
                 {
+                    var n2 = Environment.NewLine + Environment.NewLine;
+                    if (MessageBox.Show("The application has encountered an error, we apologize for any inconvenience." + n2 + "Do you want to report this error via email?", "Oops...", MessageBoxButton.OKCancel) != MessageBoxResult.OK) return;
                     var ex = e.ExceptionObject;
                     new EmailComposeTask
                     {
@@ -110,7 +112,13 @@ namespace Travlexer.WindowsPhone
                         Subject = "Triplexer " + ApplicationContext.Data.AppVersion + " error report",
                         To = "codifying@gmail.com"
                     }.Show();
-                }
+                });
+                if (uiDispatcher.CheckAccess()) action();
+                else uiDispatcher.BeginInvoke(action);
+            }
+            catch (Exception)
+            {
+                if (Debugger.IsAttached) throw;
             }
         }
 
