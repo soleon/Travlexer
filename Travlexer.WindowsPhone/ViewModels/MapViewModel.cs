@@ -43,7 +43,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Private Fields
 
         private static readonly Regex RegexWhiteSpaces = new Regex("\\n+|(\\n\\r)+|\\s{2,}");
-        
+
         private readonly GeoCoordinateWatcher _geoWatcher;
         private readonly IDataContext _data;
         private readonly IConfigurationContext _configuration;
@@ -104,11 +104,11 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// <summary>
         ///     Initializes a new instance of the <see cref="MapViewModel" /> class.
         /// </summary>
-        public MapViewModel(IDataContext data, IConfigurationContext configuration, INavigationService navigation)
+        public MapViewModel()
         {
-            _data = data;
-            _configuration = configuration;
-            _navigation = navigation;
+            _data = ApplicationContext.Data;
+            _configuration = ApplicationContext.Configuration;
+            _navigation = ApplicationContext.NavigationService;
 
             // Initialise local properties.
             VisualState = new ObservableValue<VisualStates>();
@@ -162,6 +162,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             _data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChanged(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
             _data.SelectedPlace.ValueChanged += (old, @new) => SelectedPushpin = Pushpins.FirstOrDefault(p => p.Data == @new);
             _data.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChanged(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
+            _data.ClearRoutesBeforeAddingNewRoute.ValueChanged += (old, @new) => RaisePropertyChanged(GetRouteButtonTextProperty);
             VisualState.ValueChanged += OnVisualStateChanged;
             IsTrackingCurrentLocation.ValueChanged += OnIsTrackingCurrentLocationValueChanged;
 
@@ -188,7 +189,6 @@ namespace Travlexer.WindowsPhone.ViewModels
                 }
             }
         }
-
 
         #endregion
 
@@ -591,7 +591,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                 else
                 {
                     route.DeparturePlaceId = departureLocation.PlaceId;
-                    
+
                     // Mark existing departure place as a personal pin.
                     place.IsSearchResult = false;
                 }
@@ -1063,6 +1063,18 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private bool _isAppBarVisible = true;
         private const string IsAppBarVisibleProperty = "IsAppBarVisible";
+
+        public ObservableValue<bool> ClearRoutesBeforeAddingNewRoute
+        {
+            get { return _data.ClearRoutesBeforeAddingNewRoute; }
+        }
+
+        public string GetRouteButtonText
+        {
+            get { return ClearRoutesBeforeAddingNewRoute.Value ? "Plan new route" : "Add this route"; }
+        }
+
+        private const string GetRouteButtonTextProperty = "GetRouteButtonText";
 
         #endregion
 

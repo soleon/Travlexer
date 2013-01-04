@@ -1046,9 +1046,12 @@
                                        Fill="{StaticResource BrushIconRoute}" />
                             <TextBlock FontFamily="{StaticResource PhoneFontFamilyNormal}"
                                        FontSize="{StaticResource PhoneFontSizeMedium}"
-                                       Text="Find Routes" />
+                                       Text="{Binding GetRouteButtonText}" />
                         </StackPanel>
                     </Button>
+                    <CheckBox Content="clear routes first"
+                              Grid.Row="1"
+                              IsChecked="{Binding ClearRoutesBeforeAddingNewRoute.Value, Mode=TwoWay}" />
                 </Grid>
             </Grid>
         </Grid>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
-using System.Reflection;
 using Codify.Entities;
 using Codify.GoogleMaps.Controls;
 using Codify.Services;
@@ -96,8 +95,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
         ObservableValue<bool> UseLocationService { get; }
 
         ObservableValue<bool> PreventScreenLock { get; }
-        
+
         Version AppVersion { get; }
+        ObservableValue<bool> ClearRoutesBeforeAddingNewRoute { get; }
 
 
         /// <summary>

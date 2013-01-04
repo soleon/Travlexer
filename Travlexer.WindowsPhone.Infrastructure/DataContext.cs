@@ -48,6 +48,66 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         #endregion
+        
+        
+        #region Constructors
+
+        static DataContext()
+        {
+            StaticPlaceIconMap = new Dictionary<PlaceIcon, string>
+            {
+                {PlaceIcon.General, "general"},
+                {PlaceIcon.Recreation, "recreation"},
+                {PlaceIcon.Drink, "bar and pub"},
+                {PlaceIcon.Fuel, "fuel and service station"},
+                {PlaceIcon.Vehicle, "automotive"},
+                {PlaceIcon.Shop, "shop"},
+                {PlaceIcon.Property, "property and house"},
+                {PlaceIcon.Restaurant, "restaurant"},
+                {PlaceIcon.Airport, "airport"},
+                {PlaceIcon.PublicTransport, "public transport"},
+                {PlaceIcon.Information, "information"},
+                {PlaceIcon.Internet, "internet"},
+                {PlaceIcon.MoneyExchange, "money exchange"},
+                {PlaceIcon.Ferry, "ferry"},
+                {PlaceIcon.Casino, "casino"},
+            };
+            StaticPlaceIconMap = StaticPlaceIconMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+            StaticElementColorMap = new Dictionary<ElementColor, string>();
+            foreach (var field in typeof (ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
+                StaticElementColorMap.Add((ElementColor) field.GetValue(null), field.Name.ToLower());
+            StaticElementColorMap = StaticElementColorMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DataContext" /> class.
+        /// </summary>
+        public DataContext(IStorage storageProvider, ISerializer<byte[]> binerySerializer, IGoogleMapsClient googleMapsClient)
+        {
+            _storageProvider = storageProvider;
+            _binarySerializer = binerySerializer;
+            _googleMapsClient = googleMapsClient;
+
+            MapCenter = new ObservableValue<GeoCoordinate>();
+            MapZoomLevel = new ObservableValue<double>(1D);
+            MapBaseLayer = new ObservableValue<Layer>();
+            SearchInput = new ObservableValue<string>();
+            RouteMethod = new ObservableValue<RouteMethod>();
+            TravelMode = new ObservableValue<TravelMode>();
+            UnitSystem = new ObservableValue<UnitSystems>();
+            SelectedPlace = new ObservableValue<Place>();
+            SelectedRoute = new ObservableValue<Route>();
+            UseMapAnimation = new ObservableValue<bool>();
+            UseLocationService = new ObservableValue<bool>();
+            PreventScreenLock = new ObservableValue<bool>();
+            ClearRoutesBeforeAddingNewRoute = new ObservableValue<bool>();
+
+            MapOverlays = new ObservableCollection<Layer>();
+            Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
+            Routes = new ReadOnlyObservableCollection<Route>(_routes = new ObservableCollection<Route>());
+        }
+
+        #endregion
 
 
         #region Public Properties
@@ -161,6 +221,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public ObservableValue<bool> PreventScreenLock { get; private set; }
 
         private const string PreventScreenLockProperty = "PreventScreenLock";
+
+        public ObservableValue<bool> ClearRoutesBeforeAddingNewRoute { get; private set; }
+        private const string ClearRoutesBeforeAddingNewRouteProperty = "ClearRoutesBeforeAddingNewRoute";
 
 
         /// <summary>
@@ -454,6 +517,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
                         var route = googleRoute.ToLocalRoute();
                         if (route != null && (existingRoute = _routes.FirstOrDefault(r => r == route)) == null)
                         {
+                            // Clear existing routs before adding new route.
+                            if (ClearRoutesBeforeAddingNewRoute.Value)
+                                ClearRoutes();
+
                             _routes.Add(route);
                             return route;
                         }
@@ -507,6 +574,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             _storageProvider.SaveSetting(UseMapAnimationProperty, UseMapAnimation.Value);
             _storageProvider.SaveSetting(UseLocationServiceProperty, UseLocationService.Value);
             _storageProvider.SaveSetting(PreventScreenLockProperty, PreventScreenLock.Value);
+            _storageProvider.SaveSetting(ClearRoutesBeforeAddingNewRouteProperty, ClearRoutesBeforeAddingNewRoute.Value);
         }
 
         /// <summary>
@@ -575,6 +643,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
             if (_storageProvider.TryGetSetting(PreventScreenLockProperty, out tempBool))
                 PreventScreenLock.Value = tempBool;
+
+            if (_storageProvider.TryGetSetting(ClearRoutesBeforeAddingNewRouteProperty, out tempBool))
+                ClearRoutesBeforeAddingNewRoute.Value = tempBool;
         }
 
         /// <summary>
@@ -672,65 +743,6 @@ namespace Travlexer.WindowsPhone.Infrastructure
                 var callbackResult = processSuccessfulResponse.ExecuteIfNotNull(data);
                 callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(callbackResult));
             });
-        }
-
-        #endregion
-
-
-        #region Constructors
-
-        static DataContext()
-        {
-            StaticPlaceIconMap = new Dictionary<PlaceIcon, string>
-            {
-                {PlaceIcon.General, "general"},
-                {PlaceIcon.Recreation, "recreation"},
-                {PlaceIcon.Drink, "bar and pub"},
-                {PlaceIcon.Fuel, "fuel and service station"},
-                {PlaceIcon.Vehicle, "automotive"},
-                {PlaceIcon.Shop, "shop"},
-                {PlaceIcon.Property, "property and house"},
-                {PlaceIcon.Restaurant, "restaurant"},
-                {PlaceIcon.Airport, "airport"},
-                {PlaceIcon.PublicTransport, "public transport"},
-                {PlaceIcon.Information, "information"},
-                {PlaceIcon.Internet, "internet"},
-                {PlaceIcon.MoneyExchange, "money exchange"},
-                {PlaceIcon.Ferry, "ferry"},
-                {PlaceIcon.Casino, "casino"},
-            };
-            StaticPlaceIconMap = StaticPlaceIconMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-            StaticElementColorMap = new Dictionary<ElementColor, string>();
-            foreach (var field in typeof (ElementColor).GetFields(BindingFlags.Static | BindingFlags.Public))
-                StaticElementColorMap.Add((ElementColor) field.GetValue(null), field.Name.ToLower());
-            StaticElementColorMap = StaticElementColorMap.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DataContext" /> class.
-        /// </summary>
-        public DataContext(IStorage storageProvider, ISerializer<byte[]> binerySerializer, IGoogleMapsClient googleMapsClient)
-        {
-            _storageProvider = storageProvider;
-            _binarySerializer = binerySerializer;
-            _googleMapsClient = googleMapsClient;
-
-            MapCenter = new ObservableValue<GeoCoordinate>();
-            MapZoomLevel = new ObservableValue<double>(1D);
-            MapBaseLayer = new ObservableValue<Layer>();
-            SearchInput = new ObservableValue<string>();
-            RouteMethod = new ObservableValue<RouteMethod>();
-            TravelMode = new ObservableValue<TravelMode>();
-            UnitSystem = new ObservableValue<UnitSystems>();
-            SelectedPlace = new ObservableValue<Place>();
-            SelectedRoute = new ObservableValue<Route>();
-            UseMapAnimation = new ObservableValue<bool>();
-            UseLocationService = new ObservableValue<bool>();
-            PreventScreenLock = new ObservableValue<bool>();
-
-            MapOverlays = new ObservableCollection<Layer>();
-            Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
-            Routes = new ReadOnlyObservableCollection<Route>(_routes = new ObservableCollection<Route>());
         }
 
         #endregion
