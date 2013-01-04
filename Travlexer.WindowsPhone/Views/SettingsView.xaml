@@ -5,7 +5,6 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-                            xmlns:localControls="clr-namespace:Travlexer.WindowsPhone.Controls"
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
                             xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
@@ -39,15 +38,7 @@
         </StackPanel>
         <adMob:BannerAd Grid.Row="1"
                         AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}">
-            <adMob:BannerAd.GpsLocation>
-                <Binding Path="GpsLocation">
-                    <Binding.Source>
-                        <localControls:AdMobGpsLocationProvider />
-                    </Binding.Source>
-                </Binding>
-            </adMob:BannerAd.GpsLocation>
-        </adMob:BannerAd>
+                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
     </Grid>
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>

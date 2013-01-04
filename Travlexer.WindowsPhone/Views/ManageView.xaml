@@ -162,15 +162,7 @@
         </controls:Pivot>
         <adMob:BannerAd Grid.Row="1"
                         AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}">
-            <adMob:BannerAd.GpsLocation>
-                <Binding Path="GpsLocation">
-                    <Binding.Source>
-                        <travelexerControls:AdMobGpsLocationProvider />
-                    </Binding.Source>
-                </Binding>
-            </adMob:BannerAd.GpsLocation>
-        </adMob:BannerAd>
+                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
     </Grid>
     <shellExtension:ApplicationBar.ApplicationBar>
         <shellExtension:ApplicationBar x:Name="AppBar">

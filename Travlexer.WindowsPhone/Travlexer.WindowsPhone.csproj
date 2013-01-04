@@ -82,7 +82,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\AdControl.cs" />
-    <Compile Include="Controls\AdMobGpsLocationProvider.cs" />
     <Compile Include="Controls\CircleButton.cs" />
     <Compile Include="Controls\AutoCompleteBox.cs" />
     <Compile Include="Controls\CircleToggleButton.cs" />

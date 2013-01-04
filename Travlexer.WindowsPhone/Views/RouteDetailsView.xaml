@@ -213,8 +213,8 @@
                     <Rectangle Grid.Row="4"
                                Style="{StaticResource IconRectangleStyle}"
                                Fill="{Binding Data.Color, Converter={StaticResource ElementColorToBrushConverter}}" />
-                    <toolkit:ListPicker FullModeHeader="change place color"
-                                        ItemsSource="{Binding RouteColors}"
+                    <toolkit:ListPicker ItemsSource="{Binding RouteColors}"
+                                        FullModeHeader="pick a route color"
                                         DisplayMemberPath="Value"
                                         SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}"
                                         Grid.Row="4"
@@ -244,14 +244,6 @@
         </controls:Pivot>
         <adMob:BannerAd Grid.Row="1"
                         AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}">
-            <adMob:BannerAd.GpsLocation>
-                <Binding Path="GpsLocation">
-                    <Binding.Source>
-                        <localControls:AdMobGpsLocationProvider />
-                    </Binding.Source>
-                </Binding>
-            </adMob:BannerAd.GpsLocation>
-        </adMob:BannerAd>
+                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
     </Grid>
 </phone:PhoneApplicationPage>

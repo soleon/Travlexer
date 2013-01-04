@@ -6,7 +6,6 @@
                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                   xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-                                  xmlns:localControls="clr-namespace:Travlexer.WindowsPhone.Controls"
                                   xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
                                   xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
                                   x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
@@ -267,16 +266,18 @@
                             <TextBox GotFocus="SelectAllOnTextBoxGotFocus"
                                      InputScope="Text"
                                      Text="{Binding Data.Name, Mode=TwoWay}" />
-                            <toolkit:ListPicker FullModeHeader="change place icon"
-                                                FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}"
+                            <toolkit:ListPicker FullModeItemTemplate="{StaticResource PlaceIconFullModeItemTemplate}"
+                                                FullModeHeader="pick a place icon"
                                                 ItemsSource="{Binding PlaceIcons}"
                                                 ItemTemplate="{StaticResource PlaceIconItemTemplate}"
-                                                SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}" />
-                            <toolkit:ListPicker FullModeHeader="change place color"
-                                                FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}"
+                                                SelectedItem="{Binding Data.Icon, Converter={StaticResource PlaceIconKeyValueConverter}, Mode=TwoWay}">
+                                </toolkit:ListPicker>
+                            <toolkit:ListPicker FullModeItemTemplate="{StaticResource PlaceColorFullModeItemTemplate}"
+                                                FullModeHeader="pick a place color"
                                                 ItemsSource="{Binding PlaceColors}"
                                                 ItemTemplate="{StaticResource PlaceColorItemTemplate}"
-                                                SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}" />
+                                                SelectedItem="{Binding Data.Color, Converter={StaticResource ElementColorKeyValueConverter}, Mode=TwoWay}">
+                            </toolkit:ListPicker>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="120" />
@@ -330,14 +331,6 @@
         </controls:Pivot>
         <adMob:BannerAd Grid.Row="1"
                         AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}">
-            <adMob:BannerAd.GpsLocation>
-                <Binding Path="GpsLocation">
-                    <Binding.Source>
-                        <localControls:AdMobGpsLocationProvider />
-                    </Binding.Source>
-                </Binding>
-            </adMob:BannerAd.GpsLocation>
-        </adMob:BannerAd>
+                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
     </Grid>
 </codifyPhone:PhoneApplicationPage>
