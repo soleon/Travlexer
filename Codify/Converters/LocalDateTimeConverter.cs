@@ -5,7 +5,7 @@ using System.Windows.Data;
 namespace Codify.Converters
 {
     /// <summary>
-    ///     Converts between local DateTime to UTC DateTime.
+    ///     Converts between local DateTime and UTC DateTime.
     /// </summary>
     public class LocalDateTimeConverter : IValueConverter
     {

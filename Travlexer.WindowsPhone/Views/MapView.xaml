@@ -33,6 +33,8 @@
         </Binding>
     </d:DesignProperties.DataContext>
     <phone:PhoneApplicationPage.Resources>
+        <Duration x:Key="DefaultAnimationDuration">0:0:0.4</Duration>
+        <KeyTime x:Key="DefaultAnimationKeyTime">0:0:0.4</KeyTime>
         <ScaleTransform x:Key="TileScale" />
         <!--This style is used in code behind, do not remove-->
         <Style x:Key="TilePushpin"
@@ -95,11 +97,11 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="SearchBackground"
                                              Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              To="1" />
                             <DoubleAnimation Storyboard.TargetName="SearchContentPanel"
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              EasingFunction="{StaticResource EasingQuinticOut}"
                                              To="32" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
@@ -116,14 +118,14 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="SearchBackground"
                                              Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             Duration="0:0:0.3" />
+                                             Duration="0:0:0.4" />
                             <DoubleAnimation Storyboard.TargetName="SearchContentPanel"
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              EasingFunction="{StaticResource EasingQuinticOut}" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
                                                            Storyboard.TargetProperty="(UIElement.Visibility)">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.4">
                                     <DiscreteObjectKeyFrame.Value>
                                         <Visibility>Collapsed</Visibility>
                                     </DiscreteObjectKeyFrame.Value>
@@ -136,7 +138,7 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="DragPushpin"
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              EasingFunction="{StaticResource EasingQuinticOut}"
                                              To="-90" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragPushpin"
@@ -178,12 +180,12 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="RouteContentPanel"
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              EasingFunction="{StaticResource EasingQuinticOut}"
                                              To="32" />
                             <DoubleAnimation Storyboard.TargetName="RouteBackground"
                                              Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              To="1" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RoutePanel"
                                                            Storyboard.TargetProperty="(UIElement.Visibility)">
@@ -200,14 +202,14 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="RouteContentPanel"
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              EasingFunction="{StaticResource EasingQuinticOut}" />
                             <DoubleAnimation Storyboard.TargetName="RouteBackground"
                                              Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             Duration="0:0:0.3" />
+                                             Duration="0:0:0.4" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RoutePanel"
                                                            Storyboard.TargetProperty="(UIElement.Visibility)">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.4">
                                     <DiscreteObjectKeyFrame.Value>
                                         <Visibility>Collapsed</Visibility>
                                     </DiscreteObjectKeyFrame.Value>
@@ -377,7 +379,7 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="Toolbar"
                                              Storyboard.TargetProperty="(FrameworkElement.Height)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              EasingFunction="{StaticResource EasingQuinticOut}"
                                              To="480" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
@@ -390,7 +392,7 @@
                             </ObjectAnimationUsingKeyFrames>
                             <DoubleAnimation Storyboard.TargetName="ExpandButton"
                                              Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              To="180" />
                         </Storyboard>
                     </VisualTransition>
@@ -400,11 +402,11 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="Toolbar"
                                              Storyboard.TargetProperty="(FrameworkElement.Height)"
-                                             Duration="0:0:0.3"
+                                             Duration="0:0:0.4"
                                              EasingFunction="{StaticResource EasingQuinticOut}" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandedPanel"
                                                            Storyboard.TargetProperty="(UIElement.Visibility)">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.4">
                                     <DiscreteObjectKeyFrame.Value>
                                         <Visibility>Collapsed</Visibility>
                                     </DiscreteObjectKeyFrame.Value>
@@ -412,7 +414,7 @@
                             </ObjectAnimationUsingKeyFrames>
                             <DoubleAnimation Storyboard.TargetName="ExpandButton"
                                              Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
-                                             Duration="0:0:0.3" />
+                                             Duration="0:0:0.4" />
                         </Storyboard>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
@@ -836,7 +838,7 @@
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="52" />
-                    <RowDefinition Height="75" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -926,13 +928,13 @@
                     </triggers:KeyPressTrigger>
                 </i:Interaction.Triggers>
                 <Grid.RenderTransform>
-                    <CompositeTransform TranslateY="-300" />
+                    <CompositeTransform TranslateY="-375" />
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"
-                                   MinHeight="0" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -1051,6 +1053,10 @@
                               Grid.Row="1"
                               IsChecked="{Binding ClearRoutesBeforeAddingNewRoute.Value, Mode=TwoWay}" />
                 </Grid>
+                <adMob:BannerAd Grid.ColumnSpan="4"
+                                Grid.Row="3"
+                                AdUnitID="a150e41c7f6d5e1"
+                                Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
             </Grid>
         </Grid>
     </Grid>
