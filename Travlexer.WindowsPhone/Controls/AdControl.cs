@@ -1,27 +1,29 @@
-﻿using System.Device.Location;
+﻿using System.ComponentModel;
+using System.Windows.Controls;
+using SOMAWP7;
 
 namespace Travlexer.WindowsPhone.Controls
 {
-    public class AdControl
-        //:
-        //MobFox.Ads.AdControl
-        //AdDuplex.AdControl
+    public class AdControl : ContentPresenter
     {
-        private void UpdateLocation(GeoCoordinate location)
+        public AdControl()
         {
-            #region MobFox
+            var ad = new SomaAdViewer
+            {
+#if DEBUG
+                ShowErrors = true,
+#endif
+                Pub = 923838645,
+                Adspace = 65773647,
+                PopupAd = true,
+                LocationUseOK = true
+            };
+            Content = ad;
 
-            //if (location.IsUnknown) return;
-            //var latitude = location.Latitude;
-            //var longitude = location.Longitude;
-            //if (Location == null) Location = new Location(latitude, longitude);
-            //else
-            //{
-            //    Location.Latitude = latitude;
-            //    Location.Longitude = longitude;
-            //}
-
-            #endregion
+#if DEBUG
+            if (DesignerProperties.IsInDesignTool) return;
+#endif
+            ad.StartAds();
         }
     }
 }

@@ -19,7 +19,6 @@
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                                   xmlns:triggers="clr-namespace:Codify.Triggers;assembly=Codify"
                                   xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
-                                  xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
                                   Style="{StaticResource PageDefault}"
                                   mc:Ignorable="d"
                                   d:DesignHeight="768"
@@ -221,26 +220,18 @@
                 <VisualState x:Name="Default" />
                 <VisualState x:Name="Search">
                     <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchPanel"
-                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Visible</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Storyboard.TargetName="SearchBackground"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         Duration="0"
-                                         To="1"
-                                         d:IsOptimized="True" />
-                        <DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                         Duration="0"
-                                         EasingFunction="{StaticResource EasingQuinticOut}"
-                                         To="32"
-                                         d:IsOptimized="True" />
-                    </Storyboard>
+                		<DoubleAnimation Storyboard.TargetName="SearchBackground"
+                			Storyboard.TargetProperty="(UIElement.Opacity)"
+                			Duration="0"
+                			To="1"
+                			d:IsOptimized="True" />
+                		<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
+                			Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+                			Duration="0"
+                			EasingFunction="{StaticResource EasingQuinticOut}"
+                			To="32"
+                			d:IsOptimized="True" />
+                	</Storyboard>
                 </VisualState>
                 <VisualState x:Name="PushpinSelected">
                     <Storyboard>
@@ -318,25 +309,17 @@
                 </VisualState>
                 <VisualState x:Name="Route">
                     <Storyboard>
-                        <DoubleAnimation Storyboard.TargetName="RouteContentPanel"
-                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                                         Duration="0"
-                                         To="32"
-                                         d:IsOptimized="True" />
-                        <DoubleAnimation Storyboard.TargetName="RouteBackground"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         Duration="0"
-                                         To="1"
-                                         d:IsOptimized="True" />
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RoutePanel"
-                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Visibility>Visible</Visibility>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
+                		<DoubleAnimation Storyboard.TargetName="RouteContentPanel"
+                			Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+                			Duration="0"
+                			To="32"
+                			d:IsOptimized="True" />
+                		<DoubleAnimation Storyboard.TargetName="RouteBackground"
+                			Storyboard.TargetProperty="(UIElement.Opacity)"
+                			Duration="0"
+                			To="1"
+                			d:IsOptimized="True" />
+                	</Storyboard>
                 </VisualState>
                 <VisualState x:Name="RouteSelected">
                     <Storyboard>
@@ -815,8 +798,7 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-        <Grid x:Name="SearchPanel"
-              Visibility="Collapsed">
+        <Grid x:Name="SearchPanel">
             <i:Interaction.Behaviors>
                 <behaviors:CancelGestureEventBehavior />
             </i:Interaction.Behaviors>
@@ -834,11 +816,11 @@
                     </triggers:ElementMouseButtonActivityTrigger>
                 </i:Interaction.Triggers>
                 <Grid.RenderTransform>
-                    <CompositeTransform TranslateY="-127" />
+                    <CompositeTransform TranslateY="-185" />
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="52" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MaxHeight="80" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -898,14 +880,11 @@
                                    VerticalAlignment="Center" />
                     </Border>
                 </Button>
-                <adMob:BannerAd Grid.ColumnSpan="3"
-                                Grid.Row="1"
-                                AdUnitID="a150e41c7f6d5e1"
-                                Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
+                <controls:AdControl Grid.ColumnSpan="3"
+                                    Grid.Row="1" />
             </Grid>
         </Grid>
-        <Grid x:Name="RoutePanel"
-              Visibility="Collapsed">
+        <Grid x:Name="RoutePanel">
             <i:Interaction.Behaviors>
                 <behaviors:CancelGestureEventBehavior />
             </i:Interaction.Behaviors>
@@ -928,13 +907,13 @@
                     </triggers:KeyPressTrigger>
                 </i:Interaction.Triggers>
                 <Grid.RenderTransform>
-                    <CompositeTransform TranslateY="-375" />
+                    <CompositeTransform TranslateY="-435" />
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MaxHeight="80" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -1053,10 +1032,8 @@
                               Grid.Row="1"
                               IsChecked="{Binding ClearRoutesBeforeAddingNewRoute.Value, Mode=TwoWay}" />
                 </Grid>
-                <adMob:BannerAd Grid.ColumnSpan="4"
-                                Grid.Row="3"
-                                AdUnitID="a150e41c7f6d5e1"
-                                Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
+                <controls:AdControl Grid.ColumnSpan="4"
+                                    Grid.Row="3" />
             </Grid>
         </Grid>
     </Grid>

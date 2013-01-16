@@ -97,6 +97,7 @@ namespace Travlexer.WindowsPhone
 
         private void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            e.Handled = true;
             if (Debugger.IsAttached) Debugger.Break();
             try
             {

@@ -61,7 +61,7 @@ namespace Travlexer.WindowsPhone
             
             ((DataContext) Data).AppVersion = new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version;
 
-            Data.PreventScreenLock.ValueChanged += (old, @new) => { PhoneApplicationService.Current.ApplicationIdleDetectionMode = @new ? IdleDetectionMode.Disabled : IdleDetectionMode.Enabled; };
+            Data.PreventScreenLock.ValueChanged += (old, @new) => { PhoneApplicationService.Current.UserIdleDetectionMode = @new ? IdleDetectionMode.Disabled : IdleDetectionMode.Enabled; };
 
             Data.UseLocationService.ValueChanged += (old, @new) =>
             {
