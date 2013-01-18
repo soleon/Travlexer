@@ -34,7 +34,9 @@
             <toolkit:ToggleSwitch Header="Use location service"
                                   IsChecked="{Binding UseLocationService.Value, Mode=TwoWay}" />
             <toolkit:ToggleSwitch Header="Prevent screen lock"
-                                  IsChecked="{Binding PreventScreenLock.Value,Mode=TwoWay}" />
+                                  IsChecked="{Binding PreventScreenLock.Value, Mode=TwoWay}" />
+            <toolkit:ToggleSwitch Header="Hide toolbar"
+                                  IsChecked="{Binding HideToolbar.Value, Mode=TwoWay}" />
         </StackPanel>
         <adMob:BannerAd Grid.Row="1"
                         AdUnitID="a150e41c7f6d5e1"

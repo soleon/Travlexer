@@ -1076,6 +1076,8 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private const string GetRouteButtonTextProperty = "GetRouteButtonText";
 
+        public ObservableValue<bool> HideToolbar { get { return _data.HideToolbar; } } 
+
         #endregion
 
 

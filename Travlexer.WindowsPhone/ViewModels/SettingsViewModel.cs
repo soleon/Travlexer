@@ -40,5 +40,10 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             get { return _data.PreventScreenLock; }
         }
+
+        public ObservableValue<bool> HideToolbar
+        {
+            get { return _data.HideToolbar; }
+        }
     }
 }

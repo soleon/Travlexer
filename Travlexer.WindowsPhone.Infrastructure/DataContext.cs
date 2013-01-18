@@ -101,6 +101,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             UseLocationService = new ObservableValue<bool>();
             PreventScreenLock = new ObservableValue<bool>();
             ClearRoutesBeforeAddingNewRoute = new ObservableValue<bool>();
+            HideToolbar = new ObservableValue<bool>();
 
             MapOverlays = new ObservableCollection<Layer>();
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
@@ -223,8 +224,12 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private const string PreventScreenLockProperty = "PreventScreenLock";
 
         public ObservableValue<bool> ClearRoutesBeforeAddingNewRoute { get; private set; }
+        
         private const string ClearRoutesBeforeAddingNewRouteProperty = "ClearRoutesBeforeAddingNewRoute";
 
+        public ObservableValue<bool> HideToolbar { get; private set; }
+
+        private const string HideToolbarProperty = "HideToolbar";
 
         /// <summary>
         ///     Gets a dictionary that contains available place icon enums mapping to their display names.
@@ -575,6 +580,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             _storageProvider.SaveSetting(UseLocationServiceProperty, UseLocationService.Value);
             _storageProvider.SaveSetting(PreventScreenLockProperty, PreventScreenLock.Value);
             _storageProvider.SaveSetting(ClearRoutesBeforeAddingNewRouteProperty, ClearRoutesBeforeAddingNewRoute.Value);
+            _storageProvider.SaveSetting(HideToolbarProperty, HideToolbar.Value);
         }
 
         /// <summary>
@@ -646,6 +652,9 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
             if (_storageProvider.TryGetSetting(ClearRoutesBeforeAddingNewRouteProperty, out tempBool))
                 ClearRoutesBeforeAddingNewRoute.Value = tempBool;
+
+            if (_storageProvider.TryGetSetting(HideToolbarProperty, out tempBool))
+                HideToolbar.Value = tempBool;
         }
 
         /// <summary>

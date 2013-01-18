@@ -579,7 +579,8 @@
                 CornerRadius="34"
                 HorizontalAlignment="Left"
                 Opacity="{StaticResource OpacityShell}"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center"
+                Visibility="{Binding HideToolbar.Value, Mode=OneWay, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">
             <i:Interaction.Behaviors>
                 <behaviors:CancelGestureEventBehavior />
             </i:Interaction.Behaviors>

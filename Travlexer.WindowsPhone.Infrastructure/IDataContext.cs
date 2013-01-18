@@ -97,8 +97,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
         ObservableValue<bool> PreventScreenLock { get; }
 
         Version AppVersion { get; }
+
         ObservableValue<bool> ClearRoutesBeforeAddingNewRoute { get; }
 
+        ObservableValue<bool> HideToolbar { get; }
 
         /// <summary>
         ///     Adds a new place.
