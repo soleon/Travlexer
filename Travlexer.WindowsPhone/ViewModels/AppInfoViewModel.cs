@@ -9,7 +9,7 @@ namespace Travlexer.WindowsPhone.ViewModels
     {
         public AppInfoViewModel()
         {
-            CommandSendEmail = new DelegateCommand(() => PhoneTasks.SendEmail("codifying@gmail.com", "About Triplexer"));
+            CommandSendEmail = new DelegateCommand(() => PhoneTasks.SendEmail("codifying@gmail.com", "Triplexer " + AppVersion + " feedback"));
         }
 
         public Version AppVersion
