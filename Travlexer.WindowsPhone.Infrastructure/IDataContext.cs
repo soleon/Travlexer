@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Device.Location;
+using System.Windows;
 using Codify.Entities;
 using Codify.GoogleMaps.Controls;
 using Codify.Services;
@@ -101,6 +102,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
         ObservableValue<bool> ClearRoutesBeforeAddingNewRoute { get; }
 
         ObservableValue<bool> HideToolbar { get; }
+
+        ObservableValue<HorizontalAlignment> ToolbarAlignment { get; }
 
         /// <summary>
         ///     Adds a new place.

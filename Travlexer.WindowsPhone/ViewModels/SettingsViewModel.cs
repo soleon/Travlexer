@@ -1,6 +1,5 @@
-﻿using Codify.Commands;
+﻿using System.Windows;
 using Codify.Entities;
-using Codify.WindowsPhone;
 using Travlexer.WindowsPhone.Infrastructure;
 
 namespace Travlexer.WindowsPhone.ViewModels
@@ -8,6 +7,7 @@ namespace Travlexer.WindowsPhone.ViewModels
     public class SettingsViewModel : NotifyableEntity
     {
         private static readonly UnitSystems[] StaticUnitSystems = new[] {Infrastructure.UnitSystems.Metric, Infrastructure.UnitSystems.Imperial};
+        private static readonly HorizontalAlignment[] StaticToolbarAlignments = new[] {HorizontalAlignment.Left, HorizontalAlignment.Right};
 
         private readonly IDataContext _data;
 
@@ -24,6 +24,11 @@ namespace Travlexer.WindowsPhone.ViewModels
         public UnitSystems[] UnitSystems
         {
             get { return StaticUnitSystems; }
+        }
+
+        public HorizontalAlignment[] ToolbarAlighments
+        {
+            get { return StaticToolbarAlignments; }
         }
 
         public ObservableValue<UnitSystems> SelectedUnitSystem
@@ -44,6 +49,11 @@ namespace Travlexer.WindowsPhone.ViewModels
         public ObservableValue<bool> HideToolbar
         {
             get { return _data.HideToolbar; }
+        }
+
+        public ObservableValue<HorizontalAlignment> ToolbarAlignment
+        {
+            get { return _data.ToolbarAlignment; }
         }
     }
 }

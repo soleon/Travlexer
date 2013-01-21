@@ -572,12 +572,12 @@
         </maps:Map>
         <Border x:Name="Toolbar"
                 Height="108"
-                Margin="10,0,0,0"
+                Margin="10,0"
                 Padding="10"
                 Width="68"
                 Background="{StaticResource PhoneChromeBrush}"
                 CornerRadius="34"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="{Binding ToolbarAlignment.Value, Mode=OneWay}"
                 Opacity="{StaticResource OpacityShell}"
                 VerticalAlignment="Center"
                 Visibility="{Binding HideToolbar.Value, Mode=OneWay, Converter={StaticResource VisibilityConverter}, ConverterParameter=reverse}">

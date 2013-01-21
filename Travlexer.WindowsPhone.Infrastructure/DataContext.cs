@@ -7,6 +7,7 @@ using System.Device.Location;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Windows;
 using Codify;
 using Codify.Entities;
 using Codify.Extensions;
@@ -102,6 +103,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             PreventScreenLock = new ObservableValue<bool>();
             ClearRoutesBeforeAddingNewRoute = new ObservableValue<bool>();
             HideToolbar = new ObservableValue<bool>();
+            ToolbarAlignment = new ObservableValue<HorizontalAlignment>(HorizontalAlignment.Left);
 
             MapOverlays = new ObservableCollection<Layer>();
             Places = new ReadOnlyObservableCollection<Place>(_places = new ObservableCollection<Place>());
@@ -230,6 +232,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
         public ObservableValue<bool> HideToolbar { get; private set; }
 
         private const string HideToolbarProperty = "HideToolbar";
+        
+        public ObservableValue<HorizontalAlignment> ToolbarAlignment { get; private set; }
+
+        private const string ToolbarAlignmentProperty = "ToolbarAlignment";
 
         /// <summary>
         ///     Gets a dictionary that contains available place icon enums mapping to their display names.
@@ -581,6 +587,7 @@ namespace Travlexer.WindowsPhone.Infrastructure
             _storageProvider.SaveSetting(PreventScreenLockProperty, PreventScreenLock.Value);
             _storageProvider.SaveSetting(ClearRoutesBeforeAddingNewRouteProperty, ClearRoutesBeforeAddingNewRoute.Value);
             _storageProvider.SaveSetting(HideToolbarProperty, HideToolbar.Value);
+            _storageProvider.SaveSetting(ToolbarAlignmentProperty, ToolbarAlignment.Value);
         }
 
         /// <summary>
@@ -655,6 +662,10 @@ namespace Travlexer.WindowsPhone.Infrastructure
 
             if (_storageProvider.TryGetSetting(HideToolbarProperty, out tempBool))
                 HideToolbar.Value = tempBool;
+
+            HorizontalAlignment tempAlignment;
+            if (_storageProvider.TryGetSetting(ToolbarAlignmentProperty, out tempAlignment))
+                ToolbarAlignment.Value = tempAlignment;
         }
 
         /// <summary>

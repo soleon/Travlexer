@@ -7,7 +7,6 @@
                             xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
-                            xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
                             xmlns:localControls="clr-namespace:Travlexer.WindowsPhone.Controls"
                             Style="{StaticResource PageDefault}"
                             mc:Ignorable="d">
@@ -23,22 +22,27 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Margin="{StaticResource PhoneHorizontalMargin}">
-            <TextBlock Text="settings"
-                       FontSize="{StaticResource PhoneFontSizeExtraExtraLarge}"
-                       FontFamily="{StaticResource PhoneFontFamilySemiLight}" />
-            <toolkit:ListPicker Header="Unit system"
-                                ItemsSource="{Binding UnitSystems}"
-                                SelectedItem="{Binding SelectedUnitSystem.Value, Mode=TwoWay}" />
-            <toolkit:ToggleSwitch IsChecked="{Binding UseMapAnimation.Value, Mode=TwoWay}"
-                                  Header="Use map animation" />
-            <toolkit:ToggleSwitch Header="Use location service"
-                                  IsChecked="{Binding UseLocationService.Value, Mode=TwoWay}" />
-            <toolkit:ToggleSwitch Header="Prevent screen lock"
-                                  IsChecked="{Binding PreventScreenLock.Value, Mode=TwoWay}" />
-            <toolkit:ToggleSwitch Header="Hide toolbar"
-                                  IsChecked="{Binding HideToolbar.Value, Mode=TwoWay}" />
-        </StackPanel>
+        <ScrollViewer Margin="{StaticResource PhoneHorizontalMargin}">
+            <StackPanel>
+                <TextBlock Text="settings"
+                           FontSize="{StaticResource PhoneFontSizeExtraExtraLarge}"
+                           FontFamily="{StaticResource PhoneFontFamilySemiLight}" />
+                <toolkit:ListPicker Header="unit system"
+                                    ItemsSource="{Binding UnitSystems}"
+                                    SelectedItem="{Binding SelectedUnitSystem.Value, Mode=TwoWay}" />
+                <toolkit:ListPicker Header="toolbar position"
+                                    ItemsSource="{Binding ToolbarAlighments}"
+                                    SelectedItem="{Binding ToolbarAlignment.Value, Mode=TwoWay}" />
+                <toolkit:ToggleSwitch Header="hide toolbar"
+                                      IsChecked="{Binding HideToolbar.Value, Mode=TwoWay}" />
+                <toolkit:ToggleSwitch IsChecked="{Binding UseMapAnimation.Value, Mode=TwoWay}"
+                                      Header="use map animation" />
+                <toolkit:ToggleSwitch Header="use location service"
+                                      IsChecked="{Binding UseLocationService.Value, Mode=TwoWay}" />
+                <toolkit:ToggleSwitch Header="prevent screen lock"
+                                      IsChecked="{Binding PreventScreenLock.Value, Mode=TwoWay}" />
+            </StackPanel>
+        </ScrollViewer>
         <localControls:AdControl Grid.Row="1" />
     </Grid>
     <phone:PhoneApplicationPage.ApplicationBar>
