@@ -242,8 +242,6 @@
                 </Grid>
             </controls:PivotItem>
         </controls:Pivot>
-        <adMob:BannerAd Grid.Row="1"
-                        AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
+        <localControls:AdControl Grid.Row="1" />
     </Grid>
 </phone:PhoneApplicationPage>

@@ -8,6 +8,7 @@
                                   xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
                                   xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
                                   xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
+                                  xmlns:localControl="clr-namespace:Travlexer.WindowsPhone.Controls"
                                   x:Class="Travlexer.WindowsPhone.Views.PlaceDetailsView"
                                   x:Name="Page"
                                   mc:Ignorable="d"
@@ -329,8 +330,6 @@
                 </Grid>
             </controls:PivotItem>
         </controls:Pivot>
-        <adMob:BannerAd Grid.Row="1"
-                        AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
+        <localControl:AdControl Grid.Row="1" />
     </Grid>
 </codifyPhone:PhoneApplicationPage>

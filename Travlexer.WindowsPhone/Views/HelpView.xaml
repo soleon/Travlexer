@@ -6,7 +6,7 @@
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-                            xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
+                            xmlns:localControls="clr-namespace:Travlexer.WindowsPhone.Controls"
                             Style="{StaticResource PageDefault}"
                             mc:Ignorable="d">
     <Grid>
@@ -19,9 +19,7 @@
 
             </controls:PivotItem>
         </controls:Pivot>
-        <adMob:BannerAd Grid.Row="1"
-                        AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
+        <localControls:AdControl Grid.Row="1" />
     </Grid>
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>

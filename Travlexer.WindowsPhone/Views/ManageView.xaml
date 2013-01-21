@@ -6,9 +6,8 @@
                             xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
                             xmlns:viewModels="clr-namespace:Travlexer.WindowsPhone.ViewModels"
                             xmlns:shellExtension="clr-namespace:Codify.WindowsPhone.ShellExtension;assembly=Codify.WindowsPhone"
-                            xmlns:travelexerControls="clr-namespace:Travlexer.WindowsPhone.Controls"
+                            xmlns:localControls="clr-namespace:Travlexer.WindowsPhone.Controls"
                             xmlns:windowsPhone="clr-namespace:Travlexer.WindowsPhone"
-                            xmlns:adMob="clr-namespace:Google.AdMob.Ads.WindowsPhone7.WPF;assembly=Google.AdMob.Ads.WindowsPhone7"
                             x:Class="Travlexer.WindowsPhone.Views.ManageView"
                             mc:Ignorable="d"
                             d:DesignHeight="768"
@@ -24,7 +23,7 @@
     </d:DesignProperties.DataContext>
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="GoButtonStyle"
-               TargetType="travelexerControls:CircleButton"
+               TargetType="localControls:CircleButton"
                BasedOn="{StaticResource CircleButtonDefaultStyle}">
             <Setter Property="Grid.Column"
                     Value="2" />
@@ -70,12 +69,12 @@
                              FontSize="{StaticResource PhoneFontSizeSmall}" />
                     </TextBlock>
                 </Button>
-                <travelexerControls:CircleButton Command="{Binding DataContext.CommandGoToPlace, ElementName=Page}"
+                <localControls:CircleButton Command="{Binding DataContext.CommandGoToPlace, ElementName=Page}"
                                                  CommandParameter="{Binding Data}"
                                                  Style="{StaticResource GoButtonStyle}">
                     <Rectangle Fill="{StaticResource BrushIconRightArrow}"
                                Style="{StaticResource IconRectangleStyle}" />
-                </travelexerControls:CircleButton>
+                </localControls:CircleButton>
             </Grid>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
@@ -160,9 +159,7 @@
                 </ScrollViewer>
             </controls:PivotItem>
         </controls:Pivot>
-        <adMob:BannerAd Grid.Row="1"
-                        AdUnitID="a150e41c7f6d5e1"
-                        Visibility="{Binding AdAvailable, RelativeSource={RelativeSource Self}, Converter={StaticResource VisibilityConverter}}" />
+        <localControls:AdControl Grid.Row="1" />
     </Grid>
     <shellExtension:ApplicationBar.ApplicationBar>
         <shellExtension:ApplicationBar x:Name="AppBar">
