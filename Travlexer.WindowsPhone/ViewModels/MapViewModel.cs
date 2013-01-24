@@ -17,6 +17,7 @@ using Codify.GoogleMaps.Controls;
 using Codify.Services;
 using Codify.Threading;
 using Codify.WindowsPhone;
+using Microsoft.Devices.Sensors;
 using Microsoft.Expression.Interactivity.Core;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Converters;
@@ -30,17 +31,12 @@ namespace Travlexer.WindowsPhone.ViewModels
     /// </summary>
     public class MapViewModel : NotifyableEntity
     {
-        #region Constants
+        #region Private Fields
 
         private const string CurrentLocationString = "Current Location";
         private const double MaxZoomLevel = 21D;
         private const double MinZoomLevel = 1D;
         private const double ZoomStep = 1D;
-
-        #endregion
-
-
-        #region Private Fields
 
         private static readonly Regex RegexWhiteSpaces = new Regex("\\n+|(\\n\\r)+|\\s{2,}");
 
@@ -48,6 +44,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         private readonly IDataContext _data;
         private readonly IConfigurationContext _configuration;
         private readonly INavigationService _navigation;
+        private readonly Compass _compass;
 
         private AppBarButtonViewModel
             _trackButton;
@@ -109,6 +106,11 @@ namespace Travlexer.WindowsPhone.ViewModels
             _data = ApplicationContext.Data;
             _configuration = ApplicationContext.Configuration;
             _navigation = ApplicationContext.NavigationService;
+            if (IsCompassSupported)
+            {
+                _compass = new Compass {TimeBetweenUpdates = TimeSpan.FromMilliseconds(200)};
+                _compass.CurrentValueChanged += OnCompassReadingChanged;
+            }
 
             // Initialise local properties.
             VisualState = new ObservableValue<VisualStates>();
@@ -157,7 +159,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             InitializeAppBarButtonSources();
             InitializeAppBarMenuItemsSource();
 
-            // Handle necessary events.
+            // Handle events.
             Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
             _data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChanged(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
             _data.SelectedPlace.ValueChanged += (old, @new) => SelectedPushpin = Pushpins.FirstOrDefault(p => p.Data == @new);
@@ -188,6 +190,11 @@ namespace Travlexer.WindowsPhone.ViewModels
                     ZoomLevel.Value = 15;
                 }
             }
+        }
+
+        private void OnCompassReadingChanged(object sender, SensorReadingEventArgs<CompassReading> e)
+        {
+            Heading = e.SensorReading.TrueHeading;
         }
 
         #endregion
@@ -725,6 +732,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         private void OnDeactivate()
         {
             _navigation.BackKeyPress -= OnBackKeyPress;
+            _compass.UseIfNotNull(c => c.Stop());
         }
 
         /// <summary>
@@ -733,6 +741,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         private void OnActivate()
         {
             _navigation.BackKeyPress += OnBackKeyPress;
+            _compass.UseIfNotNull(c => c.Start());
         }
 
         #endregion
@@ -1085,6 +1094,20 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             get { return _data.ToolbarAlignment; }
         }
+
+        public bool IsCompassSupported
+        {
+            get { return Compass.IsSupported; }
+        }
+
+        public double Heading
+        {
+            get { return _heading; }
+            private set { SetValue(ref _heading, value, HeadingProperty); }
+        }
+
+        private double _heading;
+        private const string HeadingProperty = "Heading";
 
         #endregion
 

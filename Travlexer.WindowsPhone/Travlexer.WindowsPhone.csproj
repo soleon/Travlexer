@@ -26,7 +26,7 @@
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <Utf8Output>true</Utf8Output>
-    <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
+    <ExpressionBlendVersion>5.0.31017.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +56,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\GoogleAdMobAdsSDKWindowsPhone7-4.0.4\Google.AdMob.Ads.WindowsPhone7.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Devices.Sensors" />
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
@@ -85,6 +86,7 @@
     <Compile Include="Controls\CircleButton.cs" />
     <Compile Include="Controls\AutoCompleteBox.cs" />
     <Compile Include="Controls\CircleToggleButton.cs" />
+    <Compile Include="Controls\CurrentLocationIndicator.cs" />
     <Compile Include="Controls\Icons\IconBase.cs" />
     <Compile Include="Controls\Icons\Slash.cs" />
     <Compile Include="Controls\MapPolyline.cs" />

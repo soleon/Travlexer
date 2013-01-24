@@ -132,57 +132,59 @@
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualTransition>
-                	<VisualTransition GeneratedDuration="0:0:0.4" GeneratedEasingFunction="{StaticResource EasingQuinticOut}"/>
-                	<VisualTransition GeneratedDuration="0" To="PushpinSelected"/>
+                    <VisualTransition GeneratedDuration="0:0:0.4"
+                                      GeneratedEasingFunction="{StaticResource EasingQuinticOut}" />
+                    <VisualTransition GeneratedDuration="0"
+                                      To="PushpinSelected" />
                 </VisualStateGroup.Transitions>
                 <VisualState x:Name="Default" />
                 <VisualState x:Name="Search">
                     <Storyboard>
-                		<DoubleAnimation Storyboard.TargetName="SearchBackground"
-                			Storyboard.TargetProperty="(UIElement.Opacity)"
-                			Duration="0"
-                			To="1"
-                			d:IsOptimized="True" />
-                		<DoubleAnimation Storyboard.TargetName="SearchContentPanel"
-                			Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-                			Duration="0"
-                			EasingFunction="{StaticResource EasingQuinticOut}"
-                			To="32"
-                			d:IsOptimized="True" />
-                	</Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="SearchBackground"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         Duration="0"
+                                         To="1"
+                                         d:IsOptimized="True" />
+                        <DoubleAnimation Storyboard.TargetName="SearchContentPanel"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+                                         Duration="0"
+                                         EasingFunction="{StaticResource EasingQuinticOut}"
+                                         To="32"
+                                         d:IsOptimized="True" />
+                    </Storyboard>
                 </VisualState>
                 <VisualState x:Name="PushpinSelected">
                     <Storyboard>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinContent"
-                			Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<codify:ExpansionStates>Expanded</codify:ExpansionStates>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
-                			Storyboard.TargetProperty="(UIElement.Opacity)"
-                			Duration="0"
-                			To="1"
-                			d:IsOptimized="True" />
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinLayer"
-                			Storyboard.TargetProperty="(UIElement.Visibility)">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Visible</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                		<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
-                			Storyboard.TargetProperty="(UIElement.Visibility)">
-                			<DiscreteObjectKeyFrame KeyTime="0">
-                				<DiscreteObjectKeyFrame.Value>
-                					<Visibility>Collapsed</Visibility>
-                				</DiscreteObjectKeyFrame.Value>
-                			</DiscreteObjectKeyFrame>
-                		</ObjectAnimationUsingKeyFrames>
-                	</Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinContent"
+                                                       Storyboard.TargetProperty="(PushpinOverlay.VisualState)">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <codify:ExpansionStates>Expanded</codify:ExpansionStates>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Storyboard.TargetName="SelectedPushpinBackground"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         Duration="0"
+                                         To="1"
+                                         d:IsOptimized="True" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPushpinLayer"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Toolbar"
+                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Drag">
                     <Storyboard>
@@ -225,20 +227,20 @@
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
-            	<VisualState x:Name="Route">
-            		<Storyboard>
-            			<DoubleAnimation Storyboard.TargetName="RouteContentPanel"
-            				Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
-            				Duration="0"
-            				To="32"
-            				d:IsOptimized="True" />
-            			<DoubleAnimation Storyboard.TargetName="RouteBackground"
-            				Storyboard.TargetProperty="(UIElement.Opacity)"
-            				Duration="0"
-            				To="1"
-            				d:IsOptimized="True" />
-            		</Storyboard>
-            	</VisualState>
+                <VisualState x:Name="Route">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="RouteContentPanel"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)"
+                                         Duration="0"
+                                         To="32"
+                                         d:IsOptimized="True" />
+                        <DoubleAnimation Storyboard.TargetName="RouteBackground"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         Duration="0"
+                                         To="1"
+                                         d:IsOptimized="True" />
+                    </Storyboard>
+                </VisualState>
                 <VisualState x:Name="RouteSelected">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedRouteLayer"
@@ -274,24 +276,25 @@
                 </VisualState>
             </VisualStateGroup>
             <VisualStateGroup x:Name="ToolbarStates">
-            	<VisualStateGroup.Transitions>
-            		<VisualTransition GeneratedDuration="0:0:0.4" GeneratedEasingFunction="{StaticResource EasingQuinticOut}"/>
-            	</VisualStateGroup.Transitions>
-            	<VisualState x:Name="Collapsed" />
-            	<VisualState x:Name="Expanded">
-            		<Storyboard>
-            			<DoubleAnimation Storyboard.TargetName="Toolbar"
-            				Storyboard.TargetProperty="(FrameworkElement.Height)"
-            				Duration="0"
-            				To="480"
-            				d:IsOptimized="True" />
-            			<DoubleAnimation Storyboard.TargetName="ExpandButton"
-            				Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
-            				Duration="0"
-            				To="180"
-            				d:IsOptimized="True" />
-            		</Storyboard>
-            	</VisualState>
+                <VisualStateGroup.Transitions>
+                    <VisualTransition GeneratedDuration="0:0:0.4"
+                                      GeneratedEasingFunction="{StaticResource EasingQuinticOut}" />
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="Collapsed" />
+                <VisualState x:Name="Expanded">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="Toolbar"
+                                         Storyboard.TargetProperty="(FrameworkElement.Height)"
+                                         Duration="0"
+                                         To="480"
+                                         d:IsOptimized="True" />
+                        <DoubleAnimation Storyboard.TargetName="ExpandButton"
+                                         Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)"
+                                         Duration="0"
+                                         To="180"
+                                         d:IsOptimized="True" />
+                    </Storyboard>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Rectangle>
@@ -405,16 +408,9 @@
                         <i:InvokeCommandAction Command="{Binding CommandAddCurrentPlace, Mode=OneTime}" />
                     </triggers:EventTrigger>
                 </i:Interaction.Triggers>
-                <Grid>
-                    <Ellipse Height="40"
-                             Width="40"
-                             Fill="Transparent" />
-                    <Rectangle Height="30"
-                               Width="30"
-                               Fill="{StaticResource BrushIconCurrentLocationBlack}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                </Grid>
+                <controls:CurrentLocationIndicator Width="32"
+                                                   HasHeading="{Binding IsCompassSupported}"
+                                                   Heading="{Binding Heading}"/>
             </maps:Pushpin>
             <maps:MapLayer x:Name="RoutesLayer"
                            Opacity="0.7"
@@ -688,7 +684,8 @@
                 </Grid.RenderTransform>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="52" />
-                    <RowDefinition Height="Auto" MaxHeight="80" />
+                    <RowDefinition Height="Auto"
+                                   MaxHeight="80" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -781,7 +778,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
-                    <RowDefinition Height="Auto" MaxHeight="80" />
+                    <RowDefinition Height="Auto"
+                                   MaxHeight="80" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Device.Location;
+using System.Windows;
 using Codify.Entities;
 using Codify.GoogleMaps;
 using Codify.Serialization;
@@ -156,6 +157,7 @@ namespace Travlexer.WindowsPhone
                 r.Result.ArrivalPlaceId = place1.Id;
                 r.Result.DeparturePlaceId = place2.Id;
             });
+            ApplicationContext.Data.ToolbarAlignment.Value = HorizontalAlignment.Left;
         }
 #endif
     }
