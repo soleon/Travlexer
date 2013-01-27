@@ -224,6 +224,7 @@
     <Content Include="Assets\Information.png" />
     <Content Include="Assets\CheckList.png" />
     <Content Include="Assets\List.png" />
+    <Content Include="Assets\Map.png" />
     <Content Include="Assets\Route.png" />
     <Content Include="Assets\SatelliteView.png" />
     <Content Include="Assets\Search.png" />
@@ -268,6 +269,9 @@
       <Project>{6E495B32-0B3C-4677-A2E1-53F76E7FFE4C}</Project>
       <Name>Travlexer.WindowsPhone.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\AppBar" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

@@ -416,4 +416,18 @@
             </Path.Fill>
         </Path>
     </ControlTemplate>
+    <Style x:Key="IconControlStyleBase"
+           TargetType="ContentControl">
+        <Setter Property="Foreground"
+                Value="{StaticResource PhoneForegroundBrush}" />
+        <Setter Property="Width"
+                Value="{StaticResource IconDimension}" />
+        <Setter Property="Height"
+                Value="{StaticResource IconDimension}" />
+    </Style>
+    <Style x:Key="IconPathStyleBase"
+           TargetType="Path">
+        <Setter Property="Stretch"
+                Value="Uniform" />
+    </Style>
 </ResourceDictionary>

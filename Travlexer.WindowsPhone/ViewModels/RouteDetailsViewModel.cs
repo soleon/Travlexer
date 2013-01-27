@@ -4,6 +4,7 @@ using System.Device.Location;
 using System.Linq;
 using Codify.Commands;
 using Codify.ViewModels;
+using Codify.WindowsPhone;
 using Travlexer.Data;
 using Travlexer.WindowsPhone.Infrastructure;
 
@@ -48,6 +49,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             Steps = route.Steps.Select(step => new RouteStepSummaryViewModel(index++, step)).ToArray();
 
             CommandGoToStep = new DelegateCommand<RouteStep>(step => SelectedStep = step);
+            CommandShowInBingMaps = new DelegateCommand(() => PhoneTasks.ShowBingMapsDirections(DeparturePlace.Name, DeparturePlace.Location.ToGeoCoordinate(), ArrivalPlace.Name, ArrivalPlace.Location.ToGeoCoordinate()));
 
 #if DEBUG
             if (DesignerProperties.IsInDesignTool) return;
@@ -135,6 +137,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         #region Commands
 
         public DelegateCommand<RouteStep> CommandGoToStep { get; private set; }
+        public DelegateCommand CommandShowInBingMaps { get; private set; }
 
         #endregion
     }

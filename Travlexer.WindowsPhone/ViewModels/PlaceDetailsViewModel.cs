@@ -19,10 +19,11 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandNavigateToUrl = new DelegateCommand<string>(PhoneTasks.OpenUrl);
             CommandCallNumber = new DelegateCommand<string>(number => PhoneTasks.CallPhoneNumber(Data.Name, number));
             CommandMarkAsPin = new DelegateCommand(() => Data.IsSearchResult = false);
+            CommandShowInBingMaps = new DelegateCommand(() => PhoneTasks.ShowBingMaps(Data.Location.ToGeoCoordinate()));
         }
 
-
         #endregion
+
 
         #region Commands
 
@@ -30,7 +31,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand<string> CommandNavigateToUrl { get; private set; }
         public DelegateCommand<string> CommandCallNumber { get; private set; }
         public DelegateCommand CommandMarkAsPin { get; private set; }
-        public DelegateCommand CommandAddContact { get; private set; }
+        public DelegateCommand CommandShowInBingMaps { get; private set; }
 
         #endregion
 
@@ -46,7 +47,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         {
             get { return ApplicationContext.Data.ElementColorMap; }
         }
-
 
         #endregion
     }

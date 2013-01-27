@@ -4,22 +4,8 @@
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                            mc:Ignorable="d"
-                            shell:SystemTray.IsVisible="False">
-    <phone:PhoneApplicationPage.Style>
-        <StaticResource ResourceKey="PageDefault" />
-    </phone:PhoneApplicationPage.Style>
-	<Canvas HorizontalAlignment="Left" Height="800" VerticalAlignment="Top" Width="480">
-		<Ellipse Height="28" Canvas.Top="7.5" Width="28" Stroke="White" StrokeThickness="2" UseLayoutRounding="False">
-			<Ellipse.Fill>
-				<RadialGradientBrush>
-					<GradientStop Color="{StaticResource PhoneForegroundColor}" Offset="0.7"/>
-					<GradientStop Color="{StaticResource PhoneBackgroundColor}" Offset="0.7"/>
-					<GradientStop Color="{StaticResource PhoneForegroundColor}" Offset="0.5"/>
-					<GradientStop Color="{StaticResource PhoneForegroundColor}" Offset="0.5"/>
-				</RadialGradientBrush>
-			</Ellipse.Fill>
-		</Ellipse>
-		<Path Data="M145,300 L150,290 L155,300" Height="11" Canvas.Left="8.5" Stretch="Fill" Stroke="White" UseLayoutRounding="False" Width="11" Fill="Black" StrokeEndLineCap="Triangle" StrokeStartLineCap="Triangle" StrokeThickness="2"/>
+                            mc:Ignorable="d">
+	<Canvas>
+		<Path Data="M36.069,86.161 L38.631,89.252 L36.069,89.937 z M63.931,72.836 L63.931,82.472 L41.033,88.61 L37.664,84.541 z M67.765,72.155 L80.266,73.283 L95.626,89.211 L95.626,89.937 L67.765,82.472 z M67.765,60.319 L78.135,71.072 L67.765,70.136 z M18.053,55.786 L32.235,80.504 L32.235,89.937 L4.374,82.472 L4.374,69.91 z M36.069,43.407 L63.931,57.369 L63.931,70.819 L36.443,83.068 L36.069,82.616 z M32.235,41.146 L32.235,76.959 L19.331,54.468 z M4.374,41.12 L16.711,53.913 L4.374,66.65 z M63.931,35.878 L63.931,54.862 L50.611,48.187 z M71.171,32.038 L95.626,57.398 L95.626,86.703 L67.765,57.811 L67.765,33.36 z M95.626,22.543 L95.626,54.89 L72.93,31.355 z M32.235,19.306 L32.235,37.885 L32.204,37.916 L23.226,28.607 z M36.069,18.555 L43.001,22.029 L36.069,32.899 z M4.374,11.563 L30.993,39.168 L17.922,52.661 L4.374,38.613 z M51.243,9.102 L44.213,20.128 L36.069,16.049 L36.069,13.168 z M63.931,8.104 L63.931,33.5 L48.943,47.351 L41.337,43.538 z M63.27,5.88 L39.761,42.749 L36.069,40.899 L36.069,36.16 L53.75,8.43 z M67.765,5.703 L95.626,13.168 L95.626,20.165 L67.765,30.982 z M4.374,5.701 L32.235,13.168 L32.235,16.045 L21.651,26.973 L4.374,9.055 z M1.988,2.592 L1.988,84.302 L34.153,92.922 L65.848,84.429 L98.013,93.047 L98.013,11.337 L65.848,2.717 L34.153,11.211 z M0,0 L34.153,9.153 L65.848,0.660001 L100,9.811 L100,95.64 L65.848,86.486 L34.153,94.98 L0,85.828 z"/>
 	</Canvas>
 </phone:PhoneApplicationPage>

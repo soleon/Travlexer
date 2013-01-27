@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Device.Location;
 using System.Windows;
 using Codify.Extensions;
 using Microsoft.Phone.Tasks;
@@ -109,6 +110,25 @@ namespace Codify.WindowsPhone
             var task = new AddressChooserTask();
             task.Completed += (s, e) => addressSelected.ExecuteIfNotNull(e.Address, e.Error);
             task.Show();
+        }
+
+        public static void ShowBingMaps(GeoCoordinate center = null, string searchTerm = null, double zoomLevel = 15)
+        {
+            new BingMapsTask
+            {
+                Center = center,
+                SearchTerm = searchTerm,
+                ZoomLevel = zoomLevel
+            }.Show();
+        }
+
+        public static void ShowBingMapsDirections(string startLocationLabel, GeoCoordinate startLocation, string endLocationLabel, GeoCoordinate endLocation)
+        {
+            new BingMapsDirectionsTask
+            {
+                Start = new LabeledMapLocation(startLocationLabel, startLocation),
+                End = new LabeledMapLocation(endLocationLabel, endLocation)
+            }.Show();
         }
     }
 }
