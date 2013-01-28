@@ -56,7 +56,9 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         private ObservableCollection<AppBarMenuItemViewModel>
             _defaultMenuItemsSource,
-            _searchResultSelectedMenuItemsSource;
+            _searchResultSelectedMenuItemsSource,
+            _personalPlaceSelectedMenuItemsSource,
+            _routeSelectedMenuItemsSource;
 
         #endregion
 
@@ -473,12 +475,12 @@ namespace Travlexer.WindowsPhone.ViewModels
                 case VisualStates.PushpinSelected:
                     IsAppBarVisible = true;
                     SelectedAppBarButtonItemsSource = _pushpinSelectedButtonItemsSource;
-                    SelectedAppBarMenuItemsSource = _selectedPushpin.Data.IsSearchResult ? _searchResultSelectedMenuItemsSource : null;
+                    SelectedAppBarMenuItemsSource = _selectedPushpin.Data.IsSearchResult ? _searchResultSelectedMenuItemsSource : _personalPlaceSelectedMenuItemsSource;
                     break;
                 case VisualStates.RouteSelected:
                     IsAppBarVisible = true;
                     SelectedAppBarButtonItemsSource = _routeSelectedButtonItemsSource;
-                    SelectedAppBarMenuItemsSource = null;
+                    SelectedAppBarMenuItemsSource = _routeSelectedMenuItemsSource;
                     break;
                 case VisualStates.Route:
                     IsAppBarVisible = false;
@@ -1333,11 +1335,6 @@ namespace Travlexer.WindowsPhone.ViewModels
                     Text = "settings...",
                     Command = new ActionCommand(() => _navigation.Navigate<SettingsViewModel>())
                 },
-                //new AppBarMenuItemViewModel
-                //{
-                //    Text = "help...",
-                //    Command = new ActionCommand(() => _navigation.Navigate<HelpViewModel>())
-                //},
                 new AppBarMenuItemViewModel
                 {
                     Text = "app info...",
@@ -1350,6 +1347,27 @@ namespace Travlexer.WindowsPhone.ViewModels
                 {
                     Text = "mark as personal pin",
                     Command = new DelegateCommand(OnMarkSelectedSearchResultAsPin)
+                },
+                new AppBarMenuItemViewModel
+                {
+                    Text = "show in bing maps",
+                    Command = new DelegateCommand(OpenSelectedPlaceInBingMaps)
+                }
+            };
+            _personalPlaceSelectedMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
+            {
+                new AppBarMenuItemViewModel
+                {
+                    Text = "show in bing maps",
+                    Command = new DelegateCommand(OpenSelectedPlaceInBingMaps)
+                }
+            };
+            _routeSelectedMenuItemsSource = new ObservableCollection<AppBarMenuItemViewModel>
+            {
+                new AppBarMenuItemViewModel
+                {
+                    Text = "show in bing maps",
+                    Command = new DelegateCommand(ShowSelectedRouteInBingMaps)
                 }
             };
             AppBarMenuItemsSources = new[]
@@ -1358,6 +1376,35 @@ namespace Travlexer.WindowsPhone.ViewModels
                 _selectedAppBarMenuItemsSource
             };
             SelectedAppBarMenuItemsSource = _defaultMenuItemsSource;
+        }
+
+        private void ShowSelectedRouteInBingMaps()
+        {
+            if (_selectedRoute == null) return;
+            var route = _selectedRoute.Data;
+            Place start = null, end = null;
+            foreach (var p in _data.Places)
+                if (p.Id == route.DeparturePlaceId)
+                {
+                    start = p;
+                    if (end != null) break;
+                }
+                else if (p.Id == route.ArrivalPlaceId)
+                {
+                    end = p;
+                    if (start != null) break;
+                }
+            PhoneTasks.ShowBingMapsDirections(
+                start == null ? "start" : start.Name,
+                start == null ? route.Points[0].ToGeoCoordinate() : start.Location.ToGeoCoordinate(),
+                end == null ? "end" : end.Name,
+                end == null ? route.Points[route.Points.Count - 1].ToGeoCoordinate() : end.Location.ToGeoCoordinate());
+        }
+
+        private void OpenSelectedPlaceInBingMaps()
+        {
+            if (_selectedPushpin == null) return;
+            PhoneTasks.ShowBingMaps(_selectedPushpin.Data.Location.ToGeoCoordinate(), zoomLevel: ZoomLevel.Value);
         }
 
         #endregion
