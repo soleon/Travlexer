@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Device.Location;
 using System.Linq;
+using System.Windows;
 using Codify.Commands;
 using Codify.ViewModels;
 using Codify.WindowsPhone;
@@ -50,6 +51,32 @@ namespace Travlexer.WindowsPhone.ViewModels
 
             CommandGoToStep = new DelegateCommand<RouteStep>(step => SelectedStep = step);
             CommandShowInBingMaps = new DelegateCommand(() => PhoneTasks.ShowBingMapsDirections(DeparturePlace.Name, DeparturePlace.Location.ToGeoCoordinate(), ArrivalPlace.Name, ArrivalPlace.Location.ToGeoCoordinate()));
+            CommandDelete = new DelegateCommand(() =>
+            {
+                if (MessageBox.Show("Do you want to remove the start and end locations of this route too?", "Start and End Locations", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    var count = 0;
+                    var places = _data.Places;
+                    for (var i = places.Count - 1; i >= 0; i--)
+                    {
+                        var place = places[i];
+                        var id = place.Id;
+                        if (id != route.DeparturePlaceId && id != route.ArrivalPlaceId)
+                        {
+                            continue;
+                        }
+                        _data.RemovePlace(place);
+                        if (count == 1)
+                        {
+                            break;
+                        }
+                        count++;
+                    }
+                }
+                _data.RemoveRoute(route);
+                if (ApplicationContext.NavigationService.CanGoBack) ApplicationContext.NavigationService.GoBack();
+                else throw new ExitException();
+            });
 
 #if DEBUG
             if (DesignerProperties.IsInDesignTool) return;
@@ -138,6 +165,7 @@ namespace Travlexer.WindowsPhone.ViewModels
 
         public DelegateCommand<RouteStep> CommandGoToStep { get; private set; }
         public DelegateCommand CommandShowInBingMaps { get; private set; }
+        public DelegateCommand CommandDelete { get; private set; }
 
         #endregion
     }

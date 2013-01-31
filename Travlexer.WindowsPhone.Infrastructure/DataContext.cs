@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Device.Location;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Windows;
 using Codify;
@@ -49,8 +50,8 @@ namespace Travlexer.WindowsPhone.Infrastructure
         }
 
         #endregion
-        
-        
+
+
         #region Constructors
 
         static DataContext()
@@ -226,13 +227,13 @@ namespace Travlexer.WindowsPhone.Infrastructure
         private const string PreventScreenLockProperty = "PreventScreenLock";
 
         public ObservableValue<bool> ClearRoutesBeforeAddingNewRoute { get; private set; }
-        
+
         private const string ClearRoutesBeforeAddingNewRouteProperty = "ClearRoutesBeforeAddingNewRoute";
 
         public ObservableValue<bool> HideToolbar { get; private set; }
 
         private const string HideToolbarProperty = "HideToolbar";
-        
+
         public ObservableValue<HorizontalAlignment> ToolbarAlignment { get; private set; }
 
         private const string ToolbarAlignmentProperty = "ToolbarAlignment";
@@ -698,32 +699,39 @@ namespace Travlexer.WindowsPhone.Infrastructure
             where TResponse : class, IResponse<TResult>
             where TResult : class
         {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+                callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.NetworkUnavailable));
+            else
             callAction(_googleMapsClient, r =>
             {
-                if (r.ResponseStatus == ResponseStatus.Aborted)
-                {
+                if (r == null)
                     callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Cancelled));
-                    return;
-                }
-                TResponse data = null;
-                TResult result;
-                if (r.StatusCode != HttpStatusCode.OK ||
-                    (data = r.Data) == null ||
-                    data.Status != StatusCodes.OK ||
-                    (result = data.Result) == null ||
-                    (result is IList && ((IList) result).Count == 0))
+                else if (r.ResponseStatus == ResponseStatus.Aborted)
+                    callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Cancelled));
+                else
                 {
-                    var exception = r.ErrorException;
-                    if (exception != null)
-                        callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.ServiceException, exception));
-                    else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
-                        callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Unknown));
+                    TResponse data = null;
+                    TResult result;
+                    if (r.StatusCode != HttpStatusCode.OK
+                        || (data = r.Data) == null
+                        || data.Status != StatusCodes.OK
+                        || (result = data.Result) == null
+                        || (result is IList && ((IList) result).Count == 0))
+                    {
+                        var exception = r.ErrorException;
+                        if (exception != null)
+                            callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.ServiceException, exception));
+                        else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
+                            callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.Unknown));
+                        else
+                            callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.EmptyResult));
+                    }
                     else
-                        callback.ExecuteIfNotNull(new CallbackEventArgs(CallbackStatus.EmptyResult));
-                    return;
+                    {
+                        processSuccessfulResponse.ExecuteIfNotNull(r.Data);
+                        callback.ExecuteIfNotNull(new CallbackEventArgs());
+                    }
                 }
-                processSuccessfulResponse.ExecuteIfNotNull(r.Data);
-                callback.ExecuteIfNotNull(new CallbackEventArgs());
             });
         }
 
@@ -731,38 +739,40 @@ namespace Travlexer.WindowsPhone.Infrastructure
             where TResponse : class, IResponse<TResult>
             where TResult : class
         {
-            callAction(_googleMapsClient, r =>
-            {
-                if (r == null)
+            if (!NetworkInterface.GetIsNetworkAvailable())
+                callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.NetworkUnavailable));
+            else
+                callAction(_googleMapsClient, r =>
                 {
-                    callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
-                    return;
-                }
-                if (r.ResponseStatus == ResponseStatus.Aborted)
-                {
-                    callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
-                    return;
-                }
-                TResponse data = null;
-                TResult result;
-                if (r.StatusCode != HttpStatusCode.OK ||
-                    (data = r.Data) == null ||
-                    data.Status != StatusCodes.OK ||
-                    (result = data.Result) == null ||
-                    (result is IList && ((IList) result).Count == 0))
-                {
-                    var exception = r.ErrorException;
-                    if (exception != null)
-                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.ServiceException, exception));
-                    else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
-                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Unknown));
+                    if (r == null)
+                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
+                    else if (r.ResponseStatus == ResponseStatus.Aborted)
+                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Cancelled));
                     else
-                        callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.EmptyResult));
-                    return;
-                }
-                var callbackResult = processSuccessfulResponse.ExecuteIfNotNull(data);
-                callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(callbackResult));
-            });
+                    {
+                        TResponse data = null;
+                        TResult result;
+                        if (r.StatusCode != HttpStatusCode.OK
+                            || (data = r.Data) == null
+                            || data.Status != StatusCodes.OK
+                            || (result = data.Result) == null
+                            || (result is IList && ((IList) result).Count == 0))
+                        {
+                            var exception = r.ErrorException;
+                            if (exception != null)
+                                callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.ServiceException, exception));
+                            else if (data == null || data.Status != StatusCodes.ZERO_RESULTS)
+                                callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.Unknown));
+                            else
+                                callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(CallbackStatus.EmptyResult));
+                        }
+                        else
+                        {
+                            var callbackResult = processSuccessfulResponse.ExecuteIfNotNull(data);
+                            callback.ExecuteIfNotNull(new CallbackEventArgs<TCallback>(callbackResult));
+                        }
+                    }
+                });
         }
 
         #endregion

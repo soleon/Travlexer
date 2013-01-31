@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExitException.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="NavigationService.cs" />
     <Compile Include="ShellExtension\ApplicationBar.cs" />

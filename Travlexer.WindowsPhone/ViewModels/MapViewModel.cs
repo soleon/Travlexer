@@ -128,7 +128,6 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandAddPlace = new DelegateCommand<Location>(OnAddPlace);
             CommandSelectPushpin = new DelegateCommand<PlaceViewModel>(vm => SelectedPushpin = vm);
             CommandSelectRoute = new DelegateCommand<RouteViewModel>(vm => SelectedRoute = vm);
-            CommandDeletePlace = new DelegateCommand<PlaceViewModel>(OnDeletePlace);
             CommandUpdatePlace = new DelegateCommand<PlaceViewModel>(OnUpdatePlace);
             CommandStopTrackingCurrentLocation = new DelegateCommand(OnStopTrackingCurrentLocation);
             CommandGoToDefaultState = new DelegateCommand(OnGoToDefaultState);
@@ -150,7 +149,7 @@ namespace Travlexer.WindowsPhone.ViewModels
             CommandSetDepartLocationToCurrentLocation = new DelegateCommand(() => DepartureLocation.Address = CurrentLocationString);
             CommandSetArriveLocationToCurrentLocation = new DelegateCommand(() => ArrivalLocation.Address = CurrentLocationString);
             CommandRoute = new DelegateCommand(OnRoute);
-            CommandActivate = new DelegateCommand(OnActivate);
+            CommandActivate = new DelegateCommand(Activate);
             CommandDeactivate = new DelegateCommand(OnDeactivate);
             CommandSwapRouteLocations = new DelegateCommand(OnSwapRouteLocations);
             CommandSelectContactAddress = new DelegateCommand(OnSelectContactAddress);
@@ -164,7 +163,8 @@ namespace Travlexer.WindowsPhone.ViewModels
             // Handle events.
             Pushpins.CollectionChanged += OnPushpinsCollectionChanged;
             _data.MapBaseLayer.ValueChanged += (old, @new) => RaisePropertyChanged(IsStreetLayerVisibleProperty, IsSatelliteHybridLayerVisibleProperty);
-            _data.SelectedPlace.ValueChanged += (old, @new) => SelectedPushpin = Pushpins.FirstOrDefault(p => p.Data == @new);
+            _data.SelectedPlace.ValueChanged += (old, @new) => SelectedPushpin = @new == null ? null : Pushpins.FirstOrDefault(p => p.Data == @new);
+            _data.SelectedRoute.ValueChanged += (old, @new) => SelectedRoute = @new == null ? null : Routes.FirstOrDefault(r => r.Data == @new);
             _data.MapOverlays.CollectionChanged += (s, e) => RaisePropertyChanged(IsTrafficLayerVisibleProperty, IsTransitLayerVisibleProperty);
             _data.ClearRoutesBeforeAddingNewRoute.ValueChanged += (old, @new) => RaisePropertyChanged(GetRouteButtonTextProperty);
             VisualState.ValueChanged += OnVisualStateChanged;
@@ -269,27 +269,13 @@ namespace Travlexer.WindowsPhone.ViewModels
             newPlace.Color = Data.DataExtensions.GetRandomElementColor();
         }
 
-        /// <summary>
-        ///     Called when <see cref="CommandDeletePlace" /> is executed.
-        /// </summary>
-        private void OnDeletePlace(PlaceViewModel vm)
-        {
-            _data.RemovePlace(vm.Data);
-        }
-
-        /// <summary>
-        ///     Called when <see cref="CommandDeletePlace" /> is executed.
-        /// </summary>
-        private void OnDeleteSelectedPlace()
+        private void DeleteSelectedPlace()
         {
             var place = _selectedPushpin.Data;
             var connectedRouteCount = place.ConnectedRouteIds.Count;
-            if (connectedRouteCount == 0 ||
-                MessageBox.Show("Deleting this location will also delete " + connectedRouteCount + " connecting route" + (connectedRouteCount > 1 ? "s" : null) + ". Do you want to continue?", "Delete Location", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-            {
-                _data.RemovePlace(place);
-                SelectedPushpin = null;
-            }
+            if (connectedRouteCount != 0 && MessageBox.Show("Deleting this location will also delete " + connectedRouteCount + " connecting route" + (connectedRouteCount > 1 ? "s" : null) + ". Do you want to continue?", "Delete Location", MessageBoxButton.OKCancel) != MessageBoxResult.OK) return;
+            _data.RemovePlace(place);
+            SelectedPushpin = null;
         }
 
         /// <summary>
@@ -740,10 +726,17 @@ namespace Travlexer.WindowsPhone.ViewModels
         /// <summary>
         ///     Called when <see cref="CommandActivate" /> is executed.
         /// </summary>
-        private void OnActivate()
+        private void Activate()
         {
             _navigation.BackKeyPress += OnBackKeyPress;
             _compass.UseIfNotNull(c => c.Start());
+
+            // This is for the case that if the selected place is deleted in the place details view.
+            if (_selectedPushpin != null && _data.Places.All(p=>p.Id != _selectedPushpin.Data.Id))
+                SelectedPushpin = null;
+
+            if (_selectedRoute != null && _data.Routes.All(r => r.Id != _selectedRoute.Data.Id))
+                SelectedRoute = null;
         }
 
         #endregion
@@ -1132,11 +1125,6 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand<RouteViewModel> CommandSelectRoute { get; private set; }
 
         /// <summary>
-        ///     Gets the command deletes a user pin.
-        /// </summary>
-        public DelegateCommand<PlaceViewModel> CommandDeletePlace { get; private set; }
-
-        /// <summary>
         ///     Gets the command that gets suggestions that based on the <see cref="SearchInput" />.
         /// </summary>
         public DelegateCommand CommandGetSuggestions { get; private set; }
@@ -1309,7 +1297,7 @@ namespace Travlexer.WindowsPhone.ViewModels
                     {
                         IconUri = new Uri("/Assets/Delete.png", UriKind.Relative),
                         Text = "delete",
-                        Command = new DelegateCommand(OnDeleteSelectedPlace)
+                        Command = new DelegateCommand(DeleteSelectedPlace)
                     }
                 }
             };

@@ -250,6 +250,9 @@
                 <shellExtension:ApplicationBarIconButton IconUri="\Assets\Map.png"
                                                          Text="bing maps"
                                                          Command="{Binding CommandShowInBingMaps}" />
+                <shellExtension:ApplicationBarIconButton IconUri="\Assets\Delete.png"
+                                                         Text="delete"
+                                                         Command="{Binding CommandDelete}" />
             </shellExtension:ApplicationBar.Buttons>
         </shellExtension:ApplicationBar>
     </shellExtension:ApplicationBar.ApplicationBar>

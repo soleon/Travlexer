@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
+using Codify.WindowsPhone;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
@@ -97,6 +98,9 @@ namespace Travlexer.WindowsPhone
 
         private void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            var ex = e.ExceptionObject;
+            if (ex is ExitException) return;
+
             e.Handled = true;
             if (Debugger.IsAttached) Debugger.Break();
             try
@@ -106,7 +110,6 @@ namespace Travlexer.WindowsPhone
                 {
                     var n2 = Environment.NewLine + Environment.NewLine;
                     if (MessageBox.Show("The application has encountered an error, we apologize for any inconvenience." + n2 + "Do you want to report this error via email?", "Oops...", MessageBoxButton.OKCancel) != MessageBoxResult.OK) return;
-                    var ex = e.ExceptionObject;
                     new EmailComposeTask
                     {
                         Body = ex + n2 + "OS: " + Environment.OSVersion + n2 + "Location: " + RootFrame.CurrentSource,

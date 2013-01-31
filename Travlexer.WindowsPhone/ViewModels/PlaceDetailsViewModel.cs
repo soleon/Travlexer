@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Windows;
 using Codify.Commands;
 using Codify.ViewModels;
 using Codify.WindowsPhone;
@@ -11,15 +12,23 @@ namespace Travlexer.WindowsPhone.ViewModels
     {
         #region Constructor
 
-        public PlaceDetailsViewModel(IDataContext data)
+        public PlaceDetailsViewModel()
         {
-            Data = data.SelectedPlace.Value;
+            Data = ApplicationContext.Data.SelectedPlace.Value;
 
             CommandUpdatePlaceInfo = new DelegateCommand(() => ApplicationContext.Data.GetPlaceDetails(Data));
             CommandNavigateToUrl = new DelegateCommand<string>(PhoneTasks.OpenUrl);
             CommandCallNumber = new DelegateCommand<string>(number => PhoneTasks.CallPhoneNumber(Data.Name, number));
             CommandMarkAsPin = new DelegateCommand(() => Data.IsSearchResult = false);
             CommandShowInBingMaps = new DelegateCommand(() => PhoneTasks.ShowBingMaps(Data.Location.ToGeoCoordinate()));
+            CommandDelete = new DelegateCommand(()=>
+            {
+                var connectedRouteCount = Data.ConnectedRouteIds.Count;
+                if (connectedRouteCount != 0 && MessageBox.Show("Deleting this location will also delete " + connectedRouteCount + " connecting route" + (connectedRouteCount > 1 ? "s" : null) + ". Do you want to continue?", "Delete Location", MessageBoxButton.OKCancel) != MessageBoxResult.OK) return;
+                ApplicationContext.Data.RemovePlace(Data);
+                if(ApplicationContext.NavigationService.CanGoBack) ApplicationContext.NavigationService.GoBack();
+                else throw new ExitException();
+            });
         }
 
         #endregion
@@ -32,6 +41,7 @@ namespace Travlexer.WindowsPhone.ViewModels
         public DelegateCommand<string> CommandCallNumber { get; private set; }
         public DelegateCommand CommandMarkAsPin { get; private set; }
         public DelegateCommand CommandShowInBingMaps { get; private set; }
+        public DelegateCommand CommandDelete { get; private set; }
 
         #endregion
 
